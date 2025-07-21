@@ -39,21 +39,21 @@
 	</bean>
 
            <!-- mybatis-spring:scan 은 MyBatis와 Spring을 통합할 때 Mapper 인터페이스를 자동으로 찾아 MyBatis에 등록하는 역할 -->
-           <!-- org.zerock.mapper 패키지 내의 MyBatis 매퍼 인터페이스를 자동으로 스캔하는 설정 -->
-	<mybatis-spring:scan	base-package="org.zerock.mapper" />
+           <!-- com.myrium.mapper 패키지 내의 MyBatis 매퍼 인터페이스를 자동으로 스캔하는 설정 -->
+	<mybatis-spring:scan	base-package="com.myrium.mapper" />
 	
-	<!-- org.zerock.service 패키지의 컴포넌트를 스캔하는 설정 -->
-	<context:component-scan base-package="org.zerock.service" />	
+	<!-- com.myrium.service 패키지의 컴포넌트를 스캔하는 설정 -->
+	<context:component-scan base-package="com.myrium.service" />	
 
 	
 	<!-- AspectJ를 사용하여 AOP를 활성화하고, AspectJ 어드바이스를 포함하는 빈에 대해 자동으로 프록시를 생성하여 횡단 관심사를 적용 -->
 	<aop:aspectj-autoproxy/>
 
-	<!-- org.zerock.aop 패키지를 스캔하여 등록 -->
-	<context:component-scan base-package="org.zerock.aop"/>
+	<!-- com.myrium.aop 패키지를 스캔하여 등록 -->
+	<context:component-scan base-package="com.myrium.aop"/>
 
           <!-- Component scan 설정 추가 -->
-	<context:component-scan base-package="org.zerock.sample" />
+	<context:component-scan base-package="com.myrium.sample" />
 
            <!-- 데이터베이스 트랜잭션을 관리하는 데 사용되는 설정, 이 빈은 데이터 소스를 통해 트랜잭션을 관리 -->
 	<bean id="transactionManager"
