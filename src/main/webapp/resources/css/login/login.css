@@ -1,0 +1,262 @@
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .wrap {
+    width: 400px;
+  }
+  
+  .login_wrap {
+    padding: 24px;
+  }
+  
+  /* 상단 */
+  .login_header {
+    padding: 0 16px;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  
+  .icon_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 56px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .back_btn,
+  .home_btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: none;
+    width: auto;
+    height: 40px;
+    padding: 0;
+    cursor: pointer;
+  }
+  
+  
+  
+  .back_btn img,
+  .home_btn img {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .login_title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 12px 0 0;
+  }
+  
+  /* 인트로 */
+  .login_intro {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    text-align: center;
+    margin: 16px 0;
+  }
+  
+  /* 카카오 */
+  .kakao_login {
+    background-color: #fee500;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px;
+    width: 100%;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  
+  .kakao_login img {
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* 쿠폰 */
+  .coupon_banner {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  
+  .coupon_banner img {
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  /* 구분선 */
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+    margin: 20px 0;
+  }
+  
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .divider::before {
+    margin-right: 10px;
+  }
+  
+  .divider::after {
+    margin-left: 10px;
+  }
+  
+  /* 로그인 탭 */
+  .login_tab {
+    display: flex;
+    background-color: #f6f6f6;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  
+  .login_tab button {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: #999;
+  }
+  
+  .login_tab .active {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  /* 로그인 폼 */
+  .login_form input {
+    width: 95%;
+    height: 44px;
+    margin-bottom: 12px;
+    padding: 0 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .login_option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .login_option label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;  /* 줄바꿈 방지 */
+  }
+  
+  .login_option input[type="checkbox"] {
+    transform: scale(1);
+    margin-top: 10px;
+  }
+
+  .secure img {
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  
+  .login_btn {
+    background-color: #4caf50;
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    height: 48px;
+    width: 100%;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+  
+  .login_links {
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  
+  .login_links a {
+    color: #333;
+    text-decoration: none;
+    margin: 0 6px;
+  }
+  
+  /* 네이버 */
+  .naver_login {
+    background-color: #1ec800;
+    color: #fff;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 14px;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  
+  .naver_login img {
+    width: 20px;
+  }
+  
+  /* 구글 */
+  .google_login {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 14px;
+    width: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  
+  .google_login img {
+    width: 20px;
+  }
+  
