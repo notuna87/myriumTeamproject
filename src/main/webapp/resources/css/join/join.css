@@ -17,6 +17,13 @@
   text-align: left;
 }
 
+.section_divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 30px 0;
+}
+
+
 /* 필수 표시 */
 .required {
   color: red;
@@ -50,49 +57,6 @@
   margin-bottom: 20px;
 }
 
-/* 소셜 로그인 */
-.social_login {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 30px;
-}
-
-.social_login button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 48px;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-  border: none;
-  width: 100%;
-}
-
-.kakao_btn {
-  background-color: #fee500;
-  color: #000;
-}
-
-.naver_btn {
-  background-color: #03c75a;
-  color: #fff;
-}
-
-.google_btn {
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc !important;
-  border-radius: 4px;
-}
-
-.social_login img {
-  width: 18px;
-  height: 18px;
-}
 
 /* 폼 섹션 */
 .form_section {

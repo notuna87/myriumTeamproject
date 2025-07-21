@@ -1,0 +1,85 @@
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+  }
+  
+  .wrap {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+  
+  .result_box {
+    border: 1px solid #ddd;
+    padding: 30px;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .result_msg {
+    font-size: 15px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  
+  .info_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  .info_table th,
+  .info_table td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+  }
+  
+  .found_id {
+    text-align: left;
+    margin-top: 20px;
+    font-size: 15px;
+  }
+  
+  .found_id .info {
+    color: #555;
+    margin-left: 6px;
+    font-size: 13px;
+  }
+  
+  .btn_group {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 30px;
+  }
+  
+  .btn {
+    padding: 12px 24px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+  }
+  
+  .login_btn {
+    background-color: #fff;
+  }
+  
+  .find_pw_btn {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+
+  }
+  

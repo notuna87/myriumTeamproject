@@ -22,20 +22,7 @@
 
     <h2>회원가입</h2>
 
-    <div class="social_login">
-        <button class="kakao_btn">
-        	<img src="${pageContext.request.contextPath}/resources/img/join/ico_kakao.svg" alt="카카오톡 아이콘" />
-        <span>카카오 로그인</span>
-        </button>
-        <button class="naver_btn">
-            <img src="${pageContext.request.contextPath}/resources/img/join/ico_naver.svg" alt="네이버 아이콘" />
-        <span>네이버 로그인</span>
-        </button>
-        <button class="google_btn">
-        	<img src="${pageContext.request.contextPath}/resources/img/join/ico_google.svg" alt="구글 아이콘" />
-        <span>Google 로그인</span>
-        </button>
-    </div>
+	<hr class="section_divider" />
 
     <h3>회원인증</h3>
     <div class="form_section">
