@@ -1,3 +1,6 @@
 eclipse.preferences.version=1
-encoding//src/main/webapp/WEB-INF/views/home.jsp=UTF-8
-encoding/README.md=UTF-8
+encoding//src/main/webapp/resources/data/terms1.txt=UTF-8
+encoding//src/main/webapp/resources/data/terms2.txt=UTF-8
+encoding//src/main/webapp/resources/data/terms3.txt=UTF-8
+encoding//src/main/webapp/resources/data/terms4.txt=UTF-8
+encoding//src/main/webapp/resources/data/terms5.txt=UTF-8
