@@ -18,7 +18,7 @@
 	<div class="topAdSwiper">
 		<div class="swiper-wrapper">
 			<div class="swiper-slide">
-				<a href="#">📸 사진리뷰 쓰고, 1,000원 받아가세요!</a>
+				<a href="#">📸 사진리뷰 쓰고, 1,000원 받아가세요</a>
 			</div>
 			<div class="swiper-slide">
 				<a href="#">🎉 회원 가입하고 30,000원 쿠폰팩 즉시 받기 ✨</a>
