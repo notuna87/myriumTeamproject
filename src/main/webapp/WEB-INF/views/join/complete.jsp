@@ -43,9 +43,9 @@
         </tr>
       </table>
 
-      <button type="button" class="btn_main" onclick="location.href='${pageContext.request.contextPath}/home'">
-  메인으로 이동
-</button>
+	     <button type="button" class="btn_main" onclick="location.href='${pageContext.request.contextPath}/home'">
+	  		메인으로 이동
+		</button>
     </div>
   </div>
 </body>

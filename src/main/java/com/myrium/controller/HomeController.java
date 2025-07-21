@@ -39,6 +39,6 @@ public class HomeController {
 	
     @GetMapping("/home")
     public String goHome() {
-        return "main/home"; // /WEB-INF/views/main/home.jsp로 이동
+        return "home"; //complete.jsp 메인으로 버튼 클릭 시 home.jsp 이동 코드 추가함 by.gny
     }
 }
