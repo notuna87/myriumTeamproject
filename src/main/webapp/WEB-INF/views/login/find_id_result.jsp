@@ -17,7 +17,7 @@
     <div class="result_box">
       <p class="result_msg">
         고객님 아이디 찾기가 완료되었습니다.<br />
-        가입된 아이디가 총 1개 있습니다.
+        가입된 아이디가 총 1개 있습니다!
       </p>
 
       <table class="info_table">
