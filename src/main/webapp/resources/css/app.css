@@ -222,9 +222,7 @@
 /*슬라이더 시작*/
 
 .swiperWrap {
-  height: 600px;
   width: 100%;
-  margin-bottom: 100px;
 }
 
 .swiper-button-next,
@@ -356,7 +354,7 @@ a .fontWhite {
 }
 
 .springProduct {
-  width: 390px;
+  width: 350px;
   height: 530px;
   margin: 5px;
   text-align: left;
@@ -471,6 +469,7 @@ a .fontWhite {
   color: #333;
   font-weight: 500;
   cursor: pointer;
+  display:block;
 }
 
 /*마이리움 스토리 끝*/
