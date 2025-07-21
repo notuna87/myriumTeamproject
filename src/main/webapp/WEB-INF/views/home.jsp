@@ -4,42 +4,28 @@
 <html>
 <head>
 <title>Home</title>
+<!-- reset css  -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 </head>
 <body>
-	<!-- Swiper CSS -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-
-	<style>
-.topAdSwiper {
-	width: 100%;
-	height: 40px;
-	font-size: 14px;
-	text-align: center;
-	background-color: #56b770;
-	overflow: hidden;
-}
-
-.topAdSwiper .swiper-slide a {
-	color: #fff;
-	font-weight: bold;
-	text-decoration: none;
-}
-</style>
-
 	<!-- HTML -->
-	<div class="swiper topAdSwiper">
+	<div class="topAdSwiper">
 		<div class="swiper-wrapper">
 			<div class="swiper-slide">
-				<a href="#">📸 사진리뷰 쓰고, 1,000원 받아가세요!</a>
+				<a href="#">📸 사진리뷰 쓰고, 1,000원 받아가세요</a>
 			</div>
 			<div class="swiper-slide">
-				<a href="#">123</a>
+				<a href="#">🎉 회원 가입하고 30,000원 쿠폰팩 즉시 받기 ✨</a>
 			</div>
 		</div>
 	</div>
-
-	<!-- Swiper JS -->
-	<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<%@ include file="/WEB-INF/views/main/header.jsp" %>
 	<script>
 		const swiper = new Swiper('.topAdSwiper', {
 			direction : 'vertical',
