@@ -12,7 +12,13 @@ public class LoginController {
 	}
 	
 	@GetMapping("/login/find_id")
-	public String showCompletePage() {
+	public String showFindIdPage() {
 	    return "login/find_id";
 	}
+
+	@GetMapping("/login/find_pw")
+	public String showFindPwPage() {
+	    return "login/find_pw";
+	}
+
 }

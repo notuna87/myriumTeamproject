@@ -1,14 +1,9 @@
-body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background-color: #fff;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-  }
-  
+
   .wrap {
-    width: 400px;
+	max-width: 500px;
+	margin: 0 auto;
+	padding: 20px;
+	margin-top: 10px !important;
   }
   
   .login_wrap {

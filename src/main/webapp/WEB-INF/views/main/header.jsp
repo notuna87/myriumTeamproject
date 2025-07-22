@@ -17,8 +17,8 @@
 			</div>
 			<ul class="loginWrap">
 				<li><a href="#">주문조회</a></li>
-				<li><a href="#" class="liMiddle">로그인</a></li>
-				<li><a href="#">회원가입</a></li>
+				<li><a href="${pageContext.request.contextPath}/login" class="liMiddle">로그인</a></li>
+				<li><a href="${pageContext.request.contextPath}/join">회원가입</a></li>
 			</ul>
 		</div>
 
