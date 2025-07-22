@@ -39,6 +39,10 @@ public class HomeController {
 	
     @GetMapping("/home")
     public String goHome() {
-        return "home"; //  complete.jsp ¸ŞÀÎÀ¸·Î ¹öÆ° Å¬¸¯ ½Ã home.jsp ÀÌµ¿ ÄÚµå Ãß°¡ÇÔ by.gny
+        return "home"; //  complete.jsp ë©”ì¸ìœ¼ë¡œ ë²„íŠ¼ í´ë¦­ ì‹œ home.jsp ì´ë™ ì½”ë“œ ì¶”ê°€í•¨ by.gny
+    }
+    @GetMapping("/admin")
+    public String adminPage() {
+    	return "admin"; // leedy
     }
 }
