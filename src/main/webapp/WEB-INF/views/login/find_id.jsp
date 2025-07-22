@@ -62,6 +62,7 @@
       <button type="button" class="submit_btn" onclick="submitForm()">확인</button>
     </form>
   </div>
+ <%@ include file="/WEB-INF/views/main/footer.jsp" %>
 
   <script>
     function submitForm() {
