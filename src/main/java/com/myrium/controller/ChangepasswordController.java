@@ -6,10 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/") 
-public class FindpwController {
+public class ChangepasswordController {
 
-    @GetMapping("/find_pw")
+    @GetMapping("/change_password")
     public String showFindIdForm() {
-        return "login/find_pw"; 
-}
+        return "mypage/change_password"; 
+    }
+    
 }

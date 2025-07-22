@@ -140,6 +140,8 @@
       </div>
     </div> <!-- /order-container -->
   </div> <!-- /mypage-layout -->
+ <%@ include file="/WEB-INF/views/main/footer.jsp" %>
+
 
   <script> const ctx = "${pageContext.request.contextPath}"; </script>
   <script src="${pageContext.request.contextPath}/resources/js/order_history.js"></script>

@@ -1,38 +1,43 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
+<%@ page contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<base href="${pageContext.request.contextPath}/">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>회원가입</title>
-
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css" />
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/join/join.css" />
-
+  <meta charset="UTF-8">
+  <title>회원 정보 수정</title>
+   	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css" />
+  	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage/member_update.css" />
 </head>
 <body>
-
 <%@ include file="../main/header.jsp" %>
-
-<div class="join_wrap">
-
-    <h2>회원가입</h2>
-
-	<hr class="section_divider" />
-
-    <h3>회원인증</h3>
-    <div class="form_section">
-    <label>회원구분 <span class="required">*</span></label>
-    <div class="radio_wrap">
-        <input type="radio" id="personal" name="member_type" checked />
-        <label for="personal">개인회원</label>
-    </div>
+  <div class="member-container">
+    <div class="page-header">
+      <h2>회원 정보 수정</h2>
     </div>
 
+    <div class="user-summary">
+      <div class="profile-icon"></div>
+      <div class="user-info">
+        <strong>안녕하세요. 고나영님</strong>
+        <p>씨앗친구</p>
+      </div>
+      <div class="user-benefit">
+        <span>0원 이상 구매 시 0원을 추가할인없음 받으실 수 있습니다.</span>
+      </div>
+    </div>
+
+    <div class="event-box">
+      <p><strong>회원정보 수정 시 적립금을 지급하는 이벤트를 진행중입니다.</strong></p>
+      <ul>
+        <li>이벤트 기간 : 2026년 12월 31일 23시까지</li>
+        <li>아래의 조건을 충족한 경우 적립금 1,000원이 지급됩니다.
+          <ul>
+            <li>- SMS 수신동의</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    
     <div class="form_title_wrap">
         <h4 class="form_title">기본정보</h4>
         <span class="required_note"><span class="required">*</span> 필수입력사항</span>
@@ -127,29 +132,11 @@
         <label for="lunar">음력</label>
       </div>
     </div>
-
-    <div class="terms_wrap">
-      <div class="terms_all">
-        <label>
-          <input type="checkbox" id="check_all" />
-          <strong>전체 동의</strong>
-        </label>
-        <p class="desc">이용약관 및 개인정보 수집 및 이용, 쇼핑정보 수신(선택)에 모두 동의합니다.</p>
-      </div>
-      <ul class="terms_list" id="termsList"></ul>
-    </div>
-
-    <div class="form_section">
-        <button type="submit" class="submit_btn">회원가입</button>
-      </div>
-  </form>
-</div>
-
- <%@ include file="/WEB-INF/views/main/footer.jsp" %>
-
-<script> const ctx = "${pageContext.request.contextPath}"; </script>
+    
+  </div>
+   <%@ include file="/WEB-INF/views/main/footer.jsp" %>
+   
+   <script> const ctx = "${pageContext.request.contextPath}"; </script>
 <script src="${pageContext.request.contextPath}/resources/js/join_terms.js"></script>
-
-
 </body>
 </html>

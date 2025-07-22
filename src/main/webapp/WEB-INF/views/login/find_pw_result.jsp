@@ -38,6 +38,7 @@
     <button class="btn submit_btn">임시 비밀번호 전송</button>
   </div>
 </div>
+ <%@ include file="/WEB-INF/views/main/footer.jsp" %>
 
 <script>
   document.querySelector('.submit_btn').addEventListener('click', function () {
