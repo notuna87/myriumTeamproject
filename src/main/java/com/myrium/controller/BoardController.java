@@ -48,11 +48,11 @@ public class BoardController {
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
 		
 
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		//Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		log.info("---------------------------------------------------");
 
-		log.info(authentication);
+		//log.info(authentication);
 
 		//System.out.println("Authentication Details:");		
 		//System.out.println("Principal: " + authentication.getPrincipal());
