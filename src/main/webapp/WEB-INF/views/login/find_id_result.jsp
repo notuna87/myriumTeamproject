@@ -6,11 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>아이디 찾기 결과</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css" />
-  	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/login/find_id_result.css" />
 </head>
 <body>
 <%@ include file="../main/header.jsp" %>
+
   <div class="wrap">
     <h2 class="title">아이디 찾기</h2>
 
@@ -23,23 +24,28 @@
       <table class="info_table">
         <tr>
           <th>이름</th>
-          <td>고나영</td>
+          <td>${name}</td>
         </tr>
         <tr>
           <th>이메일</th>
-          <td>sks0716ek@naver.com</td>
+          <td>${email}</td>
         </tr>
       </table>
 
       <div class="found_id">
-        <label><input type="radio" checked /> sks0716ek <span class="info">(개인회원, 2025-07-17 가입)</span></label>
+        <label>
+          <input type="radio" checked />
+          ${userId}
+          <span class="info">(개인회원, ${joinDate} 가입)</span>
+        </label>
       </div>
 
       <div class="btn_group">
-		<button class="btn login_btn" onclick="location.href='${pageContext.request.contextPath}/login'">로그인</button>
-        <button class="btn find_pw_btn" onclick="location.href='/find_pw.html'">비밀번호 찾기</button>
+        <button class="btn login_btn" onclick="location.href='${pageContext.request.contextPath}/login'">로그인</button>
+        <button class="btn find_pw_btn" onclick="location.href='${pageContext.request.contextPath}/find_pw'">비밀번호 찾기</button>
       </div>
     </div>
   </div>
+
 </body>
 </html>
