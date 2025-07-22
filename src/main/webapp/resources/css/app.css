@@ -6,20 +6,19 @@
 
 .loginWrap>li>a {
   color: #555;
+  text-align:center;
+  display : block;
 }
 
-.liMiddle::after {
+.loginWrap > li > a::after {
   content: " | ";
   color: #ddd;
-  margin: 0 10px;
+  margin-left : 5px;
 }
 
-.liMiddle::before {
-  content: " | ";
-  color: #ddd;
-  margin: 0 10px;
+.loginWrap > li > .loginWrapLastchild::after {
+  content: none;
 }
-
 .navsearchWrap {
   width: 1240px;
   height: 65px;
