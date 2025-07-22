@@ -56,7 +56,7 @@
         <div class="login_links">
           <a href="${pageContext.request.contextPath}/login/find_id">아이디 찾기</a>
           <span>|</span>
-          <a href="/find_pw.html">비밀번호 찾기</a>
+          <a href="${pageContext.request.contextPath}/login/find_pw">비밀번호 찾기</a>
           <span>|</span>
           <a href="join.html">회원가입</a>
         </div>

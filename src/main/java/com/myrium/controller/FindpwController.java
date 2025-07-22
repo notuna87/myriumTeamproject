@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/")  // °øÅë URI prefix
-public class FindidController {
+public class FindpwController {
 
-    @GetMapping("/find_id")
+    @GetMapping("/find_pw")
     public String showFindIdForm() {
-        return "login/find_id";  // ¡æ /WEB-INF/views/login/find_id.jsp
-    }
+        return "login/find_pw"; 
+}
 }
