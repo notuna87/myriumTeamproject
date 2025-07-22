@@ -16,9 +16,10 @@
 				</a>
 			</div>
 			<ul class="loginWrap">
+				<li><a href="${pageContext.request.contextPath}/admin">관리자</a></li> <!-- admin test -->
 				<li><a href="#">주문조회</a></li>
-				<li><a href="${pageContext.request.contextPath}/login" class="liMiddle">로그인</a></li>
-				<li><a href="${pageContext.request.contextPath}/join">회원가입</a></li>
+				<li><a href="#">로그인</a></li>
+				<li><a href="#" class="loginWrapLastchild">회원가입</a></li>
 			</ul>
 		</div>
 
