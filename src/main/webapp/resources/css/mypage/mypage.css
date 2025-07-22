@@ -1,0 +1,272 @@
+
+
+.mypage-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 40px auto;
+}
+
+.sidebar {
+  width: 220px;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.sidebar h2 {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.sidebar-section {
+  margin-bottom: 30px;
+}
+
+.sidebar-section p {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.sidebar-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-section li {
+  margin-bottom: 8px;
+  cursor: pointer;
+  color: #444;
+}
+
+.inquiry-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  background: #000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.content {
+  flex: 1;
+  padding: 20px 40px;
+}
+
+.info-box {
+  text-align: center;
+  flex: 1;
+  font-weight: bold;
+}
+
+.info-box .info-icon {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 6px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.top-info {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.info-box span {
+  display: block;
+  font-size: 14px;
+  color: #777;
+  margin-top: 5px;
+  font-weight: normal;
+}
+
+.order-status-section {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.order-status-title {
+  font-size: 16px;
+  font-weight: bold;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #000;
+  margin-bottom: 20px;
+}
+
+.order-status-title .subtitle {
+  font-size: 13px;
+  color: #555;
+  font-weight: normal;
+  margin-left: 6px;
+}
+
+.status-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+  background-color: transparent;
+  gap: 40px;
+}
+
+.status-step {
+  width: 100px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.status-step .count {
+  font-weight: bold;
+  font-size: 25px;
+  margin-bottom: 6px;
+}
+
+.status-step .label {
+  font-size: 16px;
+  color: #333;
+}
+
+.arrow {
+  font-size: 20px;
+  color: #e7e7e7;
+  user-select: none;
+}
+
+.order-history {
+  margin-top: 40px;
+  margin-bottom: 60px;
+}
+
+.order-history h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* -------------------------------
+   order_history.html 기반 스타일
+--------------------------------- */
+
+.order-box {
+  border-top: 2px solid #333;
+  margin-bottom: 40px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: #f4f4f4;
+  border-top: 1px solid #111;
+  border-bottom: 1px solid #eee;
+}
+
+.order-header .order-date {
+  font-weight: bold;
+}
+
+.order-header .order-date span {
+  font-weight: normal;
+  margin-left: 4px;
+}
+
+.detail-link,
+.order-detail-link {
+  color: #000;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.detail-link:hover,
+.order-detail-link:hover {
+  color: #000;
+}
+
+.order-content {
+  display: flex;
+  padding: 20px;
+  border-top: 1px solid #eee;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.product-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.product-price {
+  margin-bottom: 5px;
+}
+
+.product-option {
+  color: #666;
+  font-size: 13px;
+}
+
+.order-status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding: 14px 20px;
+}
+
+.status-text {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.status-buttons button {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  margin-left: 6px;
+}
+
+.order-actions-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 20px 20px;
+  border-top: 1px solid #ddd;
+  background-color: #fff;
+}
+
+.order-btn {
+  padding: 10px 16px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.order-btn:hover {
+  background-color: #f9f9f9;
+  border-color: #aaa;
+}
+
