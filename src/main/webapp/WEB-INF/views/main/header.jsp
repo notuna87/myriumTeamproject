@@ -41,7 +41,7 @@
 								<li><a href="#">FAQ</a></li>
 							</ul>
 						</div></li>
-					<li><a href="${pageContext.request.contextPath}/board">고객게시판</a></li>
+					<li><a href="${pageContext.request.contextPath}/board/list">고객게시판</a></li>
 				</ul>
 			</div>
 
@@ -87,7 +87,11 @@
 						<li class="categorymenuSmall">공지사항</li>
 					</ul>
 				</li>
-				<li>고객게시판</li>
+				<li>고객게시판
+					<ul>
+						<li><a class="categorymenuSmall" href="${pageContext.request.contextPath}/board/list">게시판</a></li>
+					</ul>
+				</li>
 			</ul>
 		</div>
 	</div>
