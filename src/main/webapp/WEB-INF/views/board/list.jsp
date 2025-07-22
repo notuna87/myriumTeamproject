@@ -37,7 +37,7 @@
 								  <c:forEach items="${list}" var="board">
 									<tr class="odd gradeX">										                                        
 										<td>${board.bno}</td>
-										<td><a class="move" href='${board.bno}'>   ${board.title}</a><b>[  <c:out value="${board.replyCnt}" />  ]</b></td>
+										<td><a class="move" href="${board.bno}">   ${board.title}</a><b>[  <c:out value="${board.replyCnt}" />  ]</b></td>
                                         <td>${board.writer}</td>
                                         <td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.regdate}"/></td>
                                         <td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.updateDate}"/></td>
@@ -171,6 +171,10 @@ $(document).ready(function(){
 	$(".paginate_button a").on("click", function(e){
 		e.preventDefault();
 		console.log("click");
+		
+		actionForm.removeAttr("action"); //뒤로가기 후 기존 파라미터 누적문제 해결
+		actionForm.find("input[name='bno']").remove(); //뒤로가기 후 기존 파라미터 누적문제 해결
+		
 		// 클릭된 요소의 href 값을 찾아서 input 폼 안의 pageNum 필드에 설정		
 		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
 		actionForm.submit();
@@ -178,6 +182,9 @@ $(document).ready(function(){
 	
 	$(".move").on("click", function(e) {
 		e.preventDefault();
+		
+		actionForm.find("input[name='bno']").remove(); //뒤로가기 후 기존 파라미터 누적문제 해결
+		
 		actionForm.append("<input type='hidden' name='bno' value='" + $(this).attr("href") + "'>");
 		actionForm.attr("action","/board/get");
 		actionForm.submit();

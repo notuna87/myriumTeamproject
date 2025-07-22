@@ -45,7 +45,7 @@
 			<sec:authentication property="principal" var="pinfo"/>
 				        <sec:authorize access="isAuthenticated()">
 				        <c:if test="${pinfo.username eq board.writer}">
-				       	 <button data-oper='modify' class="btn btn-default">Modify</button>			
+				       	 <button data-oper='modify' class="btn btn-default">수정</button>			
 				        </c:if>
 			</sec:authorize>
 			
@@ -53,7 +53,7 @@
 					onclick="location.href='/board/modify?bno=${board.bno}'">Modify</button> --%>
 			            
 			<button data-oper='list' class="btn btn-default btn-info"
-					onclick="location.href='/board/list'">List</button>
+					onclick="location.href='/board/list'">목록</button>
 					
 			<form id='operForm' action="/board/modify" method='get'>
 				<input type='hidden' id="bno" name='bno' value='${board.bno}'>

@@ -33,6 +33,7 @@ public class BoardController {
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
 		log.info("list__________");
+		log.info(cri);
 		
 		long startTime = System.nanoTime();
 		
