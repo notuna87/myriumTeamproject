@@ -20,5 +20,10 @@ public class LoginController {
 	public String showFindPwPage() {
 	    return "login/find_pw";
 	}
+	
+	@GetMapping("/home")
+	public String showhome() {
+		return "home";
+	}
 
 }
