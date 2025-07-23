@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <html>
 <head>
 <title>타임세일</title>
@@ -59,10 +60,11 @@
 							<h6>${item.product.product_name}</h6>
 							<p class="content">${item.product.product_content}</p>
 							<p class="originalPrice">
-								<s>${item.product.product_price}원</s>
+								<s><fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true"/>원</s>
 							</p>
 							<p class="salePrice">
-								<span style="color: #e32e15">${item.product.total_discountrate}%</span> ${item.product.discount_price}원
+								<span style="color: #e32e15">${item.product.total_discountrate}%</span>
+								<fmt:formatNumber value="${item.product.discount_price}" type="number" groupingUsed="true" />원
 							</p>
 						</div>
 					</c:forEach>

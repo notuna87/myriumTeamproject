@@ -36,7 +36,7 @@
 						<h4>${item.product.product_name}</h4>
 						<p class="springContent">${item.product.product_content}</p>
 						<p class="originalPrice">
-							<s>${item.product.product_price}원</s>
+							<s><fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />원</s>
 						</p>
 						<p class="salePrice">
 							<span style="color: #e32e15; margin-right: 5px;">${item.product.total_discountrate}%</span>${item.product.discount_price}원
