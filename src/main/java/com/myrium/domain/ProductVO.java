@@ -17,4 +17,10 @@ public class ProductVO {
 	private String created_by;
 	private Date updated_at;
 	private String updated_by;
+	private int is_timesales;
+	private int is_discount;
+	private int discount_rate;
+	private int timesalediscount_rate;
+	private int total_discountrate;
+	private int discount_price;
 }

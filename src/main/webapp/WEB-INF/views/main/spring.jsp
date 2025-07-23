@@ -30,13 +30,13 @@
 			<h2>미리 만나는 봄 🌱</h2>
 			<p>마이리움 식물키트</p>
 			<div class="springProductwrap" id="springProductwrap">
-				<c:forEach var="i" begin="0" end="8">
+				<c:forEach var="item" items="${springList}" >
 				<div class="springProduct">
-					<img src="resources/img/flower/babysbreath/babysbreath_01.jpg" alt="1" style="width: 100%; height: auto;" />
-					<h4>임시</h4>
-					<p class="springContent">임시</p>
+					<img src="resources/img/${item.thumbnail.img_path}" alt="1" style="width: 100%; height: auto;" />
+					<h4>${item.product.product_name}</h4>
+					<p class="springContent">${item.product.product_content}</p>
 					<p class="originalPrice">
-						<s>1000원</s>
+						<s>${item.product.product_price}원</s>
 					</p>
 					<p class="salePrice">
 						<span style="color: #e32e15; margin-right: 5px;">임시할인률%</span>임시 원
