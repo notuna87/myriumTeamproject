@@ -15,4 +15,14 @@ public class MypageController {
     public String showOrderHistory() {
         return "mypage/order_history";
     }
+    
+    @GetMapping("/mypage/change_password")
+    public String showchangepw() {
+        return "mypage/change_password";
+    }
+    
+    @GetMapping("/mypage/member_update")
+    public String showmemberupdate() {
+        return "mypage/member_update";
+    }
 }
