@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myrium.mapper.ProductMapper">
+
+	<select id="getproductList" resultType="com.myrium.domain.ProductVO">
+		select * from product where category = '${category}'
+	</select>
+	
+	<select id="getThumbnail" resultType ="com.myrium.domain.ImgpathVO">
+		SELECT * FROM ( SELECT * FROM img_path WHERE product_id = #{productid} AND is_thumbnail = 1 ORDER BY id) WHERE ROWNUM = 1
+	</select>
+
+	<select id="gettimesaleList" resultType="com.myrium.domain.ProductVO">
+		select * from product where is_timesales = 1
+	</select>
+
+</mapper>

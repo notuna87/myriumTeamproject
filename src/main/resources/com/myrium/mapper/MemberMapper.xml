@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myrium.mapper.MemberMapper">
+
+    <!-- 공통 resultMap -->
+    <resultMap id="memberMap" type="com.myrium.domain.MemberVO">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="password" column="password"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="address" column="address"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="email" column="email"/>
+        <result property="gender" column="gender"/>
+        <result property="birthdate" column="birthdate"/>
+        <result property="role" column="role"/>
+        <result property="agreeTerms" column="agree_terms"/>
+        <result property="agreePrivacy" column="agree_privacy"/>
+        <result property="agreeThirdParty" column="agree_third_party"/>
+        <result property="agreeDelegate" column="agree_delegate"/>
+        <result property="agreeSms" column="agree_sms"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="updatedBy" column="updated_by"/>
+    </resultMap>
+
+    <!-- 회원 등록 -->
+    <insert id="insertMember" parameterType="com.myrium.domain.MemberVO">
+        INSERT INTO member (
+            id, customer_id, password, customer_name, address,
+            phone_number, email, gender, birthdate, role,
+            agree_terms, agree_privacy, agree_third_party,
+            agree_delegate, agree_sms, is_deleted, created_at, created_by
+        ) VALUES (
+            #{id}, #{customerId}, #{password}, #{customerName}, #{address},
+            #{phoneNumber}, #{email}, #{gender}, #{birthdate}, #{role},
+            #{agreeTerms}, #{agreePrivacy}, #{agreeThirdParty},
+            #{agreeDelegate}, #{agreeSms}, #{isDeleted}, SYSDATE, #{createdBy}
+        )
+    </insert>
+
+    <!-- 회원 단건 조회 -->
+    <select id="getMemberById" parameterType="int" resultMap="memberMap">
+        SELECT * FROM member WHERE id = #{id}
+    </select>
+
+    <!-- 전체 회원 조회 -->
+    <select id="getAllMembers" resultMap="memberMap">
+        SELECT * FROM member ORDER BY id
+    </select>
+
+    <!-- 회원 정보 수정 -->
+    <update id="updateMember" parameterType="com.myrium.domain.MemberVO">
+        UPDATE member
+        SET password = #{password},
+            phone_number = #{phoneNumber},
+            address = #{address},
+            email = #{email},
+            updated_at = SYSDATE,
+            updated_by = #{updatedBy}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 회원 삭제 처리 (is_deleted = 1) -->
+    <update id="deleteMember" parameterType="int">
+        UPDATE member SET is_deleted = 1 WHERE id = #{id}
+    </update>
+
+</mapper>
