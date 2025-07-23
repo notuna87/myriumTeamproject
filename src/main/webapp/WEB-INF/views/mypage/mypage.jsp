@@ -31,9 +31,9 @@
       <div class="sidebar-section">
         <p>나의 정보</p>
         <ul>
-          <li>회원 정보 수정</li>
-          <li>비밀번호 변경</li>
-          <li>로그아웃</li>
+          <li><a href="${pageContext.request.contextPath}/mypage/member_update">회원 정보 수정</a></li>
+          <li><a href="${pageContext.request.contextPath}/mypage/change_password">비밀번호 변경</a></li>
+          <li><a href="${pageContext.request.contextPath}/home">로그아웃</a></li>
         </ul>
       </div>
       <button class="inquiry-btn">1:1 문의하기</button>
