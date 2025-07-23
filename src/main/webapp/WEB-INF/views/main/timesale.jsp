@@ -62,7 +62,7 @@
 								<s>${item.product.product_price}원</s>
 							</p>
 							<p class="salePrice">
-								<span style="color: #e32e15">임시 %</span> ${item.product.product_price}원
+								<span style="color: #e32e15">${item.product.total_discountrate}%</span> ${item.product.discount_price}원
 							</p>
 						</div>
 					</c:forEach>
