@@ -50,17 +50,17 @@
 			<h2>👩‍🌾사장님's PICK</h2>
 			<p>놓치면 후회!</p>
 			<div class="ceopickProductwrap">
-				<c:forEach var="i" begin="0" end="11">
+				<c:forEach var="product" items="${list}">
 
 				<div class="ceopickProduct">
 					<img src="resources/img/flower/babysbreath/babysbreath_01.jpg" alt="임시" />
-					<h4>임시</h4>
-					<p class="ceopickConten">임시</p>
+					<h4>${product.product_name}</h4>
+					<p class="ceopickContent">${product.product_content}</p>
 					<p class="originalPric">
-						임시 원</s>
+						${product.product_price}원</s>
 					</p>
 					<p class="ceosalePrice">
-						<span style="color: #e32e15; margin-right: 5px;">임시 %</span>
+						<span style="color: #e32e15; margin-right: 5px;">%</span>
 					</p>
 				</div>
 				</c:forEach>
@@ -70,6 +70,5 @@
 			<button id="moreBtn" class="ceoMore" onclick="loadMore()">상품 더보기</button>
 		</div>
 	</div>
-	
 </body>
 </html>

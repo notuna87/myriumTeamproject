@@ -20,24 +20,28 @@ public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
-		String formattedDate = dateFormat.format(date);
-		
-		model.addAttribute("serverTime", formattedDate );
-		
-		return "home";
-	}
-	
-    @GetMapping("/home")
+// MAIN CONTROLLER 작성을 위하여 전부 주석처리.
+// 작성자 : 노기원
+// 작성일 : 2025.07.22 17:00
+//	
+//	/**
+//	 * Simply selects the home view to render by returning its name.
+//	 */
+//	@RequestMapping(value = "/", method = RequestMethod.GET)
+//	public String home(Locale locale, Model model) {
+//		logger.info("Welcome home! The client locale is {}.", locale);
+//		
+//		Date date = new Date();
+//		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+//		
+//		String formattedDate = dateFormat.format(date);
+//		
+//		model.addAttribute("serverTime", formattedDate );
+//		
+//		return "home";
+//	}
+//	
+    @GetMapping("/")
     public String goHome() {
         return "home"; //  complete.jsp 메인으로 버튼 클릭 시 home.jsp 이동 코드 추가함 by.gny
     }

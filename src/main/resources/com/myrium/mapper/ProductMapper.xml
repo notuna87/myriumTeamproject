@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myrium.mapper.ProductMapper">
+
+	<select id="getProductList" resultType="com.myrium.domain.ProductVO">
+		select * from product where category = 'ceopick'
+	</select>
+	
+	<select id="getThumbnail" resultType ="com.myrium.domain.ImgpathVO">
+		select * from img_path where product_id = #{productid} AND is_thumbnail = 1
+	</select>
+
+</mapper>
