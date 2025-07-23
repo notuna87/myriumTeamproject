@@ -5,7 +5,6 @@
   border-radius: 8px;
 }
 
-/* 제목 */
 .join_wrap h2 {
   margin-bottom: 40px;
   text-align: center;
@@ -23,8 +22,6 @@
   margin: 30px 0;
 }
 
-
-/* 필수 표시 */
 .required {
   color: red;
   margin-left: 4px;
@@ -49,7 +46,6 @@
   white-space: nowrap;
 }
 
-/* form_title 개별 사용 시 */
 .form_title {
   font-size: 16px;
   font-weight: bold;
@@ -57,8 +53,6 @@
   margin-bottom: 20px;
 }
 
-
-/* 폼 섹션 */
 .form_section {
   margin-bottom: 18px;
 }
@@ -86,13 +80,23 @@
   color: #999;
 }
 
+.error_msg {
+  font-size: 12px;
+  color: red;
+  margin-top: 4px;
+}
+
+.success_msg {
+  font-size: 12px;
+  color: #0073e9;
+  margin-top: 4px;
+}
 
 .tooltip_wrap {
   position: relative;
 }
 
 
-/* 입력 요소 */
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -109,7 +113,6 @@ input::placeholder {
   color: #bbb;
 }
 
-/* 라디오 */
 .radio_wrap {
   display: flex;
   align-items: center;
@@ -129,7 +132,6 @@ input::placeholder {
   margin-top: 5px;
 }
 
-/* 주소 입력 */
 .address_group {
   display: flex;
   gap: 10px;
@@ -161,7 +163,7 @@ input::placeholder {
 }
 
 
-/* 전화번호 */
+/* 占쏙옙화占쏙옙호 */
 .phone_group {
   display: flex;
   align-items: center;
@@ -186,7 +188,6 @@ input::placeholder {
   cursor: pointer;
 }
 
-/* 생년월일 */
 .birth_group {
   display: flex;
   align-items: center;
@@ -208,7 +209,6 @@ input::placeholder {
   margin-right: 8px;
 }
 
-/* 약관 영역 */
 .terms_wrap {
   padding: 24px;
   background: #fff;
@@ -292,7 +292,7 @@ input::placeholder {
   margin-top: 50px;
   width: 100%;
   height: 48px;
-  background-color: #4caf50; /* 초록색 */
+  background-color: #4caf50;
   color: white;
   font-size: 15px;
   font-weight: bold;
