@@ -13,6 +13,8 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/join/join.css" />
 
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 </head>
 <body>
 
@@ -40,65 +42,75 @@
     
     <form action="${pageContext.request.contextPath}/join/complete" method="get">
     
-    <div class="form_section">
-        <label for="userid">아이디 <span class="required">*</span></label>
-        <input type="text" id="userid" name="userid" placeholder="영문소문자/숫자, 4~16자" />
-    </div>
+	  <div class="form_section">
+	  <label for="userid">아이디 <span class="required">*</span></label>
+	  <input type="text" id="userid" name="userid" placeholder="영문소문자/숫자, 4~16자" />
+	  <p class="error_msg" id="idError"></p> <!-- 유효성 메시지 영역 -->
+	</div>
 
-    <div class="form_section tooltip_wrap">
-        <label for="pw">비밀번호 <span class="required">*</span></label>
-        <input type="password" id="pw" name="pw" placeholder="영문 대/소문자+숫자+특수문자 조합 10~16자" />
-        
-        <div id="pw_tooltip" class="pw_tooltip">
-          <span>※ 비밀번호 입력 조건</span><br />
-          - 대소문자/숫자/특수문자 중 2가지 이상 조합, 10자~16자<br />
-          - 입력 가능한 특수문자: ~!@#$%^&*()-_=+[]{}<>?<br />
-          - 공백 입력 불가능<br />
-          - 동일한 문자, 숫자 반복 사용 불가능<br />
-          - 아이디 포함 불가능
-        </div>
-      </div>
+	<div class="form_section tooltip_wrap">
+	  <label for="pw">비밀번호 <span class="required">*</span></label>
+	  <input type="password" id="pw" name="pw" placeholder="영문 대/소문자+숫자+특수문자 조합 10~16자" />
+	  
+	  <div id="pw_tooltip" class="pw_tooltip">
+	    <span>※ 비밀번호 입력 조건</span><br />
+	    - 대소문자/숫자/특수문자 중 2가지 이상 조합, 10자~16자<br />
+	    - 입력 가능한 특수문자: ~!@#$%^&*()-_=+[]{}<>?<br />
+	    - 공백 입력 불가능<br />
+	    - 동일한 문자, 숫자 반복 사용 불가능<br />
+	    - 아이디 포함 불가능
+	  </div>
+	  
+	  <p class="error_msg" id="pwError"></p> <!-- 메시지 영역 추가 -->
+	</div>
+	
+	<div class="form_section">
+	  <label for="pw2">비밀번호 확인 <span class="required">*</span></label>
+	  <input type="password" id="pw2" name="pw2" />
+	  <p class="error_msg" id="pwMatchError"></p> <!-- 확인 메시지 영역 추가 -->
+	</div>
 
-    <div class="form_section">
-        <label for="pw2">비밀번호 확인 <span class="required">*</span></label>
-        <input type="password" id="pw2" name="pw2" />
-    </div>
 
     <div class="form_section">
         <label for="name">이름 <span class="required">*</span></label>
         <input type="text" id="name" name="name" />
     </div>
 
-    <div class="form_section address">
-        <label>주소 <span class="required">*</span></label>
-        <div class="address_group">
-            <input type="text" placeholder="우편번호" />
-            <button type="button">주소검색</button>
-        </div>
-            <input type="text" placeholder="기본주소" />
-            <input type="text" placeholder="나머지 주소" />
-    </div>
+	<div class="form_section address">
+	    <label>주소 <span class="required">*</span></label>
+	    <div class="address_group">
+	        <input type="text" id="postcode" placeholder="우편번호" readonly />
+	        <button type="button" onclick="execDaumPostcode()">주소검색</button>
+	    </div>
+	    <input type="text" id="roadAddress" placeholder="기본주소" readonly />
+	    <input type="text" id="detailAddress" placeholder="나머지 주소" />
+	</div>
 
-    <div class="form_section phone">
-        <label>휴대전화 <span class="required">*</span></label>
-        <div class="phone_group">
-        <select>
-            <option>010</option>
-            <option>011</option>
-            <option>016</option>
-            <option>018</option>
-            <option>019</option>
-        </select> -
-        <input type="text" /> -
-        <input type="text" />
-        <button type="button">인증번호받기</button>
-        </div>
-    </div>
 
-    <div class="form_section">
-        <label for="email">이메일 <span class="required">*</span></label>
-        <input type="email" id="email" name="email" />
-    </div>
+	<div class="form_section phone">
+	  <label>휴대전화 <span class="required">*</span></label>
+	  <div class="phone_group">
+	    <select>
+	      <option>010</option>
+	      <option>011</option>
+	      <option>016</option>
+	      <option>018</option>
+	      <option>019</option>
+	    </select> -
+	    <input type="text" /> -
+	    <input type="text" />
+	    <button type="button" id="sendCodeBtn">인증번호받기</button>
+	  </div>
+	  <p class="success_msg" id="phoneConfirmMsg" style="display: none; margin-top: 6px;">인증번호 확인 되었습니다.</p>
+	</div>
+
+
+	 <div class="form_section">
+	  <label for="email">이메일 <span class="required">*</span></label>
+	  <input type="email" id="email" name="email" />
+	  <p class="error_msg" id="emailError"></p>
+	</div>
+
 
     <h4 class="form_title">추가정보 <span class="optional_note">(선택)</span></h4>
 
@@ -139,12 +151,13 @@
     </div>
 
     <div class="form_section">
-        <button type="submit" class="submit_btn">회원가입</button>
+        <button type="submit" class="submit_btn" id="submitBtn">회원가입</button>
       </div>
   </form>
 </div>
 
  <%@ include file="/WEB-INF/views/main/footer.jsp" %>
+
 
 <script> const ctx = "${pageContext.request.contextPath}"; </script>
 <script src="${pageContext.request.contextPath}/resources/js/join_terms.js"></script>
