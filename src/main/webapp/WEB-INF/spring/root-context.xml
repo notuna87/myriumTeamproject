@@ -17,6 +17,11 @@
 		
     <!-- Root Context: 다른 모든 웹 컴포넌트에서 사용 가능한 공유 리소스 정의 -->
   
+<<<<<<< HEAD
+=======
+  <!-- <context:component-scan base-package="com.myrium.controller" /> -->
+
+>>>>>>> FE-board-bak
 	<!-- HikariCP 구성 -->
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 	    <!-- 데이터베이스 드라이버 클래스와 접속 URL 설정 -->

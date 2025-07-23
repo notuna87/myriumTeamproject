@@ -48,7 +48,11 @@
 			<artifactId>spring-test</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>		
+<<<<<<< HEAD
 				
+=======
+		
+>>>>>>> FE-board-bak
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
