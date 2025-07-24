@@ -47,7 +47,6 @@ public class BoardController {
 
 		int total = boardservice.getTotal(cri);
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
-		
 
 		//Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

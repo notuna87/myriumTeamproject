@@ -11,7 +11,7 @@
 
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-header">게시글 수정</h1>
+		<h1 class="page-header">문의사항 수정</h1>
 	</div>
 </div>
 
@@ -19,7 +19,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<div class="panel panel-default">
-			<div class="panel-heading">게시글 수정 후 수정 버튼을 클릭하세요.</div>
+			<div class="panel-heading">수정 후 수정 버튼을 클릭하세요.</div>
 
 			<!-- /.panel-heading -->
 			<div class="panel-body">
@@ -31,7 +31,7 @@
 					<input type='hidden' name='keyword' value='${cri.keyword}'>
 					<div class="form-group">
 					       <label>No.</label> 
-                           <input class="form-control" name='bno' value=${board.bno} readonly="readonly">
+                           <input class="form-control" name='id' value=${board.id} readonly="readonly">
 					</div>
 
 					<div class="form-group">
@@ -46,7 +46,7 @@
 
 					<div class="form-group">
 					      <label>작성자</label> 
-                          <input class="form-control" name='writer' value=${board.writer} readonly="readonly">
+                          <input class="form-control" name='customerId' value=${board.customerId} readonly="readonly">
 					</div>
 
                     <sec:authentication property="principal" var="pinfo"/>	
@@ -55,7 +55,7 @@
 
                    <sec:authentication property="principal" var="pinfo"/>
                     <sec:authorize access="isAuthenticated()">
-                      <c:if test="${pinfo.username eq board.writer}">
+                      <c:if test="${pinfo.username eq board.customerId}">
                         <button type="submit" data-oper='modify' class="btn btn-default">수정</button>
                         <button type="submit" data-oper='remove' class="btn btn-danger">삭제</button>
                       </c:if>

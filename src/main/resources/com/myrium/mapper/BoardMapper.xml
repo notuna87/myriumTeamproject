@@ -26,7 +26,7 @@
 	           is_answered, is_deleted, created_at, created_by,
 	           updated_at, updated_by, reply_cnt
 	    FROM board
-	    WHERE is_deleted = 0
+	    WHERE is_deleted = 0 AND id > 0 
 	    ORDER BY id DESC
 	</select>
 
@@ -97,7 +97,8 @@
 	           is_answered, is_deleted, created_at, created_by,
 	           updated_at, updated_by, reply_cnt
 	    FROM (
-	        SELECT ROWNUM rn, id, user_id, title, content, customer_id, write_date,
+	        SELECT /*+INDEX_DESC(board pk_board) */ 
+	        ROWNUM rn, id, user_id, title, content, customer_id, write_date,
 	               is_answered, is_deleted, created_at, created_by,
 	               updated_at, updated_by, reply_cnt
 	        FROM board
@@ -114,7 +115,7 @@
         SELECT COUNT(*) FROM board
         WHERE
         <include refid="criterial"/>
-        is_deleted = 0
+        id > 0
     </select>
 
     <update id="updateReplyCnt">

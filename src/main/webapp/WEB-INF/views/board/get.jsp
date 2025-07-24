@@ -89,8 +89,9 @@
         	<li class="left clearfix" data-rno="12">
         		<div>
         			<div class="header">
-        				<strong class="primary-font" >user00</strong>
-        				<small class="pull-right text-muted" >2024-02-05</small>
+        				<strong class="primary-font" >관리자</strong>
+        				<small id="currentDate" class="pull-right text-muted" ></small>
+        				<p>아직 등록된 답변이 없습니다.</p>
         			</div>
         		</div>
         	</li>
@@ -160,7 +161,12 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-  
+	
+	//답변이 없을 경우 현재날짜 출력
+    const now = new Date();
+	const currentDate = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0')
+	document.getElementById('currentDate').textContent = currentDate;
+	
 	var idValue = '${board.id}';
 	var replyUL = $(".chat");
 	

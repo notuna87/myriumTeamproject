@@ -11,12 +11,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>게시글 등록</title>
+<title>문의사항 등록</title>
 </head>
 <body>
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">게시글 등록</h1>
+			<h1 class="page-header">문의사항 등록</h1>
 		</div>
 	</div>
 
@@ -29,6 +29,10 @@
 				<div class="panel-body">
 					<form role="form" action="/board/register" method="post">
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
+						<input type="hidden" name="createdBy" value='<sec:authentication property="principal.username"/>' />
+						
+						<input type="hidden" name="userId" value="?????" />
+						
 						<div class="form-group">
 							<label>제목</label> <input class="form-control" name='title'>
 						</div>
@@ -40,7 +44,7 @@
 
 						<div class="form-group">
 							<label>작성자</label>
-							<input class="form-control" name='writer'  value='<sec:authentication property="principal.username"/>' readonly="readonly">
+							<input class="form-control" name="customerId"  value='<sec:authentication property="principal.username"/>' readonly="readonly">
 						</div>
 						<button type="submit" class="btn btn-default btn-success">등록</button>
 						<button type="reset" class="btn btn-default btn-info">다시작성</button>
