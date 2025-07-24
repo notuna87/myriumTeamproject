@@ -19,5 +19,11 @@
 	<%@ include file="/WEB-INF/views/main/topad.jsp"%>
 	<%@ include file="/WEB-INF/views/main/header.jsp"%>
 	<%@ include file="/WEB-INF/views/sub/product.jsp"%>
+	<%@ include file="/WEB-INF/views/sub/productDetail.jsp"%>
+	<%@ include file="/WEB-INF/views/sub/popularProducts.jsp"%>
+	<%@ include file="/WEB-INF/views/sub/announcement.jsp"%>
+	<%@ include file="/WEB-INF/views/sub/review.jsp"%>
+	<%@ include file="/WEB-INF/views/sub/subQna.jsp"%>
+	<%@ include file="/WEB-INF/views/main/footer.jsp"%>
 </body>
 </html>
