@@ -69,7 +69,7 @@ public class BoardController {
 
 		boardservice.register(vo);
 
-		rttr.addFlashAttribute("result", vo.getBno());
+		rttr.addFlashAttribute("result", vo.getId());
 		return "redirect:/board/list";
 	}
 	
@@ -79,22 +79,22 @@ public class BoardController {
 	}
 	
 //	@GetMapping("/get")
-//	public void testget(@RequestParam("bno") Long bno, Model model) {
-//		log.info("/get:" +bno);
-//		BoardVO vo = boardservice.get(bno);
+//	public void testget(@RequestParam("id") Long id, Model model) {
+//		log.info("/get:" +id);
+//		BoardVO vo = boardservice.get(id);
 //		log.info(vo);
-//		model.addAttribute("board", boardservice.get(bno));
+//		model.addAttribute("board", boardservice.get(id));
 //	}
 	
 	@GetMapping({"/get", "/modify"})
-	public void get(@RequestParam("bno") Long bno, @ModelAttribute("cri") Criteria cri, Model model) {
+	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) {
 		long startTime = System.currentTimeMillis();
-		model.addAttribute("board", boardservice.get(bno));
+		model.addAttribute("board", boardservice.get(id));
 		long endTime = System.currentTimeMillis();	
 		log.info("get Time : " + (endTime-startTime));		
 	}
 	
-	//@PreAuthorize("principal.username == #board.writer")
+	//@PreAuthorize("principal.username == #board.customerId")
 	@PostMapping("/modify")
 	public String modify(BoardVO board, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
 		log.info("modify:" + board);
@@ -109,11 +109,11 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
-	//@PreAuthorize("principal.username == #writer")
+	//@PreAuthorize("principal.username == #customerId")
 	@PostMapping("/remove")
-	public String remove(@RequestParam("bno") Long bno, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String writer) {
-		log.info("remove..." + bno);
-		if(boardservice.remove(bno)) {
+	public String remove(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
+		log.info("remove..." + id);
+		if(boardservice.remove(id)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		

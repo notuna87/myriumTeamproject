@@ -21,9 +21,9 @@ public class BoardServiceImpl implements BoardService{
 
 
 	@Override
-	public BoardVO get(Long bno) {
-	      log.info("get....." + bno);
-	      return mapper.read(bno);
+	public BoardVO get(Long id) {
+	      log.info("get....." + id);
+	      return mapper.read(id);
 	}
 
 
@@ -34,9 +34,9 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-	public boolean remove(Long bno) {
-	     log.info("remove...." + bno);
-	     return mapper.delete(bno)==1;
+	public boolean remove(Long id) {
+	     log.info("remove...." + id);
+	     return mapper.delete(id)==1;
 	}
 
 	@Override

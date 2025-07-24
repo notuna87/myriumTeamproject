@@ -36,12 +36,12 @@
 							<ul>
 								<li><a href="#">식물백서</a></li>
 								<li><a href="#">공지사항</a></li>
-								<li><a href="#">문의하기</a></li>
+								<li><a href="${pageContext.request.contextPath}/board/list">문의하기</a></li>
 								<li><a href="#">상품 리뷰</a></li>
 								<li><a href="#">FAQ</a></li>
 							</ul>
-						</div></li>
-					<li><a href="${pageContext.request.contextPath}/board/list">고객게시판</a></li>
+						</div>
+					</li>
 				</ul>
 			</div>
 
@@ -83,13 +83,8 @@
 						<li class="categorymenuSmall">주문/배송조회</li>
 						<li class="categorymenuSmall">관심상품</li>
 						<li class="categorymenuSmall">FAQ</li>
-						<li class="categorymenuSmall">문의하기</li>
+						<li><a class="categorymenuSmall" href="${pageContext.request.contextPath}/board/list">문의하기</a></li>
 						<li class="categorymenuSmall">공지사항</li>
-					</ul>
-				</li>
-				<li>고객게시판
-					<ul>
-						<li><a class="categorymenuSmall" href="${pageContext.request.contextPath}/board/list">게시판</a></li>
 					</ul>
 				</li>
 			</ul>
