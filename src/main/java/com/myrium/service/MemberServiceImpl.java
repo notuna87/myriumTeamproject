@@ -40,4 +40,5 @@ public class MemberServiceImpl implements MemberService {
 	    public boolean delete(int id) {
 	        return memberMapper.deleteMember(id) == 1;
 	    }
+	    
 }
