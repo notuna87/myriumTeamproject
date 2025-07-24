@@ -8,9 +8,7 @@
 
 <style>
 .detailWrap {
-	display: flex;
-	gap: 20px;
-	padding: 40px;
+
 }
 
 .swiper-container {
@@ -57,7 +55,7 @@
 			<div class="swiper-wrapper">
 				<c:forEach var="i" begin="1" end="6">
 					<div class="swiper-slide">
-						<img src="/resources/img/flower/cosmos/cosmos_0${i}.jpg" alt="title" />
+						<img src="/resources/img/flower/cosmos/cosmos_0${i}.jpg" alt="title" style="width: 100%; height:97px; border-radius: 10px;" />
 					</div>
 				</c:forEach>
 			</div>
@@ -68,7 +66,7 @@
 			<div class="swiper-wrapper">
 				<c:forEach var="i" begin="1" end="6">
 					<div class="swiper-slide">
-						<img src="/resources/img/flower/cosmos/cosmos_0${i}.jpg" alt="title" />
+						<img src="/resources/img/flower/cosmos/cosmos_0${i}.jpg" alt="title" style="width: 100%; border-radius: 10px;" />
 					</div>
 				</c:forEach>
 			</div>

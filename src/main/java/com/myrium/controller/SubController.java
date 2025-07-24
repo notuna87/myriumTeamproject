@@ -15,6 +15,8 @@ public class SubController {
 
 	@GetMapping("/sub")
 	public String goSub() {
+		
+		
 		return "sub/sub";
 	}
 }

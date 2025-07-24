@@ -241,6 +241,7 @@
 
 .swiperWrap img {
   width: 100%;
+  min-width : 1240px;
   height: 100%;
 }
 
@@ -580,6 +581,8 @@ a .fontWhite {
   display: flex;
   margin: 0 auto;
   border-bottom: 1px solid #000;
+  gap: 20px;
+padding: 40px;
 }
 
 .detailTitle {
@@ -740,7 +743,6 @@ a .fontWhite {
   font-weight: 500;
   color: #222;
   border-top: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
   cursor: pointer;
 }
 

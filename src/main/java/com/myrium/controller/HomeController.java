@@ -56,8 +56,8 @@ public class HomeController {
     @GetMapping("/")
     public String goHome(Model model) {
     	
-        List<ProductDTO> ceoPickList = productservice.getProductWithThumbnailList("ceopick");
-        List<ProductDTO> springList = productservice.getProductWithThumbnailList("spring");
+        List<ProductDTO> ceoPickList = productservice.getProductWithThumbnailList("is_mainone");
+        List<ProductDTO> springList = productservice.getProductWithThumbnailList("is_maintwo");
         List<ProductDTO> timesaleList = productservice.getTimesaleWithThumbnailList();
         
 	    model.addAttribute("ceopickList", ceoPickList);

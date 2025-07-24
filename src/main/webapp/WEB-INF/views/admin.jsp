@@ -13,6 +13,7 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css" />
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/join/complete.css" />
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/join/popularProducts.css" />
     <style>
 		.outer-wrapper {
 		    height: 100vh;
