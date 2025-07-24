@@ -24,11 +24,16 @@
 			<!-- /.panel-heading -->
 			<div class="panel-body">
 				<form role="form" action="/board/modify" method="post">
-				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
 					<input type='hidden' name='pageNum' value='${cri.pageNum}'>
 					<input type='hidden' name='amount' value='${cri.amount}'>
 					<input type='hidden' name='type' value='${cri.type}'>
 					<input type='hidden' name='keyword' value='${cri.keyword}'>
+					
+					<sec:authorize access="isAuthenticated()">
+						<input type="hidden" name="updatedBy" value='<sec:authentication property="principal.member.customerId"/>' />
+					</sec:authorize>
+					
 					<div class="form-group">
 					       <label>No.</label> 
                            <input class="form-control" name='id' value=${board.id} readonly="readonly">

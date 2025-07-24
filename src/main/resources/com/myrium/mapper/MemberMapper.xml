@@ -26,8 +26,7 @@
         <result property="createdBy" column="created_by"/>
         <result property="updatedAt" column="updated_at"/>
         <result property="updatedBy" column="updated_by"/>
-        <collection property="authList" resultMap="authMap">
-    </collection> 
+        <collection property="authList" resultMap="authMap"/>
     </resultMap>
 
     <!-- 회원 등록 -->
@@ -46,8 +45,12 @@
 	        SYSDATE, #{createdBy, jdbcType=VARCHAR}
 	    )
 	</insert>
-
-
+	
+	<!-- 회원 권한 등록 -->
+	<insert id="insertAuth" parameterType="com.myrium.domain.AuthVO">
+	    INSERT INTO member_auth (user_id, auth)
+	    VALUES (#{userId}, #{auth})
+	</insert>
 
     <!-- 회원 단건 조회 -->
     <select id="getMemberById" parameterType="int" resultMap="memberMap">
@@ -82,7 +85,7 @@
 
   
   <resultMap type="com.myrium.domain.AuthVO" id="authMap">
-    <result property="customerId" column="customerId"/>
+    <result property="customerId" column="customer_id"/>
     <result property="role" column="role"/>
   </resultMap>
   

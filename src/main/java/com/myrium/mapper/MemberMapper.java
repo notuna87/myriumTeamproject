@@ -2,11 +2,14 @@ package com.myrium.mapper;
 
 import java.util.List;
 
+import com.myrium.domain.AuthVO;
 import com.myrium.domain.MemberVO;
 
 public interface MemberMapper {
 	
     public void insertMember(MemberVO member);
+    
+	public void insertAuth(AuthVO auth);
 
     public MemberVO getMemberById(int id);
 

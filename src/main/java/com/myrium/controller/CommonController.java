@@ -19,23 +19,23 @@ public class CommonController {
 		model.addAttribute("msg", "Access Denied");
 	}
 
-	    @GetMapping("/customLogin")
-	    public String loginInput(@RequestParam(value = "error", required = false) String error,
-	                             @RequestParam(value = "logout", required = false) String logout,
-	                             Model model) {
-	        if (error != null) {
-	            model.addAttribute("error", "아이디 또는 비밀번호가 올바르지 않습니다.");
-	        }
-	        if (logout != null) {
-	            model.addAttribute("logout", "정상적으로 로그아웃되었습니다.");
-	        }
-	        return "login/login"; 
-	    }
-	    
-		@GetMapping("/customLogout")
-		public void logoutGET() {
-			log.info("custom logout");
-		}
+    @GetMapping("/customLogin")
+    public String loginInput(@RequestParam(value = "error", required = false) String error,
+                             @RequestParam(value = "logout", required = false) String logout,
+                             Model model) {
+        if (error != null) {
+            model.addAttribute("error", "아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+        if (logout != null) {
+            model.addAttribute("logout", "정상적으로 로그아웃되었습니다.");
+        }
+        return "login/login"; 
+    }
+    
+	@GetMapping("/customLogout")
+	public void logoutGET() {
+		log.info("custom logout");
 	}
+}
 
 

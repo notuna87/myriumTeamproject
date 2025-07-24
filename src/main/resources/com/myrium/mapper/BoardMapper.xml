@@ -34,13 +34,13 @@
         INSERT INTO board (
             id, title, content, customer_id, user_id, write_date, created_at, created_by, is_answered, is_deleted, reply_cnt
         ) VALUES (
-            seq_board.NEXTVAL, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0
+            board_seq.NEXTVAL, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0
         )
     </insert>
 
     <insert id="insertSelectKey">
         <selectKey keyProperty="id" order="BEFORE" resultType="long">
-            SELECT seq_board.NEXTVAL FROM dual
+            SELECT board_seq.NEXTVAL FROM dual
         </selectKey>
         INSERT INTO board (
             id, title, content, customer_id, user_id, write_date, created_at, created_by, is_answered, is_deleted, reply_cnt

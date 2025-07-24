@@ -29,9 +29,11 @@
 				<div class="panel-body">
 					<form role="form" action="/board/register" method="post">
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
-						<input type="hidden" name="createdBy" value='<sec:authentication property="principal.username"/>' />
 						
-						<input type="hidden" name="userId" value="?????" />
+						<sec:authorize access="isAuthenticated()">
+						    <input type="hidden" name="createdBy" value='<sec:authentication property="principal.username"/>' />
+						    <input type="hidden" name="userId" value='<sec:authentication property="principal.member.id"/>' />
+						</sec:authorize>
 						
 						<div class="form-group">
 							<label>제목</label> <input class="form-control" name='title'>
