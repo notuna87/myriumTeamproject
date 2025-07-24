@@ -29,19 +29,23 @@
     </resultMap>
 
     <!-- 회원 등록 -->
-    <insert id="insertMember" parameterType="com.myrium.domain.MemberVO">
-        INSERT INTO member (
-            id, customer_id, password, customer_name, address,
-            phone_number, email, gender, birthdate, role,
-            agree_terms, agree_privacy, agree_third_party,
-            agree_delegate, agree_sms, is_deleted, created_at, created_by
-        ) VALUES (
-            #{id}, #{customerId}, #{password}, #{customerName}, #{address},
-            #{phoneNumber}, #{email}, #{gender}, #{birthdate}, #{role},
-            #{agreeTerms}, #{agreePrivacy}, #{agreeThirdParty},
-            #{agreeDelegate}, #{agreeSms}, #{isDeleted}, SYSDATE, #{createdBy}
-        )
-    </insert>
+	<insert id="insertMember" parameterType="com.myrium.domain.MemberVO">
+	    INSERT INTO member (
+	        customer_id, password, customer_name, address,
+	        phone_number, email, gender, birthdate,
+	        agree_terms, agree_privacy, agree_third_party,
+	        agree_delegate, agree_sms, is_deleted,
+	        created_at, created_by
+	    ) VALUES (
+	        #{customerId, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, #{customerName, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
+	        #{phoneNumber, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR}, #{gender, jdbcType=VARCHAR}, #{birthdate, jdbcType=DATE},
+	        #{agreeTerms, jdbcType=INTEGER}, #{agreePrivacy, jdbcType=INTEGER}, #{agreeThirdParty, jdbcType=INTEGER},
+	        #{agreeDelegate, jdbcType=INTEGER}, #{agreeSms, jdbcType=INTEGER}, #{isDeleted, jdbcType=INTEGER},
+	        SYSDATE, #{createdBy, jdbcType=VARCHAR}
+	    )
+	</insert>
+
+
 
     <!-- 회원 단건 조회 -->
     <select id="getMemberById" parameterType="int" resultMap="memberMap">
@@ -70,4 +74,7 @@
         UPDATE member SET is_deleted = 1 WHERE id = #{id}
     </update>
 
+	<select id="selectByCustomerId" resultType="com.myrium.domain.MemberVO">
+    SELECT * FROM member WHERE customer_id = #{customerId}
+	</select>
 </mapper>
