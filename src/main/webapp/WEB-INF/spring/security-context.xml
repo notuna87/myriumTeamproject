@@ -15,9 +15,11 @@
 	<!-- BCryptPasswordEncoder를 사용하여 비밀번호를 안전하게 해싱하는 데 사용 -->
 	<bean id="bcryptPasswordEncoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
-		
-	<!-- org.zerock.security.CustomUserDetailsService 클래스를 사용하여 사용자 정의 사용자 세부 정보 서비스를 설정 -->
-     <bean id="customUserDetailsService" class="com.myrium.security.CustomUserDetailsService"></bean>
+
+	<!-- org.zerock.security.CustomUserDetailsService 클래스를 사용하여 사용자 정의 사용자 세부 
+		정보 서비스를 설정 -->
+	<bean id="customUserDetailsService"
+		class="com.myrium.security.CustomUserDetailsService"></bean>
 	<security:http>
 
 		<security:intercept-url pattern="/sample/all"
@@ -48,13 +50,12 @@
 
 	<!-- Spring Security 인증 관리자 설정 -->
 	<security:authentication-manager>
-		<!-- Spring Security 인증 제공자 설정 -->
-		<security:authentication-provider user-service-ref="customUserDetailsService">
+		<security:authentication-provider>
 			<!-- 스프링 시큐리티에서 JDBC를 사용하여 사용자 정보와 권한을 데이터베이스에서 가져오는데 사용된다. -->
-			<!-- 스프링 시큐리티에서 JDBC를 사용하여 사용자 정보와 권한을 데이터베이스에서 가져오는데 사용된다.
-		<security:jdbc-user-service data-source-ref="dataSource"
-		 users-by-username-query="select userid, userpw, enabled from tbl_member where userid =? "
-		 authorities-by-username-query="select userid, auth from tbl_member_auth where userid=? "/> -->
+			<security:jdbc-user-service
+				data-source-ref="dataSource"
+				users-by-username-query="select userid, userpw, enabled from tbl_member where userid =? "
+				authorities-by-username-query="select userid, auth from tbl_member_auth where userid=? " />
 
 			<security:password-encoder
 				ref="bcryptPasswordEncoder" />
