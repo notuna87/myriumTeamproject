@@ -65,6 +65,7 @@ public class HomeController {
 	    model.addAttribute("timesaleList",timesaleList);
 	    return "home";
     }
+    
     @GetMapping("/admin")
     public String adminPage() {
     	return "admin"; // leedy

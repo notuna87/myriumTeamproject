@@ -56,9 +56,9 @@
 				<div class="swiper-wrapper" id="timesale-container">
 					<c:forEach var="item" items="${timesaleList}">
 						<div class="swiper-slide timesaleSliderIn">
-							<img src="resources/img/${item.thumbnail.img_path}" alt="1000" />
+							<img src="resources/img/${item.thumbnail.img_path}" alt="1000" style="margin-bottom:12px;"/>
 							<h6>${item.product.product_name}</h6>
-							<p class="content">${item.product.product_content}</p>
+							<p class="mainProductContent">${item.product.product_content}</p>
 							<p class="originalPrice">
 								<s><fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true"/>원</s>
 							</p>
