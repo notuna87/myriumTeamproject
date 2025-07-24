@@ -68,8 +68,6 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 
-
-
 	</bean>
 
 	<!-- 어노테이션 기반 트랜잭션 처리 활성화 -->

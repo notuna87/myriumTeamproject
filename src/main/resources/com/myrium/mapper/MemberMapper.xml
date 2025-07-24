@@ -26,22 +26,28 @@
         <result property="createdBy" column="created_by"/>
         <result property="updatedAt" column="updated_at"/>
         <result property="updatedBy" column="updated_by"/>
+        <collection property="authList" resultMap="authMap">
+    </collection> 
     </resultMap>
 
     <!-- 회원 등록 -->
-    <insert id="insertMember" parameterType="com.myrium.domain.MemberVO">
-        INSERT INTO member (
-            id, customer_id, password, customer_name, address,
-            phone_number, email, gender, birthdate, role,
-            agree_terms, agree_privacy, agree_third_party,
-            agree_delegate, agree_sms, is_deleted, created_at, created_by
-        ) VALUES (
-            #{id}, #{customerId}, #{password}, #{customerName}, #{address},
-            #{phoneNumber}, #{email}, #{gender}, #{birthdate}, #{role},
-            #{agreeTerms}, #{agreePrivacy}, #{agreeThirdParty},
-            #{agreeDelegate}, #{agreeSms}, #{isDeleted}, SYSDATE, #{createdBy}
-        )
-    </insert>
+	<insert id="insertMember" parameterType="com.myrium.domain.MemberVO">
+	    INSERT INTO member (
+	        customer_id, password, customer_name, address,
+	        phone_number, email, gender, birthdate,
+	        agree_terms, agree_privacy, agree_third_party,
+	        agree_delegate, agree_sms, is_deleted,
+	        created_at, created_by
+	    ) VALUES (
+	        #{customerId, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, #{customerName, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
+	        #{phoneNumber, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR}, #{gender, jdbcType=VARCHAR}, #{birthdate, jdbcType=DATE},
+	        #{agreeTerms, jdbcType=INTEGER}, #{agreePrivacy, jdbcType=INTEGER}, #{agreeThirdParty, jdbcType=INTEGER},
+	        #{agreeDelegate, jdbcType=INTEGER}, #{agreeSms, jdbcType=INTEGER}, #{isDeleted, jdbcType=INTEGER},
+	        SYSDATE, #{createdBy, jdbcType=VARCHAR}
+	    )
+	</insert>
+
+
 
     <!-- 회원 단건 조회 -->
     <select id="getMemberById" parameterType="int" resultMap="memberMap">
@@ -70,4 +76,47 @@
         UPDATE member SET is_deleted = 1 WHERE id = #{id}
     </update>
 
+	<select id="selectByCustomerId" resultType="com.myrium.domain.MemberVO">
+    SELECT * FROM member WHERE customer_id = #{customerId}
+	</select>
+
+  
+  <resultMap type="com.myrium.domain.AuthVO" id="authMap">
+    <result property="customerId" column="customerId"/>
+    <result property="role" column="role"/>
+  </resultMap>
+  
+  <select id="read" resultMap="memberMap">
+  SELECT 
+    m.id,
+    m.customer_id,
+    m.password,
+    m.customer_name,
+    m.address,
+    m.phone_number,
+    m.email,
+    m.gender,
+    m.birthdate,
+    m.role,
+    m.agree_terms,
+    m.agree_privacy,
+    m.agree_third_party,
+    m.agree_delegate,
+    m.agree_sms,
+    m.is_deleted,
+    m.created_at,
+    m.created_by,
+    m.updated_at,
+    m.updated_by,
+    
+    a.customer_id AS auth_customer_id,
+    a.role AS auth_role
+
+  FROM member m
+  LEFT JOIN member_auth a ON m.customer_id = a.customer_id
+  WHERE m.customer_id = #{customerId}
+</select>
+
+
+	
 </mapper>

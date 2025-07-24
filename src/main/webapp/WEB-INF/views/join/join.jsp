@@ -40,17 +40,17 @@
         <span class="required_note"><span class="required">*</span> 필수입력사항</span>
     </div>
     
-    <form action="${pageContext.request.contextPath}/join/complete" method="get">
+    <form action="${pageContext.request.contextPath}/join" method="post">
     
 	  <div class="form_section">
 	  <label for="userid">아이디 <span class="required">*</span></label>
-	  <input type="text" id="userid" name="userid" placeholder="영문소문자/숫자, 4~16자" />
+	  <input type="text" id="userid" name="customerId" placeholder="영문소문자/숫자, 4~16자" />
 	  <p class="error_msg" id="idError"></p> <!-- 유효성 메시지 영역 -->
 	</div>
 
 	<div class="form_section tooltip_wrap">
 	  <label for="pw">비밀번호 <span class="required">*</span></label>
-	  <input type="password" id="pw" name="pw" placeholder="영문 대/소문자+숫자+특수문자 조합 10~16자" />
+	  <input type="password" id="pw" name="password" placeholder="영문 대/소문자+숫자+특수문자 조합 10~16자" />
 	  
 	  <div id="pw_tooltip" class="pw_tooltip">
 	    <span>※ 비밀번호 입력 조건</span><br />
@@ -66,39 +66,39 @@
 	
 	<div class="form_section">
 	  <label for="pw2">비밀번호 확인 <span class="required">*</span></label>
-	  <input type="password" id="pw2" name="pw2" />
+	  <input type="password" id="pw2" name="passwordConfirm" />
 	  <p class="error_msg" id="pwMatchError"></p> <!-- 확인 메시지 영역 추가 -->
 	</div>
 
 
     <div class="form_section">
         <label for="name">이름 <span class="required">*</span></label>
-        <input type="text" id="name" name="name" />
+        <input type="text" id="name" name="customerName" />
     </div>
 
 	<div class="form_section address">
 	    <label>주소 <span class="required">*</span></label>
 	    <div class="address_group">
-	        <input type="text" id="postcode" placeholder="우편번호" readonly />
+	        <input type="text" id="postcode" name="postcode" placeholder="우편번호" readonly />
 	        <button type="button" onclick="execDaumPostcode()">주소검색</button>
 	    </div>
-	    <input type="text" id="roadAddress" placeholder="기본주소" readonly />
-	    <input type="text" id="detailAddress" placeholder="나머지 주소" />
+	    <input type="text" id="roadAddress" name="roadAddress" placeholder="기본주소" readonly />
+	    <input type="text" id="detailAddress" name="detailAddress" placeholder="나머지 주소" />
 	</div>
 
 
 	<div class="form_section phone">
 	  <label>휴대전화 <span class="required">*</span></label>
 	  <div class="phone_group">
-	    <select>
-	      <option>010</option>
-	      <option>011</option>
-	      <option>016</option>
-	      <option>018</option>
-	      <option>019</option>
-	    </select> -
-	    <input type="text" /> -
-	    <input type="text" />
+	    <select name="phone1">
+		  <option>010</option>
+		  <option>011</option>
+		  <option>016</option>
+		  <option>018</option>
+		  <option>019</option>
+		</select> -
+		<input type="text" name="phone2" /> -
+		<input type="text" name="phone3" />
 	    <button type="button" id="sendCodeBtn">인증번호받기</button>
 	  </div>
 	  <p class="success_msg" id="phoneConfirmMsg" style="display: none; margin-top: 6px;">인증번호 확인 되었습니다.</p>
@@ -117,9 +117,9 @@
     <div class="form_section">
       <label>성별</label>
       <div class="radio_wrap">
-        <input type="radio" id="male" name="gender" />
+        <input type="radio" id="male" name="gender"  value="M"/>
         <label for="male">남자</label>
-        <input type="radio" id="female" name="gender" />
+        <input type="radio" id="female" name="gender"  value="F" />
         <label for="female">여자</label>
       </div>
     </div>
@@ -127,9 +127,9 @@
     <div class="form_section">
       <label>생년월일</label>
       <div class="birth_group">
-        <input type="text" placeholder="YYYY" /> <span>년</span>
-        <input type="text" placeholder="MM" /> <span>월</span>
-        <input type="text" placeholder="DD" /> <span>일</span>
+		<input type="text" name="birthYear" placeholder="YYYY" maxlength="4" /> <span>년</span>
+		<input type="text" name="birthMonth" placeholder="MM" maxlength="2" /> <span>월</span>
+		<input type="text" name="birthDay" placeholder="DD" maxlength="2" /> <span>일</span>
       </div>
       <div class="radio_wrap">
         <input type="radio" id="solar" name="calendar" checked />

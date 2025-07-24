@@ -5,7 +5,7 @@
 <mapper namespace="com.myrium.mapper.ProductMapper">
 
 	<select id="getproductList" resultType="com.myrium.domain.ProductVO">
-		select * from product where category = '${category}'
+		select * from product where ${isMain} = 1
 	</select>
 	
 	<select id="getThumbnail" resultType ="com.myrium.domain.ImgpathVO">

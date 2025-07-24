@@ -241,6 +241,7 @@
 
 .swiperWrap img {
   width: 100%;
+  min-width : 1240px;
   height: 100%;
 }
 
@@ -313,7 +314,7 @@ a .fontWhite {
   font-size: 16px
 }
 
-.timesaleSliderIn>.content {
+.mainProductContent {
   font-size: 14px;
   color: #bfbfbf;
 }
@@ -362,10 +363,6 @@ a .fontWhite {
 .springProduct img {
   width: 100%;
   border-radius: 10px;
-}
-
-.springContent {
-  margin-bottom: 15px;
 }
 
 .springProduct>.originalPrice {
@@ -584,6 +581,8 @@ a .fontWhite {
   display: flex;
   margin: 0 auto;
   border-bottom: 1px solid #000;
+  gap: 20px;
+padding: 40px;
 }
 
 .detailTitle {
@@ -604,7 +603,6 @@ a .fontWhite {
 .productDescription {
   width: 42%;
   height: 600px;
-  margin-top: 50px;
 }
 
 .detailKakao {
@@ -668,7 +666,7 @@ a .fontWhite {
 }
 
 .inCart {
-  width: 49%;
+  width: 48%;
   height: 50px;
   background-color: #fff;
   float: left;
@@ -682,7 +680,7 @@ a .fontWhite {
 }
 
 .purchase {
-  width: 49%;
+  width: 48%;
   height: 50px;
   background-color: #56b770;
   float: left;
@@ -745,7 +743,6 @@ a .fontWhite {
   font-weight: 500;
   color: #222;
   border-top: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
   cursor: pointer;
 }
 
