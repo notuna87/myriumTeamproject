@@ -47,7 +47,7 @@
 
 			<div class="searchBoxWrap">
 				<fieldset class="headerFieldset">
-					<input class="searchBox" type="text" placeholder="내가 키운 채소 내가 먹기">
+					<input class="searchBox" type="text" placeholder="내가 키운 채소 내가 먹기" style="height:18px;">
 					<a href="#" class="searchIcon"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_search.svg" alt="search_icon">
 					</a>
 				</fieldset>

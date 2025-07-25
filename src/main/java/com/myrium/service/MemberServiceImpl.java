@@ -31,17 +31,16 @@ public class MemberServiceImpl implements MemberService {
 	        // 비밀번호 암호화
 	        String encodedPassword = passwordEncoder.encode(memberVO.getPassword());
 	        memberVO.setPassword(encodedPassword);
+	        AuthVO authVO = new AuthVO();
 
 	        // 회원 정보 insert
 	        memberMapper.insertMember(memberVO);
 
-	        // 권한 정보 insert
-	        if (memberVO.getAuthList() != null) {
-	            for (AuthVO auth : memberVO.getAuthList()) {
-	                auth.setCustomerId(memberVO.getCustomerId());
-	                memberMapper.insertAuth(auth);
-	            }
-	        }
+			// 권한 정보 insert
+	        authVO.setUserId(memberVO.getId());  
+	        authVO.setRole("MEMBER");             
+
+	        memberMapper.insertAuth(authVO);
 	    }
 
 	    @Override
