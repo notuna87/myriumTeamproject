@@ -39,8 +39,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	    log.warn("Load User By Username : " + customerId);
 	    
 	    MemberVO vo = memberMapper.read(customerId);
-	    log.warn("memberVO : " + vo);
-	    log.warn("Member ID: " + vo.getId());
+
 	    if (vo == null) {
 	        throw new UsernameNotFoundException("User not found");
 	    }
