@@ -30,7 +30,7 @@
 	</resultMap>
 
 	<resultMap type="com.myrium.domain.AuthVO" id="authMap">
-		<result property="customerId" column="customer_id" />
+		<result property="userId" column="user_id" />
 		<result property="role" column="role" />
 	</resultMap>
 
@@ -57,9 +57,10 @@
 	</insert>
 	<!-- 회원 권한 등록 -->
 	<insert id="insertAuth" parameterType="com.myrium.domain.AuthVO">
-		INSERT INTO member_auth (user_id, role)
-		VALUES (#{userId}, 'MEMBER')
-	</insert>
+    INSERT INTO member_auth (user_id, role)
+    VALUES (#{userId}, #{role})
+</insert>
+
 
 	<!-- 회원 단건 조회 -->
 	<select id="getMemberById" parameterType="int"
@@ -118,7 +119,7 @@
 		m.updated_at,
 		m.updated_by,
 
-		a.customer_id AS auth_customer_id,
+		a.user_id AS auth_customer_id,
 		a.role AS auth_role
 
 		FROM member m
