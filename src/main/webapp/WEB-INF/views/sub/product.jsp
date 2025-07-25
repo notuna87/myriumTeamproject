@@ -3,12 +3,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <html>
 <head>
-<title>${product.title}</title>
+<title></title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 
 <style>
 .detailWrap {
-
+	
 }
 
 .swiper-container {
@@ -53,9 +53,12 @@
 		<!-- 썸네일 Swiper -->
 		<div class="swiper gallery-thumbs">
 			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<img class="miniSlider" src="/resources/img/${thumbnail.img_path}" alt="title" style="width: 100%; height: 97px; border-radius: 10px;" />
+				</div>
 				<c:forEach var="i" begin="1" end="6">
 					<div class="swiper-slide">
-						<img src="/resources/img/flower/cosmos/cosmos_0${i}.jpg" alt="title" style="width: 100%; height:97px; border-radius: 10px;" />
+						<img class="miniSlider" src="/resources/img/flower/cosmos/cosmos_0${i}.jpg" alt="title" style="width: 100%; height: 97px; border-radius: 10px;" />
 					</div>
 				</c:forEach>
 			</div>
@@ -64,6 +67,9 @@
 		<!-- 메인 Swiper -->
 		<div class="swiper gallery-top">
 			<div class="swiper-wrapper">
+					<div class="swiper-slide">
+						<img src="/resources/img/${thumbnail.img_path}" alt="title" style="width: 100%; border-radius: 10px;" />
+					</div>
 				<c:forEach var="i" begin="1" end="6">
 					<div class="swiper-slide">
 						<img src="/resources/img/flower/cosmos/cosmos_0${i}.jpg" alt="title" style="width: 100%; border-radius: 10px;" />
@@ -78,15 +84,15 @@
 
 		<!-- 상품 설명 -->
 		<div class="productDescription">
-			<h3>상품 임시 제목</h3>
-			<p>상품 임시 컨텐츠</p>
+			<h3>${product.product_name}</h3>
+			<p class="detailContent">${product.product_content}</p>
 
 			<p>
-				<s><fmt:formatNumber value="3000" type="number" />원</s>
+				<s><fmt:formatNumber value="${product.product_price}" type="number" />원</s>
 			</p>
 			<h2>
-				<span style="color: red; margin-right: 10px;">10%</span>
-				<fmt:formatNumber value="3000" type="number" />
+				<span style="color: red; margin-right: 10px;">${product.total_discountrate}%</span>
+				<fmt:formatNumber value="${product.discount_price}" type="number" />
 				원
 			</h2>
 
@@ -121,12 +127,6 @@
 			</p>
 
 			<form action="/cart/add" method="post">
-				<input type="hidden" name="id" value="${product.id}" />
-				<input type="hidden" name="name" value="${product.title}" />
-				<input type="hidden" name="price" value="${product.price}" />
-				<input type="hidden" name="discount" value="${product.discount}" />
-				<input type="hidden" name="imgurl" value="${product.imgUrl[0]}" />
-				<input type="hidden" name="kind" value="${product.kind}" />
 				<button type="submit" class="inCart">장바구니</button>
 			</form>
 

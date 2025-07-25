@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.myrium.domain.ImgpathVO;
+import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 
 // 작성자 : 노기원
@@ -21,5 +22,14 @@ public interface ProductMapper {
 	
 	// 타임세일 목록 불러오기
 	public List<ProductVO> gettimesaleList();
+	
+	// 상품 상세페이지 정보 불러오기
+	public ProductVO getproductInfo(int id);
+
+	// 상품 상세페이지 썸네일
+	public ImgpathVO productInfothumbnail(int id);
+	
+	// 상세페이지 이미지 목록 불러오기
+	public List<ImgpathVO> productSliderImg(int id);
 }
 

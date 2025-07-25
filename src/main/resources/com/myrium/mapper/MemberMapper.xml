@@ -55,12 +55,12 @@
 		SYSDATE, #{createdBy}
 		)
 	</insert>
+  
 	<!-- 회원 권한 등록 -->
 	<insert id="insertAuth" parameterType="com.myrium.domain.AuthVO">
-    INSERT INTO member_auth (user_id, role)
-    VALUES (#{userId}, #{role})
-</insert>
-
+		INSERT INTO member_auth (user_id, role)
+		VALUES (#{userId}, 'MEMBER')
+	</insert>
 
 	<!-- 회원 단건 조회 -->
 	<select id="getMemberById" parameterType="int"
@@ -71,6 +71,7 @@
 	<!-- 전체 회원 조회 -->
 	<select id="getAllMembers" resultMap="memberMap">
 		SELECT * FROM member ORDER BY id
+
 	</select>
 
 	<!-- 회원 정보 수정 -->
@@ -126,7 +127,4 @@
 		WHERE m.customer_id = #{customerId}
 	</select>
 	
-
-	
-
 </mapper>

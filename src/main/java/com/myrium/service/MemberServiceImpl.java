@@ -29,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
         String encodedPassword = passwordEncoder.encode(memberVO.getPassword());
         memberVO.setPassword(encodedPassword);
 
+
         // 회원 정보 insert
         memberMapper.insertMember(memberVO);
 

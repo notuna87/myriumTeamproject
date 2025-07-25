@@ -10,4 +10,10 @@ public interface ProductService {
 	public List<ProductDTO> getProductWithThumbnailList(String category);
 
 	public List<ProductDTO> getTimesaleWithThumbnailList();
+	
+	public ProductDTO productInfoget(int id);
+	
+	public ProductDTO productInfothumbnail(int id);
+	
+//	public ProductDTO productInfoImg(int id);
 }

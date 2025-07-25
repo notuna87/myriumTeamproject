@@ -6,4 +6,5 @@ import lombok.Data;
 public class ProductDTO {
     private ProductVO product;
     private ImgpathVO thumbnail;
+    private ImgpathVO sliderImg;
 }
