@@ -26,16 +26,16 @@ var replyService = (function () {
   }
 
   // param: 댓글 목록을 가져오기 위해 필요한 매개변수
-  // bno(게시물 번호)와 선택적으로 page (페이지 번호)가 필요
+  // id(게시물 번호)와 선택적으로 page (페이지 번호)가 필요
   // param 객체에서 page 값을 가져와서 page 변수에 할당
   // page 값이 없다면 기본값으로 1을 사용, 댓글을 가져올 페이지의 번호를 의미
   function getList(param, callback, error) {
     //전체데이타 가져오기
-    var bno = param.bno;
+    var id = param.id;
 
     var page = param.page || 1;
 
-    $.getJSON("/replies/pages/" + bno + "/" + page + ".json", function (data) {
+    $.getJSON("/replies/pages/" + id + "/" + page + ".json", function (data) {
       if (callback) {
         //callback(data); // 댓글 목록만 가져오는 경우
         callback(data.replyCnt, data.list); //댓글 숫자와 목록을 가져오는 경우

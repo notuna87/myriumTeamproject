@@ -28,17 +28,22 @@
         <result property="updatedBy" column="updated_by"/>
         <collection property="authList" resultMap="authMap"/>
     </resultMap>
-
+    
     <!-- 회원 등록 -->
 	<insert id="insertMember" parameterType="com.myrium.domain.MemberVO">
+	
+	    <selectKey keyProperty="id" resultType="long" order="BEFORE">
+	        SELECT member_seq.NEXTVAL FROM dual
+	    </selectKey>
+	
 	    INSERT INTO member (
-	        customer_id, password, customer_name, address,
+	        id, customer_id, password, customer_name, address,
 	        phone_number, email, gender, birthdate,
 	        agree_terms, agree_privacy, agree_third_party,
 	        agree_delegate, agree_sms, is_deleted,
 	        created_at, created_by
 	    ) VALUES (
-	        #{customerId, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, #{customerName, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
+	        #{id}, #{customerId, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, #{customerName, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
 	        #{phoneNumber, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR}, #{gender, jdbcType=VARCHAR}, #{birthdate, jdbcType=DATE},
 	        #{agreeTerms, jdbcType=INTEGER}, #{agreePrivacy, jdbcType=INTEGER}, #{agreeThirdParty, jdbcType=INTEGER},
 	        #{agreeDelegate, jdbcType=INTEGER}, #{agreeSms, jdbcType=INTEGER}, #{isDeleted, jdbcType=INTEGER},
@@ -48,8 +53,8 @@
 	
 	<!-- 회원 권한 등록 -->
 	<insert id="insertAuth" parameterType="com.myrium.domain.AuthVO">
-	    INSERT INTO member_auth (user_id, auth)
-	    VALUES (#{userId}, #{auth})
+	    INSERT INTO member_auth (user_id, role )
+	    VALUES (#{userId}, #{role} )
 	</insert>
 
     <!-- 회원 단건 조회 -->
@@ -85,7 +90,7 @@
 
   
   <resultMap type="com.myrium.domain.AuthVO" id="authMap">
-    <result property="customerId" column="customer_id"/>
+    <result property="userId" column="user_id"/>
     <result property="role" column="role"/>
   </resultMap>
   
@@ -100,7 +105,6 @@
     m.email,
     m.gender,
     m.birthdate,
-    m.role,
     m.agree_terms,
     m.agree_privacy,
     m.agree_third_party,
@@ -112,14 +116,20 @@
     m.updated_at,
     m.updated_by,
     
-    a.customer_id AS auth_customer_id,
+    a.user_id AS auth_user_id,
     a.role AS auth_role
 
   FROM member m
-  LEFT JOIN member_auth a ON m.customer_id = a.customer_id
+  LEFT JOIN member_auth a ON m.id = a.user_id
   WHERE m.customer_id = #{customerId}
 </select>
 
+<!-- 회원 권한 리스트 조회 (회원 PK id로) -->
+<select id="getAuthList" parameterType="long" resultType="com.myrium.domain.AuthVO">
+    SELECT user_id AS userId, role
+    FROM member_auth
+    WHERE user_id = #{userId}
+</select>
 
 	
 </mapper>

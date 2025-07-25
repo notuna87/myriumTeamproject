@@ -36,13 +36,24 @@ public class MemberServiceImpl implements MemberService {
 	        memberMapper.insertMember(memberVO);
 
 	        // 권한 정보 insert
-	        if (memberVO.getAuthList() != null) {
-	            for (AuthVO auth : memberVO.getAuthList()) {
-	                auth.setCustomerId(memberVO.getCustomerId());
-	                memberMapper.insertAuth(auth);
-	            }
-	        }
+//	        if (memberVO.getAuthList() != null) {
+//	            for (AuthVO auth : memberVO.getAuthList()) {
+//	                auth.setCustomerId(memberVO.getCustomerId());
+//	                memberMapper.insertAuth(auth);
+//	            }
+//	        }
+        	AuthVO auth = new AuthVO();
+            auth.setUserId(memberVO.getId());  // 시퀀스 ID 사용
+            auth.setRole("MEMBER");
+            memberMapper.insertAuth(auth);
 	    }
+
+	    
+//	    @Override
+//	    public MemberVO getMemberByCustomerId(String customerId) {
+//	        return memberMapper.read(customerId);
+//	    }
+	    
 
 	    @Override
 	    public MemberVO getMemberById(int id) {

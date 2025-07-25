@@ -27,7 +27,7 @@ public class ReplyServiceImpl implements ReplyService{
 	@Override
 	public int register(ReplyVO vo) {
 		log.info("register....." + vo);
-		boardMapper.updateReplyCnt(vo.getBno(), 1);  
+		boardMapper.updateReplyCnt(vo.getId(), 1);  
 		return mapper.insert(vo);
 	}
 
@@ -49,19 +49,19 @@ public class ReplyServiceImpl implements ReplyService{
 	public int remove(Long rno) {
 	     log.info("remove...." + rno);
 		ReplyVO vo = mapper.read(rno);
-		boardMapper.updateReplyCnt(vo.getBno(), -1);
+		boardMapper.updateReplyCnt(vo.getId(), -1);
 	     return mapper.delete(rno);
 	}
 
 	@Override
-	public List<ReplyVO> getList(Criteria cri, Long bno) {
-		log.info("get Reply List of a Board " + bno);
-		return mapper.getListWithPaging(cri, bno);
+	public List<ReplyVO> getList(Criteria cri, Long id) {
+		log.info("get Reply List of a Board " + id);
+		return mapper.getListWithPaging(cri, id);
 	}
 
 	@Override
-	public ReplyPageDTO getListPage(Criteria cri, Long bno) {
-		return new ReplyPageDTO(mapper.getCountByBno(bno), mapper.getListWithPaging(cri, bno));
+	public ReplyPageDTO getListPage(Criteria cri, Long id) {
+		return new ReplyPageDTO(mapper.getCountByid(id), mapper.getListWithPaging(cri, id));
 	}
 }
 

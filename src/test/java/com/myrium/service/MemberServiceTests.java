@@ -25,7 +25,7 @@ public class MemberServiceTests {
     @Test
     public void testRegister() {
         MemberVO member = new MemberVO();
-        member.setId(7); // 실제 존재하지 않는 PK값
+        member.setId((long) 7); // 실제 존재하지 않는 PK값
         member.setCustomerId("user7");
         member.setPassword("test12345!");
         member.setCustomerName("김나라");

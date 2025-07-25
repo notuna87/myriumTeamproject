@@ -61,7 +61,7 @@ public class BoardController {
 		log.info("---------------------------------------------------");
 	}
 	
-	//@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/register")
 	public String register(BoardVO vo, RedirectAttributes rttr) {
 		log.info("register......." + vo);
@@ -72,7 +72,7 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
-	//@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/register")
 	public void register() {
 	}
@@ -93,7 +93,7 @@ public class BoardController {
 		log.info("get Time : " + (endTime-startTime));		
 	}
 	
-	//@PreAuthorize("principal.username == #board.customerId")
+	@PreAuthorize("principal.username == #board.customerId")
 	@PostMapping("/modify")
 	public String modify(BoardVO board, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
 		log.info("modify:" + board);
@@ -108,7 +108,7 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
-	//@PreAuthorize("principal.username == #customerId")
+	@PreAuthorize("principal.username == #customerId")
 	@PostMapping("/remove")
 	public String remove(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
 		log.info("remove..." + id);

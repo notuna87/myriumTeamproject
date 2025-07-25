@@ -20,6 +20,8 @@ public interface MemberMapper {
     public int deleteMember(int id);
     
     public MemberVO read(String customer_id);
+
+	public List<AuthVO> getAuthList(Long id);
     
 }
 
