@@ -1,123 +1,152 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-
 <mapper namespace="com.myrium.mapper.BoardMapper">
-    <select id="getList" resultType="com.myrium.domain.BoardVO">
-        select * from tbl_board where bno > 0 order by bno desc
-    </select> 
-    
-	<insert id="insert">
-		insert into tbl_board (bno, title, content, writer)
-		values (seq_board.nextval, #{title}, #{content}, #{writer})
-	</insert>
 
-	<insert id="insertSelectKey">
-		<selectKey keyProperty="bno" order="BEFORE"
-			resultType="long">
-			select seq_board.nextval from dual
-		</selectKey>
-		
-		insert into tbl_board (bno, title, content, writer)
-		values (#{bno}, #{title}, #{content}, #{writer})
-	</insert>
+	<resultMap id="boardMap" type="com.myrium.domain.BoardVO">
+	    <id property="id" column="id" />
+	    <result property="userId" column="user_id"/>
+	    <result property="title" column="title"/>
+	    <result property="content" column="content"/>
+	    <result property="customerId" column="customer_id"/>
+	    <result property="writeDate" column="write_date"/>
+	    <result property="isAnswered" column="is_answered"/>
+	    <result property="isDeleted" column="is_deleted"/>
+	    <result property="createdAt" column="created_at"/>
+	    <result property="createdBy" column="created_by"/>
+	    <result property="updatedAt" column="updated_at"/>
+	    <result property="updatedBy" column="updated_by"/>
+	    <result property="replyCnt" column="reply_cnt"/>
+	</resultMap>
 
-	<select id="read" resultType="com.myrium.domain.BoardVO">
-		select * from tbl_board where
-		bno=#{bno}
+	<select id="getList" resultMap="boardMap">
+	    SELECT id, user_id, title, content, customer_id, write_date,
+	           is_answered, is_deleted, created_at, created_by,
+	           updated_at, updated_by, reply_cnt
+	    FROM board
+	    WHERE is_deleted = 0 AND id > 0 
+	    ORDER BY id DESC
 	</select>
 
-	<delete id="delete">
-		delete from tbl_board where bno = #{bno}
-	</delete>
+    <insert id="insert">
+        INSERT INTO board (
+            id, title, content, customer_id, user_id, write_date, created_at, created_by, is_answered, is_deleted, reply_cnt
+        ) VALUES (
+            board_seq.NEXTVAL, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0
+        )
+    </insert>
 
-	<update id="update">
-		update tbl_board
-		set title= #{title},
-		content=
-		#{content},
-		writer = #{writer},
-		updateDate = sysdate
-		where bno=#{bno}
-	</update>
-	
+    <insert id="insertSelectKey">
+        <selectKey keyProperty="id" order="BEFORE" resultType="long">
+            SELECT board_seq.NEXTVAL FROM dual
+        </selectKey>
+        INSERT INTO board (
+            id, title, content, customer_id, user_id, write_date, created_at, created_by, is_answered, is_deleted, reply_cnt
+        ) VALUES (
+            #{id}, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0
+        )
+    </insert>
 
-	<sql id="criterial">
-			<trim prefix="(" suffix=") AND " prefixOverrides="OR">
-				<foreach item='type' collection="typeArr">
-					<trim prefix="OR">
-						<choose>
-							<when test="type == 'T'.toString()">
-								title like '%'||#{keyword}||'%'
-							</when>
-							<when test="type == 'C'.toString()">
-								content like '%'||#{keyword}||'%'
-							</when>
-							<when test="type == 'W'.toString()">
-								writer like '%'||#{keyword}||'%'
-							</when>
-						</choose>
-					</trim>
-				</foreach>
-			</trim>
-	</sql> 
-
-
-	<select id="getListWithPaging" resultType="com.myrium.domain.BoardVO"> 
-		<![CDATA[ 
-		select bno, title, content, writer, regdate, updatedate, replycnt
-		from ( 
-		select /*+INDEX_DESC(tbl_board pk_board) */ 
-		rownum rn, bno, title, content, writer, regdate, updatedate, replycnt
-		from tbl_board where
-		]]>
-		
-		<include refid="criterial"></include>
-		
-		<![CDATA[
-		 rownum <= #{pageNum} * #{amount}
-		) where rn > (#{pageNum}-1) * #{amount}
-		]]> 
+	<select id="read" resultMap="boardMap">
+	    SELECT id, user_id, title, content, customer_id, write_date,
+	           is_answered, is_deleted, created_at, created_by,
+	           updated_at, updated_by, reply_cnt
+	    FROM board
+	    WHERE id = #{id}
 	</select>
-	
-	<select id = "getTotalCount" resultType = "int">
-		select count(*) from tbl_board where 
-		<include refid="criterial"></include>
-		bno > 0
+
+    <delete id="delete">
+        DELETE FROM board WHERE id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE board
+        SET title = #{title},
+            content = #{content},
+            updated_at = SYSDATE,
+            updated_by = #{updatedBy}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 페이징용 검색 필터 -->
+    <sql id="criterial">
+        <trim prefix="(" suffix=") AND" prefixOverrides="OR">
+            <foreach item='type' collection="typeArr">
+                <trim prefix="OR">
+                    <choose>
+                        <when test="type == 'T'.toString()">
+                            title LIKE '%' || #{keyword} || '%'
+                        </when>
+                        <when test="type == 'C'.toString()">
+                            content LIKE '%' || #{keyword} || '%'
+                        </when>
+                        <when test="type == 'W'.toString()">
+                            customer_id LIKE '%' || #{keyword} || '%'
+                        </when>
+                    </choose>
+                </trim>
+            </foreach>
+        </trim>
+    </sql>
+
+	<select id="getListWithPaging" resultMap="boardMap">
+	    <![CDATA[
+	    SELECT id, user_id, title, content, customer_id, write_date,
+	           is_answered, is_deleted, created_at, created_by,
+	           updated_at, updated_by, reply_cnt
+	    FROM (
+	        SELECT /*+INDEX_DESC(board pk_board) */ 
+	        ROWNUM rn, id, user_id, title, content, customer_id, write_date,
+	               is_answered, is_deleted, created_at, created_by,
+	               updated_at, updated_by, reply_cnt
+	        FROM board
+	        WHERE
+	    ]]>
+	    <include refid="criterial"/>
+	    <![CDATA[
+	        ROWNUM <= #{pageNum} * #{amount}
+	    ) WHERE rn > (#{pageNum} - 1) * #{amount}
+	    ]]>
 	</select>
-	
-	<update id="updateReplyCnt">
-       update tbl_board set replycnt = replycnt + #{amount} where bno = #{bno}
-	</update>
-	
-	
-	<!--  검색조건1  key, val 찍히는 내용 검색--> 
-	<select id="searchTest" resultType="com.myrium.domain.BoardVO">
-		 <![CDATA[
-			select * from tbl_board
-			where
-		 ]]>	
-		<trim prefix="(" suffix=") and"> 
-		<foreach item="val"  index="key" collection="map" separator="or">
-			<if test = "key == 'T'.toString()">
-				title like '%' || #{val} ||'%'
-			</if>
-			<if test="key == 'C'.toString()">
-		      content like '%' || #{val} ||'%'
-	         </if>
-	         <if test="key == 'W'.toString()">
-			      writer like '%' || #{val} ||'%'
-			 </if>
-	         
-		</foreach>	
-		</trim>	
-		<![CDATA[
-		 rownum < 10
-		 ]]>
-	</select>	
-	
-	
-	
+
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*) FROM board
+        WHERE
+        <include refid="criterial"/>
+        id > 0
+    </select>
+
+    <update id="updateReplyCnt">
+        UPDATE board SET reply_cnt = reply_cnt + #{amount} WHERE id = #{id}
+    </update>
+
+	<select id="searchTest" resultMap="boardMap">
+	    <![CDATA[
+	    SELECT id, user_id, title, content, customer_id, write_date,
+	           is_answered, is_deleted, created_at, created_by,
+	           updated_at, updated_by, reply_cnt
+	    FROM board
+	    WHERE
+	    ]]>
+	    <trim prefix="(" suffix=") AND">
+	        <foreach item="val" index="key" collection="map" separator="OR">
+	            <if test="key == 'T'.toString()">
+	                title LIKE '%' || #{val} || '%'
+	            </if>
+	            <if test="key == 'C'.toString()">
+	                content LIKE '%' || #{val} || '%'
+	            </if>
+	            <if test="key == 'W'.toString()">
+	                customer_id LIKE '%' || #{val} || '%'
+	            </if>
+	        </foreach>
+	    </trim>
+	    <![CDATA[
+	    AND ROWNUM < 10
+	    ]]>
+	</select>
+
+
 </mapper>

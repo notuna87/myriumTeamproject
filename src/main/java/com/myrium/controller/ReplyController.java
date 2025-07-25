@@ -51,15 +51,15 @@ public class ReplyController {
 	}
 	
 
-    @GetMapping(value = "/pages/{bno}/{page}" , produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/pages/{id}/{page}" , produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<ReplyPageDTO> getList(
-								@PathVariable("bno") Long bno,
+								@PathVariable("id") Long id,
 								@PathVariable("page") int page){
 		
 		log.info("getList..........");
 		Criteria cri =  new Criteria(page, 10);
 		
-		return new ResponseEntity<>(service.getListPage(cri, bno), HttpStatus.OK);
+		return new ResponseEntity<>(service.getListPage(cri, id), HttpStatus.OK);
 		
 	}
     

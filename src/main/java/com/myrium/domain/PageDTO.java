@@ -2,9 +2,11 @@ package com.myrium.domain;
 
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j;
 
 @Getter
 @ToString
+@Log4j
 public class PageDTO {
 
 		private int startPage;
@@ -22,12 +24,13 @@ public class PageDTO {
 			
 			this.startPage = this.endPage - 9;
 			
-			int realEnd = (int)(Math.ceil(total * 1.0) / cri.getAmount());
+			int realEnd = (int)(Math.ceil(total * 1.0 / cri.getAmount()));
 			
 			if(realEnd <= this.endPage) {
 				this.endPage = realEnd;
 			}
 		this.prev = this.startPage > 1;
 		this.next = this.endPage < realEnd;
+		
 		}
 }

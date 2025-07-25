@@ -12,8 +12,8 @@ public interface BoardMapper {
 	public List<BoardVO> getList();	
 	public void insert(BoardVO board);
 	public void insertSelectKey(BoardVO board);
-	public BoardVO read(Long bno);
-	public int delete(Long bno);
+	public BoardVO read(Long id);
+	public int delete(Long id);
 	public int update(BoardVO board);
 	
 	public List<BoardVO> getListWithPaging(Criteria cn);
@@ -22,6 +22,6 @@ public interface BoardMapper {
 	
 	public List<BoardVO> searchTest(Map<String, Map<String, String>> map);
 	
-	public void updateReplyCnt(@Param("bno") Long bno, @Param("amount") int amount);
+	public void updateReplyCnt(@Param("id") Long id, @Param("amount") int amount);
 
 }

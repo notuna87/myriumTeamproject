@@ -11,7 +11,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-	<h1 class="page-header">게시글 보기</h1>
+	<h1 class="page-header">문의사항 보기</h1>
     </div>
 </div>
 
@@ -19,12 +19,12 @@
 <div class="row">
     <div class="col-lg-12">
 	<div class="panel panel-default">
-		<div class="panel-heading">게시글 보기</div>
+		<div class="panel-heading">문의사항 보기</div>
 		<!-- /.panel-heading -->
 		<div class="panel-body">
 			<div class="form-group">
 				 <label>No.</label> 
-                 <input class="form-control" name='bno' value=${board.bno} readonly="readonly">
+                 <input class="form-control" name='id' value=${board.id} readonly="readonly">
 			</div>
 
 			<div class="form-group">
@@ -39,24 +39,24 @@
 
 			<div class="form-group">
 				<label>작성자</label> 
-                <input class="form-control" name='writer' value=${board.writer } readonly="readonly">
+                <input class="form-control" name='customerId' value=${board.customerId } readonly="readonly">
 			</div>
 			
 			<sec:authentication property="principal" var="pinfo"/>
 				        <sec:authorize access="isAuthenticated()">
-				        <c:if test="${pinfo.username eq board.writer}">
-				       	 <button data-oper='modify' class="btn btn-default">Modify</button>			
+				        <c:if test="${pinfo.username eq board.customerId}">
+				       	 <button data-oper='modify' class="btn btn-default">수정</button>			
 				        </c:if>
 			</sec:authorize>
 			
 			<%-- <button data-oper='modify' class="btn btn-default btn-success"
-					onclick="location.href='/board/modify?bno=${board.bno}'">Modify</button> --%>
+					onclick="location.href='/board/modify?id=${board.id}'">Modify</button> --%>
 			            
 			<button data-oper='list' class="btn btn-default btn-info"
-					onclick="location.href='/board/list'">List</button>
+					onclick="location.href='/board/list'">목록</button>
 					
 			<form id='operForm' action="/board/modify" method='get'>
-				<input type='hidden' id="bno" name='bno' value='${board.bno}'>
+				<input type='hidden' id="id" name='id' value='${board.id}'>
 				<input type='hidden' name='pageNum' value='${cri.pageNum}'>
 				<input type='hidden' name='amount' value='${cri.amount}'>
 				<input type='hidden' name='type' value='${cri.type}'>
@@ -72,15 +72,15 @@
 </div>
 
 <!-- /.row -->
-<!-- 댓글추가 -->
+<!-- 답변추가 -->
 <div class='row'>
   <div class="col-lg-12">
     <!-- /.panel -->
     <div class="panel panel-default">
       <div class="panel-heading">
-        <i class="fa fa-comments fa-fw"></i> 댓글
+        <i class="fa fa-comments fa-fw"></i> 답변
           <sec:authorize access="isAuthenticated()">
-        	<button id='addReplyBtn' class='btn btn-primary btn-xs pull-right'>새 댓글</button>
+        	<button id='addReplyBtn' class='btn btn-primary btn-xs pull-right'>답변하기</button>
 	      </sec:authorize>
       </div>      
       <!-- /.panel-heading -->
@@ -89,8 +89,9 @@
         	<li class="left clearfix" data-rno="12">
         		<div>
         			<div class="header">
-        				<strong class="primary-font" >user00</strong>
-        				<small class="pull-right text-muted" >2024-02-05</small>
+        				<strong class="primary-font" >관리자</strong>
+        				<small id="currentDate" class="pull-right text-muted" ></small>
+        				<p>아직 등록된 답변이 없습니다.</p>
         			</div>
         		</div>
         	</li>
@@ -106,10 +107,10 @@
   
 </div>
 
-<!-- 댓글추가 end-->
+<!-- 답변추가 end-->
 
 
-<!-- 새 댓글 Modal -->
+<!-- 새 답변 Modal -->
       <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -117,12 +118,12 @@
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal"
                 aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">댓글 작성</h4>
+              <h4 class="modal-title" id="myModalLabel">답변 작성</h4>
             </div>
             <div class="modal-body">
               <div class="form-group">
-                <label>댓글</label> 
-                <input class="form-control" name='reply' value='새 댓글!!!!'>
+                <label>답변</label> 
+                <input class="form-control" name='reply' value='새 답변!!!!'>
               </div>      
               <div class="form-group">
                 <label>작성자</label> 
@@ -144,7 +145,7 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
- <!-- /새 댓글 .modal -->
+ <!-- /새 답변 .modal -->
 
 </div>
 <!-- /#page-wrapper -->
@@ -160,19 +161,24 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-  
-	var bnoValue = '${board.bno}';
+	
+	//답변이 없을 경우 현재날짜 출력
+    const now = new Date();
+	const currentDate = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0')
+	document.getElementById('currentDate').textContent = currentDate;
+	
+	var idValue = '${board.id}';
 	var replyUL = $(".chat");
 	
-	console.log(bnoValue);
+	console.log(idValue);
 	console.log(replyUL);
 	
-    //댓글목록의 페이지번호 1
+    //답변목록의 페이지번호 1
 	showList(1);
 	    
 	 function showList(page){
 	  
-          replyService.getList({bno:bnoValue, page: page|| 1 }, function(replyCnt, list) {
+          replyService.getList({id:idValue, page: page|| 1 }, function(replyCnt, list) {
 
 	   	    console.log("replyCnt: "+ replyCnt );
 	   	    console.log("list: " + list);
@@ -258,7 +264,7 @@ $(document).ready(function() {
 		//페이징 처리 끝
 	
 	
-		// 댓글 목록 하단의 페이지 번호를 클릭했을 때의 이벤트 처리
+		// 답변 목록 하단의 페이지 번호를 클릭했을 때의 이벤트 처리
 		replyPageFooter.on("click","li a", function(e){
 		       e.preventDefault();
 		       console.log("page click");
@@ -268,13 +274,13 @@ $(document).ready(function() {
 		       
 		       pageNum = targetPageNum;   // pageNum 변수에 클릭한 페이지 번호를 저장
 		       
-		       showList(pageNum);  // 클릭한 페이지의 댓글 목록을 보여주는 함수를 호출
+		       showList(pageNum);  // 클릭한 페이지의 답변 목록을 보여주는 함수를 호출
 		   }); 
 		
 		
-	//댓글 작성 버튼을 클릭했을 때 모달 창이 나타나는 코드
+	//답변 작성 버튼을 클릭했을 때 모달 창이 나타나는 코드
     var modal = $(".modal");   // 모달 창 선택
-    var modalInputReply = modal.find("input[name='reply']"); // 댓글 입력 필드 선택
+    var modalInputReply = modal.find("input[name='reply']"); // 답변 입력 필드 선택
     var modalInputReplyer = modal.find("input[name='replyer']"); // 작성자 입력 필드 선택
     var modalInputReplyDate = modal.find("input[name='replyDate']");  // 작성일 입력 필드 선택
     
@@ -287,11 +293,11 @@ $(document).ready(function() {
     	modal.modal('hide');
     }); */
     
-   // 댓글 작성 버튼 클릭 시 실행될 코드
+   // 답변 작성 버튼 클릭 시 실행될 코드
     $("#addReplyBtn").on("click", function(e){
       
       modal.find("input").val("");  // 모달 내의 입력 필드 초기화
-      modalInputReplyDate.closest("div").hide();   // 댓글 작성일 숨김
+      modalInputReplyDate.closest("div").hide();   // 답변 작성일 숨김
       modal.find("button[id !='modalCloseBtn']").hide();  // 모달 내의 버튼 숨김
       
       modalRegisterBtn.show();  // 등록 버튼 표시
@@ -300,13 +306,13 @@ $(document).ready(function() {
       
     }); // end addReplyBtn
     
-    //댓글등록
+    //답변등록
     modalRegisterBtn.on("click",function(e){
         
         var reply = {
-              reply: modalInputReply.val(),//댓글내용
+              reply: modalInputReply.val(),//답변내용
               replyer:modalInputReplyer.val(),//작성자
-              bno:bnoValue //게시글번호
+              id:idValue //게시글번호
             };
         replyService.add(reply, function(result){
           
@@ -322,22 +328,22 @@ $(document).ready(function() {
         
     }); //modalRegisterBtn 
     
-    // 댓글 조회 클릭 이벤트 처리, chat 클래스에 속한 li 요소가 클릭되었을 때 실행되는 함수
+    // 답변 조회 클릭 이벤트 처리, chat 클래스에 속한 li 요소가 클릭되었을 때 실행되는 함수
     $(".chat").on("click", "li", function(e){
    	      
-     var rno = $(this).data("rno");   // 댓글의 번호(rno)를 추출
+     var rno = $(this).data("rno");   // 답변의 번호(rno)를 추출
    	      
-    // 댓글 조회 요청, replyService.get() 함수를 호출하여 해당 댓글의 정보를 서버로 가져옴
+    // 답변 조회 요청, replyService.get() 함수를 호출하여 해당 답변의 정보를 서버로 가져옴
     replyService.get(rno, function(reply){
-   	         // 댓글 정보 표시
-   	        modalInputReply.val(reply.reply);  // 댓글내용
+   	         // 답변 정보 표시
+   	        modalInputReply.val(reply.reply);  // 답변내용
    	        modalInputReplyer.val(reply.replyer); // 작성자
    	        modalInputReplyDate.val(replyService.displayTime( reply.replyDate))  // 작성일
    	        .attr("readonly","readonly");
-   	        modal.data("rno", reply.rno); // 모달에 현재 조회된 댓글의 번호(rno)를 저장
+   	        modal.data("rno", reply.rno); // 모달에 현재 조회된 답변의 번호(rno)를 저장
    	        
    	        modal.find("button[id !='modalCloseBtn']").hide();  // 다른 버튼들은 숨김
-   	        modalModBtn.show();  // 조회된 댓글은 수정과 삭제가 가능하므로 
+   	        modalModBtn.show();  // 조회된 답변은 수정과 삭제가 가능하므로 
    	        modalRemoveBtn.show();  // 수정과 삭제 버튼을 표시
    	        
    	        $(".modal").modal("show");
@@ -345,7 +351,7 @@ $(document).ready(function() {
    	      });
     });
     
-  //댓글 내용 수정
+  //답변 내용 수정
     modalModBtn.on("click", function(e){
         
         var reply = {rno:modal.data("rno"), reply: modalInputReply.val()};
@@ -354,7 +360,7 @@ $(document).ready(function() {
               
           alert(result);
           modal.modal("hide");
-          showList(pageNum); //현재 페이지의 댓글 목록 다시 로드
+          showList(pageNum); //현재 페이지의 답변 목록 다시 로드
           
         });
         
@@ -370,7 +376,7 @@ $(document).ready(function() {
   	        
   	      alert(result);
   	      modal.modal("hide");
-  	      showList(pageNum); //현재 페이지의 댓글 목록 다시 로드
+  	      showList(pageNum); //현재 페이지의 답변 목록 다시 로드
   	      
   	  });
   	  
@@ -386,24 +392,24 @@ $(document).ready(function() {
 </script>
 
 <script>
-	/* var bnoValue = ${board.bno};
-	console.log("bnoValue");
-	console.log("bno: "+ bnoValue); */
+	/* var idValue = ${board.id};
+	console.log("idValue");
+	console.log("id: "+ idValue); */
 	
 	/* replyService.add(
-			{reply:"js test", replyer:"tester", bno:bnoValue},
+			{reply:"js test", replyer:"tester", id:idValue},
 			function(result){
 				alert("Result : " + result);
 			}
 	); */
 	
-	/* replyService.getList({bno:bnoValue, page:1}, function(list){
+	/* replyService.getList({id:idValue, page:1}, function(list){
 	    for(var i=0; i<list.length; i++){
 	        console.log(list[i]);
 	    }
 	}); */
 	
-	 //댓글번호 확인하고 지우기
+	 //답변번호 확인하고 지우기
 	/* replyService.remove(62, function(result){
 	    console.log("Result : " + result);
 	    if(result === "success") {
@@ -411,12 +417,12 @@ $(document).ready(function() {
 	    }
 	}); */
 	
-	//댓글 수정할 번호 확인하고 수정하기
-	/* replyService.update({rno:64, bno:bnoValue, reply:"수정하고있음8282"}, function(result){
+	//답변 수정할 번호 확인하고 수정하기
+	/* replyService.update({rno:64, id:idValue, reply:"수정하고있음8282"}, function(result){
 	   alert("수정완료");
 	}); */
 	
-	// 댓글 가져올 번호 확인
+	// 답변 가져올 번호 확인
 	/* replyService.get(64, function(data){
 		console.log(data);
 	}); */
@@ -432,7 +438,7 @@ $(document).ready(function() {
     });
 
     $("button[data-oper='list']").on("click", function(e) {
-      operForm.find("#bno").remove();
+      operForm.find("#id").remove();
       operForm.attr("action", "/board/list");
       operForm.submit();
     });

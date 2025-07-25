@@ -9,7 +9,7 @@
 <body>
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">고객게시판</h1>
+                    <h1 class="page-header">문의하기</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -18,8 +18,8 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            새로운 글을 작성하려면 게시글 작성 버튼을 클릭하세요. 
-              		         <button id='regBtn' type="button" class="btn btn-xs pull-right btn-info">게시글 작성</button>
+                            문의사항을 작성하려면 작성 버튼을 클릭하세요. 
+              		         <button id='regBtn' type="button" class="btn btn-info">작성</button>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -36,11 +36,11 @@
                                 <tbody>
 								  <c:forEach items="${list}" var="board">
 									<tr class="odd gradeX">										                                        
-										<td>${board.bno}</td>
-										<td><a class="move" href='${board.bno}'>   ${board.title}</a><b>[  <c:out value="${board.replyCnt}" />  ]</b></td>
-                                        <td>${board.writer}</td>
-                                        <td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.regdate}"/></td>
-                                        <td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.updateDate}"/></td>
+										<td>${board.id}</td>
+										<td><a class="move" href="${board.id}">   ${board.title}</a><b>[  <c:out value="${board.replyCnt}" />  ]</b></td>
+                                        <td>${board.customerId}</td>
+                                        <td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.createdAt}"/></td>
+                                        <td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.updatedAt}"/></td>
                                     </tr>
                                   </c:forEach>											
                               	</tbody>
@@ -171,6 +171,10 @@ $(document).ready(function(){
 	$(".paginate_button a").on("click", function(e){
 		e.preventDefault();
 		console.log("click");
+		
+		actionForm.removeAttr("action"); //뒤로가기 후 기존 파라미터 누적문제 해결
+		actionForm.find("input[name='id']").remove(); //뒤로가기 후 기존 파라미터 누적문제 해결
+		
 		// 클릭된 요소의 href 값을 찾아서 input 폼 안의 pageNum 필드에 설정		
 		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
 		actionForm.submit();
@@ -178,7 +182,10 @@ $(document).ready(function(){
 	
 	$(".move").on("click", function(e) {
 		e.preventDefault();
-		actionForm.append("<input type='hidden' name='bno' value='" + $(this).attr("href") + "'>");
+		
+		actionForm.find("input[name='id']").remove(); //뒤로가기 후 기존 파라미터 누적문제 해결
+		
+		actionForm.append("<input type='hidden' name='id' value='" + $(this).attr("href") + "'>");
 		actionForm.attr("action","/board/get");
 		actionForm.submit();
 	});
