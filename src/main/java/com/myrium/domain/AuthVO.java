@@ -7,4 +7,6 @@ public class AuthVO {
 
 	private Integer userId;
 	private String role;
+	
+	private String customerId;
 }
