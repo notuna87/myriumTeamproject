@@ -119,8 +119,8 @@
 		m.updated_at,
 		m.updated_by,
 
-		a.user_id AS auth_customer_id,
-		a.role AS auth_role
+		a.user_id,
+		a.role
 
 		FROM member m
 		LEFT JOIN member_auth a ON m.id = a.user_id
