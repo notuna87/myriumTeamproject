@@ -28,28 +28,34 @@
         <result property="updatedBy" column="updated_by"/>
         <collection property="authList" resultMap="authMap"/>
     </resultMap>
+    
+	  <resultMap type="com.myrium.domain.AuthVO" id="authMap">
+	    <result property="customerId" column="customer_id"/>
+	    <result property="role" column="role"/>
+	  </resultMap>
 
     <!-- 회원 등록 -->
 	<insert id="insertMember" parameterType="com.myrium.domain.MemberVO">
 	    INSERT INTO member (
-	        customer_id, password, customer_name, address,
+	        id ,customer_id, password, customer_name, address,
 	        phone_number, email, gender, birthdate,
 	        agree_terms, agree_privacy, agree_third_party,
 	        agree_delegate, agree_sms, is_deleted,
 	        created_at, created_by
 	    ) VALUES (
-	        #{customerId, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, #{customerName, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
+	        seq_member.NEXTVAL, #{customerId, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, #{customerName, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
 	        #{phoneNumber, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR}, #{gender, jdbcType=VARCHAR}, #{birthdate, jdbcType=DATE},
 	        #{agreeTerms, jdbcType=INTEGER}, #{agreePrivacy, jdbcType=INTEGER}, #{agreeThirdParty, jdbcType=INTEGER},
 	        #{agreeDelegate, jdbcType=INTEGER}, #{agreeSms, jdbcType=INTEGER}, #{isDeleted, jdbcType=INTEGER},
 	        SYSDATE, #{createdBy, jdbcType=VARCHAR}
 	    )
+		
 	</insert>
 	
 	<!-- 회원 권한 등록 -->
 	<insert id="insertAuth" parameterType="com.myrium.domain.AuthVO">
-	    INSERT INTO member_auth (user_id, auth)
-	    VALUES (#{userId}, #{auth})
+	    INSERT INTO member_auth (user_id, role)
+	    VALUES (#{userId}, #{role})
 	</insert>
 
     <!-- 회원 단건 조회 -->
@@ -84,11 +90,6 @@
 	</select>
 
   
-  <resultMap type="com.myrium.domain.AuthVO" id="authMap">
-    <result property="customerId" column="customer_id"/>
-    <result property="role" column="role"/>
-  </resultMap>
-  
   <select id="read" resultMap="memberMap">
   SELECT 
     m.id,
@@ -100,7 +101,6 @@
     m.email,
     m.gender,
     m.birthdate,
-    m.role,
     m.agree_terms,
     m.agree_privacy,
     m.agree_third_party,
@@ -116,7 +116,7 @@
     a.role AS auth_role
 
   FROM member m
-  LEFT JOIN member_auth a ON m.customer_id = a.customer_id
+  LEFT JOIN member_auth a ON m.id = a.user_id
   WHERE m.customer_id = #{customerId}
 </select>
 
