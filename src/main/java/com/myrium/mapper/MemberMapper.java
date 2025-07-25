@@ -21,6 +21,10 @@ public interface MemberMapper {
     
     public MemberVO read(String customer_id);
     
+    int checkIdDuplicate(String customer_id);  // 아이디 중복 체크
+
+    public MemberVO selectByCustomerId(String customerId);
+
 }
 
 

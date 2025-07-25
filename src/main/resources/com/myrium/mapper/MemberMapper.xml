@@ -91,8 +91,7 @@
 		UPDATE member SET is_deleted = 1 WHERE id = #{id}
 	</update>
 
-	<select id="selectByCustomerId"
-		resultType="com.myrium.domain.MemberVO">
+	<select id="selectByCustomerId" resultMap="memberMap">
 		SELECT * FROM member WHERE customer_id = #{customerId}
 	</select>
 
@@ -126,7 +125,8 @@
 		LEFT JOIN member_auth a ON m.id = a.user_id
 		WHERE m.customer_id = #{customerId}
 	</select>
+	
 
-
+	
 
 </mapper>

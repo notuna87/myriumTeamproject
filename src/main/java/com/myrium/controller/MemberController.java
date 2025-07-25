@@ -7,8 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.myrium.domain.MemberVO;
 import com.myrium.service.MemberService;
@@ -28,5 +26,6 @@ public class MemberController {
         
         return "join/member_list"; // => /WEB-INF/views/member/member_list.jsp
     }
+    
 
 }
