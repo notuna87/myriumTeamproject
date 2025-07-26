@@ -20,8 +20,10 @@ public class MemberRestController {
 
 	    // 아이디 중복 확인 API
 	    @GetMapping("/check-id")
-	    public ResponseEntity<Boolean> checkId(@RequestParam String customerId) {
+	    public ResponseEntity<String> checkId(@RequestParam String customerId) {
 	        boolean isDuplicate = memberService.isCustomerIdDuplicate(customerId);
-	        return ResponseEntity.ok(isDuplicate); // true: 중복, false: 사용가능
+	        String result = isDuplicate ? "unavailable" : "available";
+	        return ResponseEntity.ok(result);
 	    }
+
 }
