@@ -28,7 +28,7 @@
 				<!-- 로그인 안 했을 때 -->
 				<sec:authorize access="!isAuthenticated()">
 					<li><a href="${pageContext.request.contextPath}/admin">관리자</a></li>
-					<li><a href="${pageContext.request.contextPath}/mypage">주문조회</a></li>
+					<li><a href="#" id="mypageLinkNotLoggedIn">마이페이지</a></li>
 					<li><a href="${pageContext.request.contextPath}/login">로그인</a></li>
 					<li><a href="${pageContext.request.contextPath}/join"
 						class="loginWrapLastchild">회원가입</a></li>
@@ -153,6 +153,26 @@
 							}
 						});
 	</script>
+
+	<script>
+  const isLoggedIn = <sec:authorize access="isAuthenticated()">true</sec:authorize><sec:authorize access="!isAuthenticated()">false</sec:authorize>;
+	</script>
+
+
+	<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const mypageLink = document.getElementById('mypageLinkNotLoggedIn');
+
+    if (mypageLink) {
+      mypageLink.addEventListener('click', function (e) {
+        e.preventDefault(); // 링크 기본 이동 막기
+        alert("회원 전용 기능입니다. 로그인 후 이용해주세요.");
+        location.href = "${pageContext.request.contextPath}/login";
+      });
+    }
+  });
+</script>
+	
 </body>
 
 </html>
