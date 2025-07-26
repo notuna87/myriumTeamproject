@@ -41,26 +41,24 @@ document.getElementById('userid').addEventListener('input', function () {
   }
 
   // ✅ 아이디 중복 확인 API 호출
-  fetch(`/member/check-id?customerId=${id}`)
-    .then(response => response.text())
-.then(text => {
-  const isDuplicate = (text === "true"); // 문자열로 비교
-  if (isDuplicate) {
-    errorEl.textContent = '이미 사용 중인 아이디입니다.';
-    errorEl.className = 'error_msg';
-    isIdAvailable = false;
-  } else {
-    errorEl.textContent = '사용 가능한 아이디입니다.';
-    errorEl.className = 'success_msg';
-    isIdAvailable = true;
-  }
-})
-
-    .catch(() => {
-      errorEl.textContent = '서버 오류로 확인할 수 없습니다.';
-      errorEl.className = 'error_msg';
-      isIdAvailable = false;
-    });
+	fetch(`/member/check-id?customerId=${id}`)
+	  .then(response => response.text())
+	  .then(text => {
+	    if (text === "unavailable") {
+	      errorEl.textContent = '이미 사용 중인 아이디입니다.';
+	      errorEl.className = 'error_msg';
+	      isIdAvailable = false;
+	    } else {
+	      errorEl.textContent = '사용 가능한 아이디입니다.';
+	      errorEl.className = 'success_msg';
+	      isIdAvailable = true;
+	    }
+	  })
+	  .catch(() => {
+	    errorEl.textContent = '서버 오류로 확인할 수 없습니다.';
+	    errorEl.className = 'error_msg';
+	    isIdAvailable = false;
+	  });
 });
 
 
