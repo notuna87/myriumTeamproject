@@ -35,10 +35,10 @@
 						<div class="subCategory">
 							<ul>
 								<li><a href="#">식물백서</a></li>
-								<li><a href="#">공지사항</a></li>
+								<li><a href="${pageContext.request.contextPath}/notice/list">공지사항</a></li>
 								<li><a href="${pageContext.request.contextPath}/board/list">문의하기</a></li>
 								<li><a href="#">상품 리뷰</a></li>
-								<li><a href="#">FAQ</a></li>
+								<li><a href="${pageContext.request.contextPath}/faq/list">FAQ</a></li>
 							</ul>
 						</div>
 					</li>

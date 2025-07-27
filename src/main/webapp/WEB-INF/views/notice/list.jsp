@@ -10,10 +10,10 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<sec:authorize access="hasAuthority('ADMIN')">
-				<h1 class="page-header">문의하기(관리자)</h1>
+				<h1 class="page-header">공지사항(관리자)</h1>
 			</sec:authorize>
 			<sec:authorize access="!hasAuthority('ADMIN')">
-				<h1 class="page-header">문의하기</h1>
+				<h1 class="page-header">공지사항</h1>
 			</sec:authorize>
 		</div>
 		<!-- /.col-lg-12 -->
@@ -22,9 +22,9 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="panel panel-default">
-				<sec:authorize access="!hasAuthority('ADMIN')">
+				<sec:authorize access="hasAuthority('ADMIN')">
 					<div class="panel-heading">
-						문의사항을 작성하려면 작성 버튼을 클릭하세요.
+						공지사항을 작성하려면 작성 버튼을 클릭하세요.
 						<button id='regBtn' type="button" class="btn btn-info">작성</button>
 					</div>
 				</sec:authorize>
@@ -35,16 +35,15 @@
 						id="dataTables-example">
 						<thead>
 							<tr>
-								<th class="text-center">No.</th>
+								<th class="text-center">번호</th>
 								<th class="text-center">제목</th>
-								<th class="text-center">작성자 ID</th>
+								<th class="text-center">작성자</th>
 								<th class="text-center">작성일</th>
-								<th class="text-center">수정일</th>
+								<th class="text-center">조회</th>
+								<th class="text-center">첨부파일</th>
 
 								<!-- 관리자만 노출 -->
 								<sec:authorize access="hasAuthority('ADMIN')">
-									<!-- <th>답변여부</th> -->
-									<th class="text-center">상태</th>
 									<th class="text-center">관리</th>
 								</sec:authorize>
 							</tr>
@@ -54,57 +53,59 @@
 							<c:choose>
 								<c:when test="${empty list}">
 									<tr>
-										<td colspan="7" class="text-center">작성된 문의가 없습니다.</td>
+										<td colspan="7" class="text-center">등록된 공지사항이 없습니다.</td>
 									</tr>
 								</c:when>
 								<c:otherwise>
-									<c:forEach items="${list}" var="board">
+									<c:forEach items="${list}" var="notice">
 										<tr
 											class="odd gradeX 
-								          <c:if test='${board.isDeleted == 1}'>table-danger</c:if>'">
-											<td class="text-center">${board.id}</td>
-											<td><a class="move" href="${board.id}"> ${board.title}</a> <c:choose>
-													<c:when test="${board.replyCnt > 0}">
-														<b>[ <c:out value="${board.replyCnt}" /> ]
-														</b>
-													</c:when>
-												</c:choose> <b> <c:choose>
-														<c:when test="${board.isAnswered == 1}">
-															<span class="label label-success">답변완료</span>
-														</c:when>
-														<c:otherwise>
-															<span class="label label-default">미답변</span>
-														</c:otherwise>
-													</c:choose>
-											</b></td>
-
-											<td class="text-center">${board.customerId}</td>
+								          <c:if test='${notice.isDeleted == 1}'>table-danger</c:if>'">
+											<td class="text-center">${notice.id}</td>
+											<td>
+												<a class="move" href="${notice.id}">${notice.title}</a>
+							                    <!-- NEW 라벨: 3일 이내 등록 -->
+							                    <c:if test="${notice.createdAt.time + (1000*60*60*24*3) > now.time}">
+							                        <span class="badge badge-danger ml-1">NEW</span>
+							                    </c:if>
+							                </td>
+											<td class="text-center">${notice.customerId}</td>
 											<td class="text-center"><fmt:formatDate pattern="yyyy-MM-dd"
-													value="${board.createdAt}" /></td>
-											<td class="text-center"><fmt:formatDate pattern="yyyy-MM-dd"
-													value="${board.updatedAt}" /></td>
+													value="${notice.createdAt}" /></td>
+											<td class="text-center">${notice.readCnt}</td>
+											
+											<td class="text-center">
+											  <c:choose>
+											    <c:when test="${notice.has_file > 0}">
+											      <i class="fa fa-paperclip" title="첨부파일 있음"></i>
+											    </c:when>
+											    <c:otherwise>
+											      -
+											    </c:otherwise>
+											  </c:choose>
+											</td>
 
 											<!-- 관리자 전용 열 -->
 											<sec:authorize access="hasAuthority('ADMIN')">
 												<td class="text-center"><c:choose>
-														<c:when test="${board.isDeleted == 1}">미노출</c:when>
+														<c:when test="${notice.isDeleted == 1}">미노출</c:when>
 														<c:otherwise>정상</c:otherwise>
 													</c:choose></td>
 												<td class="text-center">
-													<button type="button" class="btn btn-sm btn-primary edit-btn" data-id="${board.id}">수정</button>
+													<button type="button" class="btn btn-sm btn-primary edit-btn" data-id="${notice.id}">수정</button>
 
 													<c:choose>
-														<c:when test="${board.isDeleted == 0}">
+														<c:when test="${notice.isDeleted == 0}">
 															<button type="button" class="btn btn-sm btn-warning softdel-btn"
-																data-id="${board.id}">글내림</button>
+																data-id="${notice.id}">글내림</button>
 															<button type="button" class="btn btn-sm btn-danger harddel-btn"
-																data-id="${board.id}">영구삭제</button>
+																data-id="${notice.id}">영구삭제</button>
 														</c:when>
 														<c:otherwise>
 															<button type="button" class="btn btn-sm btn-success restore-btn"
-																data-id="${board.id}">복구</button>
+																data-id="${notice.id}">복구</button>
 															<button type="button" class="btn btn-sm btn-danger harddel-btn"
-																data-id="${board.id}">영구삭제</button>
+																data-id="${notice.id}">영구삭제</button>
 														</c:otherwise>
 													</c:choose>
 												</td>
@@ -121,7 +122,7 @@
 					<!-- 검색조건 -->
 					<div class='row'>
 						<div class="col-lg-12">
-							<form id='searchForm' action="/board/list" method='get'>
+							<form id='searchForm' action="/notice/list" method='get'>
 								<select name='type'>
 									<option value="" <c:out value="${pageMaker.cri.type == null?'selected':''}"/>>선택하세요</option>
 									<option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':''}"/>>제목</option>
@@ -168,7 +169,7 @@
 					</div>
 					<!-- end 페이지 처리 -->
 
-					<form id='actionForm' action="/board/list" method='get'>
+					<form id='actionForm' action="/notice/list" method='get'>
 						<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'> <input
 							type='hidden' name='amount' value='${pageMaker.cri.amount}'> <input type='hidden'
 							name='type' value='${pageMaker.cri.type}'> <input type='hidden' name='keyword'
@@ -241,7 +242,7 @@ $(document).ready(function(){
 	}
 	
 	$("#regBtn").on("click",function(){
-		self.location = "/board/register";
+		self.location = "/notice/register";
 	})
 	
 	var actionForm = $("#actionForm");
@@ -263,7 +264,7 @@ $(document).ready(function(){
 		actionForm.find("input[name='id']").remove(); //뒤로가기 후 기존 파라미터 누적문제 해결
 		
 		actionForm.append("<input type='hidden' name='id' value='" + $(this).attr("href") + "'>");
-		actionForm.attr("action","/board/get");
+		actionForm.attr("action","/notice/get");
 		actionForm.submit();
 	});
 	
@@ -289,7 +290,7 @@ $(document).ready(function(){
 	// 관리자용 버튼 이벤트
 	$(document).on("click", ".edit-btn", function () {
 	    const id = $(this).data("id");
-	    window.location.href = "/board/modify?id=" + id;
+	    window.location.href = "/notice/modify?id=" + id;
 	});
 
 	$(document).on("click", ".harddel-btn", function () {
@@ -297,7 +298,7 @@ $(document).ready(function(){
 	    if (confirm("삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
 	        $.ajax({
 	            type: "post",
-	            url: "/board/harddel",
+	            url: "/notice/harddel",
 	            data: { id: id },
 	            success: function () {
 	                location.reload();
@@ -314,7 +315,7 @@ $(document).ready(function(){
 	    if (confirm("글이 노출되지 않습니다. 정말 하시겠습니까?")) {
 	        $.ajax({
 	            type: "post",
-	            url: "/board/softdel",
+	            url: "/notice/softdel",
 	            data: { id: id },
 	            success: function () {
 	                location.reload();
@@ -331,7 +332,7 @@ $(document).ready(function(){
 	    if (confirm("복구하시겠습니까?")) {
 	        $.ajax({
 	            type: "post",
-	            url: "/board/restore",
+	            url: "/notice/restore",
 	            data: { id: id },
 	            success: function () {
 	                location.reload();

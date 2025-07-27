@@ -2,53 +2,102 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+
 <mapper namespace="com.myrium.mapper.ReplyMapper">
 
+  <!-- INSERT -->
+  <!--<insert id="insert">
+    INSERT INTO board_reply (
+      rno, bno, user_id, customer_id, reply, is_deleted, created_at, replyer, writer_is_admin
+    )
+    VALUES (
+      board_reply_seq.nextval, #{bno}, #{user_id}, #{customer_id}, #{reply}, 0, SYSDATE, #{replyer}, #{writer_is_admin}
+    )
+  </insert> -->
+  
+  <!-- 댓글 등록 & 게시글 답변 여부 업데이트 -->
 	<insert id="insert">
-		insert into tbl_reply(rno, id, reply, replyer)
-		values (seq_reply.nextval, #{id}, #{reply}, #{replyer})
+	  <!-- 1. 댓글 INSERT -->
+	  INSERT INTO board_reply (
+	    rno, bno, user_id, customer_id, reply, is_deleted, created_at, replyer, writer_is_admin
+	  )
+	  VALUES (
+	    board_reply_seq.nextval, #{bno}, #{user_id}, #{customer_id}, #{reply}, 0, SYSDATE, #{replyer}, #{writer_is_admin}
+	  )
 	</insert>
 	
-	<select id="read" resultType="com.myrium.domain.ReplyVO">
-		select * from tbl_reply where rno = #{rno}
-	</select>
-	
-	<delete id="delete">
-		delete from tbl_reply where rno = #{rno}
-	</delete>
-	
-	<update id="update">
-		update tbl_reply set reply=#{reply}, updatedate=sysdate
-		where rno=#{rno}
+	  <!-- 2. board 테이블의 답변여부 업데이트 -->
+	<update id="isAnswered">
+	  UPDATE board
+	  SET is_answered = 
+	    <choose>
+	      <when test="writer_is_admin == 1">1</when>
+	      <otherwise>0</otherwise>
+	    </choose>
+	  WHERE id = #{bno}
 	</update>
 	
-	<!-- <select id="getListWithPaging" resultType="com.myrium.domain.ReplyVO">
-		select rno, id, reply, replyer, replyDate, updatedate
-		from tbl_reply
-		where id = #{id}
-		order by rno asc
-	</select> -->
-	
-	<select id="getListWithPaging" resultType="com.myrium.domain.ReplyVO">
-	    <![CDATA[
-		select  rno, id, reply, replyer, replydate, updatedate
-		from 
-		   (
-		     select /*+INDEX(tbl_reply idx_reply) */ 
-		        rownum rn,  rno, id, reply, replyer, replyDate, updatedate
-		      from tbl_reply
-		      where id =  #{id}
-	                  and rno > 0 
-	                  and rownum <= #{cri.pageNum} * #{cri.amount}
-	               ) where rn > (#{cri.pageNum} -1) * #{cri.amount}
-	    ]]>
-	</select>
-	
-	<select id="getCountByid" resultType="int">
-	<![CDATA[
-	select count(rno) from tbl_reply where id = #{id}
-	]]>
-</select>
+
+	  <!-- 임시 디버깅 -->
+	  <!-- test="${writerIsAdmin}" --> <!-- 이런 식은 SQL Injection 위험이 있으므로 조심 -->
+   <!-- <update id="isAnswered">
+	  UPDATE board
+	  SET is_answered = #{writer_is_admin}
+	  WHERE id = #{bno}
+	</update> -->
+
+  <!-- SELECT ONE -->
+  <select id="read" resultType="com.myrium.domain.ReplyVO">
+    SELECT 
+      rno, bno, user_id, customer_id, reply, reply_date, is_deleted,
+      created_at, replyer, updated_at, updated_by, writer_is_admin
+    FROM board_reply 
+    WHERE rno = #{rno}
+  </select>
+
+  <!-- HARDDELETE (영구 삭제) -->
+  <delete id="harddelete">
+    DELETE FROM board_reply WHERE rno = #{rno}
+  </delete>
+  
+  <!-- SOFTDELETE -->
+  <update id="softdelete">
+    UPDATE board_reply
+    SET is_deleted = 1
+    WHERE rno = #{rno}
+  </update>
+
+  <!-- UPDATE -->
+  <update id="update">
+    UPDATE board_reply
+    SET 
+      reply = #{reply},
+      updated_at = SYSDATE,
+      updated_by = #{updated_by}
+    WHERE rno = #{rno}
+  </update>
+
+  <!-- SELECT LIST WITH PAGING -->
+  <select id="getListWithPaging" resultType="com.myrium.domain.ReplyVO">
+    <![CDATA[
+    SELECT rno, bno, user_id, customer_id, reply, reply_date, is_deleted,
+           created_at, replyer, updated_at, updated_by, writer_is_admin
+    FROM (
+        SELECT /*+ INDEX(board_reply idx_reply) */
+               ROWNUM rn, rno, bno, user_id, customer_id, reply, reply_date, is_deleted,
+               created_at, replyer, updated_at, updated_by, writer_is_admin
+        FROM board_reply
+        WHERE bno = #{bno}
+          AND is_deleted = 0
+          AND ROWNUM <= #{cri.pageNum} * #{cri.amount}
+    )
+    WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount} AND is_deleted = 0
+    ]]>
+  </select>
+
+  <!-- COUNT -->
+  <select id="getCountByBno" resultType="int">
+    SELECT COUNT(*) FROM board_reply WHERE bno = #{bno} AND is_deleted = 0
+  </select>
 
 </mapper>

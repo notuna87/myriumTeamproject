@@ -26,16 +26,16 @@ var replyService = (function () {
   }
 
   // param: 댓글 목록을 가져오기 위해 필요한 매개변수
-  // id(게시물 번호)와 선택적으로 page (페이지 번호)가 필요
+  // bno(게시물 번호)와 선택적으로 page (페이지 번호)가 필요
   // param 객체에서 page 값을 가져와서 page 변수에 할당
   // page 값이 없다면 기본값으로 1을 사용, 댓글을 가져올 페이지의 번호를 의미
   function getList(param, callback, error) {
     //전체데이타 가져오기
-    var id = param.id;
+    var bno = param.bno;
 
     var page = param.page || 1;
 
-    $.getJSON("/replies/pages/" + id + "/" + page + ".json", function (data) {
+    $.getJSON("/replies/pages/" + bno + "/" + page + ".json", function (data) {
       if (callback) {
         //callback(data); // 댓글 목록만 가져오는 경우
         callback(data.replyCnt, data.list); //댓글 숫자와 목록을 가져오는 경우
@@ -47,23 +47,46 @@ var replyService = (function () {
     });
   }
 
-  function remove(rno, callback, error) {
+  function harddel(rno, callback, error) {
     //데이타 삭제
-    $.ajax({
-      type: "delete",
-      url: "/replies/" + rno,
+    if (confirm("복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
+	    $.ajax({
+	      type: "delete",
+	      url: "/replies/" + rno + "/hard",
+	
+	      success: function (result, status, xhr) {
+	        if (callback) {
+	          callback(result);
+	        }
+	      },
+	      error: function (xhr, status, er) {
+	        if (error) {
+	          error(er);
+	        }
+	      },
+	    });
+	}
+  }
 
-      success: function (result, status, xhr) {
-        if (callback) {
-          callback(result);
-        }
-      },
-      error: function (xhr, status, er) {
-        if (error) {
-          error(er);
-        }
-      },
-    });
+  function softdel(rno, callback, error) {
+    //데이타 삭제
+    if (confirm("정말 삭제하시겠습니까?")) {
+	    $.ajax({
+	      type: "patch",
+	      url: "/replies/" + rno + "/soft",
+	
+	      success: function (result, status, xhr) {
+	        if (callback) {
+	          callback(result);
+	        }
+	      },
+	      error: function (xhr, status, er) {
+	        if (error) {
+	          error(er);
+	        }
+	      },
+	    });
+	}
   }
 
   function update(reply, callback, error) {
@@ -140,7 +163,8 @@ var replyService = (function () {
   return {
     add: add,
     getList: getList,
-    remove: remove,
+    harddel: harddel,
+    softdel: softdel,
     update: update,
     get: get,
     displayTime: displayTime,
