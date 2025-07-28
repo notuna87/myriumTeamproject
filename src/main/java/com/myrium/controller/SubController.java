@@ -37,7 +37,6 @@ public class SubController {
 		model.addAttribute("productDetailImg", productDetailImg.getProductDetailImg());
 		model.addAttribute("popularProduct", popularProduct);
 
-
 		return "sub/sub";
 	}
 }

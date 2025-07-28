@@ -96,7 +96,9 @@
 				</div>
 			</div>
 			<p style="margin-bottom: 20px;">
-				총 구매 금액 <span id="totalPrice" style="float: right; font-size: 22px; font-weight: bold; color: #e32e15;"> 원 </span>
+				총 구매 금액 <span id="totalPrice" style="float: right; font-size: 22px; font-weight: bold; color: #e32e15;"> 원
+				</span>
+
 
 			</p>
 
@@ -144,6 +146,7 @@
 			}
 		}
 
+
 		// 서버에서 넘어온 할인 가격을 JS에서 사용
 		const discountPrice = ${product.discount_price};
 		const productPrice = ${product.product_price};
@@ -175,6 +178,7 @@
 		function decreaseQty() {
 			if (parseInt(qtyInput.value) > 1) {
 				qtyInput.value = parseInt(qtyInput.value) - 1;
+        
 				
 				if(discountPrice == 0){
 					updateNotSaleTotalPrice();			
