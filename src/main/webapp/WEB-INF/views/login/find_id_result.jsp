@@ -1,4 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page isELIgnored="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -12,6 +16,13 @@
 <body>
 <%@ include file="../main/header.jsp" %>
 
+<c:if test="${param.error eq 'Y'}">
+  <script>
+    alert('입력하신 정보와 일치하는 회원이 없습니다.');
+    history.back();
+  </script>
+</c:if>
+
   <div class="wrap">
     <h2 class="title">아이디 찾기</h2>
 
@@ -21,30 +32,35 @@
         가입된 아이디가 총 1개 있습니다!
       </p>
 
-			<table class="info_table">
-				<tr>
-					<th>이름</th>
-					<td>${member.customerName}</td>
-				</tr>
-				<tr>
-					<th>이메일</th>
-					<td>${member.email}</td>
-				</tr>
-			</table>
+      <table class="info_table">
+        <tr>
+          <th>이름</th>
+          <td>${member.customerName}</td>
+        </tr>
+        <tr>
+          <th>이메일</th>
+          <td>${member.email}</td>
+        </tr>
+      </table>
 
-			<div class="found_id">
-				<label> <input type="radio" checked /> ${member.customerId}
-					<span class="info">(개인회원, ${member.createdAt} 가입)</span>
-				</label>
-			</div>
+      <div class="found_id">
+        <label>
+          <input type="radio" checked />
+          <strong>${member.customerId}</strong>
+          <span class="info">
+		     (개인회원, <fmt:formatDate value="${member.createdAt}" pattern="yyyy년 MM월 dd일" /> 가입)
+		  </span>
+        </label>
+      </div>
 
-
-			<div class="btn_group">
+      <div class="btn_group">
         <button class="btn login_btn" onclick="location.href='${pageContext.request.contextPath}/login'">로그인</button>
-        <button class="btn find_pw_btn" onclick="location.href='${pageContext.request.contextPath}/find_pw'">비밀번호 찾기</button>
+        <button class="btn find_pw_btn" onclick="location.href='${pageContext.request.contextPath}/login/find_pw'">비밀번호 찾기</button>
+
       </div>
     </div>
   </div>
- <%@ include file="/WEB-INF/views/main/footer.jsp" %>
+
+<%@ include file="/WEB-INF/views/main/footer.jsp" %>
 </body>
 </html>

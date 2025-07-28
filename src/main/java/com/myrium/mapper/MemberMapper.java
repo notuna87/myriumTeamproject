@@ -35,6 +35,7 @@ public interface MemberMapper {
 
     public MemberVO findByNameAndPhone(@Param("customerName") String customerName,
             @Param("phoneNumber") String phoneNumber);
+    
 
 
 }

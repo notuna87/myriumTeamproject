@@ -115,22 +115,29 @@
 	
 
 	<!-- 아이디 찾기 -->
-	<select id="findByNameAndEmail"
-		resultType="com.myrium.domain.MemberVO">
-		SELECT customer_id, customer_name, email, created_at
+	<select id="findByNameAndEmail" resultMap="memberMap">
+		SELECT id, customer_id, customer_name, email, created_at
 		FROM member
 		WHERE customer_name = #{customerName}
 		AND email = #{email}
 	</select>
-
-
-	<select id="findByNameAndPhone"
-		resultType="com.myrium.domain.MemberVO">
-		SELECT customer_id, customer_name, phone_number, created_at
+	
+	<select id="findByNameAndPhone" resultMap="memberMap">
+		SELECT id, customer_id, customer_name, phone_number, created_at
 		FROM member
 		WHERE customer_name = #{customerName}
 		AND phone_number = #{phoneNumber}
 	</select>
+	
+	<!-- 패스워드 찾기 -->
+	<update id="updateMember" parameterType="com.myrium.domain.MemberVO">
+	  UPDATE member
+	  SET password = #{password},
+	      updated_at = #{updatedAt},
+	      updated_by = #{updatedBy}
+	  WHERE id = #{id}
+	</update>
+	
 	
 	
 </mapper>

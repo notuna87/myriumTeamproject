@@ -1,5 +1,6 @@
 package com.myrium.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -69,4 +70,57 @@ public class MemberServiceImpl implements MemberService {
         System.out.println("중복 확인 결과: " + (vo != null ? "중복됨" : "사용 가능"));
         return vo != null;
     }
+    
+    //패스워드 찾기, 임시 패스워드 생성 
+    @Override
+    @Transactional
+    public String findPasswordByEmail(String customerId, String customerName, String email) {
+        MemberVO member = memberMapper.findByNameAndEmail(customerName, email);
+        if (member != null && member.getCustomerId().equals(customerId)) {
+            String tempPassword = generateTempPassword(); // 임시 비번 생성
+            String encodedPassword = passwordEncoder.encode(tempPassword); // 암호화
+            member.setPassword(encodedPassword);
+            member.setUpdatedAt(new Date());               // 현재 시간으로 설정
+            member.setUpdatedBy("비밀번호 찾기");           // 또는 customerId 등
+            
+            memberMapper.updateMember(member);             // DB update 호출
+            return tempPassword;
+        }
+        return null;
+    }
+    @Override
+    @Transactional
+    public String findPasswordByPhone(String customerId, String customerName, String phoneNumber) {
+        MemberVO member = memberMapper.findByNameAndPhone(customerName, phoneNumber);
+
+        if (member != null && member.getCustomerId().equals(customerId)) {
+            String tempPassword = generateTempPassword();
+
+            String encodedPassword = passwordEncoder.encode(tempPassword);
+
+            // 비밀번호 및 수정 정보 업데이트
+            member.setPassword(encodedPassword);
+            member.setUpdatedAt(new Date());
+            member.setUpdatedBy("find_password");
+
+            memberMapper.updateMember(member);
+
+            return tempPassword;
+        }
+
+        return null;
+    }
+
+    // 임시 비밀번호 생성기
+    private String generateTempPassword() {
+        int length = 10;
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int rand = (int)(Math.random() * chars.length());
+            sb.append(chars.charAt(rand));
+        }
+        return sb.toString();
+    }
+    
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import com.myrium.domain.MemberVO;
 
 public interface MemberService {
-
+	
     void register(MemberVO member);               // 회원 등록
 
     MemberVO getMemberById(int id);              // ID로 회원 조회
@@ -19,5 +19,9 @@ public interface MemberService {
 //	MemberVO getMemberByCustomerId(String customerId);
     
     boolean isCustomerIdDuplicate(String customerId); // 아이디 중복체크
+    
+    String findPasswordByEmail(String customerId, String customerName, String email);
+
+    String findPasswordByPhone(String customerId, String customerName, String phoneNumber);
     
 }
