@@ -16,6 +16,7 @@
 				<a href="${pageContext.request.contextPath}/"> <img src="${pageContext.request.contextPath}/resources/img/logo/logo.png" alt="logo">
 				</a>
 			</div>
+
 			<ul class="loginWrap">
 				<!-- 로그인 안 했을 때 -->
 				<sec:authorize access="!isAuthenticated()">
@@ -25,26 +26,13 @@
 					<li><a href="${pageContext.request.contextPath}/join" class="loginWrapLastchild">회원가입</a></li>
 				</sec:authorize>
 
-
 				<!-- 로그인 했을 때 -->
 				<sec:authorize access="isAuthenticated()">
 					<li><a href="${pageContext.request.contextPath}/admin">관리자</a></li>
 					<li><a href="${pageContext.request.contextPath}/mypage">마이페이지</a></li>
-<<<<<<< HEAD
-					<li><sec:authentication
-							property="principal.member.customerName" var="username" /> <span>${username}님</span>
-
-					</li>
-					<li><a href="#"
-						onclick="document.getElementById('logoutForm').submit(); return false;">로그아웃</a>
-						<form id="logoutForm"
-							action="${pageContext.request.contextPath}/customLogout"
-							method="post" style="display: none;"></form></li>
-=======
 					<li><sec:authentication property="principal.member.customerName" var="username" /> <span>${username}님</span></li>
 					<li><a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">로그아웃</a>
 						<form id="logoutForm" action="${pageContext.request.contextPath}/customLogout" method="post" style="display: none;"></form></li>
->>>>>>> main
 
 				</sec:authorize>
 
@@ -52,26 +40,6 @@
 		</div>
 	</div>
 
-<<<<<<< HEAD
-		<div class="navsearchWrap">
-			<div class="navbarWrap">
-				<ul>
-					<li><a href="#">브랜드 소개</a></li>
-					<li><a href="#">식물키우기</a></li>
-					<li><a href="#">타임세일</a></li>
-					<li><a href="#">리뷰</a></li>
-					<li><a href="#">매거진</a></li>
-					<li class="subCategoryWrap"><a href="#">고객센터</a>
-						<div class="subCategory">
-							<ul>
-								<li><a href="#">식물백서</a></li>
-								<li><a href="${pageContext.request.contextPath}/notice/list">공지사항</a></li>
-								<li><a href="${pageContext.request.contextPath}/board/list">문의하기</a></li>
-								<li><a href="#">상품 리뷰</a></li>
-								<li><a href="${pageContext.request.contextPath}/faq/list">FAQ</a></li>
-							</ul>
-						</div>
-=======
 	<div class="navsearchWrap">
 		<div class="navbarWrap">
 			<ul>
@@ -92,7 +60,6 @@
 					</div></li>
 			</ul>
 		</div>
->>>>>>> main
 
 		<div class="searchBoxWrap">
 			<fieldset class="headerFieldset">
@@ -138,7 +105,7 @@
 			</li>
 		</ul>
 	</div>
-	</div>
+
 	<script>
 		document
 				.addEventListener(
