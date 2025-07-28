@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<jsp:useBean id="now" class="java.util.Date" />
 
 <%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp"%>
@@ -25,7 +26,13 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<td><span class="badge badge-danger ml-1">NEW</span> 마크는 최근 3일 이내에 업로드 된 글입니다.</td> 
+                    <!-- NEW 라벨: 3일 이내 등록 -->
+                    <c:if test="${notice.createdAt.time + (1000*60*60*24*3) > now.time}">
+	                    <div>
+	                        <span class="badge badge-danger ml-1">NEW</span>
+	                        <span> 새로운 공지사항 입니다.</span>	                        
+          				</div>
+                    </c:if>
 				</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
@@ -89,12 +96,12 @@
     var operForm = $("#operForm");
 
     $("button[data-oper='modify']").on("click", function(e) {
-      operForm.attr("action", "/board/modify").submit();
+      operForm.attr("action", "/notice/modify").submit();
     });
     
     $("button[data-oper='list']").on("click", function(e) {
       operForm.find("#id").remove();
-      operForm.attr("action", "/board/list");
+      operForm.attr("action", "/notice/list");
       operForm.submit();
     });
     
@@ -104,14 +111,14 @@
 	    if (confirm("글이 노출되지 않습니다. 정말 하시겠습니까?")) {
 	        $.ajax({
 	            type: "post",
-	            url: "/board/softdel",
+	            url: "/notice/softdel",
 	            data: { 
 	            	id: id,
 	            	customerId: customerId
 	            },
 	            success: function () {
 	                //location.reload();
-	                window.location.href = "/board/list";
+	                window.location.href = "/notice/list";
 	            },
 	            error: function () {
 	                alert("글내림 실패");

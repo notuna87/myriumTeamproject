@@ -1,5 +1,7 @@
 package com.myrium.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.myrium.domain.Criteria;
@@ -34,13 +35,13 @@ public class NoticeController {
 	
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
-		log.info("notice list__________");
+		log.info("list__________");
 		log.info(cri);
 		
 	    // 현재 로그인 사용자 권한 조회
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    boolean isAdmin = authentication.getAuthorities().stream()
-	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));	
+	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));		
 		
 		List<NoticeVO> list = noticeservice.getList(cri, isAdmin);
 		
@@ -64,8 +65,8 @@ public class NoticeController {
 	
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/register")
-	public String register(NoticeVO vo, @RequestParam("uploadFiles") MultipartFile[] uploadFiles, RedirectAttributes rttr) {
-		log.info("notice register......." + vo);
+	public String register(NoticeVO vo, RedirectAttributes rttr) {
+		log.info("register......." + vo);
 
 		noticeservice.register(vo);
 
@@ -81,10 +82,10 @@ public class NoticeController {
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping({"/get", "/modify"})
 	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) {
-		model.addAttribute("board", noticeservice.get(id));
+		model.addAttribute("notice", noticeservice.get(id));
 	}
 	
-	@PreAuthorize("principal.username == #notice.customerId")
+	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
 	@PostMapping("/modify")
 	public String modify(NoticeVO notice, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
 		log.info("modify:" + notice);
@@ -99,10 +100,10 @@ public class NoticeController {
 		return "redirect:/notice/list";
 	}
 	
-	@PreAuthorize("principal.username == #customerId")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/harddel")
 	public String harddel(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
-		log.info("harddelete..." + id);
+		log.info("notice harddelete..." + id);
 		if(noticeservice.harddel(id)) {
 			rttr.addFlashAttribute("result","success");
 		}
@@ -115,11 +116,27 @@ public class NoticeController {
 		return "redirect:/notice/list";
 	}
 
-	@PreAuthorize("principal.username == #customerId")
+	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
 	@PostMapping("/softdel")
 	public String softdel(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
-		log.info("softdelete..." + id);
+		log.info("notice softdelete..." + id);
 		if(noticeservice.softdel(id)) {
+			rttr.addFlashAttribute("result","success");
+		}
+		
+		rttr.addAttribute("pageNum", cri.getPageNum());
+		rttr.addAttribute("amount", cri.getAmount());
+		rttr.addAttribute("type", cri.getType());
+		rttr.addAttribute("keyword", cri.getKeyword());
+		
+		return "redirect:/notice/list";
+	}
+
+	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@PostMapping("/restore")
+	public String restore(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
+		log.info("notice restore..." + id);
+		if(noticeservice.restore(id)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		
