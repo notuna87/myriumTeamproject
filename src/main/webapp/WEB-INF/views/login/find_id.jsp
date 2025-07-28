@@ -61,7 +61,8 @@
     <input type="hidden" id="phoneNumber" name="phoneNumber" />
 
     <!-- form 내부에서 submit 버튼 -->
-<button type="submit" class="submit_btn">확인</button>
+	<button type="button" class="submit_btn" onclick="submitForm()">확인</button>
+
 
 
 
