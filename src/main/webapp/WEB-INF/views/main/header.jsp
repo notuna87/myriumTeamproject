@@ -105,7 +105,7 @@
 			</li>
 		</ul>
 	</div>
-	</div>
+
 	<script>
 		document
 				.addEventListener(

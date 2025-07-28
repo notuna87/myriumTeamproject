@@ -19,7 +19,7 @@ public class NoticeVO {
     private String updatedBy;
     private Date updatedAt;
     private Integer readCnt;
-    private boolean hasFiles;
-    private boolean isDeleted;
+    private Integer hasFiles;
+    private Integer isDeleted;
     private MultipartFile[] files;
 }

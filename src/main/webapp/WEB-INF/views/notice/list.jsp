@@ -58,9 +58,7 @@
 								</c:when>
 								<c:otherwise>
 									<c:forEach items="${list}" var="notice">
-										<tr
-											class="odd gradeX 
-								          <c:if test='${notice.isDeleted == 1}'>table-danger</c:if>'">
+										<tr	class="odd gradeX">
 											<td class="text-center">${notice.id}</td>
 											<td>
 												<a class="move" href="${notice.id}">${notice.title}</a>
@@ -76,7 +74,7 @@
 											
 											<td class="text-center">
 											  <c:choose>
-											    <c:when test="${notice.has_file > 0}">
+											    <c:when test="${notice != null and notice.hasFiles > 0}">
 											      <i class="fa fa-paperclip" title="첨부파일 있음"></i>
 											    </c:when>
 											    <c:otherwise>
