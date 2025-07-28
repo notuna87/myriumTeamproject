@@ -81,4 +81,29 @@ public class ProductServiceImpl implements ProductService {
 		return dto;
 	}
 
+	@Override
+	public ProductDTO productDetailImg(int id) {
+		ImgpathVO productDetailImg = productmapper.productDetailImg(id);
+		ProductDTO dto = new ProductDTO();
+		
+		dto.setProductDetailImg(productDetailImg);
+		return dto;
+	}
+
+	
+	@Override
+	public List<ProductDTO> getPopularProduct() {
+		List<ProductVO> products = productmapper.getPopularProduct();
+		List<ProductDTO> productDTOs = new ArrayList<>();
+
+		for (ProductVO product : products) {
+			ImgpathVO thumbnail = productmapper.getThumbnail(product.getId());
+			ProductDTO dto = new ProductDTO();
+			dto.setProduct(product);
+			dto.setThumbnail(thumbnail);
+			productDTOs.add(dto);
+		}
+		return productDTOs;
+	}
+
 }

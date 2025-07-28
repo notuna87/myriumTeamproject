@@ -33,13 +33,13 @@
     <!-- Swiper -->
     <div class="swiper mySwiper">
       <div class="swiper-wrapper">
-        <c:forEach var="i" begin="1" end="9">
+        <c:forEach var="item" items="${popularProduct}">
           <div class="swiper-slide">
             <div class="timesaleSliderIn">
-              <img src="/resources/img/flower/cosmos/cosmos_0${i}.jpg" alt="cosmos" />
-              <h6 style="font-size: 13px;">코스모스 임시</h6>
+              <img src="/resources/img/${item.thumbnail.img_path}" alt="${item.product.product_name}" />
+              <h6 style="font-size: 13px;">${item.product.product_name}</h6>
               <p class="originalPrice">
-                <fmt:formatNumber value="1000" type="number" groupingUsed="true"/>원
+                <fmt:formatNumber value="${item.product.discount_price}" type="number" groupingUsed="true"/>원
               </p>
             </div>
           </div>

@@ -31,5 +31,11 @@ public interface ProductMapper {
 	
 	// 상세페이지 슬라이더 이미지 목록 불러오기
 	public List<ImgpathVO> productSliderImg(int id);
+	
+	// 상세페이지 상품상세정보 이미지 불러오기
+	public ImgpathVO productDetailImg(int id);
+	
+	// 판매량순 상위 10개 상품 가져오기
+	public List<ProductVO> getPopularProduct();
 }
 

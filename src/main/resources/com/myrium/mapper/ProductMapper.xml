@@ -29,14 +29,31 @@
 		select * from product where id=#{id}
 	</select>
 
+	<!-- 썸네일 이미지 불러오기 -->
 	<select id="productInfothumbnail"
 		resultType="com.myrium.domain.ImgpathVO">
 		select * from img_path where product_id=#{id} and
 		is_thumbnail = 1
 	</select>
-	
-	<select id="productSliderImg" resultType="com.myrium.domain.ImgpathVO">
-		select * from img_path where product_id=#{id} and is_thumbnail = 0 and is_detail = 0
+
+	<select id="productSliderImg"
+		resultType="com.myrium.domain.ImgpathVO">
+		select * from img_path where product_id=#{id} and
+		is_thumbnail = 0 and is_detail = 0
 	</select>
+
+	<!-- 상품 상세정보 이미지 불러오기 -->
+	<select id="productDetailImg"
+		resultType="com.myrium.domain.ImgpathVO">
+		select * from (select * from img_path where
+		product_id=#{id} and is_thumbnail = 0 and is_detail = 1) WHERE ROWNUM
+		= 1
+	</select>
+
+	<!-- 인기있는 상품 상위 10개만 조회하기 -->
+	<select id="getPopularProduct" resultType="com.myrium.domain.ProductVO">
+		SELECT * FROM ( SELECT * FROM product ORDER BY sales_count DESC) where ROWNUM &lt;= 10
+	</select>
+
 
 </mapper>

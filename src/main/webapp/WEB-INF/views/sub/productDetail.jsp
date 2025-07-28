@@ -16,7 +16,7 @@
 
   <div class="productDetailWrap">
     <div class="detailContents">
-        <img src="/resources/img/flower/babysbreath/babysbreath_detail.JPG" alt="123" />
+        <img src="${pageContext.request.contextPath}/resources/img/${productDetailImg.img_path}" alt="${product.product_name}" />
     </div>
   </div>
 

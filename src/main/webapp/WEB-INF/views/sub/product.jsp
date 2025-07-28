@@ -82,6 +82,7 @@
 				</p>
 			</div>
 			<div class="creaseButtonWrap">
+				<p style="width: 100%;">${product.product_name}</p>
 				<div class="creaseButton">
 					<button type="button" onclick="decreaseQty()">-</button>
 					<input type="number" id="quantity" value="1" min="1" readonly />
@@ -89,7 +90,7 @@
 				</div>
 			</div>
 			<p style="margin-bottom: 20px;">
-				총 구매 금액 <span style="float: right; font-size: 22px; font-weight: bold; color: #e32e15;"> <fmt:formatNumber value="${product.discount_price}" type="number" /> 원
+				총 구매 금액 <span id="totalPrice" style="float: right; font-size: 22px; font-weight: bold; color: #e32e15;"> 원
 				</span>
 
 			</p>
@@ -137,6 +138,32 @@
 				qtyInput.value = parseInt(qtyInput.value) - 1;
 			}
 		}
+		
+		// 서버에서 넘어온 할인 가격을 JS에서 사용
+		const discountPrice = ${product.discount_price}; // 숫자만 넘기기 때문에 "" 안 붙임
+		const qtyInput = document.getElementById("quantity");
+		const totalPriceSpan = document.getElementById("totalPrice");
+
+		function updateTotalPrice() {
+			const qty = parseInt(qtyInput.value);
+			const total = discountPrice * qty;
+			totalPriceSpan.textContent = total.toLocaleString() + " 원";
+		}
+
+		function increaseQty() {
+			qtyInput.value = parseInt(qtyInput.value) + 1;
+			updateTotalPrice();
+		}
+
+		function decreaseQty() {
+			if (parseInt(qtyInput.value) > 1) {
+				qtyInput.value = parseInt(qtyInput.value) - 1;
+				updateTotalPrice();
+			}
+		}
+
+		// 페이지가 처음 로드됐을 때 총 가격 초기 계산
+		document.addEventListener("DOMContentLoaded", updateTotalPrice);
 	</script>
 </body>
 </html>

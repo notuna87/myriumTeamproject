@@ -35,16 +35,15 @@
 
 /* 증감 버튼 */
 .creaseButtonWrap {
-	display : flex;
 	margin-bottom : 20px;
 	background-color : #f7f8fa;
 	height : 80px;
-	width: 100%;
-	padding-right : 10px;
-	justify-content: flex-end; /* ⭐ 오른쪽으로 붙이기 */
+	padding : 10px;
 }
 
 .creaseButton {
+	margin-top :5px;
+	float:right;
 	display:flex;
 }
 
@@ -56,6 +55,11 @@
 	padding-left : 15px;
 }
 
+.creaseButton > input:focus {
+	outline : none;
+}
+
+
 .creaseButton > button{
 	font-size : 20px;
 	width : 30px;
@@ -63,3 +67,7 @@
 	border : none;
 	background-color : #fff;
 }
+
+.creaseButton > button:hover{
+	cursor: pointer;	
+	}

@@ -16,4 +16,9 @@ public interface ProductService {
 	public ProductDTO productInfothumbnail(int id);
 	
 	public ProductDTO productSliderImg(int id);
+	
+	public ProductDTO productDetailImg(int id);
+	
+	// 판매량 순 10개까지 리스트 불러오기
+	public List<ProductDTO> getPopularProduct();
 }

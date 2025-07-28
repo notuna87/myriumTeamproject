@@ -1,5 +1,6 @@
 package com.myrium.controller;
 
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,25 +21,25 @@ import lombok.extern.log4j.Log4j;
 public class SubController {
 
 	private final ProductService productservice;
-	
+
 	@GetMapping("/sub")
 	public String goSub(@RequestParam("id") int id, Model model) {
-		
+
 		ProductDTO product_id = productservice.productInfoget(id);
 		ProductDTO thumbnail = productservice.productInfothumbnail(id);
-        ProductDTO productSliderImg = productservice.productSliderImg(id);
+		ProductDTO productSliderImg = productservice.productSliderImg(id);
+		ProductDTO productDetailImg = productservice.productDetailImg(id);
+		List<ProductDTO> popularProduct = productservice.getPopularProduct();
 
-        
-		
 		model.addAttribute("product", product_id.getProduct());
 		model.addAttribute("thumbnail", thumbnail.getThumbnail());
 		model.addAttribute("productSliderImg", productSliderImg.getSliderImg());
-		
-	    log.info(id);
-	    log.info(product_id);
-	    log.info(thumbnail);
-	    log.info(productSliderImg);
-		
+		model.addAttribute("productDetailImg", productDetailImg.getProductDetailImg());
+		model.addAttribute("popularProduct", popularProduct);
+
+		log.info("오잉:" + productDetailImg);
+		log.info("오잉투" + popularProduct);
+
 		return "sub/sub";
 	}
 }
