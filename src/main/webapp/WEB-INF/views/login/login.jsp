@@ -82,8 +82,9 @@
 
 				<div class="login_links">
 					<a href="${pageContext.request.contextPath}/login/find_id">아이디
-						찾기</a> <span>|</span> <a
-						href="${pageContext.request.contextPath}/login/find_pw">비밀번호
+						찾기</a> <span>|</span>
+					<!-- login.jsp 내부 -->
+					<a href="${pageContext.request.contextPath}/login/find_pw">비밀번호
 						찾기</a> <span>|</span> <a
 						href="${pageContext.request.contextPath}/join">회원가입</a>
 				</div>
@@ -97,8 +98,8 @@
 
 	<c:if test="${not empty msg}">
 		<script>
-    alert("${msg}");
-  </script>
+			alert("${msg}");
+		</script>
 	</c:if>
 
 </body>

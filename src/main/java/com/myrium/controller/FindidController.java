@@ -1,5 +1,12 @@
 package com.myrium.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,38 +18,52 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.myrium.domain.MemberVO;
 import com.myrium.mapper.MemberMapper;
 
+import lombok.extern.log4j.Log4j;
+
+@Log4j
 @Controller
-@RequestMapping("/") 
+@RequestMapping("/login") 
 public class FindidController {
 
 	@Autowired
 	private MemberMapper memberMapper;
 	
-    @GetMapping("/find_id")
-    public String showFindIdForm() {
-        return "login/find_id"; 
-    }
     
-    @PostMapping("/find_id_result")
-    public String findIdResult(@RequestParam String customerName,
-                               @RequestParam(required = false) String email,
-                               @RequestParam(required = false) String phoneNumber,
-                               @RequestParam String method, // "email" 또는 "phone"
-                               Model model) {
-        MemberVO member = null;
+	@PostMapping("/find_id_result")
+	public String findIdResult(@RequestParam String customerName,
+	                           @RequestParam(required = false) String email,
+	                           @RequestParam(required = false) String phoneNumber,
+	                           @RequestParam String method,
+	                           Model model) {
 
-        if ("email".equals(method)) {
-            member = memberMapper.findByNameAndEmail(customerName, email);
-        } else if ("phone".equals(method)) {
-            member = memberMapper.findByNameAndPhone(customerName, phoneNumber);
-        }
+	    log.info(">>> 아이디 찾기 요청 - 이름: " + customerName);
+	    log.info(">>> 인증 방법: " + method);
+	    log.info(">>> 이메일: " + email);
+	    log.info(">>> 휴대폰번호: " + phoneNumber);
 
-        if (member != null) {
-            model.addAttribute("member", member);
-            return "find_id_result"; // JSP 결과 페이지
-        } else {
-            model.addAttribute("error", "일치하는 정보가 없습니다.");
-            return "find_id"; // 다시 입력 폼으로
-        }
+	    MemberVO member = null;
+
+	    if ("email".equals(method)) {
+	        member = memberMapper.findByNameAndEmail(customerName, email);
+	    } else if ("phone".equals(method)) {
+	        member = memberMapper.findByNameAndPhone(customerName, phoneNumber);
+	    }
+
+	    log.info(">>> 조회된 회원 정보: " + member);
+
+	    if (member != null) {
+	        model.addAttribute("member", member);  // 뷰에서 EL로 사용 가능
+	        return "login/find_id_result";  // forward
+	    } else {
+	        return "redirect:/login/find_id_result?error=Y";
+	    }
+	}
+
+	
+
+    // GET: 직접 URL 접근 시 기본 화면만 보여주기
+    @GetMapping("/find_id_result")
+    public String showFindIdResultPage() {
+        return "login/find_id_result";  // member 정보 없이 빈 화면일 수 있음
     }
 }

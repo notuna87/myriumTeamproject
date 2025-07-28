@@ -12,38 +12,36 @@
 <body>
 <%@ include file="../main/header.jsp" %>
 
+<c:if test="${param.error eq 'Y'}">
+  <script>
+    alert('입력하신 정보와 일치하는 회원이 없습니다.');
+    history.back();
+  </script>
+</c:if>
+
 <div class="container">
   <h2>비밀번호 찾기</h2>
-  <div class="result_box">
-    <p class="label">임시 비밀번호</p>
-    <div class="radio_group">
-      <input type="radio" id="${method}" checked>
-      <label for="${method}">
-        <c:choose>
-          <c:when test="${method eq 'email'}">이메일</c:when>
-          <c:when test="${method eq 'phone'}">휴대폰</c:when>
-        </c:choose>
-      </label>
+  <c:choose>
+  <c:when test="${not empty password}">
+    <div class="result_box">
+      <p>회원님의 임시 비밀번호는 아래와 같습니다.</p>
+      <p class="password_display"><strong>${password}</strong></p>
+      <p style="color:red;">※ 로그인 후 반드시 비밀번호를 변경해주세요.</p>
     </div>
-    <p class="info_label">
-      <c:choose>
-        <c:when test="${method eq 'email'}">이메일</c:when>
-        <c:when test="${method eq 'phone'}">휴대폰 번호</c:when>
-      </c:choose>
-    </p>
-    <p class="info_text">${targetValue}</p>
-  </div>
+  </c:when>
+  <c:otherwise>
+    <div class="result_box">
+      <p style="color:red;">일치하는 회원 정보가 없습니다.</p>
+    </div>
+  </c:otherwise>
+</c:choose>
+
   <div class="btn_group">
     <button class="btn cancel_btn" onclick="history.back()">취소</button>
-    <button class="btn submit_btn">임시 비밀번호 전송</button>
+    <button class="btn submit_btn" onclick="location.href='${pageContext.request.contextPath}/login'">로그인 하기</button>
   </div>
 </div>
  <%@ include file="/WEB-INF/views/main/footer.jsp" %>
 
-<script>
-  document.querySelector('.submit_btn').addEventListener('click', function () {
-    alert("임시 비밀번호가 전송되었습니다.");
-  });
-</script>
 </body>
 </html>

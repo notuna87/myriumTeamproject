@@ -16,10 +16,10 @@ public class LoginController {
 	    return "login/find_id";
 	}
 
-	@GetMapping("/login/find_pw")
-	public String showFindPwPage() {
-	    return "login/find_pw";
-	}
+	//@GetMapping("/login/find_pw")
+	//public String showFindPwPage() {
+	//    return "login/find_pw";
+	//}
 	
 	@GetMapping("/home")
 	public String showhome() {
