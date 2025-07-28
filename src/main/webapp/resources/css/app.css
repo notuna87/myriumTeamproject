@@ -345,6 +345,7 @@ a .fontWhite {
   margin-bottom: 30px;
 }
 
+/* 메인화면 1번 전시 스타일 */
 .springProductwrap {
   width: 100%;
   display: flex;
@@ -360,6 +361,9 @@ a .fontWhite {
   text-align: left;
 }
 
+.springProduct:hover {
+	cursor: pointer;
+}
 .springProduct img {
   width: 100%;
   border-radius: 10px;

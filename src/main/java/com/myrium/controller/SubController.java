@@ -37,8 +37,6 @@ public class SubController {
 		model.addAttribute("productDetailImg", productDetailImg.getProductDetailImg());
 		model.addAttribute("popularProduct", popularProduct);
 
-		log.info("오잉:" + productDetailImg);
-		log.info("오잉투" + popularProduct);
 
 		return "sub/sub";
 	}

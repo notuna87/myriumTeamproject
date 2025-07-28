@@ -47,16 +47,22 @@
 		<div class="productDescription">
 			<h3>${product.product_name}</h3>
 			<p class="detailContent">${product.product_content}</p>
-
-			<p>
-				<s><fmt:formatNumber value="${product.product_price}" type="number" />원</s>
-			</p>
-			<h2>
-				<span style="color: red; margin-right: 10px;">${product.total_discountrate}%</span>
-				<fmt:formatNumber value="${product.discount_price}" type="number" />
-				원
-			</h2>
-
+			<c:if test="${product.discount_price != 0}">
+				<p>
+					<s><fmt:formatNumber value="${product.product_price}" type="number" />원</s>
+				</p>
+				<h2>
+					<span style="color: red; margin-right: 10px;">${product.total_discountrate}%</span>
+					<fmt:formatNumber value="${product.discount_price}" type="number" />
+					원
+				</h2>
+			</c:if>
+			<c:if test="${product.discount_price == 0}">
+				<h2>
+					<fmt:formatNumber value="${product.product_price}" type="number" />
+					원
+				</h2>
+			</c:if>
 			<div class="detailKakao">
 				<img src="/resources/img/logo/kakaotalk.png" alt="kakao" />
 				<p>
@@ -90,8 +96,7 @@
 				</div>
 			</div>
 			<p style="margin-bottom: 20px;">
-				총 구매 금액 <span id="totalPrice" style="float: right; font-size: 22px; font-weight: bold; color: #e32e15;"> 원
-				</span>
+				총 구매 금액 <span id="totalPrice" style="float: right; font-size: 22px; font-weight: bold; color: #e32e15;"> 원 </span>
 
 			</p>
 
@@ -138,32 +143,52 @@
 				qtyInput.value = parseInt(qtyInput.value) - 1;
 			}
 		}
-		
+
 		// 서버에서 넘어온 할인 가격을 JS에서 사용
-		const discountPrice = ${product.discount_price}; // 숫자만 넘기기 때문에 "" 안 붙임
+		const discountPrice = ${product.discount_price};
+		const productPrice = ${product.product_price};
 		const qtyInput = document.getElementById("quantity");
 		const totalPriceSpan = document.getElementById("totalPrice");
 
-		function updateTotalPrice() {
-			const qty = parseInt(qtyInput.value);
-			const total = discountPrice * qty;
-			totalPriceSpan.textContent = total.toLocaleString() + " 원";
-		}
+		
+			function updateNotSaleTotalPrice() {
+				const qty = parseInt(qtyInput.value);
+				const total = productPrice * qty;
+				totalPriceSpan.textContent = total.toLocaleString() + " 원";
+			}
+
+			function updateTotalPrice() {
+				const qty = parseInt(qtyInput.value);
+				const total = discountPrice * qty;
+				totalPriceSpan.textContent = total.toLocaleString() + " 원";
+			}
 
 		function increaseQty() {
 			qtyInput.value = parseInt(qtyInput.value) + 1;
-			updateTotalPrice();
+			if(discountPrice == 0){
+				updateNotSaleTotalPrice();			
+			} else {
+				updateTotalPrice();
+			}
 		}
 
 		function decreaseQty() {
 			if (parseInt(qtyInput.value) > 1) {
 				qtyInput.value = parseInt(qtyInput.value) - 1;
-				updateTotalPrice();
+				
+				if(discountPrice == 0){
+					updateNotSaleTotalPrice();			
+				} else {
+					updateTotalPrice();
+				}
 			}
 		}
-
-		// 페이지가 처음 로드됐을 때 총 가격 초기 계산
-		document.addEventListener("DOMContentLoaded", updateTotalPrice);
+		
+		if(discountPrice == 0){
+			 document.addEventListener("DOMContentLoaded", updateNotSaleTotalPrice);
+		} else {
+			 document.addEventListener("DOMContentLoaded", updateTotalPrice);
+		}
 	</script>
 </body>
 </html>

@@ -31,7 +31,7 @@
 			<p>마이리움 식물키트</p>
 			<div class="springProductwrap" id="springProductwrap">
 				<c:forEach var="item" items="${springList}">
-					<div class="springProduct">
+					<div class="springProduct" onclick="location.href='sub?id=${item.product.id}'">
 						<img src="resources/img/${item.thumbnail.img_path}" alt="1" style="width: 100%; height: auto; margin-bottom:12px;" />
 						<h4>${item.product.product_name}</h4>
           
