@@ -56,7 +56,7 @@
 			<p>놓치면 후회!</p>
 			<div class="ceopickProductwrap">
 				<c:forEach var="item" items="${ceopickList}">
-					<div class="ceopickProduct">
+					<div class="ceopickProduct" onclick="location.href='sub?id=${item.product.id}'">
 						<img src="resources/img/${item.thumbnail.img_path}" alt="임시" style="margin-bottom: 12px;" />
 						<h4>${item.product.product_name}</h4>
 						<p class="mainProductContent">${item.product.product_content}</p>

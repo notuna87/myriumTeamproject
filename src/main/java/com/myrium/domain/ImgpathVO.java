@@ -15,4 +15,5 @@ public class ImgpathVO {
 	private String updated_by;
 	private int is_deleted;
 	private int is_thumbnail;
+	private int is_datail;
 }

@@ -4,16 +4,39 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.myrium.mapper.ProductMapper">
 
-	<select id="getproductList" resultType="com.myrium.domain.ProductVO">
+	<!-- 메인페이지 전시 여부 확인 후 리스트 가져오기 -->
+	<select id="getproductList"
+		resultType="com.myrium.domain.ProductVO">
 		select * from product where ${isMain} = 1
 	</select>
-	
-	<select id="getThumbnail" resultType ="com.myrium.domain.ImgpathVO">
-		SELECT * FROM ( SELECT * FROM img_path WHERE product_id = #{productid} AND is_thumbnail = 1 ORDER BY id) WHERE ROWNUM = 1
+
+	<!-- 썸네일 여부 확인 후 가져오기 -->
+	<select id="getThumbnail"
+		resultType="com.myrium.domain.ImgpathVO">
+		SELECT * FROM ( SELECT * FROM img_path WHERE product_id =
+		#{productid} AND is_thumbnail = 1 ORDER BY id) WHERE ROWNUM = 1
 	</select>
 
-	<select id="gettimesaleList" resultType="com.myrium.domain.ProductVO">
+	<!-- 타임세일 여부에 따른 리스트 조회 -->
+	<select id="gettimesaleList"
+		resultType="com.myrium.domain.ProductVO">
 		select * from product where is_timesales = 1
+	</select>
+
+	<!-- 상품 디테일 페이지 상품 받아오기 -->
+	<select id="getproductInfo"
+		resultType="com.myrium.domain.ProductVO">
+		select * from product where id=#{id}
+	</select>
+
+	<select id="productInfothumbnail"
+		resultType="com.myrium.domain.ImgpathVO">
+		select * from img_path where product_id=#{id} and
+		is_thumbnail = 1
+	</select>
+	
+	<select id="productSliderImg" resultType="com.myrium.domain.ImgpathVO">
+		select * from img_path where product_id=#{id} and is_thumbnail = 0 and is_detail = 0
 	</select>
 
 </mapper>

@@ -18,4 +18,6 @@ public interface MemberService {
 
 //	MemberVO getMemberByCustomerId(String customerId);
     
+    boolean isCustomerIdDuplicate(String customerId); // 아이디 중복체크
+    
 }

@@ -53,4 +53,32 @@ public class ProductServiceImpl implements ProductService {
 		return productDTOs;
 	}
 
+	@Override
+	public ProductDTO productInfoget(int id) {
+		ProductVO vo = productmapper.getproductInfo(id); //
+
+		ProductDTO dto = new ProductDTO(); // DTO로 감싸기
+		dto.setProduct(vo);
+		return dto;
+	}
+
+	@Override
+	public ProductDTO productInfothumbnail(int id) {
+		ImgpathVO thumbnail = productmapper.productInfothumbnail(id);
+
+		ProductDTO dto = new ProductDTO();
+		dto.setThumbnail(thumbnail);
+		return dto;
+	}
+
+	@Override
+	public ProductDTO productSliderImg(int id) {
+		List<ImgpathVO> sliderImg = productmapper.productSliderImg(id);
+
+		ProductDTO dto = new ProductDTO();
+		dto.setSliderImg(sliderImg);
+
+		return dto;
+	}
+
 }

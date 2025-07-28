@@ -49,43 +49,20 @@
 	        #{agreeDelegate, jdbcType=INTEGER}, #{agreeSms, jdbcType=INTEGER}, #{isDeleted, jdbcType=INTEGER},
 	        SYSDATE, #{createdBy, jdbcType=VARCHAR}
 	    )
+
 	</insert>
-	
+  
 	<!-- 회원 권한 등록 -->
 	<insert id="insertAuth" parameterType="com.myrium.domain.AuthVO">
 	    INSERT INTO member_auth (user_id, role )
 	    VALUES (#{userId}, #{role} )
+
 	</insert>
 
-    <!-- 회원 단건 조회 -->
-    <select id="getMemberById" parameterType="int" resultMap="memberMap">
-        SELECT * FROM member WHERE id = #{id}
-    </select>
-
-    <!-- 전체 회원 조회 -->
-    <select id="getAllMembers" resultMap="memberMap">
-        SELECT * FROM member ORDER BY id
-    </select>
-
-    <!-- 회원 정보 수정 -->
-    <update id="updateMember" parameterType="com.myrium.domain.MemberVO">
-        UPDATE member
-        SET password = #{password},
-            phone_number = #{phoneNumber},
-            address = #{address},
-            email = #{email},
-            updated_at = SYSDATE,
-            updated_by = #{updatedBy}
-        WHERE id = #{id}
-    </update>
-
-    <!-- 회원 삭제 처리 (is_deleted = 1) -->
-    <update id="deleteMember" parameterType="int">
-        UPDATE member SET is_deleted = 1 WHERE id = #{id}
-    </update>
-
-	<select id="selectByCustomerId" resultType="com.myrium.domain.MemberVO">
-    SELECT * FROM member WHERE customer_id = #{customerId}
+	<!-- 회원 단건 조회 -->
+	<select id="getMemberById" parameterType="int"
+		resultMap="memberMap">
+		SELECT * FROM member WHERE id = #{id}
 	</select>
 
   
@@ -129,5 +106,23 @@
     WHERE user_id = #{userId}
 </select>
 
+	<!-- 아이디 찾기 -->
+	<select id="findByNameAndEmail"
+		resultType="com.myrium.domain.MemberVO">
+		SELECT customer_id, customer_name, email, created_at
+		FROM member
+		WHERE customer_name = #{customerName}
+		AND email = #{email}
+	</select>
+
+
+	<select id="findByNameAndPhone"
+		resultType="com.myrium.domain.MemberVO">
+		SELECT customer_id, customer_name, phone_number, created_at
+		FROM member
+		WHERE customer_name = #{customerName}
+		AND phone_number = #{phoneNumber}
+	</select>
+	
 	
 </mapper>

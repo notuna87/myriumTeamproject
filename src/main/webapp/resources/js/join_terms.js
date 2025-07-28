@@ -2,44 +2,65 @@
 
 //아이디 유효성 검사 
 
+let isIdAvailable = false; // 전역 변수로 사용 가능 여부 저장
+
 document.getElementById('userid').addEventListener('input', function () {
-    const id = this.value;
-    const errorEl = document.getElementById('idError');
+  const id = this.value;
+  const errorEl = document.getElementById('idError');
 
-    // 정규식 조건
-    const basicRule = /^[a-z0-9]{4,16}$/;                  // 영소문자+숫자 조합, 4~16자
-    const startsWithNumber = /^[0-9]/.test(id);            // 숫자로 시작
-    const onlyNumbers = /^[0-9]+$/.test(id);               // 숫자만
-    const containsUpperCase = /[A-Z]/.test(id);            // 대문자 포함
-    const containsSpecialOrSpace = /[^a-zA-Z0-9]/.test(id); // 특수문자 또는 공백 포함
-    const containsKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(id);  // 한글 포함
+  const basicRule = /^[a-z0-9]{4,16}$/;
+  const startsWithNumber = /^[0-9]/.test(id);
+  const onlyNumbers = /^[0-9]+$/.test(id);
+  const containsUpperCase = /[A-Z]/.test(id);
+  const containsSpecialOrSpace = /[^a-zA-Z0-9]/.test(id);
+  const containsKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(id);
 
-    // 초기화
-    errorEl.textContent = '';
-    errorEl.className = ''; // 기존 클래스 제거
+  // 초기화
+  errorEl.textContent = '';
+  errorEl.className = '';
+  isIdAvailable = false;
 
-    if (!id) {
-        // 입력 없으면 메시지 없음
-        return;
-    }
+  if (!id) return;
 
-    if (
-        containsUpperCase ||
-        containsSpecialOrSpace ||
-        startsWithNumber ||
-        onlyNumbers ||
-        containsKorean
-    ) {
-        errorEl.textContent = '대문자/공백/특수문자가 포함되었거나, 숫자로 시작 또는 숫자로만 이루어진 아이디는 사용할 수 없습니다.';
-        errorEl.className = 'error_msg';
-    } else if (!basicRule.test(id)) {
-        errorEl.textContent = '아이디는 영문소문자 또는 숫자 4~16자로 입력해 주세요.';
-        errorEl.className = 'error_msg';
-    } else {
-        errorEl.textContent = '사용 가능한 아이디입니다.';
-        errorEl.className = 'success_msg';
-    }
+  if (
+    containsUpperCase ||
+    containsSpecialOrSpace ||
+    startsWithNumber ||
+    onlyNumbers ||
+    containsKorean
+  ) {
+    errorEl.textContent = '대문자/공백/특수문자가 포함되었거나, 숫자로 시작 또는 숫자로만 이루어진 아이디는 사용할 수 없습니다.';
+    errorEl.className = 'error_msg';
+    return;
+  }
+
+  if (!basicRule.test(id)) {
+    errorEl.textContent = '아이디는 영문소문자 또는 숫자 4~16자로 입력해 주세요.';
+    errorEl.className = 'error_msg';
+    return;
+  }
+
+  // ✅ 아이디 중복 확인 API 호출
+	fetch(`/member/check-id?customerId=${id}`)
+	  .then(response => response.text())
+	  .then(text => {
+	    if (text === "unavailable") {
+	      errorEl.textContent = '이미 사용 중인 아이디입니다.';
+	      errorEl.className = 'error_msg';
+	      isIdAvailable = false;
+	    } else {
+	      errorEl.textContent = '사용 가능한 아이디입니다.';
+	      errorEl.className = 'success_msg';
+	      isIdAvailable = true;
+	    }
+	  })
+	  .catch(() => {
+	    errorEl.textContent = '서버 오류로 확인할 수 없습니다.';
+	    errorEl.className = 'error_msg';
+	    isIdAvailable = false;
+	  });
 });
+
 
 //비밀번호 유효성 검사
 
@@ -265,8 +286,8 @@ document.addEventListener("click", function (e) {
   // 1. 아이디
   const idError = document.getElementById("idError");
   const idVal = document.getElementById("userid").value;
-  if (!idVal || idError.className === "error_msg") {
-    errors.push("아이디 형식이 올바르지 않거나 입력되지 않았습니다.");
+  if (!idVal || idError.className === "error_msg" || !isIdAvailable) {
+    errors.push("아이디 형식이 올바르지 않거나 이미 사용 중인 아이디입니다.");
   }
 
   // 2. 비밀번호
