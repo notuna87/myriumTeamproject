@@ -27,7 +27,7 @@ public interface MemberMapper {
     
     int checkIdDuplicate(String customer_id);  // 아이디 중복 체크
 
-    public MemberVO selectByCustomerId(String customerId);
+    public MemberVO selectByCustomerId(@Param("customerId") String customerId);
     
     //아이디 이메일,휴대폰 번호로 찾기
     public MemberVO findByNameAndEmail(@Param("customerName") String customerName,

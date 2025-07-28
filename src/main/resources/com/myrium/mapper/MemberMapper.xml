@@ -106,6 +106,14 @@
     WHERE user_id = #{userId}
 </select>
 
+
+	<!-- 아이디 중복체크 -->
+	<select id="selectByCustomerId" resultType="com.myrium.domain.MemberVO">
+	  SELECT *
+	  FROM member
+	  WHERE customer_id = #{customerId}
+	</select>
+	
 	<!-- 아이디 찾기 -->
 	<select id="findByNameAndEmail"
 		resultType="com.myrium.domain.MemberVO">
