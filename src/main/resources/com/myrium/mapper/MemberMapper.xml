@@ -128,8 +128,8 @@
 		WHERE customer_name = #{customerName}
 		AND phone_number = #{phoneNumber}
 	</select>
+
 	
-	<!-- 패스워드 찾기 -->
 	<update id="updateMember" parameterType="com.myrium.domain.MemberVO">
 	  UPDATE member
 	  SET password = #{password},
@@ -137,7 +137,5 @@
 	      updated_by = #{updatedBy}
 	  WHERE id = #{id}
 	</update>
-	
-	
-	
+		
 </mapper>

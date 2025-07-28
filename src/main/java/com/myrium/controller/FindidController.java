@@ -32,28 +32,41 @@ public class FindidController {
 	@PostMapping("/find_id_result")
 	public String findIdResult(@RequestParam String customerName,
 	                           @RequestParam(required = false) String email,
-	                           @RequestParam(required = false) String phoneNumber,
+	                           @RequestParam(required = false) String phone1,
+	                           @RequestParam(required = false) String phone2,
+	                           @RequestParam(required = false) String phone3,
 	                           @RequestParam String method,
 	                           Model model) {
 
 	    log.info(">>> 아이디 찾기 요청 - 이름: " + customerName);
 	    log.info(">>> 인증 방법: " + method);
 	    log.info(">>> 이메일: " + email);
-	    log.info(">>> 휴대폰번호: " + phoneNumber);
+	    log.info(">>> 휴대폰번호 파라미터: " + phone1 + "-" + phone2 + "-" + phone3);
+
+	    String phoneNumber = null;
+	    if (phone1 != null && phone2 != null && phone3 != null) {
+	        phoneNumber = phone1 + "-" + phone2 + "-" + phone3;
+	    }
 
 	    MemberVO member = null;
 
 	    if ("email".equals(method)) {
 	        member = memberMapper.findByNameAndEmail(customerName, email);
-	    } else if ("phone".equals(method)) {
+	    }  else if ("phone".equals(method)) {
 	        member = memberMapper.findByNameAndPhone(customerName, phoneNumber);
+
+	        // 가운데 마스킹 처리
+	        if (phone1 != null && phone3 != null) {
+	            String maskedPhone = phone1 + "-****-" + phone3;
+	            model.addAttribute("phoneNumber", maskedPhone);
+	        }
 	    }
 
 	    log.info(">>> 조회된 회원 정보: " + member);
 
 	    if (member != null) {
-	        model.addAttribute("member", member);  // 뷰에서 EL로 사용 가능
-	        return "login/find_id_result";  // forward
+	        model.addAttribute("member", member);
+	        return "login/find_id_result";
 	    } else {
 	        return "redirect:/login/find_id_result?error=Y";
 	    }

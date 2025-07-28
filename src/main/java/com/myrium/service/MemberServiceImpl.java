@@ -81,7 +81,7 @@ public class MemberServiceImpl implements MemberService {
             String encodedPassword = passwordEncoder.encode(tempPassword); // 암호화
             member.setPassword(encodedPassword);
             member.setUpdatedAt(new Date());               // 현재 시간으로 설정
-            member.setUpdatedBy("비밀번호 찾기");           // 또는 customerId 등
+            member.setUpdatedBy("find_password");           // 또는 customerId 등
             
             memberMapper.updateMember(member);             // DB update 호출
             return tempPassword;

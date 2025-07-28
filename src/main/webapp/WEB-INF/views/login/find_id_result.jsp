@@ -33,15 +33,26 @@
       </p>
 
       <table class="info_table">
-        <tr>
-          <th>이름</th>
-          <td>${member.customerName}</td>
-        </tr>
-        <tr>
-          <th>이메일</th>
-          <td>${member.email}</td>
-        </tr>
-      </table>
+  <tr>
+    <th>이름</th>
+    <td>${member.customerName}</td>
+  </tr>
+
+  <c:choose>
+    <c:when test="${not empty phoneNumber}">
+      <tr>
+        <th>휴대폰번호</th>
+        <td>${phoneNumber}</td>
+      </tr>
+    </c:when>
+    <c:otherwise>
+      <tr>
+        <th>이메일</th>
+        <td>${member.email}</td>
+      </tr>
+    </c:otherwise>
+  </c:choose>
+</table>
 
       <div class="found_id">
         <label>
