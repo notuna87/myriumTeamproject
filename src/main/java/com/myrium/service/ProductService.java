@@ -15,5 +15,5 @@ public interface ProductService {
 	
 	public ProductDTO productInfothumbnail(int id);
 	
-//	public ProductDTO productInfoImg(int id);
+	public ProductDTO productSliderImg(int id);
 }

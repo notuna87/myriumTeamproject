@@ -1,0 +1,65 @@
+.swiper-container {
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.gallery-thumbs {
+	width: 100px;
+	height: 520px;
+}
+
+.gallery-top {
+	width: 520px;
+	height: 520px;
+}
+
+.gallery-top img, .gallery-thumbs img {
+	width: 100%;
+	display: block;
+}
+
+.productDescription {
+	flex: 1;
+	padding-left: 40px;
+}
+
+.detailKakao, .parcel {
+	display: flex;
+	align-items: center;
+	margin-top: 20px;
+}
+
+.detailKakao img, .parcel img {
+	margin-right: 10px;
+}
+
+/* 증감 버튼 */
+.creaseButtonWrap {
+	display : flex;
+	margin-bottom : 20px;
+	background-color : #f7f8fa;
+	height : 80px;
+	width: 100%;
+	padding-right : 10px;
+	justify-content: flex-end; /* ⭐ 오른쪽으로 붙이기 */
+}
+
+.creaseButton {
+	display:flex;
+}
+
+.creaseButton > input {
+	width : 60px;
+	height : 30px;
+	text-align: center;
+	border : none;
+	padding-left : 15px;
+}
+
+.creaseButton > button{
+	font-size : 20px;
+	width : 30px;
+	height : 30px;
+	border : none;
+	background-color : #fff;
+}

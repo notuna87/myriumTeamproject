@@ -1,5 +1,6 @@
 package com.myrium.controller;
 
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +26,18 @@ public class SubController {
 		
 		ProductDTO product_id = productservice.productInfoget(id);
 		ProductDTO thumbnail = productservice.productInfothumbnail(id);
+        ProductDTO productSliderImg = productservice.productSliderImg(id);
+
         
 		
 		model.addAttribute("product", product_id.getProduct());
 		model.addAttribute("thumbnail", thumbnail.getThumbnail());
+		model.addAttribute("productSliderImg", productSliderImg.getSliderImg());
 		
 	    log.info(id);
 	    log.info(product_id);
 	    log.info(thumbnail);
+	    log.info(productSliderImg);
 		
 		return "sub/sub";
 	}

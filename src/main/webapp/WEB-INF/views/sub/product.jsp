@@ -5,47 +5,8 @@
 <head>
 <title></title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-
-<style>
-.detailWrap {
-	
-}
-
-.swiper-container {
-	border-radius: 10px;
-	overflow: hidden;
-}
-
-.gallery-thumbs {
-	width: 100px;
-	height: 520px;
-}
-
-.gallery-top {
-	width: 520px;
-	height: 520px;
-}
-
-.gallery-top img, .gallery-thumbs img {
-	width: 100%;
-	display: block;
-}
-
-.productDescription {
-	flex: 1;
-	padding-left: 40px;
-}
-
-.detailKakao, .parcel {
-	display: flex;
-	align-items: center;
-	margin-top: 20px;
-}
-
-.detailKakao img, .parcel img {
-	margin-right: 10px;
-}
-</style>
+<!-- reset css  -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/sub.css">
 </head>
 
 <body>
@@ -56,9 +17,9 @@
 				<div class="swiper-slide">
 					<img class="miniSlider" src="/resources/img/${thumbnail.img_path}" alt="title" style="width: 100%; height: 97px; border-radius: 10px;" />
 				</div>
-				<c:forEach var="i" begin="1" end="6">
+				<c:forEach var="item" items="${productSliderImg}">
 					<div class="swiper-slide">
-						<img class="miniSlider" src="/resources/img/flower/cosmos/cosmos_0${i}.jpg" alt="title" style="width: 100%; height: 97px; border-radius: 10px;" />
+						<img class="miniSlider" src="/resources/img/${item.img_path}" alt="title" style="width: 100%; height: 97px; border-radius: 10px;" />
 					</div>
 				</c:forEach>
 			</div>
@@ -67,12 +28,12 @@
 		<!-- 메인 Swiper -->
 		<div class="swiper gallery-top">
 			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<img src="/resources/img/${thumbnail.img_path}" alt="title" style="width: 100%; border-radius: 10px;" />
+				</div>
+				<c:forEach var="item" items="${productSliderImg}">
 					<div class="swiper-slide">
-						<img src="/resources/img/${thumbnail.img_path}" alt="title" style="width: 100%; border-radius: 10px;" />
-					</div>
-				<c:forEach var="i" begin="1" end="6">
-					<div class="swiper-slide">
-						<img src="/resources/img/flower/cosmos/cosmos_0${i}.jpg" alt="title" style="width: 100%; border-radius: 10px;" />
+						<img src="/resources/img/${item.img_path}" alt="title" style="width: 100%; border-radius: 10px;" />
 					</div>
 				</c:forEach>
 			</div>
@@ -120,10 +81,17 @@
 					오늘출발 상품 <span style="font-weight: normal;">(오후 3시 전 주문 시)</span>
 				</p>
 			</div>
-
+			<div class="creaseButtonWrap">
+				<div class="creaseButton">
+					<button type="button" onclick="decreaseQty()">-</button>
+					<input type="number" id="quantity" value="1" min="1" readonly />
+					<button type="button" onclick="increaseQty()">+</button>
+				</div>
+			</div>
 			<p style="margin-bottom: 20px;">
-				총 구매 금액 <span style="float: right; font-size: 22px; font-weight: bold; color: #e32e15;"> <fmt:formatNumber value="${disPrice}" type="number" /> 원
+				총 구매 금액 <span style="float: right; font-size: 22px; font-weight: bold; color: #e32e15;"> <fmt:formatNumber value="${product.discount_price}" type="number" /> 원
 				</span>
+
 			</p>
 
 			<form action="/cart/add" method="post">
@@ -137,6 +105,7 @@
 	<!-- Swiper JS -->
 	<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 	<script>
+		// swiper JS
 		const galleryThumbs = new Swiper('.gallery-thumbs', {
 			direction : 'vertical',
 			spaceBetween : 10,
@@ -155,6 +124,19 @@
 				swiper : galleryThumbs,
 			},
 		});
+
+		// 장바구니 담기용 증감 버튼
+		function increaseQty() {
+			const qtyInput = document.getElementById("quantity");
+			qtyInput.value = parseInt(qtyInput.value) + 1;
+		}
+
+		function decreaseQty() {
+			const qtyInput = document.getElementById("quantity");
+			if (parseInt(qtyInput.value) > 1) {
+				qtyInput.value = parseInt(qtyInput.value) - 1;
+			}
+		}
 	</script>
 </body>
 </html>

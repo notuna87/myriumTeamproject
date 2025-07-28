@@ -29,7 +29,7 @@ public interface ProductMapper {
 	// 상품 상세페이지 썸네일
 	public ImgpathVO productInfothumbnail(int id);
 	
-	// 상세페이지 이미지 목록 불러오기
+	// 상세페이지 슬라이더 이미지 목록 불러오기
 	public List<ImgpathVO> productSliderImg(int id);
 }
 

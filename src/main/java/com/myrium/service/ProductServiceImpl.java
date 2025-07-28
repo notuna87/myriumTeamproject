@@ -56,8 +56,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public ProductDTO productInfoget(int id) {
 		ProductVO vo = productmapper.getproductInfo(id); //
-		
-		
+
 		ProductDTO dto = new ProductDTO(); // DTO로 감싸기
 		dto.setProduct(vo);
 		return dto;
@@ -66,19 +65,20 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public ProductDTO productInfothumbnail(int id) {
 		ImgpathVO thumbnail = productmapper.productInfothumbnail(id);
-		
+
 		ProductDTO dto = new ProductDTO();
 		dto.setThumbnail(thumbnail);
 		return dto;
 	}
 
-//	@Override
-//	public ProductDTO productInfoImg(int id) {
-//		List<ImgpathVO> sliderImg = productmapper.productSliderImg(id);
-//		
-//		ProductDTO dto = new ProductDTO();
-//		dto.setSliderImg(sliderImg);
-//		return null;
-//	}
+	@Override
+	public ProductDTO productSliderImg(int id) {
+		List<ImgpathVO> sliderImg = productmapper.productSliderImg(id);
+
+		ProductDTO dto = new ProductDTO();
+		dto.setSliderImg(sliderImg);
+
+		return dto;
+	}
 
 }
