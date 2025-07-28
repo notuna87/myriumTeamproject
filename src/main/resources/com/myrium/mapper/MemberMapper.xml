@@ -126,5 +126,23 @@
 		LEFT JOIN member_auth a ON m.id = a.user_id
 		WHERE m.customer_id = #{customerId}
 	</select>
+
+	<!-- 아이디 찾기 -->
+	<select id="findByNameAndEmail"
+		resultType="com.myrium.domain.MemberVO">
+		SELECT customer_id, customer_name, email, created_at
+		FROM member
+		WHERE customer_name = #{customerName}
+		AND email = #{email}
+	</select>
+
+	<select id="findByNameAndPhone"
+		resultType="com.myrium.domain.MemberVO">
+		SELECT customer_id, customer_name, phone_number, created_at
+		FROM member
+		WHERE customer_name = #{customerName}
+		AND phone_number = #{phoneNumber}
+	</select>
+	
 	
 </mapper>
