@@ -22,6 +22,8 @@ public interface MemberMapper {
     public int deleteMember(int id);
     
     public MemberVO read(String customer_id);
+
+	public List<AuthVO> getAuthList(Long id);
     
     int checkIdDuplicate(String customer_id);  // 아이디 중복 체크
 

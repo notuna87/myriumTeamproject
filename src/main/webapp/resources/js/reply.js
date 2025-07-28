@@ -47,23 +47,46 @@ var replyService = (function () {
     });
   }
 
-  function remove(rno, callback, error) {
+  function harddel(rno, callback, error) {
     //데이타 삭제
-    $.ajax({
-      type: "delete",
-      url: "/replies/" + rno,
+    if (confirm("복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
+	    $.ajax({
+	      type: "delete",
+	      url: "/replies/" + rno + "/hard",
+	
+	      success: function (result, status, xhr) {
+	        if (callback) {
+	          callback(result);
+	        }
+	      },
+	      error: function (xhr, status, er) {
+	        if (error) {
+	          error(er);
+	        }
+	      },
+	    });
+	}
+  }
 
-      success: function (result, status, xhr) {
-        if (callback) {
-          callback(result);
-        }
-      },
-      error: function (xhr, status, er) {
-        if (error) {
-          error(er);
-        }
-      },
-    });
+  function softdel(rno, callback, error) {
+    //데이타 삭제
+    if (confirm("정말 삭제하시겠습니까?")) {
+	    $.ajax({
+	      type: "patch",
+	      url: "/replies/" + rno + "/soft",
+	
+	      success: function (result, status, xhr) {
+	        if (callback) {
+	          callback(result);
+	        }
+	      },
+	      error: function (xhr, status, er) {
+	        if (error) {
+	          error(er);
+	        }
+	      },
+	    });
+	}
   }
 
   function update(reply, callback, error) {
@@ -140,7 +163,8 @@ var replyService = (function () {
   return {
     add: add,
     getList: getList,
-    remove: remove,
+    harddel: harddel,
+    softdel: softdel,
     update: update,
     get: get,
     displayTime: displayTime,

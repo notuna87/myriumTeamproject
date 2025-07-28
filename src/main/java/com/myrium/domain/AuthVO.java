@@ -5,8 +5,7 @@ import lombok.Data;
 @Data
 public class AuthVO {
 
-	private Integer userId;
+	private Long userId;
 	private String role;
-	
 	private String customerId;
 }

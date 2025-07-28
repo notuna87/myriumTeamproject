@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class MemberVO {
 	
-	private Integer id;
+	private Long id;
 	private String customerId;
 	private String password;
 	private String customerName;

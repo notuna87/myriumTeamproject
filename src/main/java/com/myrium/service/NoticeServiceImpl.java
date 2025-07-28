@@ -4,9 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.myrium.domain.BoardVO;
+
 import com.myrium.domain.Criteria;
-import com.myrium.mapper.BoardMapper;
+import com.myrium.domain.NoticeVO;
+import com.myrium.mapper.NoticeMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -14,53 +15,53 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @Service
 @AllArgsConstructor
-public class BoardServiceImpl implements BoardService{
+public class NoticeServiceImpl implements NoticeService{
 	
 	@Autowired
-	private BoardMapper mapper;
+	private NoticeMapper mapper;
 
 
 	@Override
-	public BoardVO get(Long id) {
-	      log.info("get....." + id);
+	public NoticeVO get(Long id) {
+	      log.info("notice get....." + id);
 	      return mapper.read(id);
 	}
 
 
 	@Override
-	public boolean modify(BoardVO board) {
-	     log.info("modify.... " + board);
-	     return mapper.update(board)==1;
+	public boolean modify(NoticeVO notice) {
+	     log.info("notice modify.... " + notice);
+	     return mapper.update(notice)==1;
 	}
 
 	@Override
 	public boolean harddel(Long id) {
-	     log.info("remove...." + id);
+	     log.info("notice harddel...." + id);
 	     return mapper.harddel(id)==1;
 	}
 
 	@Override
 	public boolean softdel(Long id) {
-		log.info("remove...." + id);
+		log.info("notice softdel...." + id);
 		return mapper.softdel(id)==1;
 	}
 
 	@Override
-	public List<BoardVO> getList() {
-		log.info("getList.....");
+	public List<NoticeVO> getList() {
+		log.info("notice getList.....");
 		return mapper.getList();
 	}
 
 
 	@Override
-	public void register(BoardVO board) {
-		log.info("register....." + board);
-		mapper.insertSelectKey(board);
+	public void register(NoticeVO notice) {
+		log.info("notice register....." + notice);
+		mapper.insertSelectKey(notice);
 	}
 	
 	@Override
-	public List<BoardVO> getList(Criteria cri, boolean isAdmin){
-		log.info("getList...(Criteria cri)");
+	public List<NoticeVO> getList(Criteria cri, boolean isAdmin){
+		log.info("notice getList...(Criteria cri)");
 		//return mapper.getList();
 		return mapper.getListWithPaging(cri, isAdmin);
 	}

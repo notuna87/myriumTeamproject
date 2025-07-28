@@ -17,8 +17,8 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @Service
 @AllArgsConstructor
-public class ReplyServiceImpl implements ReplyService{
-	
+public class ReplyServiceImpl implements ReplyService {
+
 	@Autowired
 	private ReplyMapper mapper;
 	private BoardMapper boardMapper;
@@ -27,30 +27,39 @@ public class ReplyServiceImpl implements ReplyService{
 	@Override
 	public int register(ReplyVO vo) {
 		log.info("register....." + vo);
-		boardMapper.updateReplyCnt(vo.getBno(), 1);  
-		return mapper.insert(vo);
+		boardMapper.updateReplyCnt(vo.getBno(), 1);
+		mapper.isAnswered(vo);
+		int result = mapper.insert(vo);
+		return result;
 	}
 
 	@Override
 	public ReplyVO get(Long rno) {
-	      log.info("get....." + rno);
-	      return mapper.read(rno);
+		log.info("get....." + rno);
+		return mapper.read(rno);
 	}
-
 
 	@Override
 	public int modify(ReplyVO vo) {
-	     log.info("modify.... " + vo);
-	     return mapper.update(vo);
+		log.info("modify.... " + vo);
+		return mapper.update(vo);
 	}
 
 	@Transactional
 	@Override
-	public int remove(Long rno) {
-	     log.info("remove...." + rno);
+	public int harddelete(Long rno) {
+		log.info("reply - harddelete...." + rno);
 		ReplyVO vo = mapper.read(rno);
 		boardMapper.updateReplyCnt(vo.getBno(), -1);
-	     return mapper.delete(rno);
+		return mapper.harddelete(rno);
+	}
+	@Transactional
+	@Override
+	public int softdelete(Long rno) {
+		log.info("reply - softdelete...." + rno);
+		ReplyVO vo = mapper.read(rno);
+		boardMapper.updateReplyCnt(vo.getBno(), -1);
+		return mapper.softdelete(rno);
 	}
 
 	@Override
@@ -64,6 +73,3 @@ public class ReplyServiceImpl implements ReplyService{
 		return new ReplyPageDTO(mapper.getCountByBno(bno), mapper.getListWithPaging(cri, bno));
 	}
 }
-
-
-

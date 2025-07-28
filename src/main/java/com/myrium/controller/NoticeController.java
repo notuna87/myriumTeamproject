@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.myrium.domain.BoardVO;
+
 import com.myrium.domain.Criteria;
+import com.myrium.domain.NoticeVO;
 import com.myrium.domain.PageDTO;
-import com.myrium.service.BoardService;
+import com.myrium.service.NoticeService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -24,28 +26,28 @@ import lombok.extern.log4j.Log4j;
 @Controller
 @Log4j
 //@AllArgsConstructor
-@RequestMapping("/board/*")
+@RequestMapping("/notice/*")
 @RequiredArgsConstructor
-public class BoardController {
+public class NoticeController {
 
-	private final BoardService boardservice;
+	private final NoticeService noticeservice;
 	
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
-		log.info("list__________");
+		log.info("notice list__________");
 		log.info(cri);
 		
 	    // 현재 로그인 사용자 권한 조회
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    boolean isAdmin = authentication.getAuthorities().stream()
-	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));		
+	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));	
 		
-		List<BoardVO> list = boardservice.getList(cri, isAdmin);
+		List<NoticeVO> list = noticeservice.getList(cri, isAdmin);
 		
-		list.forEach(board -> log.info(board));
+		list.forEach(notice -> log.info(notice));
 		model.addAttribute("list", list);
 
-		int total = boardservice.getTotal(cri, isAdmin);
+		int total = noticeservice.getTotal(cri, isAdmin);
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
 
 		// Debug log
@@ -62,13 +64,13 @@ public class BoardController {
 	
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/register")
-	public String register(BoardVO vo, RedirectAttributes rttr) {
-		log.info("register......." + vo);
+	public String register(NoticeVO vo, @RequestParam("uploadFiles") MultipartFile[] uploadFiles, RedirectAttributes rttr) {
+		log.info("notice register......." + vo);
 
-		boardservice.register(vo);
+		noticeservice.register(vo);
 
 		rttr.addFlashAttribute("result", vo.getId());
-		return "redirect:/board/list";
+		return "redirect:/notice/list";
 	}
 	
 	@PreAuthorize("isAuthenticated()")
@@ -79,14 +81,14 @@ public class BoardController {
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping({"/get", "/modify"})
 	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) {
-		model.addAttribute("board", boardservice.get(id));
+		model.addAttribute("board", noticeservice.get(id));
 	}
 	
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@PreAuthorize("principal.username == #notice.customerId")
 	@PostMapping("/modify")
-	public String modify(BoardVO board, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
-		log.info("modify:" + board);
-		if(boardservice.modify(board)) {
+	public String modify(NoticeVO notice, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
+		log.info("modify:" + notice);
+		if(noticeservice.modify(notice)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		rttr.addAttribute("pageNum", cri.getPageNum());
@@ -94,14 +96,14 @@ public class BoardController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/board/list";
+		return "redirect:/notice/list";
 	}
 	
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("principal.username == #customerId")
 	@PostMapping("/harddel")
 	public String harddel(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
 		log.info("harddelete..." + id);
-		if(boardservice.harddel(id)) {
+		if(noticeservice.harddel(id)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		
@@ -110,14 +112,14 @@ public class BoardController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/board/list";
+		return "redirect:/notice/list";
 	}
 
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@PreAuthorize("principal.username == #customerId")
 	@PostMapping("/softdel")
 	public String softdel(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
 		log.info("softdelete..." + id);
-		if(boardservice.softdel(id)) {
+		if(noticeservice.softdel(id)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		
@@ -126,23 +128,7 @@ public class BoardController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/board/list";
-	}
-
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
-	@PostMapping("/restore")
-	public String restore(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
-		log.info("board restore..." + id);
-		if(boardservice.restore(id)) {
-			rttr.addFlashAttribute("result","success");
-		}
-		
-		rttr.addAttribute("pageNum", cri.getPageNum());
-		rttr.addAttribute("amount", cri.getAmount());
-		rttr.addAttribute("type", cri.getType());
-		rttr.addAttribute("keyword", cri.getKeyword());
-		
-		return "redirect:/board/list";
+		return "redirect:/notice/list";
 	}
 	
 	

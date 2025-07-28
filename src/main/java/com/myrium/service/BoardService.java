@@ -14,13 +14,17 @@ public interface BoardService {
 	   
 	   public boolean modify(BoardVO board);
 	   
-	   public boolean remove(Long id);
+	   public boolean harddel(Long id);
+	
+	   public boolean softdel(Long id);
 	   
 	   public List<BoardVO> getList();
 	   
-	   public List<BoardVO> getList(Criteria cri);
+	   public List<BoardVO> getList(Criteria cri, boolean isAdmin);
 	   
-	   public int getTotal(Criteria cri);
+	   public int getTotal(Criteria cri, boolean isAdmin);
+
+	   public boolean restore(Long id);
 	  
 
 }
