@@ -27,6 +27,11 @@
 						공지사항을 작성하려면 작성 버튼을 클릭하세요.
 						<button id='regBtn' type="button" class="btn btn-info">작성</button>
 					</div>
+					<div class="panel-heading">
+						<td>
+							<span class="badge badge-danger ml-1">NEW</span> 마크는 최근 3일 이내에 업로드 된 글입니다.
+						</td>
+					</div> 
 				</sec:authorize>
 
 				<!-- /.panel-heading -->

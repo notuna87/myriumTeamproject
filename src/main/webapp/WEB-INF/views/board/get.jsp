@@ -17,6 +17,16 @@
             <sec:authorize access="!hasAuthority('ADMIN')">
             	<h1 class="page-header">문의사항 보기</h1>
             </sec:authorize>
+            
+			<!-- 디버그용  -->
+			<div>
+				<sec:authorize access="isAuthenticated()">
+					<sec:authentication property="principal.member" var="pminfo" />
+				    <sec:authentication property="principal.authorities" var="roles" />
+				    <div class="form-group"><c:out value="#debug - ${pminfo.customerName} / 권한 ${roles} ==> ADMIN만 (1)답변글 클릭 가능, (2)답변버튼 노출" /></div>
+				</sec:authorize>
+			</div>
+			
         </div>
 	</div>
 
@@ -43,23 +53,20 @@
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					<div class="form-group">
-						<label>No.</label> <input class="form-control" name='id' value=${board.id }
-							readonly="readonly">
+						<label>No.</label> 
+						<input class="form-control" name='id' value="${board.id}" readonly="readonly"/>
 					</div>
-
 					<div class="form-group">
-						<label>제목</label> <input class="form-control" name='title' value=${board.title }
-							readonly="readonly">
+						<label>제목</label>
+						<input class="form-control" name='title' value="${board.title}" readonly="readonly"/>
 					</div>
-
 					<div class="form-group">
 						<label>내용</label>
-						<textarea class="form-control" rows="3" name='content' readonly="readonly">${board.content}</textarea>
+						<textarea class="form-control" rows="10" name='content' readonly="readonly">${board.content}</textarea>
 					</div>
-
 					<div class="form-group">
-						<label>작성자</label> <input class="form-control" name='customerId' value=${board.customerId }
-							readonly="readonly">
+						<label>작성자</label>
+						<input class="form-control" name='customerId' value="${board.customerId}" readonly="readonly"/>
 					</div>
 
 					<sec:authentication property="principal" var="pinfo" />
@@ -100,15 +107,6 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<i class="fa fa-comments fa-fw"></i> 채팅
-
-					<!-- 디버그용  -->
-					<div>
-						<sec:authorize access="isAuthenticated()">
-							<sec:authentication property="principal.member" var="pminfo" />
-						    <sec:authentication property="principal.authorities" var="roles" />
-						    <c:out value="#debug - ${pminfo.customerName} / 권한 ${roles} ==> ADMIN만 (1)답변글 클릭 가능, (2)답변버튼 노출" />
-						</sec:authorize>
-					</div>
 
 					<!-- 로그인 상태에서만 노출 -->
 					<!--<sec:authorize access="isAuthenticated()">
