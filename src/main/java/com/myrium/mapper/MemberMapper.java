@@ -36,8 +36,9 @@ public interface MemberMapper {
     public MemberVO findByNameAndPhone(@Param("customerName") String customerName,
             @Param("phoneNumber") String phoneNumber);
     
-
-
+    //비밀번호 변경
+    void updatePassword(@Param("customerId") String customerId, @Param("password") String password);
+    MemberVO readByCustomerId(String customerId);
 }
 
 

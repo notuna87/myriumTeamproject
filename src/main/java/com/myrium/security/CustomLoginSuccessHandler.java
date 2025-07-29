@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import com.myrium.domain.MemberVO;
+import com.myrium.security.domain.CustomUser;
+
 import lombok.extern.log4j.Log4j;
 
 @Log4j
@@ -18,29 +21,46 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-			throws IOException, ServletException {
+	        throws IOException, ServletException {
 
-                        //사용자의 권한을 확인하고 이를 roleNames 리스트에 추가
-		log.warn("Login Success................");
-		List<String> roleNames = new ArrayList<String>();
+	    log.warn("Login Success................");
 
-                       //authentication.getAuthorities() 메서드를 사용해서 사용자의 권한을 확인
-		authentication.getAuthorities().forEach(authority -> {
-			roleNames.add(authority.getAuthority());
-		});
+	    //CustomUser에서 로그인한 사용자 정보 꺼내기
+	    CustomUser customUser = (CustomUser) authentication.getPrincipal();
+	    MemberVO member = customUser.getMember();
 
-		log.warn("ROLE NAMES : " + roleNames);
+	    //세션에 로그인 사용자 저장
+	    request.getSession().setAttribute("loginUser", member);
 
-                       //ROLE_ADMIN과 ROLE_MEMBER 권한을 가진 사용자를 구분
-		if (roleNames.contains("ADMIN")) {
-			response.sendRedirect("/admin");
-			return;
-		}
+	    //권한 확인
+	    List<String> roleNames = new ArrayList<>();
 
-		if (roleNames.contains("MEMBER")) {
-			response.sendRedirect("/");
-			return;
-		}
-		response.sendRedirect("/");
+	    authentication.getAuthorities().forEach(authority -> {
+	        roleNames.add(authority.getAuthority());
+	    });
+
+	    log.warn("ROLE NAMES : " + roleNames);
+	 // ✅ 세션에 사용자 정보 저장
+	    request.getSession().setAttribute("loginUser", member);
+
+	    // ✅ 로그 출력
+	    log.warn("로그인한 사용자 정보: " + member);
+	    log.warn("세션 loginUser 확인: " + request.getSession().getAttribute("loginUser"));
+	    log.warn("세션 ID: " + request.getSession().getId());
+	    
+	    
+	    if (roleNames.contains("ADMIN")) {
+	        response.sendRedirect("/admin");
+	        return;
+	    }
+
+	    if (roleNames.contains("MEMBER")) {
+	        response.sendRedirect("/");
+	        return;
+	    }
+
+	    // 기타 권한이 없을 경우 기본 처리
+	    response.sendRedirect("/");
 	}
+
 }

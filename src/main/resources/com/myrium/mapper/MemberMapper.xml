@@ -137,5 +137,18 @@
 	      updated_by = #{updatedBy}
 	  WHERE id = #{id}
 	</update>
+	
+	<!-- 비밀번호 변경 -->
+	<update id="updatePassword">
+    UPDATE member
+    SET password = #{password},
+        updated_at = SYSDATE,
+        updated_by = 'change_pw'
+    WHERE customer_id = #{customerId}
+	</update>
+	<select id="readByCustomerId" resultType="com.myrium.domain.MemberVO">
+	  SELECT * FROM member WHERE customer_id = #{customerId}
+	</select>
+	
 		
 </mapper>

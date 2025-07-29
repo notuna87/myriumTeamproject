@@ -13,4 +13,9 @@ public class ChangepasswordController {
         return "mypage/change_password"; 
     }
     
+    @GetMapping("/mypage/mypage")
+    public String showMyPage() {
+        return "mypage/mypage"; // → /WEB-INF/views/mypage/mypage.jsp 로 포워딩됨
+    }
+    
 }
