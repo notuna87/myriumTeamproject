@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<jsp:useBean id="now" class="java.util.Date" />
 
 <%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp"%>
@@ -28,9 +29,7 @@
 						<button id='regBtn' type="button" class="btn btn-info">작성</button>
 					</div>
 					<div class="panel-heading">
-						<td>
-							<span class="badge badge-danger ml-1">NEW</span> 마크는 최근 3일 이내에 업로드 된 글입니다.
-						</td>
+						<span class="badge badge-danger ml-1">NEW</span> 최근 3일 이내의 새로운 공지사항 입니다.
 					</div> 
 				</sec:authorize>
 

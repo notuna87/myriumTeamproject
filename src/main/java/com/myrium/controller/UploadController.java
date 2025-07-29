@@ -3,6 +3,7 @@ package com.myrium.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.myrium.domain.AttachFileDTO;
 
 import lombok.extern.log4j.Log4j;
@@ -29,11 +33,6 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Controller
 @Log4j
 public class UploadController {
-
-	@GetMapping("/uploadForm")
-	public void uploadForm() {
-		log.info("upload form");
-	}
 
 	@PostMapping("/uploadFormAction")
 	public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
@@ -52,11 +51,6 @@ public class UploadController {
 			}
 		}
 
-	}
-
-	@GetMapping("/uploadAjax")
-	public void uploadAjax() {
-		log.info("upload Ajax");
 	}
 
 	@PostMapping(value = "/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -95,7 +89,7 @@ public class UploadController {
 			UUID uuid = UUID.randomUUID();
 			uploadFileName = uuid.toString() + "_" + uploadFileName;
 
-			File saveFile = new File(uploadPath, uploadFileName);
+			//File saveFile = new File(uploadPath, uploadFileName);
 
 			try {
 				File savefile = new File(uploadFolder, multipartFile.getOriginalFilename());
@@ -108,7 +102,7 @@ public class UploadController {
 				// if (checkImageType(saveFile)) {
 				if (checkImageType(savefile)) {
 
-					attachDTO.setImage(true);
+					attachDTO.setImage(1);
 
 					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
 					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
@@ -164,5 +158,22 @@ public class UploadController {
 
 		return result;
 	}
+	
+	@GetMapping("/download")
+	public ResponseEntity<Resource> downloadFile(String uuid, String path, String filename) throws Exception {
+	    //String fullPath = "c:\\upload\\" + path + "\\" + uuid + "_" + filename;
+	    String fullPath = "c:\\upload\\" + filename;
+	    Resource resource = new FileSystemResource(fullPath);
 
+	    if (!resource.exists()) {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
+
+	    String encodedName = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
+
+	    return ResponseEntity.ok()
+	        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedName + "\"")
+	        .body(resource);
+	}
+	
 }
