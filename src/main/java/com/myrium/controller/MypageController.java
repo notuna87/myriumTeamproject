@@ -1,8 +1,11 @@
 package com.myrium.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -36,5 +39,13 @@ public class MypageController {
         }
         return "mypage/mypage"; // 로그인 된 경우만
     }
-
+    
+    //로그아웃 버튼 클릭 시 홈화면 이동
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/home";
+    }
 }
+
+
