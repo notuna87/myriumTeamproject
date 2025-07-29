@@ -123,4 +123,13 @@ public class MemberServiceImpl implements MemberService {
         return sb.toString();
     }
     
+    //비밀번호 변경
+    @Override
+    public void updatePassword(String customerId, String encodedPassword) {
+        memberMapper.updatePassword(customerId, encodedPassword);
+    }
+    @Override
+    public MemberVO getMemberByCustomerId(String customerId) {
+        return memberMapper.readByCustomerId(customerId);
+    }
 }

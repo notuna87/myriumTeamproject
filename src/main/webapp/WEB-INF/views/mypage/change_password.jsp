@@ -1,4 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:set var="loginUser" value="${sessionScope.loginUser}" />
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -10,7 +13,14 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage/change_password.css" />
 </head>
 <body>
-<%@ include file="../main/header.jsp" %>
+<jsp:include page="../main/header.jsp" />
+
+<c:if test="${not empty msg}">
+  <script>
+    alert("${msg}");
+    history.replaceState(null, null, location.pathname); // 뒤로가기 alert 방지
+  </script>
+</c:if>
 
   <main class="container">
     <h2 class="page-title">비밀번호 변경</h2>
@@ -20,10 +30,10 @@
     </p>
 
     <div class="form-box">
-      <form class="pw-form">
+      <form class="pw-form" method="post" action="${pageContext.request.contextPath}/member/changePassword">
         <div class="form-group">
           <label for="user-id">아이디</label>
-          <div id="user-id" class="static-text">sks0716ek</div>
+           <div id="user-id" class="static-text">${loginUser.customerId}</div>
         </div>
 
         <div class="form-group">
