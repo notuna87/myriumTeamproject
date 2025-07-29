@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <jsp:useBean id="now" class="java.util.Date" />
 
@@ -48,6 +49,25 @@
 						<label>내용</label>
 						<textarea class="form-control" rows="10" name='content' readonly="readonly">${notice.content}</textarea>
 					</div>
+					
+					<c:if test="${not empty attachFiles}">
+					    <div class="form-group">
+					        <label>첨부파일 다운로드</label>
+					        <ul class="list-group">
+					            <c:forEach items="${attachFiles}" var="file">
+					                <li class="list-group-item">
+					                    <!-- <a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
+										    ${file.fileName}
+										</a> -->
+										<a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
+										    ${file.fileName}
+										</a>
+					                </li>
+					            </c:forEach>
+					        </ul>
+					    </div>
+					</c:if>
+					
 					<div class="form-group">
 						<label>작성자</label>
 						<input class="form-control" name='customerId' value="${notice.customerId}" readonly="readonly"/>

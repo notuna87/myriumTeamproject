@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.NoticeVO;
 
@@ -26,5 +27,11 @@ public interface NoticeMapper {
 	public List<NoticeVO> searchTest(Map<String, Map<String, String>> map);
 	
 	public void updateReadCnt(@Param("id") Long id, @Param("amount") int amount);
+	
+    // 파일 정보 저장
+    void insertAttach(AttachFileDTO dto);
+
+    // 해당 공지의 파일 목록 조회
+    List<AttachFileDTO> findByNoticeId(Long noticeId);
 
 }

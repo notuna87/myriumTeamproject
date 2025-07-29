@@ -1,39 +1,38 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 
 <%@include file="../main/header.jsp"%>
-<%@include file="../includes_admin/header.jsp" %>
+<%@include file="../includes_admin/header.jsp"%>
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>공지사항 등록</title>
-	<style>
-	.uploadResult {
-		width: 100%;
-		background-color: lightgray;
-	}
-	
-	.uploadResult ul {
-		display: flex;
-		flex-flow: row;
-		justify-content: center;
-		align-items: center;
-	}
-	
-	.uploadResult ul li {
-		list-style: none;
-		padding: 10px;
-	}
-	
-	.uploadResult ul li img {
-		width: 100px;
-	}
-	</style>
+<style>
+.uploadResult {
+	width: 100%;
+	background-color: lightgray;
+}
+
+.uploadResult ul {
+	display: flex;
+	flex-flow: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.uploadResult ul li {
+	list-style: none;
+	padding: 10px;
+}
+
+.uploadResult ul li img {
+	width: 100px;
+}
+</style>
 
 </head>
 <body>
@@ -51,13 +50,15 @@
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					<form role="form" action="/notice/register" method="post" enctype="multipart/form-data">
-						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
-						
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+
 						<sec:authorize access="isAuthenticated()">
-						    <input type="hidden" name="createdBy" value='<sec:authentication property="principal.username"/>' />
-						    <input type="hidden" name="userId" value='<sec:authentication property="principal.member.id"/>' />
+							<input type="hidden" name="createdBy"
+								value='<sec:authentication property="principal.username"/>' />
+							<input type="hidden" name="userId"
+								value='<sec:authentication property="principal.member.id"/>' />
 						</sec:authorize>
-						
+
 						<div class="form-group">
 							<label>제목</label> <input class="form-control" name='title'>
 						</div>
@@ -66,10 +67,10 @@
 							<label>내용</label>
 							<textarea class="form-control" rows="10" name='content'></textarea>
 						</div>
-						
+
 						<div class="form-group">
-							<label>작성자</label>
-							<input class="form-control" name="customerId"  value='<sec:authentication property="principal.username"/>' readonly="readonly">
+							<label>작성자</label> <input class="form-control" name="customerId"
+								value='<sec:authentication property="principal.username"/>' readonly="readonly">
 						</div>
 
 						<!-- 업로드 영역 -->
@@ -78,6 +79,7 @@
 
 							<!-- 설명 문구 -->
 							<p class="text-muted small mb-2">
+								※ 파일은 <strong>3개</strong> 까지 업로드할 수 있습니다.<br>
 								※ 여러 파일을 선택하려면 <strong>Ctrl 키</strong>를 누른 상태에서 클릭하세요.<br>
 								※ 첨부파일은 <strong>등록 전에 반드시 업로드</strong>해야 합니다.
 							</p>
@@ -89,39 +91,70 @@
 								<button id="uploadBtn" class="btn btn-primary">업로드</button>
 							</div>
 						</div>
+						
+						<input type="hidden" name="attachList" id="attachListJson"> 
+						
 						<div class="text-right mt-3">
-						  <button type="submit" class="btn btn-success">등록</button>
-						  <button type="reset" class="btn btn-info">다시작성</button>
+							<button type="submit" class="btn btn-success">등록</button>
+							<button type="reset" class="btn btn-info">다시작성</button>
 						</div>
 					</form>
-
 				</div>
-				<!-- /.panel-body -->
 			</div>
-			<!-- /.panel -->
 		</div>
-		<!-- /.col-lg-12 -->
 	</div>
-	<!-- /.row -->
-	<!-- /#page-wrapper -->
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" 
-integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" 
-crossorigin="anonymous"></script>
-	
-<script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+	<script>
 $(document).ready(function () {
   const csrfHeader = $("meta[name='_csrf_header']").attr("content");
   const csrfToken = $("meta[name='_csrf']").attr("content");
+  
+  var regex = new RegExp("(.*?)\\.(exe|sh|zip|alz)$", "i");
+  var maxSize = 5242880; // 5MB
+
+  function checkExtension(fileName, fileSize) {
+    const fileSizeMB = (fileSize / (1024 * 1024)).toFixed(2);
+    const maxSizeMB = (maxSize / (1024 * 1024)).toFixed(2);
+    
+
+    if (regex.test(fileName)) {
+      alert("❗ 파일 [ " + fileName + " ]은 허용되지 않는 확장자입니다.");
+      return false;
+    }
+    
+    if (fileSize >= maxSize) {
+      alert("❗ 파일이 [ " + fileName + " ]" + fileSizeMB + "MB 너무 큽니다. (허용 용량 : " + maxSizeMB + "MB)");
+      return false;
+    }
+    
+    return true;
+  }
 
   // 선택된 파일 리스트를 전역에서 관리
   let selectedFiles = [];
 
-  // 파일 선택 시 UI 표시 및 배열에 저장
+//파일 선택 시 UI 표시 및 배열에 저장
   $("#uploadInput").on("change", function (e) {
     const files = Array.from(e.target.files);
-    selectedFiles.push(...files);
+
+    // 최대 3개 제한
+    if (selectedFiles.length + files.length > 3) {
+      alert("❗ 최대 3개까지 파일을 업로드할 수 있습니다.");
+      $(this).val('');
+      return;
+    }
+
+    files.forEach(file => {
+      if (checkExtension(file.name, file.size)) {
+        selectedFiles.push(file);
+      }
+    });
+
     updateFileListUI();
+
     // input 초기화 (같은 파일 다시 선택할 경우에도 change 이벤트 발생하게 하기 위함)
     $(this).val('');
   });
@@ -150,17 +183,23 @@ $(document).ready(function () {
         }
       },
       success: function (result) {
-    	  console.log(result);
+    	  
+    	  console.log("Attatch result: " + result);
+    	  console.log(JSON.stringify(result, null, 2));  // JSON 형식으로 보기 좋게 출력
+    	  
     	  showUploadedFiles(result);
     	  uploadedFileList = result;     // 업로드 완료된 파일 저장
     	  selectedFiles = [];            // 선택 목록 초기화
     	  uploadCompleted = true;        // 업로드 완료 플래그 true
+    	  setAttachListJson(result);     // 숨은 input에 JSON으로 저장
     	}
     });
   });
+  
 
   // 미리보기 영역 업데이트
   function updateFileListUI() {
+	  
     const list = $("#uploadList");
     list.empty();
 
@@ -256,6 +295,10 @@ $(document).ready(function () {
     });
   }
   
+  function setAttachListJson(attachList) {
+	  document.getElementById("attachListJson").value = JSON.stringify(attachList);
+	}
+  
   $("button[type='reset']").on("click", function() {
 	  selectedFiles = [];       // 선택된 파일 배열 초기화
 	  uploadCompleted = false;  // 업로드 완료 상태 초기화
@@ -299,7 +342,7 @@ $(document).ready(function () {
 
 </body>
 
-<%@include file="../includes_admin/footer.jsp" %>
+<%@include file="../includes_admin/footer.jsp"%>
 <%@include file="../main/footer.jsp"%>
 
 </html>

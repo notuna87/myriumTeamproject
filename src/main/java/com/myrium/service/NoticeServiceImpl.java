@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.NoticeVO;
 import com.myrium.mapper.NoticeMapper;
@@ -73,7 +74,19 @@ public class NoticeServiceImpl implements NoticeService{
 	
 	@Override
 	public boolean restore(Long id) {
-		log.info("restore...." + id);
+		log.info("notice restore...." + id);
 		return mapper.restore(id)==1;
 	}
+	
+	@Override
+	public void insertAttach(AttachFileDTO dto) {
+		log.info("notice_file Attach...." + dto);
+		mapper.insertAttach(dto);
+	}
+	
+    @Override
+    public List<AttachFileDTO> findByNoticeId(Long noticeId) {
+        return mapper.findByNoticeId(noticeId);
+    }
+	
 }

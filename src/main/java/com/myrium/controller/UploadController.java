@@ -3,8 +3,7 @@ package com.myrium.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,11 +34,6 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Log4j
 public class UploadController {
 
-	@GetMapping("/uploadForm")
-	public void uploadForm() {
-		log.info("upload form");
-	}
-
 	@PostMapping("/uploadFormAction")
 	public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
 		String uploadFolder = "c:\\upload";
@@ -55,11 +51,6 @@ public class UploadController {
 			}
 		}
 
-	}
-
-	@GetMapping("/uploadAjax")
-	public void uploadAjax() {
-		log.info("upload Ajax");
 	}
 
 	@PostMapping(value = "/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -111,7 +102,7 @@ public class UploadController {
 				// if (checkImageType(saveFile)) {
 				if (checkImageType(savefile)) {
 
-					attachDTO.setImage(true);
+					attachDTO.setImage(1);
 
 					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
 					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
@@ -166,6 +157,23 @@ public class UploadController {
 		}
 
 		return result;
+	}
+	
+	@GetMapping("/download")
+	public ResponseEntity<Resource> downloadFile(String uuid, String path, String filename) throws Exception {
+	    //String fullPath = "c:\\upload\\" + path + "\\" + uuid + "_" + filename;
+	    String fullPath = "c:\\upload\\" + filename;
+	    Resource resource = new FileSystemResource(fullPath);
+
+	    if (!resource.exists()) {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
+
+	    String encodedName = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
+
+	    return ResponseEntity.ok()
+	        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedName + "\"")
+	        .body(resource);
 	}
 	
 }

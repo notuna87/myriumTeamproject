@@ -1,7 +1,7 @@
 package com.myrium.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.NoticeVO;
 import com.myrium.domain.PageDTO;
@@ -63,18 +67,56 @@ public class NoticeController {
 		log.info("---------------------------------------------------");
 	}
 	
-	@PreAuthorize("isAuthenticated()")
+//	@PreAuthorize("hasAuthority('ADMIN')")
+//	@PostMapping("/register")
+//	public String register(NoticeVO vo, RedirectAttributes rttr) {
+//		log.info("register......." + vo);
+//
+//		noticeservice.register(vo);
+//
+//		rttr.addFlashAttribute("result", vo.getId());
+//		return "redirect:/notice/list";
+//	}
+	
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/register")
-	public String register(NoticeVO vo, RedirectAttributes rttr) {
-		log.info("register......." + vo);
+	public String register(NoticeVO vo,
+	                       @RequestParam("attachList") String attachListJson,
+	                       RedirectAttributes rttr) {
+		log.info("(notice_file) register......." + vo);
 
-		noticeservice.register(vo);
+	    // 1. JSON 파싱
+	    ObjectMapper mapper = new ObjectMapper();
+	    List<AttachFileDTO> attachList = new ArrayList<>();
+	    try {
+	        attachList = mapper.readValue(attachListJson, new TypeReference<List<AttachFileDTO>>() {});
+	    } catch (JsonProcessingException e) {
+	        e.printStackTrace();
+	    }
 
-		rttr.addFlashAttribute("result", vo.getId());
-		return "redirect:/notice/list";
+	    // 2. 공지사항 저장
+	    noticeservice.register(vo);
+
+	    // 3. 첨부파일 저장
+	    if (attachList != null && !attachList.isEmpty()) {
+	        for (AttachFileDTO dto : attachList) {
+	            dto.setUserId(vo.getUserId()); // NotiveVO 에서 가져옴
+	            dto.setNoticeId(vo.getId());
+	            dto.setCustomerId(vo.getCustomerId());
+	            dto.setCreatedBy(vo.getCustomerId());
+	            dto.setUpdatedAt(vo.getUpdatedAt());
+	            dto.setUpdatedBy(vo.getUpdatedBy());
+	            
+	            log.info("(notice_file) AttachFileDTO......." + dto);
+
+	            noticeservice.insertAttach(dto);
+	        }
+	    }
+
+	    return "redirect:/notice/list";
 	}
 	
-	@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/register")
 	public void register() {
 	}
@@ -82,7 +124,13 @@ public class NoticeController {
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping({"/get", "/modify"})
 	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) {
+		
 		model.addAttribute("notice", noticeservice.get(id));
+		//model.addAttribute("attachFiles", noticeservice.findByNoticeId(id));
+		List<AttachFileDTO> attachFiles = noticeservice.findByNoticeId(id);
+		System.out.println("첨부파일 수: " + attachFiles.size()); // 디버깅
+		model.addAttribute("attachFiles", attachFiles);
+
 	}
 	
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")

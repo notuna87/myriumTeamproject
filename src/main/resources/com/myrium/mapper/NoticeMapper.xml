@@ -20,6 +20,22 @@
 	    <result property="readCnt" column="read_cnt"/>
 	    <result property="hasFiles" column="has_files"/>
 	</resultMap>
+	
+	<resultMap id="attachMap" type="com.myrium.domain.AttachFileDTO">
+	  <id property="id" column="id"/>
+	  <result property="userId" column="user_id"/>
+	  <result property="noticeId" column="notice_id"/>
+	  <result property="fileName" column="file_name"/>
+	  <result property="uploadPath" column="upload_path"/>
+	  <result property="uuid" column="uuid"/>
+	  <result property="image" column="image"/>
+	  <result property="customerId" column="customer_id"/>
+	  <result property="uploadDate" column="upload_date"/>
+	  <result property="createdAt" column="created_at"/>
+	  <result property="createdBy" column="created_by"/>
+	  <result property="updatedAt" column="updated_at"/>
+	  <result property="updatedBy" column="updated_by"/>
+	</resultMap>
 
 	<select id="getList" resultMap="noticeMap" >
 	    SELECT id, user_id, title, content, customer_id, write_date,
@@ -151,5 +167,20 @@
     <update id="updateReadCnt">
         UPDATE notice SET read_cnt = read_cnt + #{amount} WHERE id = #{id}
     </update>
+    
+	<insert id="insertAttach" parameterType="com.myrium.domain.AttachFileDTO">
+	  INSERT INTO notice_files (id, user_id, notice_id, file_name, upload_path, uuid, image,
+	   customer_id, upload_date, created_at, created_by)
+	  VALUES (
+	    NOTICE_FILES_SEQ.NEXTVAL, #{userId}, #{noticeId}, #{fileName}, #{uploadPath}, #{uuid}, #{image},
+	    #{customerId}, SYSDATE, SYSDATE, #{createdBy}
+	  )
+	</insert>
+	
+	<select id="findByNoticeId" resultMap="attachMap">
+	  SELECT *
+	  FROM notice_files
+	  WHERE notice_id = #{noticeId}
+	</select>
 
 </mapper>
