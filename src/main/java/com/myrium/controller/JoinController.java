@@ -32,7 +32,6 @@ public class JoinController {
 	
 	@PostMapping("/join")
 	public String register(MemberVO member, HttpServletRequest request, Model model, RedirectAttributes rttr) {
-		 log.info("✅ [register()] POST 요청 도착");
 
 	    // 1. 비밀번호 확인
 	    String passwordConfirm = request.getParameter("passwordConfirm");
@@ -50,9 +49,9 @@ public class JoinController {
 	    member.setPhoneNumber(fullPhone);
 
 	    // 3. 주소 조합 + null 체크
-	    String postcode = request.getParameter("postcode");
-	    String roadAddress = request.getParameter("roadAddress");
-	    String detailAddress = request.getParameter("detailAddress");
+	    String postcode = request.getParameter("zipcode");
+	    String roadAddress = request.getParameter("addr1");
+	    String detailAddress = request.getParameter("addr2");
 
 	    if (postcode == null || roadAddress == null || detailAddress == null ||
 	        postcode.trim().isEmpty() || roadAddress.trim().isEmpty() || detailAddress.trim().isEmpty()) {
