@@ -26,32 +26,24 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void register(MemberVO memberVO) {
-        log.info("✅ [Service] register() 진입");
-        log.info("👉 [Service] 전달받은 memberVO: " + memberVO);
 
         try {
             // 비밀번호 암호화
             String encodedPassword = passwordEncoder.encode(memberVO.getPassword());
             memberVO.setPassword(encodedPassword);
-            log.info("🔐 [Service] 비밀번호 암호화 완료");
 
             // 회원 정보 insert
-            log.info("📥 [Service] insertMember() 호출 전");
             memberMapper.insertMember(memberVO);
-            log.info("✅ [Service] insertMember() 완료, DB ID: " + memberVO.getId());
-
+ 
             // 권한 정보 insert
             AuthVO authVO = new AuthVO();
             authVO.setUserId(memberVO.getId());
             authVO.setRole("MEMBER");
 
-            log.info("📥 [Service] insertAuth() 호출 전");
             memberMapper.insertAuth(authVO);
-            log.info("✅ [Service] insertAuth() 완료");
 
         } catch (Exception e) {
-            log.error("❌ [Service] register() 도중 예외 발생", e);
-            throw e; // rollback을 위해 다시 던짐
+            throw e; 
         }
     }
 
