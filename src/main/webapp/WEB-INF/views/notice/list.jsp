@@ -48,6 +48,7 @@
 
 								<!-- 관리자만 노출 -->
 								<sec:authorize access="hasAuthority('ADMIN')">
+									<th class="text-center">상태</th>
 									<th class="text-center">관리</th>
 								</sec:authorize>
 							</tr>
@@ -201,27 +202,14 @@
 							</div>
 						</div>
 						<!-- End Modal -->
-
-
-
 					</div>
-					<!-- /.panel-body -->
 				</div>
-				<!-- /.panel -->
 			</div>
-			<!-- /.col-lg-12 -->
 		</div>
-
 	</div>
-	<!-- /#page-wrapper -->
 
-	<!-- </div>  -->
-
-</body>
-
-<%@include file="../includes_admin/footer.jsp"%>
-<%@include file="../main/footer.jsp"%>
-
+<!-- jQuery -->
+<script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
     var result = '${result}'; 	
@@ -350,3 +338,7 @@ $(document).ready(function(){
 });
 </script>
 
+</body>
+
+<%@include file="../includes_admin/footer.jsp"%>
+<%@include file="../main/footer.jsp"%>

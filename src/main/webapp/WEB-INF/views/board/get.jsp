@@ -192,25 +192,13 @@
 					<button id='modalCloseBtn' type="button" class="btn btn-default">닫기</button>
 				</div>
 			</div>
-			<!-- /.modal-content -->
 		</div>
-		<!-- /.modal-dialog -->
 	</div>
-	<!-- /새 답변 .modal -->
 
-	</div>
-	<!-- /#page-wrapper -->
-
-
-</body>
-
-<%@include file="../includes_admin/footer.jsp"%>
-<%@include file="../main/footer.jsp"%>
-
+<!-- jQuery -->
+<script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="/resources/js/reply.js"></script>
-
 <script type="text/javascript">
-
 $(document).ready(function() {
 	
 	//답변이 없을 경우 현재날짜 출력
@@ -512,3 +500,7 @@ $(document).ready(function() {
 	});
   });
 </script>
+
+</body>
+<%@include file="../includes_admin/footer.jsp"%>
+<%@include file="../main/footer.jsp"%>

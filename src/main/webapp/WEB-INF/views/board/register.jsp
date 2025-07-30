@@ -53,15 +53,10 @@
 					</form>
 
 				</div>
-				<!-- /.panel-body -->
 			</div>
-			<!-- /.panel -->
 		</div>
-		<!-- /.col-lg-12 -->
 	</div>
-	<!-- /.row -->
-	</div>
-	<!-- /#page-wrapper -->
+
 </body>
 
 <%@include file="../includes_admin/footer.jsp" %>
