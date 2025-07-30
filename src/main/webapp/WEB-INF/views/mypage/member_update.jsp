@@ -94,11 +94,11 @@
     <label>주소 <span class="required">*</span></label>
     <div class="form_input">
       <div class="address_line">
-        <input type="text" name="zipcode" value="${member.zipcode}" readonly />
-        <button type="button" class="btn_search">주소검색</button>
+        <input type="text" id="zipcode" name="zipcode" value="${member.zipcode}" readonly />
+        <button type="button" class="btn_search" onclick="execDaumPostcode()">주소검색</button>
       </div>
-      <input type="text" name="addr1" value="${member.addr1}" readonly />
-      <input type="text" name="addr2" value="${member.addr2}" />
+		<input type="text" id="addr1" name="addr1" value="${member.addr1}" readonly />
+		<input type="text" id="addr2" name="addr2" value="${member.addr2}" />
     </div>
   </div>
 
@@ -113,8 +113,8 @@
          <option value="018" <c:if test="${phone1 == '018'}">selected</c:if>>018</option>
          <option value="019" <c:if test="${phone1 == '019'}">selected</c:if>>019</option>
        </select>   
-       <input type="text" class="phone_input" name="phone2" value="${phone2}" />
-       <input type="text" class="phone_input" name="phone3" value="${phone3}" />
+       <input type="text" class="phone_input" name="phone2" value="${phone2}" maxlength="4"/>
+       <input type="text" class="phone_input" name="phone3" value="${phone3}" maxlength="4"/>
        <button type="button" class="btn_cert">인증번호받기</button>
      </div>
    </div>
@@ -162,13 +162,13 @@
       <label>생년월일</label>
       <div class="form_input birth_wrap">
         <div class="birth_inputs">
-          <input type="text" class="birth_input" placeholder="${birthYear}" /> <span>년</span>
-          <input type="text" class="birth_input" placeholder="${birthMonth}" /> <span>월</span>
-          <input type="text" class="birth_input" placeholder="${birthDay}" /> <span>일</span>
+          <input type="text" class="birth_input" placeholder="${birthYear}" readonly /> <span>년</span>
+          <input type="text" class="birth_input" placeholder="${birthMonth}" readonly /> <span>월</span>
+          <input type="text" class="birth_input" placeholder="${birthDay}" readonly /> <span>일</span>
         </div>
         <div class="calendar_select">
-          <label><input type="radio" name="calendar" value="solar" /> 양력</label>
-          <label><input type="radio" name="calendar" value="lunar" checked /> 음력</label>
+          <label><input type="radio" name="calendar" value="solar" checked  /> 양력</label>
+          <label><input type="radio" name="calendar" value="lunar" /> 음력</label>
         </div>
       </div>      
     </div>
@@ -224,17 +224,47 @@
 <script>const ctx = "${pageContext.request.contextPath}";</script>
 <script src="${pageContext.request.contextPath}/resources/js/join_terms.js"></script>
 
+<!-- 주소api -->
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
-document.querySelector('.btn_search').addEventListener('click', function () {
-    // 다음 주소 API 호출
+  function execDaumPostcode() {
     new daum.Postcode({
-        oncomplete: function(data) {
-            document.querySelector('input[name="zipcode"]').value = data.zonecode;
-            document.querySelector('input[name="addr1"]').value = data.address;
-            document.querySelector('input[name="addr2"]').focus();
+      oncomplete: function(data) {
+        let fullAddr = '';
+        let extraAddr = '';
+
+        if (data.userSelectedType === 'R') {
+          fullAddr = data.roadAddress;
+        } else {
+          fullAddr = data.jibunAddress;
         }
+
+        if (data.userSelectedType === 'R') {
+          if (data.bname !== '') {
+            extraAddr += data.bname;
+          }
+          if (data.buildingName !== '') {
+            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+          }
+          if (extraAddr !== '') {
+            fullAddr += ' (' + extraAddr + ')';
+          }
+        }
+
+        //주소 필드 값 덮어쓰기
+        document.getElementById('zipcode').value = data.zonecode;
+        document.getElementById('addr1').value = fullAddr;
+
+        //addr2는 공란으로 초기화
+        document.getElementById('addr2').value = '';
+
+        //addr2에 포커스
+        document.getElementById('addr2').focus();
+      }
     }).open();
-});
+  }
 </script>
+
+
 </body>
 </html>
