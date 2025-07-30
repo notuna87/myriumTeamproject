@@ -80,21 +80,14 @@
 
 				</form>
 			</div>
-			<!-- /.panel-body -->
 		</div>
-		<!-- /.panel -->
 	</div>
-	<!-- /.col-lg-12 -->
 </div>
-<!-- /.row -->
-</div>
-<!-- /#page-wrapper -->
 
-</body>
 
-<%@include file="../includes_admin/footer.jsp" %> 
-<%@include file="../main/footer.jsp"%>
 
+<!-- jQuery -->
+<script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	var formObj = $("form");
@@ -130,3 +123,8 @@ $(document).ready(function() {
 	
 });
 </script>
+
+
+</body>
+<%@include file="../includes_admin/footer.jsp" %> 
+<%@include file="../main/footer.jsp"%>

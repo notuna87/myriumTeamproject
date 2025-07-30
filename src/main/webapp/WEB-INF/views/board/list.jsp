@@ -198,28 +198,17 @@
 							</div>
 						</div>
 						<!-- End Modal -->
-
-
-
 					</div>
-					<!-- /.panel-body -->
 				</div>
-				<!-- /.panel -->
 			</div>
-			<!-- /.col-lg-12 -->
 		</div>
 
 	</div>
-	<!-- /#page-wrapper -->
 
-	<!-- </div>  -->
 
-</body>
-
-<%@include file="../includes_admin/footer.jsp"%>
-<%@include file="../main/footer.jsp"%>
-
-<script>
+<!-- jQuery -->
+<script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
+<script type="text/javascript">
 $(document).ready(function(){
     var result = '${result}'; 	
     
@@ -346,4 +335,8 @@ $(document).ready(function(){
     
 });
 </script>
+
+</body>
+<%@include file="../includes_admin/footer.jsp"%>
+<%@include file="../main/footer.jsp"%>
 

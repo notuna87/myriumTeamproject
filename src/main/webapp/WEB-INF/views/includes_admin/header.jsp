@@ -13,7 +13,7 @@
     <meta name="author" content="">
 
     <title>SB Admin 2 - Bootstrap Admin Theme</title>
-
+    
     <!-- Bootstrap Core CSS -->
     <link href="/resources/bsAdmin2/resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
