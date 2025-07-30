@@ -39,6 +39,10 @@ public interface MemberMapper {
     //비밀번호 변경
     void updatePassword(@Param("customerId") String customerId, @Param("password") String password);
     MemberVO readByCustomerId(String customerId);
+    
+    //회원정보수정
+    void updateMemberInfo(MemberVO member);
+    public MemberVO readById(Long id);
 }
 
 
