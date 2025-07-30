@@ -4,13 +4,16 @@
 
 <mapper namespace="com.myrium.mapper.MemberMapper">
 
-    <!-- 공통 resultMap -->
+    <!-- 공통 resultMap,주소 칼럼 추가-->
     <resultMap id="memberMap" type="com.myrium.domain.MemberVO">
         <id property="id" column="id"/>
         <result property="customerId" column="customer_id"/>
         <result property="password" column="password"/>
         <result property="customerName" column="customer_name"/>
         <result property="address" column="address"/>
+        <result property="zipcode" column="zipcode"/>
+		<result property="addr1" column="addr1"/>
+		<result property="addr2" column="addr2"/>
         <result property="phoneNumber" column="phone_number"/>
         <result property="email" column="email"/>
         <result property="gender" column="gender"/>
@@ -29,7 +32,7 @@
         <collection property="authList" resultMap="authMap"/>
     </resultMap>
     
-    <!-- 회원 등록 -->
+    <!-- 회원 등록 ,주소 칼럼 추가-->
 	<insert id="insertMember" parameterType="com.myrium.domain.MemberVO">
 	
 	    <selectKey keyProperty="id" resultType="long" order="BEFORE">
@@ -38,19 +41,33 @@
 	
 	    INSERT INTO member (
 	        id, customer_id, password, customer_name, address,
-	        phone_number, email, gender, birthdate,
+	        zipcode, addr1, addr2,phone_number, email, gender, birthdate,
 	        agree_terms, agree_privacy, agree_third_party,
 	        agree_delegate, agree_sms, is_deleted,
 	        created_at, created_by
 	    ) VALUES (
-	        #{id}, #{customerId, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, #{customerName, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
-	        #{phoneNumber, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR}, #{gender, jdbcType=VARCHAR}, #{birthdate, jdbcType=DATE},
-	        #{agreeTerms, jdbcType=INTEGER}, #{agreePrivacy, jdbcType=INTEGER}, #{agreeThirdParty, jdbcType=INTEGER},
-	        #{agreeDelegate, jdbcType=INTEGER}, #{agreeSms, jdbcType=INTEGER}, #{isDeleted, jdbcType=INTEGER},
-	        SYSDATE, #{createdBy, jdbcType=VARCHAR}
+	        #{id}, #{customerId, jdbcType=VARCHAR}, 
+	        #{password, jdbcType=VARCHAR}, 
+	        #{customerName, jdbcType=VARCHAR}, 
+	        #{address, jdbcType=VARCHAR},
+	        #{zipcode, jdbcType=VARCHAR}, 
+	        #{addr1, jdbcType=VARCHAR}, 
+	        #{addr2, jdbcType=VARCHAR},
+	        #{phoneNumber, jdbcType=VARCHAR}, 
+	        #{email, jdbcType=VARCHAR}, 
+	        #{gender, jdbcType=VARCHAR}, 
+	        #{birthdate, jdbcType=DATE},
+	        #{agreeTerms, jdbcType=INTEGER}, 
+	        #{agreePrivacy, jdbcType=INTEGER}, 
+	        #{agreeThirdParty, jdbcType=INTEGER},
+	        #{agreeDelegate, jdbcType=INTEGER}, 
+	        #{agreeSms, jdbcType=INTEGER}, #{isDeleted, jdbcType=INTEGER},
+	        SYSDATE, 
+	        #{createdBy, jdbcType=VARCHAR}
 	    )
-
+	
 	</insert>
+
   
 	<!-- 회원 권한 등록 -->
 	<insert id="insertAuth" parameterType="com.myrium.domain.AuthVO">
@@ -78,6 +95,9 @@
     m.password,
     m.customer_name,
     m.address,
+    m.zipcode,
+    m.addr1,
+    m.addr2,
     m.phone_number,
     m.email,
     m.gender,

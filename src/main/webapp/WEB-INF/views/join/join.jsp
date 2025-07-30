@@ -78,13 +78,16 @@
 
 	<div class="form_section address">
 	    <label>주소 <span class="required">*</span></label>
+	    
 	    <div class="address_group">
-	        <input type="text" id="postcode" name="postcode" placeholder="우편번호" readonly />
+	        <input type="text" id="postcode" name="zipcode" placeholder="우편번호" readonly />
 	        <button type="button" onclick="execDaumPostcode()">주소검색</button>
 	    </div>
-	    <input type="text" id="roadAddress" name="roadAddress" placeholder="기본주소" readonly />
-	    <input type="text" id="detailAddress" name="detailAddress" placeholder="나머지 주소" />
+	    
+	    <input type="text" id="roadAddress" name="addr1" placeholder="기본주소" readonly />
+	    <input type="text" id="detailAddress" name="addr2" placeholder="나머지 주소" />
 	</div>
+
 
 
 	<div class="form_section phone">
