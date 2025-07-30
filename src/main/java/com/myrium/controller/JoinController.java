@@ -82,11 +82,11 @@ public class JoinController {
 	    }
 
 	    // 5. 약관 동의 항목 (체크박스 name 속성에 따라 처리)
-	    member.setAgreePrivacy(request.getParameter("agreeTerms") != null ? 1 : 0);
+	    member.setAgreeTerms(request.getParameter("agreeTerms") != null ? 1 : 0);
 	    member.setAgreePrivacy(request.getParameter("agreePrivacy") != null ? 1 : 0);
 	    member.setAgreeThirdParty(request.getParameter("agreeThirdParty") != null ? 1 : 0);
 	    member.setAgreeDelegate(request.getParameter("agreeDelegate") != null ? 1 : 0);
-	    member.setAgreePrivacy(request.getParameter("agreeSms") != null ? 1 : 0);
+	    member.setAgreeSms(request.getParameter("agreeSms") != null ? 1 : 0);
 
 	    // 6. 시스템 기본값 설정
 	    member.setIsDeleted(0);

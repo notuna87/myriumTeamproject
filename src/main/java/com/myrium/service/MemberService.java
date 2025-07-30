@@ -28,4 +28,7 @@ public interface MemberService {
     void updatePassword(String customerId, String encodedPassword);
     MemberVO getMemberByCustomerId(String customerId);
     
+    //회원정보수정
+    void updateMemberInfo(MemberVO member);
+    public MemberVO readById(long id);
 }
