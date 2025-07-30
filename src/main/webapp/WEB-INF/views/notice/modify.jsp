@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp" %> 
@@ -12,10 +13,10 @@
 <div class="row">
      <div class="col-lg-12">
         <sec:authorize access="hasAuthority('ADMIN')">
-        	<h1 class="page-header">문의사항 수정(관리자)</h1>
+        	<h1 class="page-header">공지사항 수정(관리자)</h1>
         </sec:authorize>
         <sec:authorize access="!hasAuthority('ADMIN')">
-        	<h1 class="page-header">문의사항 수정</h1>
+        	<h1 class="page-header">공지사항 수정</h1>
         </sec:authorize>
     </div>
 </div>
@@ -28,7 +29,7 @@
 
 			<!-- /.panel-heading -->
 			<div class="panel-body">
-				<form role="form" action="/board/modify" method="post">
+				<form role="form" action="/notice/modify" method="post" enctype="multipart/form-data">
 					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
 					<input type='hidden' name='pageNum' value='${cri.pageNum}'>
 					<input type='hidden' name='amount' value='${cri.amount}'>
@@ -41,22 +42,22 @@
 					
 					<div class="form-group">
 					       <label>No.</label> 
-                           <input class="form-control" name='id' value=${board.id} readonly="readonly">
+                           <input class="form-control" name='id' value="${notice.id}" readonly="readonly">
 					</div>
 
 					<div class="form-group">
 					      <label>제목</label> 	
-                      	  <input class="form-control" name='title' value=${board.title} >
+                      	  <input class="form-control" name='title' value="${notice.title}">
 					</div>
 
 					<div class="form-group">
 		                  <label>내용</label>
-					      <textarea class="form-control" rows="3" name='content'>${board.content}</textarea>
+					      <textarea class="form-control" rows="3" name='content'>${notice.content}</textarea>
 					</div>
 
 					<div class="form-group">
 					      <label>작성자</label> 
-                          <input class="form-control" name='customerId' value=${board.customerId} readonly="readonly">
+                          <input class="form-control" name='customerId' value="${notice.customerId}" readonly="readonly">
 					</div>
 
                     <sec:authentication property="principal" var="pinfo"/>	
@@ -65,11 +66,61 @@
 
                    <sec:authentication property="principal" var="pinfo"/>
                     <!--<sec:authorize access="isAuthenticated()">
-                      <c:if test="${pinfo.username eq board.customerId}">
+                      <c:if test="${pinfo.username eq notice.customerId}">
                         <button type="submit" data-oper='modify' class="btn btn-default">수정</button>
                         <button type="submit" data-oper='remove' class="btn btn-danger">삭제</button>
                       </c:if>
-                    </sec:authorize> -->
+                    </sec:authorize> -->                   
+
+
+					<c:if test="${not empty attachFiles}">
+					    <div class="form-group">
+					        <label>첨부파일 다운로드</label>
+					        <ul class="list-group">
+					            <c:forEach items="${attachFiles}" var="file">
+					                <li class="list-group-item uploadedFile">
+					                    <!-- <a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
+										    ${file.fileName}
+										</a> -->
+										<a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
+										    ${file.fileName}
+										</a>
+										<button type="button" class="btn btn-xs btn-danger remove-file-btn" data-uuid="${file.uuid}">삭제</button>
+					                </li>
+					            </c:forEach>
+					        </ul>
+					    </div>
+					</c:if>
+					
+					
+                    <c:if test="${not empty attachFiles}">
+					  <div class="form-group">
+					    <label>첨부파일</label>
+					    <ul id="uploadList">
+					      <c:forEach var="file" items="${attachFiles}">
+					        <li>
+					          <a href="/download?uuid=${file.uuid}&fileName=${file.fileName}">
+					            ${file.fileName}
+					          </a>
+					          <button type="button" id="uploadBtn" class="btn btn-xs btn-danger remove-file-btn" data-uuid="${file.uuid} data-fileName="${file.file_Name}">삭제</button>
+					        </li>
+					      </c:forEach>
+					    </ul>
+					  </div>
+					</c:if>
+					
+<div class="form-group">
+    <label>파일 추가</label>
+    <div id="new-file-inputs">
+        <input type="file" id="uploadInput" name="uploadFiles" class="form-control upload-file">
+    </div>
+    <button type="button" id="add-file-btn" class="btn btn-default btn-xs">파일 추가</button>
+</div>
+					
+<input type="hidden" name="deleteFiles" id="deleteFiles">
+<input type="hidden" name="attachListJson" id="attachListJson" >
+
+
                    
    					<sec:authorize access="hasAuthority('ADMIN')">
 		            	<button type="submit" data-oper='modify' class="btn btn-default">수정</button>
@@ -85,10 +136,11 @@
 
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 $(document).ready(function() {
 	var formObj = $("form");
 	
+	// 수정/삭제/목록 버튼 처리
 	$("button").on("click",function(e){
 		e.preventDefault();
 		
@@ -98,10 +150,10 @@ $(document).ready(function() {
 		
 		if(operation === 'remove'){
 			if (confirm("삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
-				formObj.attr("action", "/board/harddel"); // 소프트 삭제 => softdel, 하드(영구) 삭제 => harddel 
+				formObj.attr("action", "/notice/harddel"); // 소프트 삭제 => softdel, 하드(영구) 삭제 => harddel 
 			}
 		}else if(operation === 'list'){
-			formObj.attr("action", "/board/list").attr("method", "get");
+			formObj.attr("action", "/notice/list").attr("method", "get");
 			var pageNumTag = $("input[name='pageNum']").clone();
 			var amountTag = $("input[name='amount']").clone();
 			var keywordTag = $("input[name='keyword']").clone();
@@ -118,9 +170,58 @@ $(document).ready(function() {
 		
 	});
 	
-});
-</script>
+	// 기존 파일 삭제 처리
+    let deletedFile = [];
+    $(".remove-file-btn").on("click", function () {
+        const uuid = $(this).data("uuid");
+        const fileName = $(this).data("fileName");
+        const uuidFileName = uuid + "_" + fileName;        
+        deletedFile.push(uuidFileName);
+        $(this).closest("li").remove();
+        $("#deleteFiles").val(deletedFile.join(","));
+    });
 
+    // 파일 추가 제한 (최대 3개)
+    $("#add-file-btn").on("click", function () {
+        const current = $(".uploadedFile").length;
+        const currentNew = $(".upload-file").length;
+        const total = current + currentNew;
+
+        if (total >= 3) {
+            alert("최대 3개의 파일만 업로드 가능합니다.");
+            return;
+        }
+
+        $("#new-file-inputs").append('<input type="file" name="uploadFiles" class="form-control upload-file">');
+    });
+    
+    
+
+
+
+});
+	
+</script> -->
+
+    <!-- ====================================================== -->
+  <script type="module">
+    import { UploadManager } from '/resources/js/file_upload.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const uploadManager = new UploadManager({
+        uploadInputSelector: '#uploadInput',
+        uploadListSelector: '#uploadList',
+        uploadBtnSelector: '#uploadBtn',
+        attachListJsonSelector: '#attachListJson',
+        maxFiles: 3,
+        uploadUrl: '/uploadAjaxAction',
+        deleteUrl: '/deleteFile',
+		generateThumbnail: false
+      });
+    });
+  </script>
+  
+  
 </body>
 
 <%@include file="../includes_admin/footer.jsp" %> 

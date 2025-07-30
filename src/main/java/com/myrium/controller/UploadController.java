@@ -87,12 +87,13 @@ public class UploadController {
 			attachDTO.setFileName(uploadFileName);
 
 			UUID uuid = UUID.randomUUID();
-			uploadFileName = uuid.toString() + "_" + uploadFileName;
+			String uuidUploadFileName = uuid.toString() + "_" + uploadFileName;
 
 			//File saveFile = new File(uploadPath, uploadFileName);
 
 			try {
-				File savefile = new File(uploadFolder, multipartFile.getOriginalFilename());
+				//File savefile = new File(uploadFolder, multipartFile.getOriginalFilename());
+				File savefile = new File(uploadFolder, uuidUploadFileName);
 				// multipartFile.transferTo(saveFile);
 				multipartFile.transferTo(savefile);
 
@@ -104,7 +105,7 @@ public class UploadController {
 
 					attachDTO.setImage(1);
 
-					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
+					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uuidUploadFileName));
 					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
 					thumbnail.close();
 				}
@@ -162,7 +163,7 @@ public class UploadController {
 	@GetMapping("/download")
 	public ResponseEntity<Resource> downloadFile(String uuid, String path, String filename) throws Exception {
 	    //String fullPath = "c:\\upload\\" + path + "\\" + uuid + "_" + filename;
-	    String fullPath = "c:\\upload\\" + filename;
+	    String fullPath = "c:\\upload\\" + uuid + "_" + filename;
 	    Resource resource = new FileSystemResource(fullPath);
 
 	    if (!resource.exists()) {
