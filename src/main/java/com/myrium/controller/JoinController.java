@@ -32,12 +32,14 @@ public class JoinController {
 	
 	@PostMapping("/join")
 	public String register(MemberVO member, HttpServletRequest request, Model model, RedirectAttributes rttr) {
+		 log.info("✅ [register()] POST 요청 도착");
 
 	    // 1. 비밀번호 확인
 	    String passwordConfirm = request.getParameter("passwordConfirm");
 	    if (!member.getPassword().equals(passwordConfirm)) {
 	        model.addAttribute("pwMatchError", "비밀번호가 일치하지 않습니다.");
 	        return "join/join";
+
 	    }
 
 	    // 2. 휴대폰 번호 조합
@@ -58,12 +60,13 @@ public class JoinController {
 	        return "join/join";
 	    }
 
-	    String fullAddress = "(" + postcode + ") " + roadAddress + " " + detailAddress;
-	    member.setAddress(fullAddress);
-	    
-	    log.info("fullAddress"+fullAddress);
-	    log.info("detailAddress"+detailAddress);
-	    log.info("roadAddress"+roadAddress);
+	    member.setZipcode(postcode);
+	    member.setAddr1(roadAddress);
+	    member.setAddr2(detailAddress);
+
+	    // 필요하다면 기존 address 필드도 함께 구성
+	    member.setAddress("(" + postcode + ") " + roadAddress + " " + detailAddress);  // 선택
+
 	    // 4. 생년월일 조합
 	    String birthYear = request.getParameter("birthYear");
 	    String birthMonth = request.getParameter("birthMonth");

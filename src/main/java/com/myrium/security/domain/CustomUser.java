@@ -30,4 +30,5 @@ public class CustomUser extends User {
     public MemberVO getMember() {
         return member;
     }
+    
 }

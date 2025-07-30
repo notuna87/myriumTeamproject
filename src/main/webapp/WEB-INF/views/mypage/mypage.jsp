@@ -9,8 +9,12 @@
  	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css" />
   	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage/mypage.css" />
+	
+
 </head>
 <body>
+
+
   <%@ include file="../main/header.jsp" %>
 
   <div class="mypage-container">

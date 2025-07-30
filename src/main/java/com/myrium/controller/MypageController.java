@@ -3,10 +3,15 @@ package com.myrium.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.myrium.domain.MemberVO;
+import com.myrium.security.domain.CustomUser;
 
 @Controller
 public class MypageController {
@@ -26,10 +31,6 @@ public class MypageController {
         return "mypage/change_password";
     }
     
-    @GetMapping("/mypage/member_update")
-    public String showmemberupdate() {
-        return "mypage/member_update";
-    }
     
     @GetMapping("/mypage/order/list")
     public String showOrderList(Authentication authentication, RedirectAttributes rttr) {
@@ -45,6 +46,24 @@ public class MypageController {
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/home";
+    }
+    
+    //회원정보수정
+    @GetMapping("/mypage/member_update")
+    public String showMemberUpdate(Model model) {
+        // 현재 인증 정보 가져오기
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        // Principal에서 CustomUser 추출
+        CustomUser customUser = (CustomUser) auth.getPrincipal();
+        
+        // 내부의 MemberVO 꺼내기
+        MemberVO member = ((CustomUser) auth.getPrincipal()).getMember();
+        
+        // model에 담아서 JSP에서 사용 가능하도록 전달
+        model.addAttribute("member", member);
+        
+        return "mypage/member_update";
     }
 }
 
