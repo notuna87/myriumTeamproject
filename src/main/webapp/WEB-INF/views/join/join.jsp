@@ -100,9 +100,9 @@
 		  <option>018</option>
 		  <option>019</option>
 		</select> -
-		<input type="text" name="phone2" /> -
-		<input type="text" name="phone3" />
-	    <button type="button" id="sendCodeBtn">인증번호받기</button>
+		<input type="text" name="phone2" maxlength="4"/> -
+		<input type="text" name="phone3" maxlength="4"/>
+	    <button type="button" id="sendCodeBtn" class="btn_cert">인증번호받기</button>
 	  </div>
 	  <p class="success_msg" id="phoneConfirmMsg" style="display: none; margin-top: 6px;">인증번호 확인 되었습니다.</p>
 	</div>

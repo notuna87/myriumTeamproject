@@ -140,4 +140,15 @@ public class MemberServiceImpl implements MemberService {
     public MemberVO getMemberByCustomerId(String customerId) {
         return memberMapper.readByCustomerId(customerId);
     }
+    
+    //회원정보수정
+    @Override
+    public void updateMemberInfo(MemberVO member) {
+        memberMapper.updateMemberInfo(member);  // 여기 중요
+    }
+    
+    @Override
+    public MemberVO readById(long id) {
+        return memberMapper.readById(id);
+    }
 }
