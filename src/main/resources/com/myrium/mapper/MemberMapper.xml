@@ -61,7 +61,8 @@
 	        #{agreePrivacy, jdbcType=INTEGER}, 
 	        #{agreeThirdParty, jdbcType=INTEGER},
 	        #{agreeDelegate, jdbcType=INTEGER}, 
-	        #{agreeSms, jdbcType=INTEGER}, #{isDeleted, jdbcType=INTEGER},
+	        #{agreeSms, jdbcType=INTEGER}, 
+	        #{isDeleted, jdbcType=INTEGER},
 	        SYSDATE, 
 	        #{createdBy, jdbcType=VARCHAR}
 	    )
@@ -170,5 +171,24 @@
 	  SELECT * FROM member WHERE customer_id = #{customerId}
 	</select>
 	
-		
+	<!-- 회원정보수정 -->
+	<update id="updateMemberInfo" parameterType="com.myrium.domain.MemberVO">
+	  UPDATE member
+	  <set>
+	    phone_number = #{phoneNumber},
+	    email = #{email},
+	    agree_sms = #{agreeSms},
+	    addr1 = #{addr1},
+	    addr2 = #{addr2},
+	    zipcode = #{zipcode},
+	    gender = #{gender},
+	    updated_at = SYSDATE,
+	    updated_by = 'updateMember'
+	  </set>
+	  WHERE id = #{id}
+	</update>
+	
+	<select id="readById" resultType="com.myrium.domain.MemberVO" parameterType="long">
+  		SELECT * FROM member WHERE id = #{id}
+	</select>
 </mapper>
