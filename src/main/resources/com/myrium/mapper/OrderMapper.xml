@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myrium.mapper.OrderMapper">
+
+<select id="findOrdersByCustomerId" resultType="com.myrium.domain.OrderDTO" parameterType="String">
+SELECT
+  m.customer_id        AS customerId,
+  m.customer_name      AS receiver,
+  m.phone_number       AS phoneNumber,
+  m.zipcode || ' ' || m.addr1 || ' ' || NVL(m.addr2, '') AS address,
+  o.order_id           AS orderId,
+  TO_CHAR(o.order_date, 'YYYY-MM-DD') AS orderDate,
+  p.product_name       AS productName,
+  p.product_price      AS productPrice
+FROM
+  orders_product op
+JOIN orders o ON op.order_id = o.id
+JOIN product p ON op.product_id = p.id
+JOIN member m ON op.user_id = m.id
+WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
+  AND m.customer_id = #{customerId}
+ORDER BY o.order_date DESC, o.order_id
+</select>
+
+
+</mapper>

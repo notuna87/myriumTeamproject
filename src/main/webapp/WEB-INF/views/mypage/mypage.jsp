@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -101,22 +103,41 @@
     <section class="order-history">
       <h3>주문내역 조회</h3>
 
+<c:choose>
+  <c:when test="${not empty groupedOrders}">
+    <c:forEach var="entry" items="${groupedOrders}">
+      <c:set var="orderId" value="${entry.key}" />
+      <c:set var="orders" value="${entry.value}" />
+
       <div class="order-box">
+        <!-- 주문 헤더 -->
         <div class="order-header">
           <div class="order-date">
-            <strong>2025-07-17</strong> <span>(20250717-0000041)</span>
+            <strong>${orders[0].orderDate}</strong> <span>(${orderId})</span>
           </div>
-          <a href="${pageContext.request.contextPath}/mypage/order-history" class="detail-link">상세보기 &gt;</a>
+          <a href="${pageContext.request.contextPath}/mypage/order_detail?orderId=${orderId}" class="detail-link">상세보기 &gt;</a>
         </div>
 
-        <div class="order-content">
-          <img src="${pageContext.request.contextPath}/resources/img/mypage/eco-cup.jpg" alt="상품 이미지" class="product-img">
-          <div class="product-info">
-            <p class="product-title">집에서 스위트바질 식용바질 씨앗 키우기 에코컵</p>
-            <p class="product-price">4,800원 (1개)</p>
-            <small class="product-option">[옵션: 1. 에코_스위트바질]</small>
+        <!-- 주문 상품들 -->
+        <c:forEach var="order" items="${orders}">
+          <div class="order-content">
+            <img src="${pageContext.request.contextPath}/resources/img/mypage/eco-cup.jpg" alt="상품 이미지" class="product-img">
+            <div class="product-info">
+              <p class="product-title">${order.productName}</p>
+              <p class="product-price">
+                <fmt:formatNumber value="${order.productPrice}" pattern="#,###" />원 (${order.quantity}개)
+              </p>
+            </div>
           </div>
-        </div>
+        </c:forEach>
+      </div>
+    </c:forEach>
+  </c:when>
+
+  <c:otherwise>
+    <p>주문 내역이 없습니다.</p>
+  </c:otherwise>
+</c:choose>
 
       <div class="order-status-bar">
         <div class="status-text">배송완료</div>

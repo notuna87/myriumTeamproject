@@ -10,4 +10,9 @@ public class OrderhistoryController {
 	public String showJoinform() {
 		return "mypage/order_history";
 	}
+	
+	@GetMapping("/mypage/order_detail")
+	public String showOrderDetail() {
+	    return "mypage/order_detail"; 
+	}
 }
