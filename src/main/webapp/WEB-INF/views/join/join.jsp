@@ -10,15 +10,24 @@
 <title>회원가입</title>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/app.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/join/join.css" />
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
 
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 </head>
 <body>
 
-<%@ include file="../main/header.jsp" %>
+	<%@ include file="/WEB-INF/views/main/topad.jsp"%>
+	<%@ include file="/WEB-INF/views/main/header.jsp"%>
 
 <div class="join_wrap">
 

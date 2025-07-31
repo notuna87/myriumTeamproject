@@ -15,13 +15,6 @@ import com.myrium.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
-/**
- * Handles requests for the application home page.
- */
-
-//메인페이지 작업을 위한 컨트롤러 작성
-//작성자 : 노기원
-//작성일 : 2025.07.23 12:45
 @Controller
 @Log4j
 @RequestMapping("/*")
@@ -30,27 +23,6 @@ public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-// MAIN CONTROLLER 작성을 위하여 전부 주석처리.
-// 작성자 : 노기원
-// 작성일 : 2025.07.22 17:00
-//	
-//	/**
-//	 * Simply selects the home view to render by returning its name.
-//	 */
-//	@RequestMapping(value = "/", method = RequestMethod.GET)
-//	public String home(Locale locale, Model model) {
-//		logger.info("Welcome home! The client locale is {}.", locale);
-//		
-//		Date date = new Date();
-//		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-//		
-//		String formattedDate = dateFormat.format(date);
-//		
-//		model.addAttribute("serverTime", formattedDate );
-//		
-//		return "home";
-//	}
-//	
 	private final ProductService productservice;
 	
     @GetMapping("/")

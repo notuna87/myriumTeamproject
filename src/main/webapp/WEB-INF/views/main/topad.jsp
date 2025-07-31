@@ -4,6 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css" />
+
 </head>
 <body>
 	<!-- 상단 광고 배너 Swiper -->

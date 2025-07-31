@@ -8,6 +8,7 @@
   <title>마이 쇼핑</title>
  	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css" />
   	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
+  	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/app.css" />
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage/mypage.css" />
 	
 

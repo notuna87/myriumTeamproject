@@ -12,5 +12,5 @@ public class ProductDTO {
 	private List<ImgpathVO> sliderImg;
 	private ImgpathVO productDetailImg;
 	private List<ProductVO> popularProduct;
-
+	private CartVO inCart;
 }

@@ -23,9 +23,8 @@
 }
 
 .loginWrap {
-    width: 250px;
+    width: 255px;
     margin-left: auto;
-    display: flex;
     justify-content: space-between;
     align-items: center;
 }
@@ -59,6 +58,7 @@
   width: 1240px;
   height: 65px;
   margin: 0 auto;
+  border-bottom: 1px solid #ddd;
 }
 
 .navbarWrap {
@@ -92,6 +92,7 @@
 
 .searchBoxWrap input {
   border: none;
+  width:300px;
 }
 
 .headerFieldset {

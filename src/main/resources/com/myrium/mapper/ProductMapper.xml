@@ -51,9 +51,52 @@
 	</select>
 
 	<!-- 인기있는 상품 상위 10개만 조회하기 -->
-	<select id="getPopularProduct" resultType="com.myrium.domain.ProductVO">
-		SELECT * FROM ( SELECT * FROM product ORDER BY sales_count DESC) where ROWNUM &lt;= 10
+	<select id="getPopularProduct"
+		resultType="com.myrium.domain.ProductVO">
+		SELECT * FROM ( SELECT * FROM product ORDER BY sales_count
+		DESC) where ROWNUM &lt;= 10
 	</select>
 
+	<!-- 장바구니에 담기 -->
+	<select id="inCart" resultType="com.myrium.domain.CartVO">
+		INSERT INTO cart
+		(id,product_id,user_id,quantity,is_selected,created_by,created_at,updated_by,updated_at,is_deleted)
+		values
+		(cart_seq.NEXTVAL,#{productId},#{userId},#{quantity},1,#{customerId},sysdate,null,null,0)
+	</select>
 
+	<!-- 장바구니 리스트 불러오기 -->
+	<select id="CartList" resultType="com.myrium.domain.ProductVO">
+		SELECT * FROM product WHERE id
+		IN(select product_id from cart where user_id = #{userId} AND is_deleted = 0) 
+	</select>
+
+	<!-- 카트에 담긴 물건 수량 불러오기 -->
+	<select id="getCartInfo" resultType="com.myrium.domain.CartVO">
+		SELECT * FROM cart WHERE
+		product_id = #{productId} and user_id = #{userId} 
+	</select>
+
+	<!-- 장바구니에 상품이 존재하는지 확인 -->
+	<select id="findCartItem" resultType="com.myrium.domain.CartVO">
+		SELECT * FROM cart WHERE
+		user_id = #{userId} and product_id = #{productId}
+	</select>
+
+	<select id="addQuantity" resultType="com.myrium.domain.CartVO">
+		UPDATE cart
+		SET quantity = #{newQuantity, jdbcType=INTEGER},
+		updated_at = sysdate, is_deleted = 0
+		WHERE product_id = #{productId, jdbcType=BIGINT}
+		AND user_id = #{userId, jdbcType=BIGINT}
+	</select>
+
+	<update id="updateQuantity">
+		UPDATE cart SET quantity = #{newQuantity, jdbcType=INTEGER}, updated_at = sysdate 
+		WHERE product_id = #{productId, jdbcType=BIGINT} AND user_id = #{userId,jdbcType=BIGINT} AND is_deleted = 0
+	</update>
+	
+	<update id="deleteCart">
+		UPDATE cart SET is_deleted = 1, quantity = 0 WHERE product_id = #{productId} AND user_id = #{userId}
+	</update>
 </mapper>

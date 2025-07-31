@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.myrium.domain.CartVO;
 import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
@@ -85,12 +86,11 @@ public class ProductServiceImpl implements ProductService {
 	public ProductDTO productDetailImg(int id) {
 		ImgpathVO productDetailImg = productmapper.productDetailImg(id);
 		ProductDTO dto = new ProductDTO();
-		
+
 		dto.setProductDetailImg(productDetailImg);
 		return dto;
 	}
 
-	
 	@Override
 	public List<ProductDTO> getPopularProduct() {
 		List<ProductVO> products = productmapper.getPopularProduct();
@@ -105,5 +105,59 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return productDTOs;
 	}
+
+	// 장바구니에 담기
+	@Override
+	public ProductDTO inCart(int quantity, int productId, Long userId, String customerId) {
+		
+		CartVO vo;
+		
+		CartVO existingCart = productmapper.findCartItem(productId, userId);
+		
+		// 중복된 제품을 담을 시 +1 
+		if (existingCart != null) {
+			int newQuantity = existingCart.getQuantity() + 1;
+			vo = productmapper.addQuantity(productId, userId, newQuantity);
+		} else {
+			vo = productmapper.inCart(quantity, productId, userId, customerId);
+		}
+
+		ProductDTO dto = new ProductDTO();
+		dto.setInCart(vo);
+		return dto;
+	}
+
+	@Override
+	public List<ProductDTO> CartList(Long userId) {
+		List<ProductVO> products = productmapper.CartList(userId);
+		List<ProductDTO> productDTOs = new ArrayList<>();
+
+		for (ProductVO product : products) {
+			// 썸네일 가져오기
+			ImgpathVO thumbnail = productmapper.getThumbnail(product.getId());
+			CartVO quantity = productmapper.getCartInfo(product.getId(), userId);
+			ProductDTO dto = new ProductDTO();
+			dto.setProduct(product);
+			dto.setThumbnail(thumbnail);
+			dto.setInCart(quantity);
+			productDTOs.add(dto);
+		}
+
+		log.info(productDTOs);
+
+		return productDTOs;
+	}
+
+	@Override
+	public void updateQuantity(Long productId, Integer newQuantity, Long userId) {
+	    int updated = productmapper.updateQuantity(productId, userId, newQuantity);
+	}
+
+	@Override
+	public void deleteCart(Long productId, Long userId) {
+		int deleted = productmapper.deleteCart(productId, userId);
+	}
+
+
 
 }

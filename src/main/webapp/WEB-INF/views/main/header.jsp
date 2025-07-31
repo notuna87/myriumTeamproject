@@ -6,7 +6,6 @@
 <title>Header</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css" />
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/app.css" />
 
 </head>
 <body>
@@ -31,9 +30,8 @@
 					<li><a href="${pageContext.request.contextPath}/admin">관리자</a></li>
 					<li><a href="${pageContext.request.contextPath}/mypage">마이페이지</a></li>
 					<li><sec:authentication property="principal.member.customerName" var="username" /> <span>${username}님</span></li>
-					<li><a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">로그아웃</a>
+					<li ><a href="#" onclick="document.getElementById('logoutForm').submit(); return false;" class="logoutLi">로그아웃</a>
 						<form id="logoutForm" action="${pageContext.request.contextPath}/customLogout" method="post" style="display: none;"></form></li>
-
 				</sec:authorize>
 
 			</ul>

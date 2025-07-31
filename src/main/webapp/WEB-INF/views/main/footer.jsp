@@ -4,8 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Footer</title>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css"/>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/app.css"/>
 </head>
 <body>
   <div class="footerWrap">
