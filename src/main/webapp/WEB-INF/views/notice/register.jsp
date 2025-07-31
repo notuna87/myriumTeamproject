@@ -96,7 +96,7 @@
 						
 						<div class="text-right mt-3">
 							<button type="submit" class="btn btn-success">등록</button>
-							<button type="reset" class="btn btn-info">다시작성</button>
+							<button type="reset" class="btn btn-warning">다시작성</button>
 						</div>
 					</form>
 				</div>
@@ -138,7 +138,10 @@ $(document).ready(function () {
   let uploadedFileList = []; // 업로드 완료된 파일 정보
   let uploadCompleted = false; // 업로드 완료 여부 flag
 
-//파일 선택 시 UI 표시 및 배열에 저장
+  // 업로드 버튼 처음에 숨김
+  $("#uploadBtn").hide(); 
+  
+  //파일 선택 시 UI 표시 및 배열에 저장
   $("#uploadInput").on("change", function (e) {
     const files = Array.from(e.target.files);
 
@@ -154,6 +157,10 @@ $(document).ready(function () {
         selectedFiles.push(file);
       }
     });
+    
+    if (selectedFiles.length > 0) {
+        $("#uploadBtn").show(); // 파일이 선택되면 보여줌
+      }
 
     updateFileListUI();
 
@@ -194,6 +201,7 @@ $(document).ready(function () {
     	  selectedFiles = [];            // 선택 목록 초기화
     	  uploadCompleted = true;        // 업로드 완료 플래그 true
     	  setAttachListJson(result);     // 숨은 input에 JSON으로 저장
+    	  $("#uploadBtn").hide(); // 업로드 후 숨김
     	}
     });
   });
@@ -332,6 +340,7 @@ $(document).ready(function () {
 	  uploadedFileList = [];    // 업로드된 파일 목록 초기화
 	  $("#uploadList").empty(); // 업로드 리스트 UI 초기화
 	  $("#uploadInput").val(''); // 파일 input 초기화 (필수)
+	  $("#uploadBtn").hide(); // 업로드 후 숨김
 	});
   
   // 등록 버튼 클릭 시 유효성 검사
