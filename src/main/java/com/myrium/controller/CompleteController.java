@@ -9,6 +9,6 @@ public class CompleteController {
 	@GetMapping("/join/complete")
 	public String showCompletePage() {
 	
-	    return "join/complete"; // complete.jsp
+	    return "join/complet"; // complete.jsp
 	}
 }
