@@ -60,18 +60,7 @@
                           <input class="form-control" name='customerId' value="${notice.customerId}" readonly="readonly">
 					</div>
 
-                    <sec:authentication property="principal" var="pinfo"/>	
-                    <!--  <button type="submit" data-oper='modify' class="btn btn-default">Modify</button>
-	     			 <button type="submit" data-oper='remove' class="btn btn-danger">Remove</button> --> 
-
                    <sec:authentication property="principal" var="pinfo"/>
-                    <!--<sec:authorize access="isAuthenticated()">
-                      <c:if test="${pinfo.username eq notice.customerId}">
-                        <button type="submit" data-oper='modify' class="btn btn-default">수정</button>
-                        <button type="submit" data-oper='remove' class="btn btn-danger">삭제</button>
-                      </c:if>
-                    </sec:authorize> -->                   
-
 					<c:choose>
 						<c:when test="${not empty attachFiles}">
 							<div class="form-group">
@@ -79,9 +68,6 @@
 						        <ul class="list-group uploadList">
 						            <c:forEach items="${attachFiles}" var="file">
 						                <li class="list-group-item uploadedFile">
-						                    <!-- <a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
-											    ${file.fileName}
-											</a> -->
 											<a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
 											    ${file.fileName}
 											</a>
@@ -95,7 +81,7 @@
 						<div class="form-group">
 						        <label>첨부파일</label>
 							<ul class="list-group uploadList">
-								<li class="list-group">첨부파일이 없습니다.</span>
+								<li class="list-group">첨부파일이 없습니다.
 							</ul>
 							 </div>
 						</c:otherwise>
@@ -122,7 +108,8 @@
 						</div>
 						
 					<input type="hidden" name="deleteFiles" id="deleteFiles">
-					<input type="hidden" name="attachListJson" id="attachListJson" >
+					<input type="hidden" name="attachList" id="attachListJson" >
+					<input type="hidden" name="userId" value="${notice.userId}">
 
 
                    <div class="text-right mt-3">
@@ -140,93 +127,337 @@
 
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
-<!-- <script type="text/javascript">
-$(document).ready(function() {
-	var formObj = $("form");
-	
-	// 수정/삭제/목록 버튼 처리
-	$("button").on("click",function(e){
-		e.preventDefault();
-		
-		var operation = $(this).data("oper");
-		
-		console.log(operation);
-		
-		if(operation === 'remove'){
-			if (confirm("삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
-				formObj.attr("action", "/notice/harddel"); // 소프트 삭제 => softdel, 하드(영구) 삭제 => harddel 
-			}
-		}else if(operation === 'list'){
-			formObj.attr("action", "/notice/list").attr("method", "get");
-			var pageNumTag = $("input[name='pageNum']").clone();
-			var amountTag = $("input[name='amount']").clone();
-			var keywordTag = $("input[name='keyword']").clone();
-			var typeTag = $("input[name='type']").clone();
-			
-			formObj.empty();
-			formObj.append(pageNumTag);
-			formObj.append(amountTag);
-			formObj.append(keywordTag);
-			formObj.append(typeTag);
-		}
-		
-		formObj.submit();
-		
-	});
-	
-	// 기존 파일 삭제 처리
-    let deletedFile = [];
-    $(".remove-file-btn").on("click", function () {
-        const uuid = $(this).data("uuid");
-        const fileName = $(this).data("fileName");
-        const uuidFileName = uuid + "_" + fileName;        
-        deletedFile.push(uuidFileName);
-        $(this).closest("li").remove();
-        $("#deleteFiles").val(deletedFile.join(","));
+<!-- <script src="/resources/js/upload_manager.js"></script> -->
+<script type="text/javascript">
+$(document).ready(function () {
+  const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+  const csrfToken = $("meta[name='_csrf']").attr("content");
+  
+  var regex = new RegExp("(.*?)\\.(exe|sh|zip|alz)$", "i");
+  var maxSize = 5242880; // 5MB
+  
+  // uploadedFile 갯수
+  const uploadedCount = document.querySelectorAll(".uploadedFile").length;  
+  console.log("uploadedCount:" + uploadedCount);
+  
+  function checkExtension(fileName, fileSize) {
+    const fileSizeMB = (fileSize / (1024 * 1024)).toFixed(2);
+    const maxSizeMB = (maxSize / (1024 * 1024)).toFixed(2);
+    
+
+    if (regex.test(fileName)) {
+      alert("❗ 파일 [ " + fileName + " ]은 허용되지 않는 확장자입니다.");
+      return false;
+    }
+    
+    if (fileSize >= maxSize) {
+      alert("❗ 파일이 [ " + fileName + " ]" + fileSizeMB + "MB 너무 큽니다. (허용 용량 : " + maxSizeMB + "MB)");
+      return false;
+    }
+    
+    return true;
+  }
+  
+  // 선택된 파일 리스트를 전역에서 관리
+  let selectedFiles = [];
+  let uploadedFileList = []; // 업로드 완료된 파일 정보
+  let uploadCompleted = false; // 업로드 완료 여부 flag
+
+  
+  // 업로드 버튼 처음에 숨김
+  $("#uploadBtn").hide(); 
+  
+  //파일 선택 시 UI 표시 및 배열에 저장
+  $("#uploadInput").on("change", function (e) {
+    const files = Array.from(e.target.files);
+
+    // 최대 3개 제한
+    const totalCount = selectedFiles.length + document.querySelectorAll(".uploadedFile").length + files.length;
+	    
+    console.log("[uploadInput]totalCount:" + totalCount);
+	    
+    if (totalCount > 3) {
+	       alert("❗ 최대 3개까지 파일을 업로드할 수 있습니다.");
+	    $(this).val('');
+	    return;
+	  }
+
+    files.forEach(file => {
+      if (checkExtension(file.name, file.size)) {
+        selectedFiles.push(file);
+      }
     });
+    
+    if (selectedFiles.length > 0) {
+        $("#uploadBtn").show(); // 파일이 선택되면 보여줌
+      }
 
-    // 파일 추가 제한 (최대 3개)
-    $("#add-file-btn").on("click", function () {
-        const current = $(".uploadedFile").length;
-        const currentNew = $(".upload-file").length;
-        const total = current + currentNew;
+    updateFileListUI();
 
-        if (total >= 3) {
-            alert("최대 3개의 파일만 업로드 가능합니다.");
-            return;
+    // input 초기화 (같은 파일 다시 선택할 경우에도 change 이벤트 발생하게 하기 위함)
+    $(this).val('');
+  });
+
+  // 업로드 버튼 클릭 시 실제 업로드
+  $("#uploadBtn").on("click", function (e) {
+    e.preventDefault(); // 기본 submit 방지
+    if(selectedFiles.length === 0){
+      alert("업로드할 파일을 먼저 선택해주세요.");
+      return;
+    }
+    
+    console.log("[uploadBtn]selectedFiles + uploadedFileList:" + (selectedFiles.length + document.querySelectorAll(".uploadedFile").length));
+    
+    if (selectedFiles.length + uploadedFileList.length > 3) {
+    	  alert("❗ 최대 3개까지 파일을 업로드할 수 있습니다.");
+    	  return;
+    	}
+
+    const formData = new FormData();
+    selectedFiles.forEach(file => formData.append("uploadFile", file));
+
+    $.ajax({
+      url: '/uploadAjaxAction',
+      processData: false,
+      contentType: false,
+      data: formData,
+      type: 'POST',
+      dataType: 'json',
+      beforeSend: function (xhr) {
+        if (csrfHeader && csrfToken) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
         }
-
-        $("#new-file-inputs").append('<input type="file" name="uploadFiles" class="form-control upload-file">');
+      },
+      success: function (result) {
+    	  
+    	  console.log("Attatch result: " + result);
+    	  console.log(JSON.stringify(result, null, 2));  // JSON 형식으로 보기 좋게 출력
+    	  
+    	  showUploadedFiles(result);
+    	  uploadedFileList = uploadedFileList.concat(result); // 누적 저장 // 업로드 완료된 파일 저장
+    	  selectedFiles = [];            // 선택 목록 초기화
+    	  uploadCompleted = true;        // 업로드 완료 플래그 true
+    	  setAttachListJson(result);     // 숨은 input에 JSON으로 저장
+    	  $("#uploadBtn").hide(); // 업로드 후 숨김
+    	}
     });
-    
-    
+  });
+  
+
+  // 미리보기 영역 업데이트
+  function updateFileListUI() {
+	  
+    const list = $("#uploadList");
+    list.empty();
+
+    selectedFiles.forEach((file, index) => {
+      const li = $("<li>").addClass("list-group-item d-flex align-items-center justify-content-between");
+      const content = $("<div>").addClass("d-flex align-items-center");
+
+      // 이미지 파일이면 미리보기 생성
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = $("<img>").attr("src", e.target.result).css({
+            width: "40px",
+            height: "40px",
+            objectFit: "cover",
+            marginRight: "10px"
+          });
+          content.prepend(img);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        content.append(
+          $("<i>").addClass("fas fa-file-alt mr-2")
+        );
+      }
+
+      content.append($("<span>").text(file.name));
+
+      const delBtn = $("<button type='button'>")
+        .addClass("btn btn-sm btn-danger ml-2")
+        .text("삭제")
+        .on("click", function () {
+          selectedFiles.splice(index, 1); // 배열에서 제거
+          updateFileListUI();             // UI 다시 그림
+        });
+
+      li.append(content).append(delBtn);
+      list.append(li);
+    });
+  }
+
+  function showUploadedFiles(uploadResultArr) {
+	  const list = $("#uploadList");
+	  list.empty();
+
+	  uploadResultArr.forEach(obj => {
+	    const fileCallPath = encodeURIComponent(obj.uploadPath.replace(/\\/g, '/') + "/" + obj.uuid + "_" + obj.fileName);
+
+	    const li = $("<li>").addClass("list-group-item d-flex justify-content-between align-items-center");
+
+	    const content = $("<div>").addClass("d-flex align-items-center");
+
+	    if (obj.image) {
+	      const thumbPath = "/display?fileName=" + encodeURIComponent(obj.uploadPath.replace(/\\/g, '/') + "/s_" + obj.uuid + "_" + obj.fileName);
+	      content.append(
+	        $("<img>").attr("src", thumbPath).css({
+	          width: "40px",
+	          height: "40px",
+	          objectFit: "cover",
+	          marginRight: "10px"
+	        })
+	      );
+	    } else {
+	      content.append(
+	        $("<i>").addClass("fas fa-file-alt mr-2")
+	      );
+	    }
+
+	    content.append($("<span>").text(obj.fileName));
+
+	    const delBtn = $("<button type='button'>")
+	      .addClass("btn btn-danger btn-sm")
+	      .text("삭제")
+	      .hide() // 업로드 후 삭제버튼 숨김
+	      .on("click", function () {
+	        deleteFile(fileCallPath, obj.image ? "image" : "file", $(this).closest("li"));
+		    // 업로드 목록에서 제거 (UUID 기준)
+		    uploadedFileList = uploadedFileList.filter(file => file.uuid !== obj.uuid);
+		    setAttachListJson(uploadedFileList);
+	      });
+	    
+	    li.append(content).append(delBtn);
+	    list.append(li);
+	  });
+	}
 
 
+  function deleteFile(fileName, type, liElement) {
+    $.ajax({
+      url: '/deleteFile',
+      data: { fileName: fileName, type: type },
+      type: 'POST',
+      success: function (result) {
+        liElement.remove();
+      }
+    });
+  }
+  
+  function setAttachListJson(attachList) {
+	  document.getElementById("attachListJson").value = JSON.stringify(attachList);
+	}
+  
+  $("button[type='reset']").on("click", function() {
+    if (uploadedFileList.length > 0) {
+    	uploadedFileList.forEach(function (file) {
+          const fileCallPath = encodeURIComponent(file.uploadPath.replace(/\\/g, '/') + "/");
+          const fileName = encodeURIComponent(file.fileName);
+          const uuid = file.uuid;
+          const data = { datePath: fileCallPath, fileName: fileName, uuid: uuid, type: file.image == 1 ? 'image' : 'file' };
+
+          $.ajax({
+            url: '/deleteUploadedFile',
+            type: 'POST',
+            data: data,
+            beforeSend: function (xhr) {
+              if (csrfHeader && csrfToken) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+              }
+            },
+            success: function () {
+              console.log('삭제 성공:', fileCallPath);
+            },
+            error: function (xhr) {
+              console.error('삭제 실패:', xhr.responseText);
+            }
+          });
+        });
+      }  	  
+	  selectedFiles = [];       // 선택된 파일 배열 초기화
+	  uploadCompleted = false;  // 업로드 완료 상태 초기화
+	  uploadedFileList = [];    // 업로드된 파일 목록 초기화
+	  $("#uploadList").empty(); // 업로드 리스트 UI 초기화
+	  $("#uploadInput").val(''); // 파일 input 초기화 (필수)
+	  $("#uploadBtn").hide(); // 업로드 후 숨김
+	  setAttachListJson([]); // 숨은 필드 초기화
+	});
+  
+  
+  let deleteFileUuids = [];
+  
+  $(".remove-file-btn").on("click", function () {
+	  const uuid = $(this).data("uuid");
+	  // uploadedFileList 에서 제거
+	  uploadedFileList = uploadedFileList.filter(file => file.uuid !== uuid);
+	  setAttachListJson(uploadedFileList);
+	  
+	  deleteFileUuids.push(uuid);
+	  $("#deleteFiles").val(deleteFileUuids.join(","));
+	  $(this).closest("li").remove();
+	});
+  
+  
+  var formObj = $("form");
+  
+  // 등록 버튼 클릭 시 유효성 검사
+  $("form button[type=submit]").on("click", function (e) {
+	  
+	const title = $("input[name='title']").val().trim();
+    const content = $("textarea[name='content']").val().trim();
+
+    if (!title) {
+      alert("제목을 입력해주세요.");
+      $("input[name='title']").focus();
+      e.preventDefault();
+      return;
+    }
+
+    if (!content) {
+      alert("내용을 입력해주세요.");
+      $("textarea[name='content']").focus();
+      e.preventDefault();
+      return;
+    }
+
+    // 파일이 선택된 경우 업로드 완료 여부 체크
+    if (selectedFiles.length > 0 && !uploadCompleted) {
+      alert("파일 업로드를 먼저 완료해주세요.");
+      e.preventDefault();
+      return;
+    }
+    
+	e.preventDefault();
+	
+	  const operation = $(this).data("oper");
+	
+	console.log(operation);
+	
+	if(operation === 'remove'){
+		if (confirm("삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
+			formObj.attr("action", "/notice/harddel"); // 소프트 삭제 => softdel, 하드(영구) 삭제 => harddel 
+		}
+	}else if(operation === 'list'){
+		formObj.attr("action", "/notice/list").attr("method", "get");
+		var pageNumTag = $("input[name='pageNum']").clone();
+		var amountTag = $("input[name='amount']").clone();
+		var keywordTag = $("input[name='keyword']").clone();
+		var typeTag = $("input[name='type']").clone();
+		
+		formObj.empty();
+		formObj.append(pageNumTag);
+		formObj.append(amountTag);
+		formObj.append(keywordTag);
+		formObj.append(typeTag);
+	}
+	
+	formObj.submit();
+    
+  });
 
 });
-	
-</script> -->
-
-    <!-- ====================================================== -->
-  <!-- jQuery -->
-<script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
-  <script src="/resources/js/upload_manager.js"></script>
-  <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', () => {
-      const uploadManager = new UploadManager({
-        uploadInputSelector: '#uploadInput',
-        uploadListSelector: '#uploadList',
-        uploadBtnSelector: '#uploadBtn',
-        fileDeleteBtnSelector: '#fileDeleteBtn',
-        attachListJsonSelector: '#attachListJson',
-        maxFiles: 3,
-        uploadUrl: '/uploadAjaxAction',
-        deleteUrl: '/deleteFile',
-		generateThumbnail: false
-      });
-    });
-  </script>
-  
+</script>
   
 </body>
 

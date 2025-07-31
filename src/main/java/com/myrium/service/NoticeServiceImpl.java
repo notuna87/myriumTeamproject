@@ -90,8 +90,8 @@ public class NoticeServiceImpl implements NoticeService{
     }
     
     @Override
-    public int deleteFileByUUID(String uuid) {
-        return mapper.deleteFileByUUID(uuid);
+    public int deleteAttachByUuid(String uuid) {
+        return mapper.deleteAttachByUuid(uuid);
     }
     
     @Override    
