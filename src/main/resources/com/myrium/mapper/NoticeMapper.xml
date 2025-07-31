@@ -98,7 +98,7 @@
 
     <update id="update">
         UPDATE notice
-        SET title = #{title}, content = #{content},has_files = #{hasFiles}, updated_at = SYSDATE, updated_by = #{updatedBy}
+        SET title = #{title}, content = #{content}, has_files = #{hasFiles}, updated_at = SYSDATE, updated_by = #{updatedBy}
         WHERE id = #{id}
     </update>
 
@@ -180,7 +180,7 @@
 	  WHERE notice_id = #{noticeId}
 	</select>
 
-	<delete id="deleteFileByUUID" parameterType="string">
+	<delete id="deleteAttachByUuid" parameterType="string">
 	    DELETE FROM notice_files
 	    WHERE uuid = #{uuid}
 	</delete>

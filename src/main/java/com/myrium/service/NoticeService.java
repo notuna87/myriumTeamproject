@@ -30,7 +30,7 @@ public interface NoticeService {
 	   
 	   public List<AttachFileDTO> findByNoticeId(Long noticeId);
 
-	   public int deleteFileByUUID(String uuid);
+	   public int deleteAttachByUuid(String uuid);
 
 	   public void incrementReadCnt(Long id);
 	  
