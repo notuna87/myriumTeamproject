@@ -15,8 +15,4 @@ public class OrderDTO {
 	    private int productPrice;
 	    private int quantity;
 	    private String orderStatus;
-	    
-	    private Long userId;
-	    private String title;
-	    private String content; 
 	}
