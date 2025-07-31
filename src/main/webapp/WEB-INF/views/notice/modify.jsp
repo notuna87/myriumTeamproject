@@ -72,62 +72,66 @@
                       </c:if>
                     </sec:authorize> -->                   
 
-
-					<c:if test="${not empty attachFiles}">
-					    <div class="form-group">
-					        <label>첨부파일 다운로드</label>
-					        <ul class="list-group">
-					            <c:forEach items="${attachFiles}" var="file">
-					                <li class="list-group-item uploadedFile">
-					                    <!-- <a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
-										    ${file.fileName}
-										</a> -->
-										<a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
-										    ${file.fileName}
-										</a>
-										<button type="button" class="btn btn-xs btn-danger remove-file-btn" data-uuid="${file.uuid}">삭제</button>
-					                </li>
-					            </c:forEach>
-					        </ul>
-					    </div>
-					</c:if>
+					<c:choose>
+						<c:when test="${not empty attachFiles}">
+							<div class="form-group">
+						        <label>첨부파일</label>
+						        <ul class="list-group uploadList">
+						            <c:forEach items="${attachFiles}" var="file">
+						                <li class="list-group-item uploadedFile">
+						                    <!-- <a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
+											    ${file.fileName}
+											</a> -->
+											<a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
+											    ${file.fileName}
+											</a>
+											<button type="button" id="fileDeleteBtn" class="btn btn-xs btn-danger remove-file-btn" data-uuid="${file.uuid}">삭제</button>
+						                </li>
+						            </c:forEach>
+						        </ul>
+						    </div>
+						</c:when>
+						<c:otherwise>
+						<div class="form-group">
+						        <label>첨부파일</label>
+							<ul class="list-group uploadList">
+								<li class="list-group">첨부파일이 없습니다.</span>
+							</ul>
+							 </div>
+						</c:otherwise>
+					</c:choose>
 					
 					
-                    <c:if test="${not empty attachFiles}">
-					  <div class="form-group">
-					    <label>첨부파일</label>
-					    <ul id="uploadList">
-					      <c:forEach var="file" items="${attachFiles}">
-					        <li>
-					          <a href="/download?uuid=${file.uuid}&fileName=${file.fileName}">
-					            ${file.fileName}
-					          </a>
-					          <button type="button" id="uploadBtn" class="btn btn-xs btn-danger remove-file-btn" data-uuid="${file.uuid} data-fileName="${file.file_Name}">삭제</button>
-					        </li>
-					      </c:forEach>
-					    </ul>
-					  </div>
-					</c:if>
-					
-<div class="form-group">
-    <label>파일 추가</label>
-    <div id="new-file-inputs">
-        <input type="file" id="uploadInput" name="uploadFiles" class="form-control upload-file">
-    </div>
-    <button type="button" id="add-file-btn" class="btn btn-default btn-xs">파일 추가</button>
-</div>
-					
-<input type="hidden" name="deleteFiles" id="deleteFiles">
-<input type="hidden" name="attachListJson" id="attachListJson" >
+						<!-- 업로드 영역 -->
+						<div class="form-group">
+							<label class="form-label"><strong>첨부파일 업로드</strong></label>
+
+							<!-- 설명 문구 -->
+							<p class="text-muted small mb-2">
+								※ 파일은 <strong>3개</strong> 까지 업로드할 수 있습니다.<br>
+								※ 여러 파일을 선택하려면 <strong>Ctrl 키</strong>를 누른 상태에서 클릭하세요.<br>
+								※ 첨부파일은 <strong>등록 전에 반드시 업로드</strong>해야 합니다.
+							</p>
+
+							<div class="upload-box p-3 rounded"
+								style="background-color: #f8f9fa; border: 1px solid #ddd;">
+								<input type="file" id="uploadInput" multiple>
+								<ul id="uploadList" class="list-group mt-2"></ul>
+								<button id="uploadBtn" class="btn btn-primary">업로드</button>
+							</div>
+						</div>
+						
+					<input type="hidden" name="deleteFiles" id="deleteFiles">
+					<input type="hidden" name="attachListJson" id="attachListJson" >
 
 
-                   
-   					<sec:authorize access="hasAuthority('ADMIN')">
-		            	<button type="submit" data-oper='modify' class="btn btn-default">수정</button>
-                        <button type="submit" data-oper='remove' class="btn btn-danger">삭제</button>
-		            </sec:authorize>
-
-					<button type="submit" data-oper='list' class="btn btn-info">목록</button>
+                   <div class="text-right mt-3">
+	   					<sec:authorize access="hasAuthority('ADMIN')">
+			            	<button type="submit" data-oper='modify' class="btn btn-success">등록</button>
+	                        <button type="submit" data-oper='remove' class="btn btn-danger">삭제</button>
+			            </sec:authorize>	
+						<button type="submit" data-oper='list' class="btn btn-info">목록</button>
+					</div>
 				</form>
 			</div>
 		</div>
@@ -204,14 +208,16 @@ $(document).ready(function() {
 </script> -->
 
     <!-- ====================================================== -->
-  <script type="module">
-    import { UploadManager } from '/resources/js/file_upload.js';
-
+  <!-- jQuery -->
+<script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
+  <script src="/resources/js/upload_manager.js"></script>
+  <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', () => {
       const uploadManager = new UploadManager({
         uploadInputSelector: '#uploadInput',
         uploadListSelector: '#uploadList',
         uploadBtnSelector: '#uploadBtn',
+        fileDeleteBtnSelector: '#fileDeleteBtn',
         attachListJsonSelector: '#attachListJson',
         maxFiles: 3,
         uploadUrl: '/uploadAjaxAction',

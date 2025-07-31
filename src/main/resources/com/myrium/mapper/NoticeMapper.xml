@@ -53,7 +53,7 @@
         INSERT INTO notice (
             id, title, content, customer_id, user_id, write_date, created_at, created_by, is_deleted, has_files, read_cnt
         ) VALUES (
-            notice_seq.NEXTVAL, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0
+            notice_seq.NEXTVAL, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, #{hasFiles}, 0
         )
     </insert>
 
@@ -64,7 +64,7 @@
         INSERT INTO notice (
             id, title, content, customer_id, user_id, write_date, created_at, created_by, is_deleted, has_files, read_cnt
         ) VALUES (
-            #{id}, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0
+            #{id}, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, #{hasFiles}, 0
         )
     </insert>
 
@@ -98,10 +98,7 @@
 
     <update id="update">
         UPDATE notice
-        SET title = #{title},
-            content = #{content},
-            updated_at = SYSDATE,
-            updated_by = #{updatedBy}
+        SET title = #{title}, content = #{content},has_files = #{hasFiles}, updated_at = SYSDATE, updated_by = #{updatedBy}
         WHERE id = #{id}
     </update>
 
@@ -165,7 +162,7 @@
 	</select>
 
     <update id="updateReadCnt">
-        UPDATE notice SET read_cnt = read_cnt + #{amount} WHERE id = #{id}
+        UPDATE notice SET read_cnt = read_cnt + 1 WHERE id = #{id}
     </update>
     
 	<insert id="insertAttach" parameterType="com.myrium.domain.AttachFileDTO">
@@ -182,5 +179,10 @@
 	  FROM notice_files
 	  WHERE notice_id = #{noticeId}
 	</select>
+
+	<delete id="deleteFileByUUID" parameterType="string">
+	    DELETE FROM notice_files
+	    WHERE uuid = #{uuid}
+	</delete>
 
 </mapper>

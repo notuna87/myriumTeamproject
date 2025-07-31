@@ -210,7 +210,7 @@
 
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
-<script>
+<script type="text/javascript">
 $(document).ready(function(){
     var result = '${result}'; 	
     

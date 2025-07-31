@@ -29,9 +29,15 @@ public interface NoticeMapper {
 	public void updateReadCnt(@Param("id") Long id, @Param("amount") int amount);
 	
     // 파일 정보 저장
-    void insertAttach(AttachFileDTO dto);
+	public void insertAttach(AttachFileDTO dto);
 
     // 해당 공지의 파일 목록 조회
-    List<AttachFileDTO> findByNoticeId(Long noticeId);
+	public List<AttachFileDTO> findByNoticeId(Long noticeId);
+	
+	// 파일 정보 삭제
+	public int deleteFileByUUID(String uuid);
+	
+	public void updateReadCnt(Long id);
+
 
 }

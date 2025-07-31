@@ -106,7 +106,8 @@
 
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
-<script>
+<script src="/resources/js/upload_manager.js"></script>
+<script type="text/javascript">
 $(document).ready(function () {
   const csrfHeader = $("meta[name='_csrf_header']").attr("content");
   const csrfToken = $("meta[name='_csrf']").attr("content");
@@ -134,6 +135,8 @@ $(document).ready(function () {
 
   // 선택된 파일 리스트를 전역에서 관리
   let selectedFiles = [];
+  let uploadedFileList = []; // 업로드 완료된 파일 정보
+  let uploadCompleted = false; // 업로드 완료 여부 flag
 
 //파일 선택 시 UI 표시 및 배열에 저장
   $("#uploadInput").on("change", function (e) {
@@ -299,6 +302,31 @@ $(document).ready(function () {
 	}
   
   $("button[type='reset']").on("click", function() {
+    if (uploadedFileList.length > 0) {
+    	uploadedFileList.forEach(function (file) {
+          const fileCallPath = encodeURIComponent(file.uploadPath.replace(/\\/g, '/') + "/");
+          const fileName = encodeURIComponent(file.fileName);
+          const uuid = file.uuid;
+          const data = { datePath: fileCallPath, fileName: fileName, uuid: uuid, type: file.image == 1 ? 'image' : 'file' };
+
+          $.ajax({
+            url: '/deleteUploadedFile',
+            type: 'POST',
+            data: data,
+            beforeSend: function (xhr) {
+              if (csrfHeader && csrfToken) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+              }
+            },
+            success: function () {
+              console.log('삭제 성공:', fileCallPath);
+            },
+            error: function (xhr) {
+              console.error('삭제 실패:', xhr.responseText);
+            }
+          });
+        });
+      }  	  
 	  selectedFiles = [];       // 선택된 파일 배열 초기화
 	  uploadCompleted = false;  // 업로드 완료 상태 초기화
 	  uploadedFileList = [];    // 업로드된 파일 목록 초기화
@@ -306,9 +334,6 @@ $(document).ready(function () {
 	  $("#uploadInput").val(''); // 파일 input 초기화 (필수)
 	});
   
-  let uploadedFileList = []; // 업로드 완료된 파일 정보
-  let uploadCompleted = false; // 업로드 완료 여부 flag
-
   // 등록 버튼 클릭 시 유효성 검사
   $("form").on("submit", function (e) {
     const title = $("input[name='title']").val().trim();

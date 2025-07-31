@@ -18,8 +18,8 @@ public class NoticeVO {
     private Date createdAt;
     private String updatedBy;
     private Date updatedAt;
-    private Integer readCnt;
-    private Integer hasFiles;
-    private Integer isDeleted;
+    private Long readCnt;
+    private int hasFiles;
+    private int isDeleted;
     private MultipartFile[] files;
 }
