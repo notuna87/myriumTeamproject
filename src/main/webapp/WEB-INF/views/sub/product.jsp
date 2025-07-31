@@ -205,7 +205,6 @@
 		
 		
 		// 로그인 확인
-		
 		document.addEventListener("DOMContentLoaded", function() {
 			const cartLink = document.getElementById('cartLinkNotLoggedIn');
 			const purchaseLink = document.getElementById('purchaseLinkNotLoggedIn');

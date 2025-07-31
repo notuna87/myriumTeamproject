@@ -30,7 +30,7 @@
 					<li><a href="${pageContext.request.contextPath}/admin">관리자</a></li>
 					<li><a href="${pageContext.request.contextPath}/mypage">마이페이지</a></li>
 					<li><sec:authentication property="principal.member.customerName" var="username" /> <span>${username}님</span></li>
-					<li ><a href="#" onclick="document.getElementById('logoutForm').submit(); return false;" class="logoutLi">로그아웃</a>
+					<li><a href="#" onclick="document.getElementById('logoutForm').submit(); return false;" class="logoutLi">로그아웃</a>
 						<form id="logoutForm" action="${pageContext.request.contextPath}/customLogout" method="post" style="display: none;"></form></li>
 				</sec:authorize>
 
@@ -66,8 +66,16 @@
 				</a>
 			</fieldset>
 			<a href="#" class="cartIcon"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_user.svg" alt="user_icon">
-			</a> <a href="${pageContext.request.contextPath}/cart" class="cartIcon"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_cart.svg" alt="cart_icon">
 			</a>
+			<sec:authorize access="!isAuthenticated()">
+			<a href="#" class="cartIcon" id="cartLinkNotLoggedIn"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_cart.svg" alt="cart_icon"></a>
+			</sec:authorize>
+			<sec:authorize access="isAuthenticated()">
+			<a href="${pageContext.request.contextPath}/cart" class="cartIcon"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_cart.svg" alt="cart_icon"></a>
+			</sec:authorize>
+
+
+
 
 			<div class="menu-wrap">
 				<span class="line"></span> <span class="line"></span> <span class="line"></span>
@@ -146,6 +154,29 @@
       });
     }
   });
+  
+	// 로그인 확인
+	document.addEventListener("DOMContentLoaded", function() {
+		const cartLink = document.getElementById('cartLinkNotLoggedIn');
+		const purchaseLink = document.getElementById('purchaseLinkNotLoggedIn');
+		
+		if (cartLink) {
+			cartLink.addEventListener('click', function(e) {
+				e.preventDefault();
+				alert("로그인 후 이용해주세요.");
+				location.href = "${pageContext.request.contextPath}/login";
+			});
+		}
+		if (purchaseLink) {
+			purchaseLink.addEventListener('click', function(e) {
+				e.preventDefault();
+				alert("로그인 후 이용해주세요.");
+				location.href = "${pageContext.request.contextPath}/login";
+			});
+		}
+
+	});
+
 </script>
 
 </body>

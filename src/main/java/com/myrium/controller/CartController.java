@@ -109,10 +109,6 @@ public class CartController {
 	        CustomUser userDetails = (CustomUser) authentication.getPrincipal();
 	        Long userId = userDetails.getMember().getId(); 
 
-	        log.info("딜리트 포스트 호출");
-	        log.info("productId" + productId);
-	        log.info("userId" + userId);
-
 	        productservice.deleteCart(productId, userId);
 	        response.put("status", "ok");
 

@@ -16,6 +16,7 @@
 
 
 </head>
+
 <body>
 	<%@ include file="/WEB-INF/views/main/topad.jsp"%>
 	<%@ include file="/WEB-INF/views/main/header.jsp"%>
@@ -49,19 +50,27 @@
 				<!-- 상품 정보 및 조작 버튼 -->
 				<div class="cartContents">
 					<div class="cartTitle">${item.product.product_name}</div>
-					<div class="cartPrice">
-						<s><fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />원</s>
-					</div>
-					<div class="cartPrice" style="color: red; font-weight: bold;">
-						${item.product.total_discountrate}%
-						<fmt:formatNumber value="${item.product.discount_price}" type="number" />
-						원
-					</div>
+					<c:if test="${item.product.discount_price == 0}">
+						<div class="cartPrice" style="font-weight: bold">
+							<span class="productPrice" data-price="${item.product.product_price}"> <fmt:formatNumber value="${item.product.product_price}" type="number" />
+							</span>원
+						</div>
+					</c:if>
+					<c:if test="${item.product.discount_price != 0}">
+						<div class="cartPrice">
+							<s><fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />원</s>
+						</div>
+						<div class="cartPrice" style="color: red; font-weight: bold;">
+							${item.product.total_discountrate}% <span class="productPrice" data-price="${item.product.discount_price}"> <fmt:formatNumber value="${item.product.discount_price}" type="number" />
+							</span>원
+						</div>
+					</c:if>
+
 					<div class="cartDelivery">배송: 3,000원[조건] / 기본배송</div>
 
 					<div class="cartCount">
 						<button type="button" class="buttonMinus" onclick="changeQuantity('decrease', this)" data-product-id="${item.product.id}">-</button>
-						<input type="number" name="quantity" id="quantity" value="${item.inCart.quantity}" min="1" readonly />
+						<input type="number" class="productQty" name="quantity" id="quantity" value="${item.inCart.quantity}" min="1" readonly />
 						<button type="button" class="buttonPlus" onclick="changeQuantity('increase', this)" data-product-id="${item.product.id}">+</button>
 					</div>
 
@@ -74,12 +83,13 @@
 				</div>
 			</div>
 		</c:forEach>
-
+		<hr><br>
+		
+		<c:if test=" $${'{total}'}"></c:if>
 		<!-- 총 결제 예정 금액 -->
-		<div class="cartTotal" style="margin-top: 30px; text-align: right; font-size: 20px; font-weight: bold;">
-			<span style="font-size: 14px; margin-right: 30px;">결제예정금액</span>
-			<fmt:formatNumber value="${totalPrice}" type="number" />
-			원
+		<div class="cartTotal" style="text-align: right; font-size: 20px; font-weight: bold;">
+				
+		
 		</div>
 
 		<!-- 주문 버튼 -->
@@ -131,7 +141,7 @@
     })
     .then(data => {
       console.log('수량 업데이트 성공:', data);
-      // 여기에 총 금액 다시 계산해서 표시할 수도 있음
+      updateTotalPrice();
     })
     .catch(error => {
       console.error('수량 업데이트 실패:', error);
@@ -164,12 +174,55 @@
 	    .then(data => {
 	      console.log('삭제완료', data);
 	      productContainer.remove();
+	      updateTotalPrice();
 	    })
 	    .catch(error => {
 	      console.error('삭제 실패:', error);
 	      alert('삭제에 실패했습니다.');
 	    });
 	  }
+  
+  function updateTotalPrice(){
+	  console.log('🔄 updateTotalPrice() 호출됨');
+	  const productContainers = document.querySelectorAll('.cartContentsWrap');
+	  let total = 0;
+	  
+	  productContainers.forEach(container => {
+		  const priceE1 = container.querySelector('.productPrice');
+		  const qtyE1 = container.querySelector('.productQty');
+		  console.log("updateTotalPrice 호출됨");
+		  console.log("가격 데이터: ", priceE1?.getAttribute('data-price'));
+		  console.log("수량 데이터: ", qtyE1?.value);
+		  if (priceE1 && qtyE1) {
+			  console.log("if문 실행?");
+			  const price = parseInt(priceE1.getAttribute('data-price')) || 0;
+			  const qty = parseInt(qtyE1.value) || 1;
+			  
+			  console.log(price);
+			  console.log(qty);
+			  total += price * qty;
+			  
+
+			  console.log(total);
+		  }
+
+	  });
+	  if (total == 0){
+		  total = 0;
+	  } else if (total < 49900){
+		total += 3000;
+	  }
+	  
+	  const formattedTotal = total.toLocaleString(); // 3자리 단위 콤마
+	  document.querySelector('.cartTotal').innerHTML = `
+		<span style="font-weight: 400; float:right; font-size:13px;">배송비 3,000원(49,900원 이상 구매 시 무료)</span><br>
+	    <span style="font-size: 14px; margin-right: 30px;">결제예정금액</span>
+	    $${'{formattedTotal}'}원
+	  `;
+
+  }
+  
+  document.addEventListener("DOMContentLoaded", updateTotalPrice);
 </script>
 
 </html>
