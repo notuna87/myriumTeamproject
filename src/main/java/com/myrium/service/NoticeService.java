@@ -29,6 +29,10 @@ public interface NoticeService {
 	   public void insertAttach(AttachFileDTO dto);
 	   
 	   public List<AttachFileDTO> findByNoticeId(Long noticeId);
+
+	   public int deleteFileByUUID(String uuid);
+
+	   public void incrementReadCnt(Long id);
 	  
 
 }

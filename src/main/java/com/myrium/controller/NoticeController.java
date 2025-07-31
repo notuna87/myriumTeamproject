@@ -1,6 +1,5 @@
 package com.myrium.controller;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -77,7 +77,7 @@ public class NoticeController {
 //		rttr.addFlashAttribute("result", vo.getId());
 //		return "redirect:/notice/list";
 //	}
-	
+	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/register")
 	public String register(NoticeVO vo,
@@ -93,11 +93,13 @@ public class NoticeController {
 	    } catch (JsonProcessingException e) {
 	        e.printStackTrace();
 	    }
-
+	    
+	    // hasFiles 설정
+	    vo.setHasFiles((attachList != null && !attachList.isEmpty()) ? 1 : 0);
 	    // 2. 공지사항 저장
 	    noticeservice.register(vo);
-
-	    // 3. 첨부파일 저장
+	    
+	    // 3. 첨부파일 목록 저장
 	    if (attachList != null && !attachList.isEmpty()) {
 	        for (AttachFileDTO dto : attachList) {
 	            dto.setUserId(vo.getUserId()); // NotiveVO 에서 가져옴
@@ -124,7 +126,7 @@ public class NoticeController {
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping({"/get", "/modify"})
 	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) {
-		
+		noticeservice.incrementReadCnt(id);  // 조회수 증가 로직 (추가)
 		model.addAttribute("notice", noticeservice.get(id));
 		//model.addAttribute("attachFiles", noticeservice.findByNoticeId(id));
 		List<AttachFileDTO> attachFiles = noticeservice.findByNoticeId(id);
@@ -135,9 +137,42 @@ public class NoticeController {
 	
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
 	@PostMapping("/modify")
-	public String modify(NoticeVO notice, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
-		log.info("modify:" + notice);
-		if(noticeservice.modify(notice)) {
+	public String modify(NoticeVO vo,
+			@RequestParam("attachList") String attachListJson,
+			@ModelAttribute("cri") Criteria cri,
+			RedirectAttributes rttr) {
+		log.info("modify:" + vo);
+		
+	    // 1. JSON 파싱
+	    ObjectMapper mapper = new ObjectMapper();
+	    List<AttachFileDTO> attachList = new ArrayList<>();
+	    try {
+	        attachList = mapper.readValue(attachListJson, new TypeReference<List<AttachFileDTO>>() {});
+	    } catch (JsonProcessingException e) {
+	        e.printStackTrace();
+	    }
+		
+	    // hasFiles 설정
+	    vo.setHasFiles((attachList != null && !attachList.isEmpty()) ? 1 : 0);
+	    // 2. 공지사항 업데이트
+	    noticeservice.modify(vo);
+	    
+	    // 3. 첨부파일 목록 저장
+	    if (attachList != null && !attachList.isEmpty()) {
+	        for (AttachFileDTO dto : attachList) {
+	            dto.setUserId(vo.getUserId()); // NotiveVO 에서 가져옴
+	            dto.setNoticeId(vo.getId());
+	            dto.setCustomerId(vo.getCustomerId());
+	            dto.setCreatedBy(vo.getCustomerId());
+	            dto.setUpdatedAt(vo.getUpdatedAt());
+	            dto.setUpdatedBy(vo.getUpdatedBy());
+	            
+	            log.info("(notice_file) AttachFileDTO......." + dto);
+
+	            noticeservice.insertAttach(dto);
+	        }
+	    }
+		if(noticeservice.modify(vo)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		rttr.addAttribute("pageNum", cri.getPageNum());
@@ -195,6 +230,5 @@ public class NoticeController {
 		
 		return "redirect:/notice/list";
 	}
-	
 	
 }

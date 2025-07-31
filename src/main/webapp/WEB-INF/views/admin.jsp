@@ -12,11 +12,9 @@
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css" />
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/join/complete.css" />
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/join/popularProducts.css" />
     <style>
 		.outer-wrapper {
-		    height: 100vh;
+		    height: 80vh;
 		    display: flex;
 		    align-items: center;
 		    justify-content: center;
@@ -31,7 +29,7 @@
         }
         .menu-button {
             width: 100%;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             font-size: 1.2rem;
             padding: 15px;
         }

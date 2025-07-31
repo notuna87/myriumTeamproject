@@ -41,12 +41,12 @@
 					
 					<div class="form-group">
 					       <label>No.</label> 
-                           <input class="form-control" name='id' value=${board.id} readonly="readonly">
+                           <input class="form-control" name='id' value="${board.id}" readonly="readonly">
 					</div>
 
 					<div class="form-group">
 					      <label>제목</label> 	
-                      	  <input class="form-control" name='title' value=${board.title} >
+                      	  <input class="form-control" name='title' value="${board.title}" >
 					</div>
 
 					<div class="form-group">
@@ -56,7 +56,7 @@
 
 					<div class="form-group">
 					      <label>작성자</label> 
-                          <input class="form-control" name='customerId' value=${board.customerId} readonly="readonly">
+                          <input class="form-control" name='customerId' value="${board.customerId}" readonly="readonly">
 					</div>
 
                     <sec:authentication property="principal" var="pinfo"/>	

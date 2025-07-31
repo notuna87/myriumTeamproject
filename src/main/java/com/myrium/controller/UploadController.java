@@ -3,6 +3,7 @@ package com.myrium.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -22,10 +24,12 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.myrium.domain.AttachFileDTO;
+import com.myrium.service.NoticeService;
 
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -33,6 +37,10 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Controller
 @Log4j
 public class UploadController {
+	
+	@Autowired
+	private NoticeService noticeService;
+	
 
 	@PostMapping("/uploadFormAction")
 	public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
@@ -87,12 +95,13 @@ public class UploadController {
 			attachDTO.setFileName(uploadFileName);
 
 			UUID uuid = UUID.randomUUID();
-			uploadFileName = uuid.toString() + "_" + uploadFileName;
+			String uuidUploadFileName = uuid.toString() + "_" + uploadFileName;
 
 			//File saveFile = new File(uploadPath, uploadFileName);
 
 			try {
-				File savefile = new File(uploadFolder, multipartFile.getOriginalFilename());
+				//File savefile = new File(uploadFolder, multipartFile.getOriginalFilename());
+				File savefile = new File(uploadFolder, uuidUploadFileName);
 				// multipartFile.transferTo(saveFile);
 				multipartFile.transferTo(savefile);
 
@@ -104,7 +113,7 @@ public class UploadController {
 
 					attachDTO.setImage(1);
 
-					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
+					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uuidUploadFileName));
 					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
 					thumbnail.close();
 				}
@@ -162,7 +171,7 @@ public class UploadController {
 	@GetMapping("/download")
 	public ResponseEntity<Resource> downloadFile(String uuid, String path, String filename) throws Exception {
 	    //String fullPath = "c:\\upload\\" + path + "\\" + uuid + "_" + filename;
-	    String fullPath = "c:\\upload\\" + filename;
+	    String fullPath = "c:\\upload\\" + uuid + "_" + filename;
 	    Resource resource = new FileSystemResource(fullPath);
 
 	    if (!resource.exists()) {
@@ -175,5 +184,49 @@ public class UploadController {
 	        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedName + "\"")
 	        .body(resource);
 	}
+	
+	@PostMapping("/deleteUploadedFile")
+	@ResponseBody
+	public ResponseEntity<String> deleteFile(
+			String datePath,
+			String fileName,
+			String uuid,
+			String type,
+			@RequestParam(required = false, defaultValue = "false") boolean isUpdate) {
+	    try {
+	    	
+	    	String decodedDatePath = URLDecoder.decode(datePath, "UTF-8");
+	    	String decodedFileName = URLDecoder.decode(fileName, "UTF-8");
+	    		    	
+	        // 1. 원본 파일 삭제
+	    	File file = new File("C:/upload/" + uuid + "_" + decodedFileName);
+	        log.info("delete file_path :" + file);
+	        if (file.exists()) {
+	            file.delete();
+	        }
+
+	        // 2. 썸네일 삭제
+	        if ("image".equals(type)) {
+	        	File thumb = new File("C:/upload/" + decodedDatePath + "s_" + uuid + "_" + decodedFileName);
+	            log.info("delete thumb_path :" + thumb);
+	            if (thumb.exists()) {
+	                thumb.delete();
+	            }
+	        }
+
+	        // 3. DB 삭제는 수정 페이지일 때만
+	        if (isUpdate) {
+	            int deletedCount = noticeService.deleteFileByUUID(uuid);
+	            log.info("DB에서 삭제된 파일 개수: " + deletedCount);
+	        }
+
+	        return ResponseEntity.ok("deleted");
+
+	    } catch (Exception e) {
+	        log.error("파일 삭제 중 오류", e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	    }
+	}
+	
 	
 }

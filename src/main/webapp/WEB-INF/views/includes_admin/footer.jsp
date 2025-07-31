@@ -24,7 +24,7 @@
 	      responsive: true,
 	      paging: false,
 	      searching: false,
-	      ordering: true,
+	      order: [[0, 'desc']],
 	      info: false
           //language: {
           //    search: "검색:",

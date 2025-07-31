@@ -88,5 +88,16 @@ public class NoticeServiceImpl implements NoticeService{
     public List<AttachFileDTO> findByNoticeId(Long noticeId) {
         return mapper.findByNoticeId(noticeId);
     }
+    
+    @Override
+    public int deleteFileByUUID(String uuid) {
+        return mapper.deleteFileByUUID(uuid);
+    }
+    
+    @Override    
+    public void incrementReadCnt(Long id) {
+        mapper.updateReadCnt(id);
+    }
+
 	
 }

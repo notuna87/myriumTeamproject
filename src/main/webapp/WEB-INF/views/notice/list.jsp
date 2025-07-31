@@ -7,6 +7,16 @@
 <%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp"%>
 
+<!-- 뒤로가기 시 조회수 증가를 위해 새로고침 -->
+<!-- 한 세션에서 여러번 조회수 늘릴수 있음 : 세션 당 조회수 중복 방지 적용 안됨 -> 구현과제 -->
+<script>
+    window.onpageshow = function(event) {
+        if (event.persisted || window.performance.navigation.type === 2) {
+            location.reload();
+        }
+    };
+</script>
+
 <body>
 	<div class="row">
 		<div class="col-lg-12">
@@ -210,7 +220,7 @@
 
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
-<script>
+<script type="text/javascript">
 $(document).ready(function(){
     var result = '${result}'; 	
     
