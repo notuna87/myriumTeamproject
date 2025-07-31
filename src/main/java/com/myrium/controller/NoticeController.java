@@ -1,8 +1,11 @@
 package com.myrium.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -138,18 +141,30 @@ public class NoticeController {
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
 	@PostMapping("/modify")
 	public String modify(NoticeVO vo,
-			@RequestParam("attachList") String attachListJson,
+			@RequestParam(value = "attachList", required = false) String attachListJson,
+			@RequestParam(value = "deleteFiles", required = false) String deleteFiles,
 			@ModelAttribute("cri") Criteria cri,
 			RedirectAttributes rttr) {
 		log.info("modify:" + vo);
 		
 	    // 1. JSON 파싱
-	    ObjectMapper mapper = new ObjectMapper();
-	    List<AttachFileDTO> attachList = new ArrayList<>();
-	    try {
-	        attachList = mapper.readValue(attachListJson, new TypeReference<List<AttachFileDTO>>() {});
-	    } catch (JsonProcessingException e) {
-	        e.printStackTrace();
+		ObjectMapper mapper = new ObjectMapper();
+	    List<AttachFileDTO> attachList = new ArrayList<>(); // null을 방지하기 위해 빈 리스트로 초기화
+	    // json 데이터가 null이거나 비어있는 경우를 대비한 방어 코드를 추가합니다.
+	    if (attachListJson != null && !attachListJson.trim().isEmpty()) {
+	        try {
+	            attachList = mapper.readValue(attachListJson, new TypeReference<List<AttachFileDTO>>(){});
+	        } catch (JsonProcessingException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    
+	    // 1. 기존 첨부파일 삭제
+	    if (deleteFiles != null && !deleteFiles.isEmpty()) {
+	        String[] uuids = deleteFiles.split(",");
+	        for (String uuid : uuids) {
+	            noticeservice.deleteAttachByUuid(uuid); // delete 쿼리 실행
+	        }
 	    }
 		
 	    // hasFiles 설정
@@ -183,20 +198,63 @@ public class NoticeController {
 		return "redirect:/notice/list";
 	}
 	
+	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/harddel")
-	public String harddel(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
-		log.info("notice harddelete..." + id);
-		if(noticeservice.harddel(id)) {
-			rttr.addFlashAttribute("result","success");
-		}
-		
-		rttr.addAttribute("pageNum", cri.getPageNum());
-		rttr.addAttribute("amount", cri.getAmount());
-		rttr.addAttribute("type", cri.getType());
-		rttr.addAttribute("keyword", cri.getKeyword());
-		
-		return "redirect:/notice/list";
+	public String harddel(@RequestParam("id") Long id,
+	                      @ModelAttribute("cri") Criteria cri,
+	                      RedirectAttributes rttr,
+	                      String customerId) {
+
+	    log.info("notice harddelete..." + id);
+
+	    try {
+	        NoticeVO notice = noticeservice.get(id);
+	        if (notice == null) {
+	            rttr.addFlashAttribute("error", "존재하지 않는 게시글입니다.");
+	            return "redirect:/notice/list";
+	        }
+
+	        List<AttachFileDTO> attachList = noticeservice.findByNoticeId(id);
+
+	        for (AttachFileDTO file : attachList) {
+	            String baseDir = "C:/upload/";
+	            String filePath = baseDir + "/" + file.getUuid() + "_" + file.getFileName();
+	            File target = new File(filePath);
+
+	            if (target.exists() && !target.delete()) {
+	                log.warn("파일 삭제 실패: " + filePath);
+	            }
+
+	            if (file.getImage() == 1) {
+	                File thumb = new File(baseDir + file.getUploadPath() + "/s_" + file.getUuid() + "_" + file.getFileName());
+	                if (thumb.exists() && !thumb.delete()) {
+	                    log.warn("썸네일 삭제 실패: " + thumb.getPath());
+	                }
+	            }
+
+	            // DB 첨부파일 삭제 (항상 실행)
+	            noticeservice.deleteAttachByUuid(file.getUuid());
+	        }
+
+	        if (noticeservice.harddel(id)) {
+	            rttr.addFlashAttribute("result", "success");
+	        } else {
+	            rttr.addFlashAttribute("error", "게시글 삭제 실패");
+	        }
+
+	    } catch (Exception e) {
+	        log.error("하드삭제 중 예외 발생", e);
+	        rttr.addFlashAttribute("error", "서버 오류로 삭제하지 못했습니다.");
+	    }
+
+	    // redirect paging params
+	    rttr.addAttribute("pageNum", cri.getPageNum());
+	    rttr.addAttribute("amount", cri.getAmount());
+	    rttr.addAttribute("type", cri.getType());
+	    rttr.addAttribute("keyword", cri.getKeyword());
+
+	    return "redirect:/notice/list";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")

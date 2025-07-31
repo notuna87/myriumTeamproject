@@ -35,7 +35,7 @@ public interface NoticeMapper {
 	public List<AttachFileDTO> findByNoticeId(Long noticeId);
 	
 	// 파일 정보 삭제
-	public int deleteFileByUUID(String uuid);
+	public int deleteAttachByUuid(String uuid);
 	
 	public void updateReadCnt(Long id);
 

@@ -216,7 +216,7 @@ public class UploadController {
 
 	        // 3. DB 삭제는 수정 페이지일 때만
 	        if (isUpdate) {
-	            int deletedCount = noticeService.deleteFileByUUID(uuid);
+	            int deletedCount = noticeService.deleteAttachByUuid(uuid);
 	            log.info("DB에서 삭제된 파일 개수: " + deletedCount);
 	        }
 
