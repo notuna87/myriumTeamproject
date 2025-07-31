@@ -1,6 +1,7 @@
 package com.myrium.security.domain;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -30,5 +31,11 @@ public class CustomUser extends User {
     public MemberVO getMember() {
         return member;
     }
+    
+    public CustomUser() {
+        super("anonymous", "anonymous", List.of());
+    }
+    
+    
     
 }

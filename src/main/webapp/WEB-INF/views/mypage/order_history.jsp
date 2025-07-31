@@ -70,6 +70,7 @@
             <div class="order-date">
               <strong>2025-07-17</strong> <span>(20250717-0000041)</span>
             </div>
+            <a href="${pageContext.request.contextPath}/mypage/order_detail" class="detail-link">상세보기 &gt;</a>
           </div>
 
           <div class="order-content">
@@ -115,7 +116,7 @@
             <div class="order-date">
               <strong>2025-07-17</strong> <span>(20250717-0000041)</span>
             </div>
-            <a href="#" class="detail-link">상세보기 &gt;</a>
+            <a href="${pageContext.request.contextPath}/mypage/order_detail" class="detail-link">상세보기 &gt;</a>
           </div>
 
           <div class="order-content">
