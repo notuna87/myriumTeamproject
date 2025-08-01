@@ -99,4 +99,12 @@
 	<update id="deleteCart">
 		UPDATE cart SET is_deleted = 1, quantity = 0 WHERE product_id = #{productId} AND user_id = #{userId}
 	</update>
+	
+	<select id="ProductList" resultType="com.myrium.domain.ProductVO">
+		select * from product
+	</select>
+	
+	<select id="getCategory" resultType="com.myrium.domain.CategoryVO">
+		select * from category where product_id = ${id}
+	</select>
 </mapper>

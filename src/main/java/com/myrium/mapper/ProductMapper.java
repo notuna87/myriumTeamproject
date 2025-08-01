@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.myrium.domain.CartVO;
+import com.myrium.domain.CategoryVO;
 import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.ProductVO;
 
@@ -59,5 +60,9 @@ public interface ProductMapper {
 	int updateQuantity(@Param("productId") Long productId, @Param("userId") Long userId,@Param("newQuantity") Integer newQuantity);
 
 	int deleteCart(@Param("productId") Long productId, @Param("userId") Long userId);
+
+	public List<ProductVO> ProductList();
+
+	public CategoryVO getCategory(int id);
 
 }

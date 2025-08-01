@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myrium.domain.CartVO;
+import com.myrium.domain.CategoryVO;
+import com.myrium.domain.Criteria;
 import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
@@ -156,6 +158,22 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void deleteCart(Long productId, Long userId) {
 		int deleted = productmapper.deleteCart(productId, userId);
+	}
+	
+	// 카테고리 및 상품 리스트
+	@Override
+	public List<ProductDTO> getProductCategoryList(Criteria cri, boolean isAdmin) {
+		List<ProductVO> products = productmapper.ProductList();
+		List<ProductDTO> productDTOs = new ArrayList<>();
+		
+		for (ProductVO product : products) {
+			CategoryVO category = productmapper.getCategory(product.getId());
+			ProductDTO dto = new ProductDTO();
+			dto.setProduct(product);
+			dto.setCategory(category);
+			productDTOs.add(dto);
+		}
+		return productDTOs;
 	}
 
 

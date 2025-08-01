@@ -13,4 +13,5 @@ public class ProductDTO {
 	private ImgpathVO productDetailImg;
 	private List<ProductVO> popularProduct;
 	private CartVO inCart;
+	private CategoryVO category;
 }

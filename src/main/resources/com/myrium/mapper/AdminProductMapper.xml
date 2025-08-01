@@ -5,208 +5,188 @@
 
 <mapper namespace="com.myrium.mapper.AdminProductMapper">
 
-<resultMap id="productMap" type="com.myrium.domain.ProductVO">
-	    <id property="id" column="id" />
-	    <result property="productName" column="product_name"/>
-	    <result property="productContent" column="product_content"/>
-	    <result property="productStock" column="product_stock"/>
-	    <result property="productPrice" column="product_price"/>
-	    <result property="isDeleted" column="is_deleted"/>
-	    <result property="isTimesales" column="is_timesales"/>
-	    <result property="isMainone" column="is_mainone"/>
-	    <result property="isMaintwo" column="is_maintwo"/>
-	    <result property="isDiscount" column="is_discount"/>
-	    <result property="discountRate" column="discount_rate"/>
-	    <result property="timesalediscountRate" column="timesalediscount_rate "/>
-	    <result property="totalDiscountrate" column="total_discountrate"/>
-	    <result property="discountPrice" column="discount_price"/>
-	    <result property="salesCount" column="sales_count"/>
-	    <result property="createdAt" column="created_at"/>
-	    <result property="createdBy" column="created_by"/>
-	    <result property="updatedAt" column="updated_at"/>
-	    <result property="updatedBy" column="updated_by"/>
-	</resultMap>
-	
-	<resultMap id="attachMap" type="com.myrium.domain.AttachFileDTO">
-	  <id property="id" column="id"/>
-	  <result property="userId" column="user_id"/>
-	  <result property="productId" column="product_id"/>
-	  <result property="fileName" column="file_name"/>
-	  <result property="uploadPath" column="upload_path"/>
-	  <result property="uuid" column="uuid"/>
-	  <result property="image" column="image"/>
-	  <result property="customerId" column="customer_id"/>
-	  <result property="uploadDate" column="upload_date"/>
-	  <result property="createdAt" column="created_at"/>
-	  <result property="createdBy" column="created_by"/>
-	  <result property="updatedAt" column="updated_at"/>
-	  <result property="updatedBy" column="updated_by"/>
-	</resultMap>
+  <resultMap id="productMap" type="com.myrium.domain.ProductVO">
+    <id property="id" column="id" />
+    <result property="product_name" column="product_name"/>
+    <result property="product_content" column="product_content"/>
+    <result property="product_stock" column="product_stock"/>
+    <result property="product_price" column="product_price"/>
+    <result property="is_deleted" column="is_deleted"/>
+    <result property="is_timesales" column="is_timesales"/>
+    <result property="is_mainone" column="is_mainone"/>
+    <result property="is_maintwo" column="is_maintwo"/>
+    <result property="is_discount" column="is_discount"/>
+    <result property="discount_rate" column="discount_rate"/>
+    <result property="timesalediscount_rate" column="timesalediscount_rate"/>
+    <result property="total_discountrate" column="total_discountrate"/>
+    <result property="discount_price" column="discount_price"/>
+    <result property="sales_count" column="sales_count"/>
+    <result property="created_at" column="created_at"/>
+    <result property="created_by" column="created_by"/>
+    <result property="updated_at" column="updated_at"/>
+    <result property="updated_by" column="updated_by"/>
+  </resultMap>
 
-	<select id="getList" resultMap="productMap" >
-	    SELECT id, product_name, product_content, product_stock, product_price,
-	           is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-	           discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-	           created_at, created_by, updated_at, updated_by
-	    FROM product
-	    WHERE id > 0 ORDER BY id DESC
-	</select>
+  <resultMap id="attachMap" type="com.myrium.domain.AttachFileDTO">
+    <id property="id" column="id"/>
+    <result property="user_id" column="user_id"/>
+    <result property="product_id" column="product_id"/>
+    <result property="file_name" column="file_name"/>
+    <result property="upload_path" column="upload_path"/>
+    <result property="uuid" column="uuid"/>
+    <result property="image" column="image"/>
+    <result property="customer_id" column="customer_id"/>
+    <result property="upload_date" column="upload_date"/>
+    <result property="created_at" column="created_at"/>
+    <result property="created_by" column="created_by"/>
+    <result property="updated_at" column="updated_at"/>
+    <result property="updated_by" column="updated_by"/>
+  </resultMap>
 
-    <insert id="insert">
-        INSERT INTO product (
-            id, product_name, product_content, product_stock, product_price,
-	        is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-	        discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-	        created_at, created_by
-        ) VALUES (
-            product_seq.NEXTVAL, #{productName}, #{productContent}, #{productStock}, #{productPrice},
-	        #{isDeleted}, #{isTimesales}, #{isMainone}, #{isMaintwo}, #{isDiscount},
-	        #{discountRate}, #{timesalediscountRate}, #{totalDiscountrate}, #{discountPrice}, #{salesCount},
-	        #{createdAt}, #{createdBy}
-        )
-    </insert>
+  <select id="getList" resultMap="productMap">
+    SELECT * FROM product
+    WHERE id > 0
+    ORDER BY id DESC
+  </select>
+  
+  <select id="getCategory" resultMap="productMap">
+    SELECT * FROM category
+    WHERE product_id > 0
+    ORDER BY product_id DESC
+  </select>
 
-    <insert id="insertSelectKey">
-        <selectKey keyProperty="id" order="BEFORE" resultType="long">
-            SELECT product_seq.NEXTVAL FROM dual
-        </selectKey>
-        INSERT INTO product (
-            id, product_name, product_content, product_stock, product_price,
-	        is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-	        discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-	        created_at, created_by
-        ) VALUES (
-            #{id}, #{productName}, #{productContent}, #{productStock}, #{productPrice},
-	        #{isDeleted}, #{isTimesales}, #{isMainone}, #{isMaintwo}, #{isDiscount},
-	        #{discountRate}, #{timesalediscountRate}, #{totalDiscountrate}, #{discountPrice}, #{salesCount},
-	        #{createdAt}, #{createdBy}
-        )
-    </insert>
+  <insert id="insert">
+    INSERT INTO product (
+      id, product_name, product_content, product_stock, product_price,
+      is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
+      discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
+      created_at, created_by
+    ) VALUES (
+      product_seq.NEXTVAL, #{product_name}, #{product_content}, #{product_stock}, #{product_price},
+      #{is_deleted}, #{is_timesales}, #{is_mainone}, #{is_maintwo}, #{is_discount},
+      #{discount_rate}, #{timesalediscount_rate}, #{total_discountrate}, #{discount_price}, #{sales_count},
+      #{created_at}, #{created_by}
+    )
+  </insert>
 
-	<select id="read" resultMap="productMap">
-	    SELECT id, product_name, product_content, product_stock, product_price,
-	           is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-	           discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-	           created_at, created_by, updated_at, updated_by
-	    FROM product
-	    WHERE id = #{id}
-	</select>
+  <insert id="insertSelectKey">
+    <selectKey keyProperty="id" order="BEFORE" resultType="long">
+      SELECT product_seq.NEXTVAL FROM dual
+    </selectKey>
+    INSERT INTO product (
+      id, product_name, product_content, product_stock, product_price,
+      is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
+      discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
+      created_at, created_by
+    ) VALUES (
+      #{id}, #{product_name}, #{product_content}, #{product_stock}, #{product_price},
+      #{is_deleted}, #{is_timesales}, #{is_mainone}, #{is_maintwo}, #{is_discount},
+      #{discount_rate}, #{timesalediscount_rate}, #{total_discountrate}, #{discount_price}, #{sales_count},
+      #{created_at}, #{created_by}
+    )
+  </insert>
 
+  <select id="read" resultMap="productMap">
+    SELECT * FROM product
+    WHERE id = #{id}
+  </select>
 
-	<!-- 하드(영구) 삭제 -->
-    <delete id="harddel">
-        DELETE FROM product WHERE id = #{id}
-    </delete>
-    
-    <!-- 소프트 삭제 -->
-    <update id="softdel">
-	    UPDATE product
-	    SET is_deleted = 1
-	    WHERE id = #{id}
-	</update>
-	
-    <!-- 복구 -->
-    <update id="restore">
-	    UPDATE product
-	    SET is_deleted = 0
-	    WHERE id = #{id}
-	</update>
+  <delete id="harddel">
+    DELETE FROM product WHERE id = #{id}
+  </delete>
 
-	<update id="update" parameterType="com.myrium.domain.ProductVO">
-	    UPDATE product
-	    SET
-	        product_name = #{productName},
-	        product_content = #{productContent},
-	        product_stock = #{productStock},
-	        product_price = #{productPrice},
-	        is_deleted = #{isDeleted},
-	        is_timesales = #{isTimesales},
-	        is_mainone = #{isMainone},
-	        is_maintwo = #{isMaintwo},
-	        is_discount = #{isDiscount},
-	        discount_rate = #{discountRate},
-	        timesalediscount_rate = #{timesalediscountRate},
-	        total_discountrate = #{totalDiscountrate},
-	        discount_price = #{discountPrice},
-	        sales_count = #{salesCount},
-	        updated_at = SYSDATE,
-	        updated_by = #{updatedBy}
-	    WHERE id = #{id}
-	</update>
+  <update id="softdel">
+    UPDATE product SET is_deleted = 1 WHERE id = #{id}
+  </update>
 
-    <!-- 페이징용 검색 필터 -->
-    <sql id="criterial">
-        <trim prefix="(" suffix=") AND" prefixOverrides="OR">
-            <foreach item='type' collection="cri.typeArr">
-                <trim prefix="OR">
-                    <choose>
-                        <when test="type == 'T'.toString()">
-                            title LIKE '%' || #{cri.keyword} || '%'
-                        </when>
-                        <when test="type == 'C'.toString()">
-                            content LIKE '%' || #{cri.keyword} || '%'
-                        </when>
-                        <when test="type == 'W'.toString()">
-                            customer_id LIKE '%' || #{cri.keyword} || '%'
-                        </when>
-                    </choose>
-                </trim>
-            </foreach>
+  <update id="restore">
+    UPDATE product SET is_deleted = 0 WHERE id = #{id}
+  </update>
+
+  <update id="update" parameterType="com.myrium.domain.ProductVO">
+    UPDATE product SET
+      product_name = #{product_name},
+      product_content = #{product_content},
+      product_stock = #{product_stock},
+      product_price = #{product_price},
+      is_deleted = #{is_deleted},
+      is_timesales = #{is_timesales},
+      is_mainone = #{is_mainone},
+      is_maintwo = #{is_maintwo},
+      is_discount = #{is_discount},
+      discount_rate = #{discount_rate},
+      timesalediscount_rate = #{timesalediscount_rate},
+      total_discountrate = #{total_discountrate},
+      discount_price = #{discount_price},
+      sales_count = #{sales_count},
+      updated_at = SYSDATE,
+      updated_by = #{updated_by}
+    WHERE id = #{id}
+  </update>
+
+  <sql id="criterial">
+    <trim prefix="(" suffix=") AND" prefixOverrides="OR">
+      <foreach item='type' collection="cri.typeArr">
+        <trim prefix="OR">
+          <choose>
+            <when test="type == 'T'.toString()">
+              title LIKE '%' || #{cri.keyword} || '%'
+            </when>
+            <when test="type == 'C'.toString()">
+              content LIKE '%' || #{cri.keyword} || '%'
+            </when>
+            <when test="type == 'W'.toString()">
+              customer_id LIKE '%' || #{cri.keyword} || '%'
+            </when>
+          </choose>
         </trim>
-    </sql>
+      </foreach>
+    </trim>
+  </sql>
 
-	<select id="getListWithPaging" resultMap="productMap" >
-	  <![CDATA[
-	  SELECT id, product_name, product_content, product_stock, product_price,
-	           is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-	           discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-	           created_at, created_by, updated_at, updated_by
-	  FROM (
-	      SELECT /*+INDEX_DESC(product pk_product) */ 
-	             ROWNUM rn, id, product_name, product_content, product_stock, product_price,
-	           is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-	           discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-	           created_at, created_by, updated_at, updated_by
-	      FROM product
-	      WHERE
-	  ]]>
-	  
-	  <include refid="criterial"/>
-	
-	  <![CDATA[
-	      ROWNUM <= #{cri.pageNum} * #{cri.amount}
-	  ) WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
-	  ]]>
-	</select>
+  <select id="getListWithPaging" resultMap="productMap">
+    <![CDATA[
+    SELECT * FROM (
+      SELECT /*+INDEX_DESC(product pk_product) */
+        ROWNUM rn, id, product_name, product_content, product_stock, product_price,
+        is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
+        discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
+        created_at, created_by, updated_at, updated_by
+      FROM product
+      WHERE
+    ]]>
+    <include refid="criterial"/>
+    <![CDATA[
+      ROWNUM <= #{cri.pageNum} * #{cri.amount}
+    ) WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
+    ]]>
+  </select>
 
-	<select id="getTotalCount" resultType="int" >
-	    SELECT COUNT(*)
-	    FROM product
-	    WHERE id > 0
-	</select>
+  <select id="getTotalCount" resultType="int">
+    SELECT COUNT(*) FROM product WHERE id > 0
+  </select>
 
-    <update id="updateReadCnt">
-        UPDATE product SET read_cnt = read_cnt + 1 WHERE id = #{id}
-    </update>
-    
-	<insert id="insertAttach" parameterType="com.myrium.domain.AttachFileDTO">
-	  INSERT INTO product_files (id, user_id, product_id, file_name, upload_path, uuid, image,
-	   customer_id, upload_date, created_at, created_by)
-	  VALUES (
-	    PRODUCT_FILES_SEQ.NEXTVAL, #{userId}, #{productId}, #{fileName}, #{uploadPath}, #{uuid}, #{image},
-	    #{customerId}, SYSDATE, SYSDATE, #{createdBy}
-	  )
-	</insert>
-	
-	<select id="findByProductId" resultMap="attachMap">
-	  SELECT *
-	  FROM product_files
-	  WHERE product_id = #{productId}
-	</select>
+  <update id="updateReadCnt">
+    UPDATE product SET read_cnt = read_cnt + 1 WHERE id = #{id}
+  </update>
 
-	<delete id="deleteAttachByUuid" parameterType="string">
-	    DELETE FROM product_files
-	    WHERE uuid = #{uuid}
-	</delete>
+  <insert id="insertAttach" parameterType="com.myrium.domain.AttachFileDTO">
+    INSERT INTO product_files (
+      id, user_id, product_id, file_name, upload_path, uuid, image,
+      customer_id, upload_date, created_at, created_by
+    ) VALUES (
+      PRODUCT_FILES_SEQ.NEXTVAL, #{user_id}, #{product_id}, #{file_name}, #{upload_path}, #{uuid}, #{image},
+      #{customer_id}, SYSDATE, SYSDATE, #{created_by}
+    )
+  </insert>
+
+  <select id="findByProductId" resultMap="attachMap">
+    SELECT * FROM product_files WHERE product_id = #{product_id}
+  </select>
+
+  <delete id="deleteAttachByUuid" parameterType="string">
+    DELETE FROM product_files WHERE uuid = #{uuid}
+  </delete>
 
 </mapper>
+

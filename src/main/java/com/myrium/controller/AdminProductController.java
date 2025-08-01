@@ -23,8 +23,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.PageDTO;
+import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 import com.myrium.service.AdminProductService;
+import com.myrium.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -34,10 +36,11 @@ import lombok.extern.log4j.Log4j;
 //@AllArgsConstructor
 @RequestMapping("/product/*")
 @RequiredArgsConstructor()
-public class ProductController {
+public class AdminProductController {
 
 	private final AdminProductService service;
-	
+	private final ProductService productservice;
+
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
 		log.info("list__________");
@@ -48,9 +51,9 @@ public class ProductController {
 	    boolean isAdmin = authentication.getAuthorities().stream()
 	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));		
 		
-		List<ProductVO> list = service.getList(cri, isAdmin);
+		List<ProductDTO> list = productservice.getProductCategoryList(cri, isAdmin);
 		
-		list.forEach(product -> log.info(product));
+		log.info(list);
 		model.addAttribute("list", list);
 
 		int total = service.getTotal(cri, isAdmin);
@@ -59,6 +62,7 @@ public class ProductController {
 		// Debug log
 		log.info("---------------------------------------------------");
 
+		log.info(list);
 		log.info(authentication);
 
 		System.out.println("Authentication Details:");		

@@ -99,5 +99,11 @@ public class AdminProductServiceImpl implements AdminProductService{
         mapper.updateReadCnt(id);
     }
 
+
+	@Override
+	public List<String> getCategory() {
+		return mapper.getCategory();
+	}
+
 	
 }

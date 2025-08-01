@@ -29,7 +29,7 @@
 			<div class="panel panel-default">
 				<sec:authorize access="hasAuthority('ADMIN')">
 					<div class="panel-heading">
-						새상품 등록은 작성 버튼을 클릭하세요.
+						새상품은 상품등록을 클릭하고 등록하세요.
 						<button id='regBtn' type="button" class="btn btn-info">작성</button>
 					</div>
 					<div class="panel-heading">
@@ -40,96 +40,88 @@
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					    <!-- 필터링 섹션 -->
-    <form action="/product/list" method="get" class="form-inline mb-3">
-        <!-- <select name="category" class="form-control">
-            <option value="">카테고리</option>
-            <c:forEach var="cat" items="${categories}">
-                <option value="${cat}" <c:if test="${param.category == cat}">selected</c:if>>${cat}</option>
-            </c:forEach>
-        </select> -->
-        <select name="category" class="form-control">
-		    <option value="">카테고리</option>
-		    <option value="전체" <c:if test="${param.category == ''}">selected</c:if>>원예용품</option>
-		    <option value="원예용품" <c:if test="${param.category == '원예용품'}">selected</c:if>>원예용품</option>
-		    <option value="식물키트모음" <c:if test="${param.category == '식물키트모음'}">selected</c:if>>식물키트모음</option>
-		    <option value="허브 키우기" <c:if test="${param.category == '허브 키우기'}">selected</c:if>>허브 키우기</option>
-		    <option value="채소키우기" <c:if test="${param.category == '채소키우기'}">selected</c:if>>채소키우기</option>
-		    <option value="꽃시키우기" <c:if test="${param.category == '꽃시키우기'}">selected</c:if>>꽃시키우기</option>
-		    <option value="기타 키우기키트" <c:if test="${param.category == '기타 키우기키트'}">selected</c:if>>기타 키우기키트</option>
-		</select>
-        <select name="discounted" class="form-control">
-            <option value="">일반할인여부</option>
-            <option value="true">예</option>
-            <option value="false">아니오</option>
-        </select>
-        <select name="timedeal" class="form-control">
-            <option value="">타임세일여부</option>
-            <option value="true">예</option>
-            <option value="false">아니오</option>
-        </select>
-        <select name="soldout" class="form-control">
-            <option value="">품절여부</option>
-            <option value="true">예</option>
-            <option value="false">아니오</option>
-        </select>
-        <select name="visible" class="form-control">
-            <option value="">노출여부</option>
-            <option value="true">노출</option>
-            <option value="false">미노출</option>
-        </select>
-        <button type="submit" class="btn btn-primary">필터</button>
-    </form>
-
-    <!-- 상품 테이블 -->
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>상품번호</th>
-                <th>카테고리</th>
-                <th>상품명</th>
-                <th>재고량</th>
-                <th>가격</th>
-                <th>할인가격</th>
-                <th>일반할인</th>
-                <th>할인율</th>
-                <th>타임세일</th>
-                <th>세일율</th>
-                <th>품절</th>
-                <th>노출</th>
-                <th>관리</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:forEach items="${productList}" var="product">
-                <tr>
-                    <td>${product.id}</td>
-                    <td>${product.category}</td>
-                    <td>${product.name}</td>
-                    <td>${product.stock}</td>
-                    <td><fmt:formatNumber value="${product.price}" pattern="#.##"/></td>
-                    <td><fmt:formatNumber value="${product.discountPrice}" pattern="#.##"/></td>
-                    <td>${product.discounted ? '예' : '아니오'}</td>
-                    <td>${product.discountRate}%</td>
-                    <td>${product.timeSale ? '예' : '아니오'}</td>
-                    <td>${product.timeSaleRate}%</td>
-                    <td>${product.soldOut ? '예' : '아니오'}</td>
-                    <td>${product.visible ? '노출' : '미노출'}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" onclick="location.href='/product/edit?id=${product.id}'">수정</button>
-                        <c:choose>
-                            <c:when test="${product.visible}">
-                                <button class="btn btn-sm btn-warning toggle-visibility" data-id="${product.id}" data-visible="false">미노출</button>
-                            </c:when>
-                            <c:otherwise>
-                                <button class="btn btn-sm btn-success toggle-visibility" data-id="${product.id}" data-visible="true">복구</button>
-                            </c:otherwise>
-                        </c:choose>
-                        <button class="btn btn-sm btn-danger delete-product" data-id="${product.id}">삭제</button>
-                    </td>
-                </tr>
-            </c:forEach>
-        </tbody>
-    </table>
+				    <form action="/product/list" method="get" class="form-inline mb-3">
+				        <!-- <select name="category" class="form-control">
+				            <option value="">카테고리</option>
+				            <c:forEach var="cat" items="${categories}">
+				                <option value="${cat}" <c:if test="${param.category == cat}">selected</c:if>>${cat}</option>
+				            </c:forEach>
+				        </select> -->
+				        <select name="category" class="form-control">
+						    <option value="">카테고리</option>
+						    <option value="원예용품" <c:if test="${param.category == '원예용품'}">selected</c:if>>원예용품</option>
+						    <option value="식물키트모음" <c:if test="${param.category == '식물키트모음'}">selected</c:if>>식물키트모음</option>
+						    <option value="허브 키우기" <c:if test="${param.category == '허브 키우기'}">selected</c:if>>허브 키우기</option>
+						    <option value="채소키우기" <c:if test="${param.category == '채소키우기'}">selected</c:if>>채소키우기</option>
+						    <option value="꽃시키우기" <c:if test="${param.category == '꽃시키우기'}">selected</c:if>>꽃시키우기</option>
+						    <option value="기타 키우기키트" <c:if test="${param.category == '기타 키우기키트'}">selected</c:if>>기타 키우기키트</option>
+						</select>
+				        <select name="discounted" class="form-control">
+				            <option value="">일반할인여부</option>
+				            <option value="true">Y</option>
+				            <option value="false">N</option>
+				        </select>
+				        <select name="timedeal" class="form-control">
+				            <option value="">타임세일여부</option>
+				            <option value="true">Y</option>
+				            <option value="false">N</option>
+				        </select>
+				        <select name="visible" class="form-control">
+				            <option value="">노출여부</option>
+				            <option value="true">Y</option>
+				            <option value="false">N</option>
+				        </select>
+				        <button type="submit" class="btn btn-primary">필터</button>
+				    </form>
+				
+				    <!-- 상품 테이블 -->
+				    <table class="table table-bordered table-hover">
+				        <thead>
+				            <tr>
+				                <th class="text-center">상품번호</th>
+				                <th class="text-center">카테고리</th>
+				                <th class="text-center">상품명</th>
+				                <th class="text-center">재고량</th>
+				                <th class="text-center">가격</th>
+				                <th class="text-center">할인가격</th>
+				                <th class="text-center">일반할인</th>
+				                <th class="text-center">(일반)할인율</th>
+				                <th class="text-center">타임세일</th>
+				                <th class="text-center">(타임세일)할인율</th>
+				                <th class="text-center">노출</th>
+				                <th class="text-center">관리</th>
+				            </tr>
+				        </thead>
+				        <tbody>
+				            <c:forEach items="${list}" var="product">
+				                <tr>
+				                    <td class="text-center">${product.product.id}</td>
+				                    <td class="text-center">${product.category}</td>
+				                    <td class="text-left">${product.product.product_name}</td>
+				                    <td class="text-right">stock</td>
+				                    <td class="text-right"><fmt:formatNumber value="${product.product.product_price}" pattern="#.##"/></td>
+				                    <td class="text-right"><fmt:formatNumber value="${product.product.discount_price}" pattern="#.##"/></td>
+				                    <td class="text-center">${product.product.is_discount ==1 ? 'Y' : 'N'}</td>
+				                    <td class="text-right">${product.product.discount_rate}%</td>
+				                    <td class="text-center">${product.product.is_timesales == 1 ? 'Y' : 'N'}</td>
+				                    <td class="text-right">${product.product.timesalediscount_rate}%</td>
+				                    <td class="text-center">${product.product.is_deleted == 0 ? 'Y' : 'N'}</td>
+				                    <td>
+				                        <button class="btn btn-sm btn-primary" onclick="location.href='/product/edit?id=${product.product.id}'">수정</button>
+				                        <c:choose>
+				                            <c:when test="${product.product.is_deleted == 0}">
+				                                <button class="btn btn-sm btn-warning toggle-visibility" data-id="${product.product.id}" data-visible="false">미노출</button>
+				                            </c:when>
+				                            <c:otherwise>
+				                                <button class="btn btn-sm btn-success toggle-visibility" data-id="${product.product.id}" data-visible="true">복구</button>
+				                            </c:otherwise>
+				                        </c:choose>
+				                        <button class="btn btn-sm btn-danger delete-product" data-id="${product.product.id}">삭제</button>
+				                    </td>
+				                </tr>
+				            </c:forEach>
+				        </tbody>
+				    </table>
 
 
 					<!-- 검색조건 -->

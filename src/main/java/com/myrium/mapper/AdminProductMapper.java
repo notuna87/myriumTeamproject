@@ -38,6 +38,8 @@ public interface AdminProductMapper {
 	public int deleteAttachByUuid(String uuid);
 	
 	public void updateReadCnt(Long id);
+	
+	public List<String> getCategory();
 
 
 }

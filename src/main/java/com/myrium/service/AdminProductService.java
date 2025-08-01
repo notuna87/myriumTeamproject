@@ -5,7 +5,6 @@ import java.util.List;
 import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.ProductVO;
-import com.myrium.domain.ImgpathVO;
 
 public interface AdminProductService {
 	
@@ -34,6 +33,8 @@ public interface AdminProductService {
 	   public int deleteAttachByUuid(String uuid);
 
 	   public void incrementReadCnt(Long id);
+
+       public List<String> getCategory();
 	  
 
 }
