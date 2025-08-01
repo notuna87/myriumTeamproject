@@ -7,4 +7,6 @@ import com.myrium.domain.OrderDTO;
 public interface OrderService {
 
 	  List<OrderDTO> getOrderListByCustomerId(String customerId);
+	  
+	  List<OrderDTO> getCanceledOrdersByCustomerId(String customerId);
 }

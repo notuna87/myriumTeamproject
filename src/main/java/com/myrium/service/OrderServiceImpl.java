@@ -19,4 +19,10 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDTO> getOrderListByCustomerId(String customerId) {
         return orderMapper.findOrdersByCustomerId(customerId);
     }
+    
+    // ✅ 교환/환불 데이터 조회 구현
+    @Override
+    public List<OrderDTO> getCanceledOrdersByCustomerId(String customerId) {
+        return orderMapper.selectCanceledOrdersByCustomerId(customerId);
+    }
 }

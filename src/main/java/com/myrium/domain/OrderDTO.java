@@ -9,14 +9,29 @@ public class OrderDTO {
 	    private String receiver;
 	    private String phoneNumber;
 	    private String address;
-	    private String orderId;
+	    private String ordersId;
 	    private String orderDate;
 	    private String productName;
 	    private int productPrice;
 	    private int quantity;
 	    private String orderStatus;
 	    
-	    private Long userId;
-	    private String title;
-	    private String content; 
-	}
+	    //주문번호내역 매칭
+	    private String orderDisplayId; // 화면 출력용 주문번호 (예: 20250801-0000001)
+
+	    public void setOrderDisplayId() {
+	        if (orderDate != null && ordersId != null) {
+	            try {
+	                String dateOnly = orderDate.replaceAll("-", "").substring(0, 8); // yyyyMMdd
+	                int idInt = Integer.parseInt(ordersId); // String -> int 변환
+	                String idFormatted = String.format("%07d", idInt);
+	                this.orderDisplayId = dateOnly + "-" + idFormatted;
+	            } catch (NumberFormatException e) {
+	                this.orderDisplayId = "";
+	            }
+	        } else {
+	            this.orderDisplayId = "";
+	        }
+	    }
+
+}

@@ -1,5 +1,6 @@
 package com.myrium.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,16 +30,6 @@ public class MypageController {
 
 	@Autowired
 	private OrderService orderService;
-	
-//	@GetMapping("/mypage")
-//	public String showJoinform() {
-//		return "mypage/mypage";
-//	}
-	
-    @GetMapping("/mypage/order-history")
-    public String showOrderHistory() {
-        return "mypage/order_history";
-    }
     
     @GetMapping("/mypage/change_password")
     public String showchangepw() {
@@ -79,6 +70,7 @@ public class MypageController {
         return "mypage/member_update";
     }
     
+    //마이페이지 주문내역조회 
     @GetMapping("/mypage")
     public String showMypage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -94,21 +86,77 @@ public class MypageController {
 
         List<OrderDTO> orderList = orderService.getOrderListByCustomerId(customerId);
         log.info("주문 내역 수: " + orderList.size());
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         for (OrderDTO dto : orderList) {
-            log.info(dto.getOrderId() + " - " + dto.getProductName());
+        	 dto.setOrderDisplayId();
+            log.info(dto.getOrdersId() + " - " + dto.getProductName());
+            if (dto.getOrderDate() != null && dto.getOrdersId() != null) {
+                try {
+                    String idFormatted = String.format("%08d", Integer.parseInt(dto.getOrdersId()));
+                } catch (NumberFormatException e) {
+                    log.warn("ordersId 파싱 실패: " + dto.getOrdersId());
+                }
+            }
         }
 
         // 주문 ID 기준으로 묶기
         Map<String, List<OrderDTO>> groupedOrders = new LinkedHashMap<>();
         for (OrderDTO order : orderList) {
             groupedOrders
-                .computeIfAbsent(order.getOrderId(), k -> new ArrayList<>())
+                .computeIfAbsent(order.getOrdersId(), k -> new ArrayList<>())
                 .add(order);
         }
 
         model.addAttribute("groupedOrders", groupedOrders);
         return "mypage/mypage"; // mypage.jsp
     }
+    
+    //order_history 주문내역조회 구현
+    @GetMapping("/mypage/order-history")
+    public String goOrderHistoryPage(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return "redirect:/login";
+        }
+
+        String customerId = auth.getName();
+
+        // 주문 내역 조회
+        List<OrderDTO> orderList = orderService.getOrderListByCustomerId(customerId);
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        for (OrderDTO dto : orderList) {
+        	 dto.setOrderDisplayId();
+            if (dto.getOrderDate() != null && dto.getOrdersId() != null) {
+                try {
+                    String idFormatted = String.format("%08d", Integer.parseInt(dto.getOrdersId()));
+                } catch (NumberFormatException e) {
+                    log.warn("ordersId 파싱 실패: " + dto.getOrdersId());
+                }
+            }
+        }
+        
+        Map<String, List<OrderDTO>> groupedOrders = new LinkedHashMap<>();
+        for (OrderDTO order : orderList) {
+        	
+            groupedOrders.computeIfAbsent(order.getOrdersId(), k -> new ArrayList<>()).add(order);
+        }
+        model.addAttribute("groupedOrders", groupedOrders);
+        model.addAttribute("orderCount", orderList.size());
+
+        // 교환/환불 내역 조회
+        List<OrderDTO> cancelList = orderService.getCanceledOrdersByCustomerId(customerId);
+        Map<String, List<OrderDTO>> cancelGroupedOrders = new LinkedHashMap<>();
+        for (OrderDTO order : cancelList) {
+            cancelGroupedOrders.computeIfAbsent(order.getOrdersId(), k -> new ArrayList<>()).add(order);
+        }
+        model.addAttribute("cancelGroupedOrders", cancelGroupedOrders);
+        model.addAttribute("cancelCount", cancelList.size());
+
+        return "mypage/order_history";
+    }
+
 
     }
     
