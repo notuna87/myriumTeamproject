@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.Criteria;
+import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 
 public interface AdminProductService {
@@ -34,7 +35,5 @@ public interface AdminProductService {
 
 	   public void incrementReadCnt(Long id);
 
-       public List<String> getCategory();
-	  
-
+	   public List<ProductDTO> getCategoryList(Criteria cri, boolean isAdmin);
 }

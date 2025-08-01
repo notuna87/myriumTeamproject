@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.myrium.domain.AttachFileDTO;
+import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.ProductVO;
 
@@ -39,7 +40,10 @@ public interface AdminProductMapper {
 	
 	public void updateReadCnt(Long id);
 	
-	public List<String> getCategory();
+	public List<ProductVO> getProductList();
+
+	public CategoryVO getCategoryList(int id);
+
 
 
 }

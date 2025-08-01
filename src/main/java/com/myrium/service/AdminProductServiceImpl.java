@@ -1,12 +1,15 @@
 package com.myrium.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myrium.domain.AttachFileDTO;
+import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
+import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 import com.myrium.mapper.AdminProductMapper;
 
@@ -99,11 +102,20 @@ public class AdminProductServiceImpl implements AdminProductService{
         mapper.updateReadCnt(id);
     }
 
-
+	// 카테고리 및 상품 리스트
 	@Override
-	public List<String> getCategory() {
-		return mapper.getCategory();
+	public List<ProductDTO> getCategoryList(Criteria cri, boolean isAdmin) {
+		List<ProductVO> productList = mapper.getProductList();
+		List<ProductDTO> productDTO = new ArrayList<>();
+		
+		for (ProductVO product : productList) {
+			CategoryVO category = mapper.getCategoryList(product.getId());
+			ProductDTO dto = new ProductDTO();
+			dto.setProduct(product);
+			dto.setCategory(category);
+			productDTO.add(dto);
+		}
+		return productDTO;
 	}
-
 	
 }

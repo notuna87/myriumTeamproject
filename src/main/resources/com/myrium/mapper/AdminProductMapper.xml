@@ -26,6 +26,16 @@
     <result property="updated_at" column="updated_at"/>
     <result property="updated_by" column="updated_by"/>
   </resultMap>
+  
+  <resultMap id="categoryMap" type="com.myrium.domain.CategoryVO">
+    <id property="product_id" column="product_id" />
+    <result property="gardening" column="gardening"/>
+    <result property="plantkit" column="plantkit"/>
+    <result property="hurb" column="hurb"/>
+    <result property="vegetable" column="vegetable"/>
+    <result property="flower" column="flower"/>
+    <result property="etc" column="etc"/>
+  </resultMap>
 
   <resultMap id="attachMap" type="com.myrium.domain.AttachFileDTO">
     <id property="id" column="id"/>
@@ -43,16 +53,24 @@
     <result property="updated_by" column="updated_by"/>
   </resultMap>
 
-  <select id="getList" resultMap="productMap">
+  <!-- <select id="getList" resultMap="productMap">
     SELECT * FROM product
     WHERE id > 0
     ORDER BY id DESC
-  </select>
+  </select>  -->
   
-  <select id="getCategory" resultMap="productMap">
+  <!-- <select id="getCategory" resultMap="productMap">
     SELECT * FROM category
     WHERE product_id > 0
     ORDER BY product_id DESC
+  </select>  -->
+    	
+  <select id="getProductList" resultMap="productMap">
+  	select * from product
+  </select>
+	
+  <select id="getCategoryList" resultMap="categoryMap">
+	select * from category where product_id = ${id}
   </select>
 
   <insert id="insert">

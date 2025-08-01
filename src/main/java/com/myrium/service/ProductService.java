@@ -31,7 +31,5 @@ public interface ProductService {
 	void updateQuantity(Long productId, Integer newQuantity, Long userId);
 
 	void deleteCart(Long productId, Long userId);
-
-	public List<ProductDTO> getProductCategoryList(Criteria cri, boolean isAdmin);
 	
 }

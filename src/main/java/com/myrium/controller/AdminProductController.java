@@ -39,7 +39,6 @@ import lombok.extern.log4j.Log4j;
 public class AdminProductController {
 
 	private final AdminProductService service;
-	private final ProductService productservice;
 
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
@@ -51,7 +50,7 @@ public class AdminProductController {
 	    boolean isAdmin = authentication.getAuthorities().stream()
 	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));		
 		
-		List<ProductDTO> list = productservice.getProductCategoryList(cri, isAdmin);
+		List<ProductDTO> list = service.getCategoryList(cri, isAdmin);
 		
 		log.info(list);
 		model.addAttribute("list", list);

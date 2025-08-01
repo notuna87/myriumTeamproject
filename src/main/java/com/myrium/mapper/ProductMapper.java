@@ -61,8 +61,4 @@ public interface ProductMapper {
 
 	int deleteCart(@Param("productId") Long productId, @Param("userId") Long userId);
 
-	public List<ProductVO> ProductList();
-
-	public CategoryVO getCategory(int id);
-
 }
