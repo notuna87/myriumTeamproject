@@ -1,0 +1,331 @@
+.purchaseWrap {
+    width: 892px;
+    border: 1px solid #d7d5d5;
+    margin: 0 auto;
+    border-top: none;
+}
+
+/* 공통 스타일 시작 */
+input {
+    padding-left: 10px;
+    font-size: 15px;
+    height: 45px;
+    border: 1px solid #d9d9d9;
+
+}
+
+input:focus {
+    outline-style: none;
+}
+
+.bigTextBox {
+    width: 98%;
+}
+
+.phoneTextBox {
+    width: 241px;
+}
+
+/* 공통 스타일 끝*/
+
+/* 걸제페이지 헤더 시작 */
+.header {
+    height: 60px;
+    font-weight: bold;
+    font-size: 17px;
+    text-align: center;
+    align-content: center;
+}
+
+.headerPurchase {
+    background-color: #000;
+    height: 60px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    align-content: center;
+}
+
+.beforeButton {
+    position: absolute;
+    overflow: hidden;
+    cursor: pointer;
+    width: 30px;
+    scale: 0.6;
+    transform: translateX(-670px) translateY(-15px);
+}
+/* 결제 페이지 헤더 끝 */
+
+/* 결제 페이지 섹션 시작*/
+section {
+    background-color: #EDEDED;
+    padding: 5px 0;
+}
+
+/* 주문 정보 시작 */
+.orderInfoTitle {
+    background-color: #fff;
+    margin-top: 10px;
+    height: 60px;
+    font-size: 15px;
+    font-weight: 500;
+    align-content: center;
+    padding: 0 20px;
+}
+
+.orderInfoContent {
+    background-color: #fff;
+    height: 310px;
+    border-bottom: 1px solid #d7d5d5;
+}
+
+.orderInfoContent th {
+    width: 100px;
+    height: 57px;
+    padding-left: 15px;
+    font-weight: 400;
+    font-size: 14px;
+    text-align: left;
+}
+
+.orderInfoContent td {
+    width: 800px;
+    height: 57px;
+    padding-left: 20px;
+}
+
+.addressTopTh {
+    align-content: start;
+    padding: 20px;
+}
+
+.addressTop {
+    width: 160px;
+}
+
+.addressSearchButton {
+    padding: 10px;
+    background-color: #fff;
+    transform: translateX(-1px);
+    border: 1px solid #A7A7A7;
+    font-size: 14px;
+    width: 80px;
+    cursor: pointer;
+}
+
+/*메세지 선택 시작 */
+.messageSelectWrap {
+    background-color: #fff;
+    padding: 15px;
+    padding-right: 0;
+}
+
+.messageSelect {
+    width: 857px;
+    height: 42px;
+    padding: 0 15px;
+    appearance: none;
+}
+
+.messageSelect option {
+    height: 42px;
+}
+
+/*메세지 선택 끝 */
+/* 주문 정보 끝 */
+
+/* 주문 상품 시작 */
+
+.orderProductTitle {
+    background-color: #fff;
+    margin-top: 10px;
+    height: 60px;
+    font-size: 15px;
+    font-weight: 500;
+    align-content: center;
+    padding: 0 20px;
+}
+
+.orderProduct {
+    background-color: #fff;
+    font-size: 14px;
+}
+
+.orderProduct th {
+    width: 100px;
+}
+
+.orderProductThumbnail {
+    width: 62px;
+    height: 62px;
+    border: 1px solid #F2F2F2;
+}
+
+/* 삭제 버튼*/
+.deleteButton {
+    border: 1px solid #e7e7e7;
+    width: 70px;
+    height: 40px;
+    text-align: center;
+    align-content: center;
+    cursor: pointer;
+    padding: 5px;
+    transform: translateY(-30px);
+    font-size: 12px;
+    color: #222;
+    border-radius: 3px;
+}
+
+/* 배송비 시작 */
+.totalPriceWrap {
+    background-color: #f6f6f6;
+    height: 45px;
+    align-content: center;
+    padding: 10px;
+    font-size: 13px;
+}
+
+/* 배송비 끝 */
+/* 주문 상품 끝 */
+
+/* 결제 정보 시작 */
+.paymentInfoTitle {
+    background-color: #fff;
+    margin-top: 10px;
+    height: 60px;
+    font-size: 15px;
+    font-weight: 500;
+    align-content: center;
+    padding: 0 20px;
+}
+
+.paymentInfo {
+    background-color: #fff;
+    font-size: 15px;
+    padding: 10px;
+}
+
+.paymentInfoWrap th {
+    width: 100px;
+    height: 25px;
+    padding-left: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: left;
+}
+
+.paymentInfoWrap td {
+    width: 770px;
+    font-weight: 500;
+}
+
+.finalPaymentAmount {
+    background-color: #F4F7FF;
+    height: 50px;
+    align-content: center;
+    padding-left: 7px;
+    font-size: 14px;
+}
+
+/* 결제 정보 끝 */
+/* 결제 수단 시작 */
+.paymentMethodTitle {
+    background-color: #fff;
+    margin-top: 10px;
+    height: 60px;
+    font-size: 15px;
+    font-weight: 500;
+    align-content: center;
+    padding: 0 20px;
+}
+
+.paymentMethod {
+    background-color: #fff;
+    padding: 15px;
+    font-size: 14px;
+}
+
+.methodSelect {
+    margin-top: 10px;
+}
+
+.methodSelect div {
+    border: 1px solid #000;
+    height: 70px;
+    align-content: center;
+    padding-left: 20px;
+    border-bottom: 0px;
+}
+
+.methodSelect div:last-child {
+    border-bottom: 1px solid #000;
+}
+
+.methodSelect label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 30px;
+}
+
+.methodSelect label input[type="radio"] {
+    vertical-align: middle;
+}
+
+/* 결제 수단 끝*/
+
+/* 구매 조건 동의서 시작 */
+
+.purchaseAgreeWrap {
+    background-color: #fff;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.purchaseAgree {
+    background-color: #FAFAFD;
+    padding: 20px;
+    font-size: 15px;
+    line-height: 30px;
+}
+
+.purchaseAgree span a {
+    font-size: 13px;
+    color: #666;
+}
+
+.purchaseAgreeWrap h4 {
+    margin-top: 15px;
+    font-weight: 500;
+    text-align: center;
+}
+/* 구매 조건 동의서 끝 */
+
+/* 구매하기 버튼 시작*/
+
+.purchaseButton {
+    background-color: #000;
+    text-align: center;
+    color: #f6f6f6;
+    font-weight: bold;
+    height: 50px;
+    align-content: center;
+    cursor: pointer;
+}
+/* 구매하기 버튼 끝 */
+
+/* 푸터 시작 */
+.footer {
+    background-color: #FAFAFD;
+    padding: 25px;
+    font-size: 12px;
+    color: #666;
+}
+
+.footer p::before {
+    content: "-";
+    margin-right: 6px;
+}
+/* 푸터 끝*/
+
+/* 결제 페이지 섹션 끝*/
