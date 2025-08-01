@@ -10,10 +10,12 @@ SELECT
   m.customer_name      AS receiver,
   m.phone_number       AS phoneNumber,
   m.zipcode || ' ' || m.addr1 || ' ' || NVL(m.addr2, '') AS address,
-  o.orders_id           AS ordersId,
+  o.id          AS ordersId,
+  op.order_status       AS orderStatus,
   TO_CHAR(o.order_date, 'YYYY-MM-DD') AS orderDate,
   p.product_name       AS productName,
-  p.product_price      AS productPrice
+  p.product_price      AS productPrice,
+  op.quantity          AS quantity
 FROM
   orders_product op
 JOIN orders o ON op.orders_id = o.id
@@ -21,8 +23,33 @@ JOIN product p ON op.product_id = p.id
 JOIN member m ON op.user_id = m.id
 WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
   AND m.customer_id = #{customerId}
+  AND op.order_status NOT IN ('환불완료', '교환완료','환불신청중','교환신청중')
 ORDER BY o.order_date DESC, o.orders_id
 </select>
+
+  <!-- 취소/반품/교환 완료 주문 조회 -->
+  <select id="selectCanceledOrdersByCustomerId" resultType="com.myrium.domain.OrderDTO" parameterType="String">
+    SELECT
+      m.customer_id        AS customerId,
+      m.customer_name      AS receiver,
+      m.phone_number       AS phoneNumber,
+      m.zipcode || ' ' || m.addr1 || ' ' || NVL(m.addr2, '') AS address,
+      o.orders_id          AS ordersId,
+      TO_CHAR(o.order_date, 'YYYY-MM-DD') AS orderDate,
+      p.product_name       AS productName,
+      p.product_price      AS productPrice,
+      op.quantity          AS quantity,
+      op.order_status       AS orderStatus
+    FROM
+      orders_product op
+    JOIN orders o ON op.orders_id = o.id
+    JOIN product p ON op.product_id = p.id
+    JOIN member m ON op.user_id = m.id
+    WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
+      AND m.customer_id = #{customerId}
+      AND op.order_status IN ('환불완료', '교환완료','환불신청중','환불신청중')
+    ORDER BY o.order_date DESC, o.orders_id
+  </select>
 
 
 </mapper>

@@ -25,7 +25,7 @@
 			<div class="sidebar-section">
 				<p>쇼핑 정보</p>
 				<ul>
-					<li>주문내역 조회</li>
+					<li><a href="${pageContext.request.contextPath}/mypage/order-history">주문내역 조회</a></li>
 				</ul>
 			</div>
 			<div class="sidebar-section">
