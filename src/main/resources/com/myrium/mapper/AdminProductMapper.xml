@@ -65,9 +65,35 @@
     ORDER BY product_id DESC
   </select>  -->
     	
-  <select id="getProductList" resultMap="productMap">
-  	select * from product
-  </select>
+	<select id="getProductList" resultMap="productMap">
+	    SELECT * FROM product p
+	    WHERE 1 = 1
+	    <if test="cri.category != '' and cri.category != null">
+	        AND EXISTS (
+	            SELECT 1 FROM category c
+	            WHERE c.product_id = p.id
+	            <choose>
+	                <when test="cri.category == '원예용품'">AND c.gardening = 1</when>
+	                <when test="cri.category == '식물키트모음'">AND c.plantkit = 1</when>
+	                <when test="cri.category == '허브키우기'">AND c.hurb = 1</when>
+	                <when test="cri.category == '채소키우기'">AND c.vegetable = 1</when>
+	                <when test="cri.category == '꽃씨키우기'">AND c.flower = 1</when>
+	                <when test="cri.category == '기타키우기키트'">AND c.etc = 1</when>
+	            </choose>
+	        )
+	    </if>
+	    <if test="cri.is_discount != -1">
+		    AND is_discount = #{cri.is_discount}
+		</if>
+		
+		<if test="cri.is_timeSales != -1">
+		    AND is_timesales = #{cri.is_timesales}
+		</if>
+		
+		<if test="cri.is_deleted != -1">
+		    AND is_deleted = #{cri.is_deleted}
+		</if>
+	</select>
 	
   <select id="getCategoryList" resultMap="categoryMap">
 	select * from category where product_id = ${id}

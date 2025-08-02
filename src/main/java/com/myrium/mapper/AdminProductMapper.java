@@ -40,7 +40,7 @@ public interface AdminProductMapper {
 	
 	public void updateReadCnt(Long id);
 	
-	public List<ProductVO> getProductList();
+	public List<ProductVO> getProductList(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);
 
 	public CategoryVO getCategoryList(int id);
 

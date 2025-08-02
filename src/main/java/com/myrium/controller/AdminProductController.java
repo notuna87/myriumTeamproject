@@ -50,7 +50,7 @@ public class AdminProductController {
 	    boolean isAdmin = authentication.getAuthorities().stream()
 	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));		
 		
-		List<ProductDTO> list = service.getCategoryList(cri, isAdmin);
+		List<ProductDTO> list = service.getProductListWithCategory(cri, isAdmin);
 		
 		log.info(list);
 		model.addAttribute("list", list);

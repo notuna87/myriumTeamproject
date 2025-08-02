@@ -35,5 +35,5 @@ public interface AdminProductService {
 
 	   public void incrementReadCnt(Long id);
 
-	   public List<ProductDTO> getCategoryList(Criteria cri, boolean isAdmin);
+	   public List<ProductDTO> getProductListWithCategory(Criteria cri, boolean isAdmin);
 }

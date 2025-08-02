@@ -104,8 +104,8 @@ public class AdminProductServiceImpl implements AdminProductService{
 
 	// 카테고리 및 상품 리스트
 	@Override
-	public List<ProductDTO> getCategoryList(Criteria cri, boolean isAdmin) {
-		List<ProductVO> productList = mapper.getProductList();
+	public List<ProductDTO> getProductListWithCategory(Criteria cri, boolean isAdmin) {
+		List<ProductVO> productList = mapper.getProductList(cri, isAdmin);
 		List<ProductDTO> productDTO = new ArrayList<>();
 		
 		for (ProductVO product : productList) {

@@ -7,6 +7,13 @@
 <%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp"%>
 
+<style>
+  .category-label {
+    display: inline-block;
+    margin: 1px;
+  }
+</style>
+
 <!-- 뒤로가기 시 조회수 증가를 위해 새로고침 -->
 <!-- 한 세션에서 여러번 조회수 늘릴수 있음 : 세션 당 조회수 중복 방지 적용 안됨 -> 구현과제 -->
 <script>
@@ -40,7 +47,7 @@
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					    <!-- 필터링 섹션 -->
-				    <form action="/product/list" method="get" class="form-inline mb-3">
+				    <form action="/product/list" method="get" class="form-inline" style="margin-bottom:10px;">
 				        <!-- <select name="category" class="form-control">
 				            <option value="">카테고리</option>
 				            <c:forEach var="cat" items="${categories}">
@@ -48,30 +55,32 @@
 				            </c:forEach>
 				        </select> -->
 				        <select name="category" class="form-control">
-						    <option value="">카테고리</option>
+						    <option value= "">카테고리</option>
 						    <option value="원예용품" <c:if test="${param.category == '원예용품'}">selected</c:if>>원예용품</option>
 						    <option value="식물키트모음" <c:if test="${param.category == '식물키트모음'}">selected</c:if>>식물키트모음</option>
-						    <option value="허브 키우기" <c:if test="${param.category == '허브 키우기'}">selected</c:if>>허브 키우기</option>
+						    <option value="허브키우기" <c:if test="${param.category == '허브키우기'}">selected</c:if>>허브키우기</option>
 						    <option value="채소키우기" <c:if test="${param.category == '채소키우기'}">selected</c:if>>채소키우기</option>
-						    <option value="꽃시키우기" <c:if test="${param.category == '꽃시키우기'}">selected</c:if>>꽃시키우기</option>
-						    <option value="기타 키우기키트" <c:if test="${param.category == '기타 키우기키트'}">selected</c:if>>기타 키우기키트</option>
+						    <option value="꽃씨키우기" <c:if test="${param.category == '꽃씨키우기'}">selected</c:if>>꽃씨키우기</option>
+						    <option value="기타키우기키트" <c:if test="${param.category == '기타키우기키트'}">selected</c:if>>기타키우기키트</option>
 						</select>
-				        <select name="discounted" class="form-control">
-				            <option value="">일반할인여부</option>
-				            <option value="true">Y</option>
-				            <option value="false">N</option>
+				        <select name="is_discount" class="form-control">
+				            <option value= -1>일반할인여부</option>
+				            <option value= 1 <c:if test="${param.is_discount == 1}">selected</c:if>>할인중</option>
+				            <option value= 0 <c:if test="${param.is_discount == 0}">selected</c:if>>없음</option>
 				        </select>
-				        <select name="timedeal" class="form-control">
-				            <option value="">타임세일여부</option>
-				            <option value="true">Y</option>
-				            <option value="false">N</option>
+				        <select name="is_timesales" class="form-control">
+				            <option value= -1>타임세일여부</option>
+				            <option value= 1 <c:if test="${param.is_timesales == 1}">selected</c:if>>할인중</option>
+				            <option value= 0 <c:if test="${param.is_timesales == 0}">selected</c:if>>없음</option>
 				        </select>
-				        <select name="visible" class="form-control">
-				            <option value="">노출여부</option>
-				            <option value="true">Y</option>
-				            <option value="false">N</option>
+				        <select name="is_deleted" class="form-control">
+				            <option value= -1>노출여부</option>
+				            <option value= 0 <c:if test="${param.is_deleted == 0}">selected</c:if>>노출</option>
+				            <option value= 1 <c:if test="${param.is_deleted == 1}">selected</c:if>>비노출</option>
 				        </select>
 				        <button type="submit" class="btn btn-primary">필터</button>
+				        <button type="button" class="btn btn-default" onclick="location.href='/product/list'">필터 초기화</button>
+
 				    </form>
 				
 				    <!-- 상품 테이블 -->
@@ -96,24 +105,30 @@
 				            <c:forEach items="${list}" var="product">
 				                <tr>
 				                    <td class="text-center">${product.product.id}</td>
-				                    <td class="text-center">${product.category}</td>
+									<td class="text-center">
+									    <div class="d-flex flex-wrap justify-content-center">
+									        <c:forEach var="tag" items="${product.category.categoryTags}">
+									            <span class="label label-default category-label">${tag}</span>
+									        </c:forEach>
+									    </div>
+									</td>
 				                    <td class="text-left">${product.product.product_name}</td>
-				                    <td class="text-right">stock</td>
+				                    <td class="text-right">${product.product.product_stock}</td>
 				                    <td class="text-right"><fmt:formatNumber value="${product.product.product_price}" pattern="#.##"/></td>
 				                    <td class="text-right"><fmt:formatNumber value="${product.product.discount_price}" pattern="#.##"/></td>
-				                    <td class="text-center">${product.product.is_discount ==1 ? 'Y' : 'N'}</td>
+				                    <td class="text-center">${product.product.is_discount ==1 ? '할인중' : '없음'}</td>
 				                    <td class="text-right">${product.product.discount_rate}%</td>
-				                    <td class="text-center">${product.product.is_timesales == 1 ? 'Y' : 'N'}</td>
+				                    <td class="text-center">${product.product.is_timesales == 1 ? '할인중' : '없음'}</td>
 				                    <td class="text-right">${product.product.timesalediscount_rate}%</td>
-				                    <td class="text-center">${product.product.is_deleted == 0 ? 'Y' : 'N'}</td>
+				                    <td class="text-center">${product.product.is_deleted == 0 ? '전시중' : '비노출'}</td>
 				                    <td>
 				                        <button class="btn btn-sm btn-primary" onclick="location.href='/product/edit?id=${product.product.id}'">수정</button>
 				                        <c:choose>
 				                            <c:when test="${product.product.is_deleted == 0}">
-				                                <button class="btn btn-sm btn-warning toggle-visibility" data-id="${product.product.id}" data-visible="false">미노출</button>
+				                                <button class="btn btn-sm btn-warning toggle-visibility" data-id="${product.product.id}" data-display="false">비노출</button>
 				                            </c:when>
 				                            <c:otherwise>
-				                                <button class="btn btn-sm btn-success toggle-visibility" data-id="${product.product.id}" data-visible="true">복구</button>
+				                                <button class="btn btn-sm btn-success toggle-visibility" data-id="${product.product.id}" data-display="true">전시복구</button>
 				                            </c:otherwise>
 				                        </c:choose>
 				                        <button class="btn btn-sm btn-danger delete-product" data-id="${product.product.id}">삭제</button>
@@ -127,7 +142,7 @@
 					<!-- 검색조건 -->
 					<div class='row'>
 						<div class="col-lg-12">
-							<form id='searchForm' action="/notice/list" method='get'>
+							<form id='searchForm' action="/product/list" method='get'>
 								<select name='type'>
 									<option value="" <c:out value="${pageMaker.cri.type == null?'selected':''}"/>>선택하세요</option>
 									<option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':''}"/>>제목</option>
@@ -174,7 +189,7 @@
 					</div>
 					<!-- end 페이지 처리 -->
 
-					<form id='actionForm' action="/notice/list" method='get'>
+					<form id='actionForm' action="/product/list" method='get'>
 						<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'> <input
 							type='hidden' name='amount' value='${pageMaker.cri.amount}'> <input type='hidden'
 							name='type' value='${pageMaker.cri.type}'> <input type='hidden' name='keyword'
@@ -234,7 +249,7 @@ $(document).ready(function(){
 	}
 	
 	$("#regBtn").on("click",function(){
-		self.location = "/notice/register";
+		self.location = "/product/register";
 	})
 	
 	var actionForm = $("#actionForm");
@@ -256,7 +271,7 @@ $(document).ready(function(){
 		actionForm.find("input[name='id']").remove(); //뒤로가기 후 기존 파라미터 누적문제 해결
 		
 		actionForm.append("<input type='hidden' name='id' value='" + $(this).attr("href") + "'>");
-		actionForm.attr("action","/notice/get");
+		actionForm.attr("action","/product/get");
 		actionForm.submit();
 	});
 	
@@ -282,7 +297,7 @@ $(document).ready(function(){
 	// 관리자용 버튼 이벤트
 	$(document).on("click", ".edit-btn", function () {
 	    const id = $(this).data("id");
-	    window.location.href = "/notice/modify?id=" + id;
+	    window.location.href = "/product/modify?id=" + id;
 	});
 
 	$(document).on("click", ".harddel-btn", function () {
@@ -290,7 +305,7 @@ $(document).ready(function(){
 	    if (confirm("삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
 	        $.ajax({
 	            type: "post",
-	            url: "/notice/harddel",
+	            url: "/product/harddel",
 	            data: { id: id },
 	            success: function () {
 	                location.reload();
@@ -307,7 +322,7 @@ $(document).ready(function(){
 	    if (confirm("글이 노출되지 않습니다. 정말 하시겠습니까?")) {
 	        $.ajax({
 	            type: "post",
-	            url: "/notice/softdel",
+	            url: "/product/softdel",
 	            data: { id: id },
 	            success: function () {
 	                location.reload();
@@ -324,7 +339,7 @@ $(document).ready(function(){
 	    if (confirm("복구하시겠습니까?")) {
 	        $.ajax({
 	            type: "post",
-	            url: "/notice/restore",
+	            url: "/product/restore",
 	            data: { id: id },
 	            success: function () {
 	                location.reload();
@@ -335,7 +350,6 @@ $(document).ready(function(){
 	        });
 	    }
 	});
-	
     
 });
 </script>
