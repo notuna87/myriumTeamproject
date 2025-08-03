@@ -13,4 +13,6 @@ public interface OrderMapper {
 	 List<Map<String, Object>> countOrdersByStatus(String customerId);
 	 
 	 int getTotalPaidOrderAmount(String customerId);
+	 
+	 List<OrderDTO> findOrderDetailById(Long orderId);
 }

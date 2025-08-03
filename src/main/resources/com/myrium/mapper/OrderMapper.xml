@@ -83,4 +83,22 @@ ORDER BY o.order_date DESC, o.orders_id
     AND op.order_status IN ('배송준비중', '배송중', '배송완료')
     AND o.order_date >= ADD_MONTHS(SYSDATE, -3)
 </select>
+
+
+<!-- 주문상세내역 -->
+<select id="findOrderDetailById" parameterType="long" resultType="com.myrium.domain.OrderDTO">
+  SELECT
+    o.id AS id,                         
+    TO_CHAR(o.order_date, 'yyyy-MM-dd') AS orderDate, 
+    op.orders_id AS ordersId,      
+    op.quantity,
+    op.order_status AS orderStatus,
+    p.product_name,
+    p.product_price
+  FROM
+    orders o
+  JOIN orders_product op ON o.id = op.orders_id
+  JOIN product p ON op.product_id = p.id
+  WHERE o.id = #{orderId}
+</select>
 </mapper>

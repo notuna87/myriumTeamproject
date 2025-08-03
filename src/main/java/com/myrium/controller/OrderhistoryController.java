@@ -29,10 +29,10 @@ public class OrderhistoryController {
 	@Autowired
 	private OrderService orderService;
 	
-	@GetMapping("/mypage/order_detail")
-	public String showOrderDetail() {
-	    return "mypage/order_detail"; 
-	}
+//	@GetMapping("/mypage/order_detail")
+//	public String showOrderDetail() {
+//	    return "mypage/order_detail"; 
+//	}
 	
 
 }

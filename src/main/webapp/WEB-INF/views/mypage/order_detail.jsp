@@ -1,4 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,28 +60,30 @@
 		<div class="order-detail-wrap">
 			<h2 class="page-title">주문상세조회</h2>
 
-			<!-- 주문정보 -->
-			<section class="section-box">
-				<h3 class="section-title">주문정보</h3>
-				<table class="info-table">
-					<tr>
-						<th>주문번호</th>
-						<td>20250717-0000041</td>
-					</tr>
-					<tr>
-						<th>주문일자</th>
-						<td>2025-07-17 09:59:20</td>
-					</tr>
-					<tr>
-						<th>주문자</th>
-						<td>고나영</td>
-					</tr>
-					<tr>
-						<th>주문처리상태</th>
-						<td>구매확정</td>
-					</tr>
-				</table>
-			</section>
+		
+		<!-- 주문정보 -->
+		<section class="section-box">
+		  <h3 class="section-title">주문정보</h3>
+		  <table class="info-table">
+			<tr>
+			  <th>주문번호</th>
+			  <td>${firstOrder.orderDisplayId}</td>
+			</tr>
+			<tr>
+			  <th>주문일자</th>
+			  <td><c:out value="${firstOrder.orderDate}" default="날짜 없음" /></td>
+			</tr>
+			<tr>
+			  <th>주문자</th>
+			  <td>${customerName}</td>
+			</tr>
+			<tr>
+			  <th>주문처리상태</th>
+			  <td>${orders[0].orderStatus}</td>
+			</tr>
+		  </table>
+		</section>
+
 
 			<!-- 결제정보 -->
 			<section class="section-box">
