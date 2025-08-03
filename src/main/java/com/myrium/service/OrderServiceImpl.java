@@ -31,4 +31,9 @@ public class OrderServiceImpl implements OrderService {
     public List<Map<String, Object>> countOrdersByStatus(String customerId) {
         return orderMapper.countOrdersByStatus(customerId);
     }
+    
+    @Override
+    public int getTotalPaidOrderAmount(String customerId) {
+        return orderMapper.getTotalPaidOrderAmount(customerId);
+    }
 }

@@ -12,4 +12,7 @@ public interface OrderService {
 	  List<OrderDTO> getCanceledOrdersByCustomerId(String customerId);
 	  
 	  List<Map<String, Object>> countOrdersByStatus(String customerId);
+	  
+	  int getTotalPaidOrderAmount(String customerId);
+
 }

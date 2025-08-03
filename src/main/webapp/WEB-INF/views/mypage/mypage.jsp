@@ -68,14 +68,9 @@
         </div>
         <div class="info-box">
         <img src="${pageContext.request.contextPath}/resources/img/mypage/check.png" alt="총주문 아이콘" class="info-icon"/>
-          7,800원(1회)<br><span>총주문</span>
+         <fmt:formatNumber value="${totalPaidAmount}" type="number" />원<span>총주문</span>
         </div>
       </div>
-
-      <section class="order-status-section">
-        <h3 class="order-status-title">
-          나의 주문처리 현황 <span class="subtitle">(최근 3개월 기준)</span>
-        </h3>
       
       <c:set var="statusMap" value="${orderStatusMap}" />
 <section class="order-status-section">
