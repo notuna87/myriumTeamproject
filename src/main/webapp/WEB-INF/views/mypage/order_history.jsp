@@ -77,7 +77,7 @@
 	        <!-- 주문 상단 정보 -->
 	        <div class="order-header">
 	          <div class="order-date">
-	            <strong>${orders[0].orderDate}</strong> <span>(${ordersId})</span>
+	            <strong>${orders[0].orderDate}</strong> <span>(${orders[0].orderDisplayId})</span>
 	          </div>
 	          <a href="${pageContext.request.contextPath}/mypage/order_detail" class="detail-link">상세보기 &gt;</a>
 	        </div>
@@ -131,7 +131,7 @@
 	        <!-- 주문 정보 상단 -->
 	        <div class="order-header">
 	          <div class="order-date">
-	            <strong>${orders[0].orderDate}</strong> <span>(${ordersId})</span>
+	            <strong>${orders[0].orderDate}</strong> <span>(${orders[0].orderDisplayId})</span>
 	          </div>
 	          <a href="${pageContext.request.contextPath}/mypage/order_detail" class="detail-link">상세보기 &gt;</a>
 	        </div>
