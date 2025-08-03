@@ -14,5 +14,7 @@ public interface OrderService {
 	  List<Map<String, Object>> countOrdersByStatus(String customerId);
 	  
 	  int getTotalPaidOrderAmount(String customerId);
+	  
+	  List<OrderDTO> getOrderDetail(Long orderId);
 
 }

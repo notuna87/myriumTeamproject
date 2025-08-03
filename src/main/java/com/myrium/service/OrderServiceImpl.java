@@ -36,4 +36,9 @@ public class OrderServiceImpl implements OrderService {
     public int getTotalPaidOrderAmount(String customerId) {
         return orderMapper.getTotalPaidOrderAmount(customerId);
     }
+    
+    @Override
+    public List<OrderDTO> getOrderDetail(Long orderId) {
+        return orderMapper.findOrderDetailById(orderId);
+    }
 }
