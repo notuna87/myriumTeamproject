@@ -62,8 +62,25 @@ ORDER BY o.order_date DESC, o.orders_id
   JOIN member m ON o.user_id = m.id
   WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
     AND m.customer_id = #{customerId}
+    AND TRIM(op.order_status) IN ('입금전', '배송준비중', '배송중', '배송완료')
+    AND o.order_date >= ADD_MONTHS(SYSDATE, -3)
+  GROUP BY TRIM(op.order_status)
+</select>
+
+
+
+<!-- 마이페이지 총주문 금액합산 -->
+<select id="getTotalPaidOrderAmount" parameterType="String" resultType="int">
+  SELECT
+    NVL(SUM(op.quantity * NVL(p.product_price, 0)), 0)
+  FROM
+    orders_product op
+  JOIN orders o ON op.orders_id = o.id
+  JOIN member m ON o.user_id = m.id
+  LEFT JOIN product p ON op.product_id = p.id
+  WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
+    AND m.customer_id = #{customerId}
     AND op.order_status IN ('배송준비중', '배송중', '배송완료')
     AND o.order_date >= ADD_MONTHS(SYSDATE, -3)
-  GROUP BY op.order_status
 </select>
 </mapper>

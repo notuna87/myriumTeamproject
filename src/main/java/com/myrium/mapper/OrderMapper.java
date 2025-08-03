@@ -11,5 +11,6 @@ public interface OrderMapper {
 	 List<OrderDTO> selectCanceledOrdersByCustomerId(String customerId);
 	 
 	 List<Map<String, Object>> countOrdersByStatus(String customerId);
-
+	 
+	 int getTotalPaidOrderAmount(String customerId);
 }

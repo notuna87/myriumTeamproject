@@ -108,13 +108,15 @@ public class MypageController {
 
         for (Map<String, Object> row : statusCounts) {
             String status = (String) row.get("ORDER_STATUS");
-
             Object countObj = row.get("COUNT");
+
+            log.info("===> 상태 원본 값: [" + status + "]");
+            log.info("===> 카운트 원본 값: " + countObj);
+
             int count = 0;
 
             if (countObj instanceof BigDecimal) {
                 count = ((BigDecimal) countObj).intValue();
-                log.info(">>> 상태: " + status + ", 개수: " + count);
             } else if (countObj instanceof Integer) {
                 count = (Integer) countObj;
             } else if (countObj != null) {
@@ -125,12 +127,21 @@ public class MypageController {
                 }
             }
 
-            if (status != null) {
-                status = status.trim().replaceAll("\\s+", ""); // ← 이 줄 추가
-                log.info(">> 정리된 상태명: " + status);           // ← 로그도 찍어보면 좋음
+            if (status != null && statusMap.containsKey(status)) {
                 statusMap.put(status, count);
+            } else {
+                log.warn("예상치 못한 상태값: " + status);
             }
+
+            log.info(">> 정리된 상태명: " + status + ", 최종 개수: " + count);
         }
+
+        
+        //총주문금액
+        int totalPaidAmount = orderService.getTotalPaidOrderAmount(customerId);
+        log.info("총주문 금액: " + totalPaidAmount);
+
+        model.addAttribute("totalPaidAmount", totalPaidAmount);
 
  
         model.addAttribute("orderStatusMap", statusMap);
