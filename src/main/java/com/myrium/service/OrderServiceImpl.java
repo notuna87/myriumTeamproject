@@ -1,6 +1,7 @@
 package com.myrium.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDTO> getCanceledOrdersByCustomerId(String customerId) {
         return orderMapper.selectCanceledOrdersByCustomerId(customerId);
+    }
+    
+    @Override
+    public List<Map<String, Object>> countOrdersByStatus(String customerId) {
+        return orderMapper.countOrdersByStatus(customerId);
     }
 }

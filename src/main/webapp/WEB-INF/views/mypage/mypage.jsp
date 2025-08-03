@@ -77,29 +77,42 @@
           나의 주문처리 현황 <span class="subtitle">(최근 3개월 기준)</span>
         </h3>
       
-        <div class="status-grid">
-          <div class="status-step">
-            <div class="count">0</div>
-            <div class="label">입금전</div>
-          </div>
-          <div class="arrow">&gt;</div>
-          <div class="status-step">
-            <div class="count">0</div>
-            <div class="label">배송준비중</div>
-          </div>
-          <div class="arrow">&gt;</div>
-          <div class="status-step">
-            <div class="count">0</div>
-            <div class="label">배송중</div>
-          </div>
-          <div class="arrow">&gt;</div>
-          <div class="status-step">
-            <div class="count">1</div>
-            <div class="label">배송완료</div>
-          </div>
-        </div>
-      </section>
+      <c:set var="statusMap" value="${orderStatusMap}" />
+<section class="order-status-section">
+  <h3 class="order-status-title">
+    나의 주문처리 현황 <span class="subtitle">(최근 3개월 기준)</span>
+  </h3>
 
+					<div class="status-grid">
+						<div class="status-step">
+							<div class="count">
+								<c:out value="${statusMap['입금전']}" default="0" />
+							</div>
+							<div class="label">입금전</div>
+						</div>
+						<div class="arrow">&gt;</div>
+						<div class="status-step">
+							<div class="count">
+								<c:out value="${statusMap['배송준비중']}" default="0" />
+							</div>
+							<div class="label">배송준비중</div>
+						</div>
+						<div class="arrow">&gt;</div>
+						<div class="status-step">
+							<div class="count">
+								<c:out value="${statusMap['배송중']}" default="0" />
+							</div>
+							<div class="label">배송중</div>
+						</div>
+						<div class="arrow">&gt;</div>
+						<div class="status-step">
+							<div class="count">
+								<c:out value="${statusMap['배송완료']}" default="0" />
+							</div>
+							<div class="label">배송완료</div>
+						</div>
+					</div>
+				</section>
 
    <section class="order-history">
   <h3>주문내역 조회</h3>
@@ -116,7 +129,7 @@
           <div class="order-header">
   <div class="order-date">
     <strong>${firstOrder.orderDate}</strong>
-    <span>${order.orderDisplayId}</span>
+    <span>(${firstOrder.orderDisplayId})</span>
   </div>
   <a href="${pageContext.request.contextPath}/mypage/order_detail?orderId=${ordersId}" class="detail-link">상세보기 &gt;</a>
 </div>
