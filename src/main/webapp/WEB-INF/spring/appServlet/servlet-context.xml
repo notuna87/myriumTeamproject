@@ -13,9 +13,12 @@
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
-
+	
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
+	
+	<!-- 로컬 이미지 저장소 추가 --> <!-- 동작하지 않음 : 검토 필요, 콘트롤러로 처리하여 사용 중 -->
+	<!-- <resources mapping="/upload/**" location="file:///C:/upload/" /> -->
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -31,7 +34,5 @@
 	
 	<!-- 메서드 보안 설정 -->
 	<security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled" />
-	
-	
 	
 </beans:beans>

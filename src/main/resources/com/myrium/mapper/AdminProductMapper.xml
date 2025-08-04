@@ -84,7 +84,7 @@
     ORDER BY product_id DESC
   </select>  -->
     	
-	<select id="getProductList" resultMap="productMap">
+	<!-- <select id="getProductList" resultMap="productMap">
 	    SELECT * FROM product p
 	    WHERE 1 = 1
 	    <if test="cri.category != '' and cri.category != null">
@@ -112,7 +112,71 @@
 		<if test="cri.is_deleted != -1">
 		    AND is_deleted = #{cri.is_deleted}
 		</if>
-	</select>
+	</select> -->
+	
+	
+<select id="getProductList" resultMap="productMap">
+  SELECT * FROM (
+    SELECT ROWNUM rn, inner_query.*
+    FROM (
+      SELECT *
+      FROM product p
+      WHERE 1 = 1
+
+        <!-- 카테고리 필터 -->
+        <if test="cri.category != null and cri.category != ''">
+          AND EXISTS (
+            SELECT 1 FROM category c
+            WHERE c.product_id = p.id
+            <choose>
+              <when test="cri.category == '원예용품'">AND c.gardening = 1</when>
+              <when test="cri.category == '식물키트모음'">AND c.plantkit = 1</when>
+              <when test="cri.category == '허브키우기'">AND c.hurb = 1</when>
+              <when test="cri.category == '채소키우기'">AND c.vegetable = 1</when>
+              <when test="cri.category == '꽃씨키우기'">AND c.flower = 1</when>
+              <when test="cri.category == '기타키우기키트'">AND c.etc = 1</when>
+            </choose>
+          )
+        </if>
+
+        <!-- 할인, 타임세일, 삭제여부 -->
+        <if test="cri.is_discount != -1">
+          AND is_discount = #{cri.is_discount}
+        </if>
+        <if test="cri.is_timeSales != -1">
+          AND is_timesales = #{cri.is_timesales}
+        </if>
+        <if test="cri.is_deleted != -1">
+          AND is_deleted = #{cri.is_deleted}
+        </if>
+
+        <!-- 검색 필터 (title, content, customer_id) -->
+        <if test="cri.keyword != null and cri.keyword != '' and cri.typeArr != null">
+          <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+            <foreach item="type" collection="cri.typeArr">
+              <choose>
+                <when test="type == 'T'">
+                  OR LOWER(p.title) LIKE '%' || LOWER(#{cri.keyword}) || '%'
+                </when>
+                <when test="type == 'C'">
+                  OR LOWER(p.product_content) LIKE '%' || LOWER(#{cri.keyword}) || '%'
+                </when>
+                <when test="type == 'W'">
+                  OR LOWER(p.customer_id) LIKE '%' || LOWER(#{cri.keyword}) || '%'
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+
+        <!-- 정렬 -->
+        ORDER BY p.id DESC
+
+    ) inner_query
+    WHERE ROWNUM &lt;= #{cri.pageNum} * #{cri.amount}
+  )
+  WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
+</select>
 	
   <select id="getCategoryList" resultMap="categoryMap">
 	select * from category where product_id = ${id}

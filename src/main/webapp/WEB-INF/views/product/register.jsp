@@ -65,10 +65,10 @@
 						    <label class="required">(※)카테고리</label>
 						    <div>
 						        <label class="radio-inline">
-						            <input type="checkbox" class="category" name="gardening" value="1" checked> 🪵 원예용품
+						            <input type="checkbox" class="category" name="gardening" value="1" checked> 🧰 원예용품
 						        </label>
 						        <label class="radio-inline">
-						            <input type="checkbox" class="category" name="plantkit" value="1"> 🪴 식물키트모음
+						            <input type="checkbox" class="category" name="plantkit" value="1"> 🌱 식물키트모음
 						        </label>
 						        <label class="radio-inline">
 						            <input type="checkbox" class="category" name="hurb" value="1"> 🌿 허브키우기
