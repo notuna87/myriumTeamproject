@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Param;
 import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
+import com.myrium.domain.ImgpathVO;
+import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 
 public interface AdminProductMapper {
@@ -19,30 +21,23 @@ public interface AdminProductMapper {
 	public int harddel(Long id); //하드(영구) 삭제
 	public int softdel(Long id); //소프트 삭제
 	public int restore(Long id); //복구
-	public int update(ProductVO product);
-	
-	public List<ProductVO> getListWithPaging(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);
-	
-	public int getTotalCount(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);
-	
-	public List<ProductVO> searchTest(Map<String, Map<String, String>> map);
-	
-	public void updateReadCnt(@Param("id") Long id, @Param("amount") int amount);
-	
+	public int update(ProductVO product);	
+	public List<ProductVO> getListWithPaging(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);	
+	public int getTotalCount(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);	
+	public List<ProductVO> searchTest(Map<String, Map<String, String>> map);	
+	public void updateReadCnt(@Param("id") Long id, @Param("amount") int amount);	
     // 파일 정보 저장
 	public void insertAttach(AttachFileDTO dto);
-
     // 해당 공지의 파일 목록 조회
-	public List<AttachFileDTO> findByProductId(Long productId);
-	
+	public List<ImgpathVO> findByProductId(Long productId);	
 	// 파일 정보 삭제
-	public int deleteAttachByUuid(String uuid);
-	
-	public void updateReadCnt(Long id);
-	
-	public List<ProductVO> getProductList();
-
+	public int deleteImgpathByUuid(String uuid);	
+	public void updateReadCnt(Long id);	
+	public List<ProductVO> getProductList(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);
 	public CategoryVO getCategoryList(int id);
+	public ImgpathVO getImgPathList(int id);
+	public void insertCategory(CategoryVO cat);
+	public void insertImgpath(ImgpathVO imgVO);
 
 
 

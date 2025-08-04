@@ -21,12 +21,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myrium.domain.AttachFileDTO;
+import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
+import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.PageDTO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 import com.myrium.service.AdminProductService;
-import com.myrium.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -50,7 +51,7 @@ public class AdminProductController {
 	    boolean isAdmin = authentication.getAuthorities().stream()
 	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));		
 		
-		List<ProductDTO> list = service.getCategoryList(cri, isAdmin);
+		List<ProductDTO> list = service.getProductListWithCategory(cri, isAdmin);
 		
 		log.info(list);
 		model.addAttribute("list", list);
@@ -84,10 +85,13 @@ public class AdminProductController {
 	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/register")
-	public String register(ProductVO vo,
+	public String register(ProductVO vo, 
+						   CategoryVO cat,
 	                       @RequestParam("attachList") String attachListJson,
 	                       RedirectAttributes rttr) {
 		log.info("(product) register......." + vo);
+		log.info("(product) register......." + cat);
+		log.info("(product) register......." + attachListJson);
 
 	    // 1. JSON 파싱
 	    ObjectMapper mapper = new ObjectMapper();
@@ -98,26 +102,38 @@ public class AdminProductController {
 	        e.printStackTrace();
 	    }
 	    
-	    // hasFiles 설정
-//	    vo.setHasFiles((attachList != null && !attachList.isEmpty()) ? 1 : 0);
-	    // 2. 공지사항 저장
+	    // 2. 상품 등록
 	    service.register(vo);
 	    
-	    // 3. 첨부파일 목록 저장
-//	    if (attachList != null && !attachList.isEmpty()) {
-//	        for (AttachFileDTO dto : attachList) {
-//	            dto.setUserId(vo.getUserId()); // NotiveVO 에서 가져옴
-//	            dto.setProductId(vo.getId());
-//	            dto.setCustomerId(vo.getCustomerId());
-//	            dto.setCreatedBy(vo.getCustomerId());
-//	            dto.setUpdatedAt(vo.getUpdatedAt());
-//	            dto.setUpdatedBy(vo.getUpdatedBy());
-//	            
-//	            log.info("(product) AttachFileDTO......." + dto);
-//
-//	            service.insertAttach(dto);
-//	        }
-//	    }
+	    // 3. 카테고리 등록
+	    cat.setProduct_id(vo.getId());
+	    service.insertCategory(cat);
+	    
+	    // 3. 이미지 경로(첨부파일) 등록
+	    if (attachList != null && !attachList.isEmpty()) {
+	        for (AttachFileDTO dto : attachList) {
+	            ImgpathVO imgVO = new ImgpathVO();
+
+	            imgVO.setProduct_id(vo.getId());
+	            imgVO.setImg_path(dto.getUploadPath() + "/" + dto.getUuid() + "_" + dto.getFileName());	            
+	            imgVO.setUuid(dto.getUuid());
+	            imgVO.setCreated_by(vo.getCreated_by());
+	            imgVO.setCreated_at(vo.getCreated_at());
+	            imgVO.setUpdated_by(vo.getUpdated_by());
+	            imgVO.setUpdated_at(vo.getUpdated_at());
+	            imgVO.setIs_thumbnail(dto.getIsThumbnail());
+	            imgVO.setIs_thumbnail_main(dto.getIsThumbnailMain());
+	            imgVO.setIs_detail(dto.getIsDetail());
+	            imgVO.setIs_deleted(0);
+	            
+	            if(dto.getIsThumbnail() == 1) {
+	            	imgVO.setImg_path_thumb(dto.getUploadPath() + "/" + "s_" + dto.getUuid() + "_" + dto.getFileName());
+	            }
+
+	            log.info("Saving ImgpathVO: " + imgVO);
+	            service.insertImgpath(imgVO);
+	        }
+	    }
 
 	    return "redirect:/product/list";
 	}
@@ -130,23 +146,27 @@ public class AdminProductController {
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping({"/get", "/modify"})
 	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) {
-		service.incrementReadCnt(id);  // 조회수 증가 로직 (추가)
+		//service.incrementReadCnt(id);  // 조회수 증가 로직 (추가)
 		model.addAttribute("product", service.get(id));
 		//model.addAttribute("attachFiles", productservice.findByProductId(id));
-		List<AttachFileDTO> attachFiles = service.findByProductId(id);
-		System.out.println("첨부파일 수: " + attachFiles.size()); // 디버깅
-		model.addAttribute("attachFiles", attachFiles);
+		//List<AttachFileDTO> attachFiles = service.findByProductId(id);
+		//System.out.println("첨부파일 수: " + attachFiles.size()); // 디버깅
+		//model.addAttribute("attachFiles", attachFiles);
 
 	}
 	
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
 	@PostMapping("/modify")
 	public String modify(ProductVO vo,
-			@RequestParam(value = "attachList", required = false) String attachListJson,
-			@RequestParam(value = "deleteFiles", required = false) String deleteFiles,
-			@ModelAttribute("cri") Criteria cri,
-			RedirectAttributes rttr) {
-		log.info("modify:" + vo);
+				CategoryVO cat,
+				@RequestParam(value = "attachList", required = false) String attachListJson,
+				@RequestParam(value = "deleteFiles", required = false) String deleteFiles,
+				@ModelAttribute("cri") Criteria cri,
+				RedirectAttributes rttr) {
+		
+		log.info("(product) modify......." + vo);
+		log.info("(product) modify......." + cat);
+		log.info("(product) modify......." + attachListJson);
 		
 	    // 1. JSON 파싱
 		ObjectMapper mapper = new ObjectMapper();
@@ -164,7 +184,7 @@ public class AdminProductController {
 	    if (deleteFiles != null && !deleteFiles.isEmpty()) {
 	        String[] uuids = deleteFiles.split(",");
 	        for (String uuid : uuids) {
-	            service.deleteAttachByUuid(uuid); // delete 쿼리 실행
+	            service.deleteImgpathByUuid(uuid); // delete 쿼리 실행
 	        }
 	    }
 		
@@ -173,30 +193,37 @@ public class AdminProductController {
 	    // 2. 공지사항 업데이트
 	    service.modify(vo);
 	    
-	    // 3. 첨부파일 목록 저장
-//	    if (attachList != null && !attachList.isEmpty()) {
-//	        for (AttachFileDTO dto : attachList) {
-//	            dto.setUserId(vo.getUserId()); // NotiveVO 에서 가져옴
-//	            dto.setProductId(vo.getId());
-//	            dto.setCustomerId(vo.getCustomerId());
-//	            dto.setCreatedBy(vo.getCustomerId());
-//	            dto.setUpdatedAt(vo.getUpdatedAt());
-//	            dto.setUpdatedBy(vo.getUpdatedBy());
-//	            
-//	            log.info("(product) AttachFileDTO......." + dto);
-//
-//	            service.insertAttach(dto);
-//	        }
-//	    }
-		if(service.modify(vo)) {
-			rttr.addFlashAttribute("result","success");
-		}
-		rttr.addAttribute("pageNum", cri.getPageNum());
-		rttr.addAttribute("amount", cri.getAmount());
-		rttr.addAttribute("type", cri.getType());
-		rttr.addAttribute("keyword", cri.getKeyword());
-		
-		return "redirect:/product/list";
+	    // 3. 카테고리 등록
+	    cat.setProduct_id(vo.getId());
+	    service.insertCategory(cat);
+	    
+	    // 3. 이미지 경로(첨부파일) 등록
+	    if (attachList != null && !attachList.isEmpty()) {
+	        for (AttachFileDTO dto : attachList) {
+	            ImgpathVO imgVO = new ImgpathVO();
+
+	            imgVO.setProduct_id(vo.getId());
+	            imgVO.setImg_path(dto.getUploadPath() + "/" + dto.getUuid() + "_" + dto.getFileName());	            
+	            imgVO.setUuid(dto.getUuid());
+	            imgVO.setCreated_by(vo.getCreated_by());
+	            imgVO.setCreated_at(vo.getCreated_at());
+	            imgVO.setUpdated_by(vo.getUpdated_by());
+	            imgVO.setUpdated_at(vo.getUpdated_at());
+	            imgVO.setIs_thumbnail(dto.getIsThumbnail());
+	            imgVO.setIs_thumbnail_main(dto.getIsThumbnailMain());
+	            imgVO.setIs_detail(dto.getIsDetail());
+	            imgVO.setIs_deleted(0);
+	            
+	            if(dto.getIsThumbnail() == 1) {
+	            	imgVO.setImg_path_thumb(dto.getUploadPath() + "/" + "s_" + dto.getUuid() + "_" + dto.getFileName());
+	            }
+
+	            log.info("Saving ImgpathVO: " + imgVO);
+	            service.insertImgpath(imgVO);
+	        }
+	    }
+
+	    return "redirect:/product/list";
 	}
 	
 	@Transactional
@@ -212,36 +239,36 @@ public class AdminProductController {
 	    try {
 	    	ProductVO product = service.get(id);
 	        if (product == null) {
-	            rttr.addFlashAttribute("error", "존재하지 않는 게시글입니다.");
+	            rttr.addFlashAttribute("error", "존재하지 않는 상품입니다.");
 	            return "redirect:/product/list";
 	        }
 
-	        List<AttachFileDTO> attachList = service.findByProductId(id);
+	        List<ImgpathVO> imgpathList = service.findByProductId(id);
 
-	        for (AttachFileDTO file : attachList) {
+	        for (ImgpathVO file : imgpathList) {
 	            String baseDir = "C:/upload/";
-	            String filePath = baseDir + "/" + file.getUuid() + "_" + file.getFileName();
-	            File target = new File(filePath);
+	            String exist_thumb = file.getImg_path_thumb();
+	            String filePath_original = baseDir + file.getImg_path();
+	            String filePath_thumb = baseDir + file.getImg_path_thumb();
+	            
+	            File target_original = new File(filePath_original);
+	            File target_thumb = new File(filePath_thumb);
 
-	            if (target.exists() && !target.delete()) {
-	                log.warn("파일 삭제 실패: " + filePath);
+	            if (target_original.exists() && !target_original.delete()) {
+	                log.warn("원본이미지 파일 삭제 실패: " + filePath_original);
+	            }
+	            if (exist_thumb != null && !exist_thumb.isEmpty() && target_thumb.exists() && !target_thumb.delete()) {
+	                log.warn("썸네일이미지 파일 삭제 실패: " + filePath_thumb);
 	            }
 
-	            if (file.getImage() == 1) {
-	                File thumb = new File(baseDir + file.getUploadPath() + "/s_" + file.getUuid() + "_" + file.getFileName());
-	                if (thumb.exists() && !thumb.delete()) {
-	                    log.warn("썸네일 삭제 실패: " + thumb.getPath());
-	                }
-	            }
-
-	            // DB 첨부파일 삭제 (항상 실행)
-	            service.deleteAttachByUuid(file.getUuid());
+	            // DB img_path 삭제 (fk : product_id) 상품삭제 시 연동 삭제
+	            //service.deleteImgpathByUuid(file.getUuid());
 	        }
 
 	        if (service.harddel(id)) {
 	            rttr.addFlashAttribute("result", "success");
 	        } else {
-	            rttr.addFlashAttribute("error", "게시글 삭제 실패");
+	            rttr.addFlashAttribute("error", "상품 삭제 실패");
 	        }
 
 	    } catch (Exception e) {
@@ -260,9 +287,9 @@ public class AdminProductController {
 
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
 	@PostMapping("/softdel")
-	public String softdel(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
-		log.info("product softdelete..." + id);
-		if(service.softdel(id)) {
+	public String softdel(@RequestParam("id") Long productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
+		log.info("product softdelete..." + productId);
+		if(service.softdel(productId)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		
@@ -276,9 +303,9 @@ public class AdminProductController {
 
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
 	@PostMapping("/restore")
-	public String restore(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
-		log.info("product restore..." + id);
-		if(service.restore(id)) {
+	public String restore(@RequestParam("id") Long productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
+		log.info("product restore..." + productId);
+		if(service.restore(productId)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		

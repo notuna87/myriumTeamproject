@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
+import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 import com.myrium.mapper.AdminProductMapper;
@@ -88,13 +89,13 @@ public class AdminProductServiceImpl implements AdminProductService{
 	}
 	
     @Override
-    public List<AttachFileDTO> findByProductId(Long productId) {
+    public List<ImgpathVO> findByProductId(Long productId) {
         return mapper.findByProductId(productId);
     }
     
     @Override
-    public int deleteAttachByUuid(String uuid) {
-        return mapper.deleteAttachByUuid(uuid);
+    public int deleteImgpathByUuid(String uuid) {
+        return mapper.deleteImgpathByUuid(uuid);
     }
     
     @Override    
@@ -104,18 +105,30 @@ public class AdminProductServiceImpl implements AdminProductService{
 
 	// 카테고리 및 상품 리스트
 	@Override
-	public List<ProductDTO> getCategoryList(Criteria cri, boolean isAdmin) {
-		List<ProductVO> productList = mapper.getProductList();
-		List<ProductDTO> productDTO = new ArrayList<>();
-		
+	public List<ProductDTO> getProductListWithCategory(Criteria cri, boolean isAdmin) {
+		List<ProductVO> productList = mapper.getProductList(cri, isAdmin);
+		List<ProductDTO> productDTO = new ArrayList<>();		
 		for (ProductVO product : productList) {
 			CategoryVO category = mapper.getCategoryList(product.getId());
+			ImgpathVO imgpath = mapper.getImgPathList(product.getId());
 			ProductDTO dto = new ProductDTO();
 			dto.setProduct(product);
+			dto.setThumbnail(imgpath);
 			dto.setCategory(category);
 			productDTO.add(dto);
 		}
 		return productDTO;
 	}
+
+	@Override
+	public void insertCategory(CategoryVO cat) {
+		mapper.insertCategory(cat);		
+	}
+	
+	@Override
+	public void insertImgpath(ImgpathVO imgVO) {
+		mapper.insertImgpath(imgVO);		
+	}	
+	
 	
 }

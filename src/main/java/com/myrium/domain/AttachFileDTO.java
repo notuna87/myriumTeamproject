@@ -13,6 +13,9 @@ public class AttachFileDTO {
 	private String uploadPath;
 	private String uuid;
 	private int image;
+	private int isThumbnail;
+	private int isThumbnailMain;
+	private int isDetail;
 	private String customerId;
 	private Date uploadDate;
 	private Date createdAt;

@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,9 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Controller
 @Log4j
 public class UploadController {
-	
+
 	@Autowired
 	private NoticeService noticeService;
-	
 
 	@PostMapping("/uploadFormAction")
 	public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
@@ -63,77 +63,90 @@ public class UploadController {
 
 	@PostMapping(value = "/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(MultipartFile[] uploadFile) {
+	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(
+	        @RequestParam(required = false, defaultValue = "File") String type,
+	        @RequestParam("uploadFile") MultipartFile[] uploadFile,
+	        @RequestParam Map<String, String> params
+	) {
+	    List<AttachFileDTO> list = new ArrayList<>();
+	    String baseFolder = "C:\\upload";
+	    String dateFolder = getFolder(); // 예: 2025/08/02
+	    String subFolder;
 
-		List<AttachFileDTO> list = new ArrayList<AttachFileDTO>();
+	    // 타입별 하위경로 결정
+	    if (type.equalsIgnoreCase("thumbnail")) {
+	        subFolder = "product/img/thumbnail";
+	    } else if (type.equalsIgnoreCase("detail")) {
+	        subFolder = "product/img/detail";
+	    } else {
+	        subFolder = "file"; // file 또는 기타
+	    }
 
-		log.info("update ajax post.........");
+	    File uploadPath = new File(baseFolder, subFolder + "/" + dateFolder);
+	    if (!uploadPath.exists()) {
+	        uploadPath.mkdirs();
+	    }
 
-		String uploadFolder = "C:\\upload";
+	    for (int i = 0; i < uploadFile.length; i++) {
+	        MultipartFile multipartFile = uploadFile[i];
+	        String originalFilename = multipartFile.getOriginalFilename();
+	        if (originalFilename == null) continue;
 
-		File uploadPath = new File(uploadFolder, getFolder()); // C:\\upload\2024\02\12
-		log.info("upload path : " + uploadPath);
+	        originalFilename = originalFilename.substring(originalFilename.lastIndexOf("\\") + 1);
+	        UUID uuid = UUID.randomUUID();
+	        String uuidFileName = uuid + "_" + originalFilename;
 
-		if (uploadPath.exists() == false) {
-			uploadPath.mkdirs();
-		}
+	        File saveFile = new File(uploadPath, uuidFileName);
+	        try {
+	            multipartFile.transferTo(saveFile);
 
-		String uploadFolderPath = getFolder(); // 2024/02/12
+	            AttachFileDTO dto = new AttachFileDTO();
+	            dto.setFileName(originalFilename);
+	            dto.setUuid(uuid.toString());
+	            dto.setUploadPath(subFolder + "/" + dateFolder);
 
-		for (MultipartFile multipartFile : uploadFile) {
+	            // 타입별 처리
+	            if (type.equalsIgnoreCase("thumbnail")) {
+	                dto.setIsThumbnail(1);
+	                dto.setIsThumbnailMain(parseFlag(params, "is_thumbnail_main_" + i));
+	                dto.setIsDetail(0);
 
-			log.info("-------------------------------------");
-			log.info("Upload File Name: " + multipartFile.getOriginalFilename());
-			log.info("Upload File Size: " + multipartFile.getSize());
+	                // 썸네일 생성 (100x100) => s_파일명
+	                FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uuidFileName));
+	                Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
+	                thumbnail.close();
 
-			AttachFileDTO attachDTO = new AttachFileDTO();
+	                dto.setImage(1); // 이미지 여부
+	            } else if (type.equalsIgnoreCase("detail")) {
+	                dto.setIsThumbnail(0);
+	                dto.setIsThumbnailMain(0);
+	                dto.setIsDetail(1);
+	                dto.setImage(checkImageType(saveFile) ? 1 : 0);
+	                // 썸네일 생략
+	            } else {
+	                // file type (기존 로직 유지)
+	                dto.setImage(checkImageType(saveFile) ? 1 : 0);
+	            }
 
-			String uploadFileName = multipartFile.getOriginalFilename();
-
-			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
-			// log.info("only file name: " + uploadFileName);
-			attachDTO.setFileName(uploadFileName);
-
-			UUID uuid = UUID.randomUUID();
-			String uuidUploadFileName = uuid.toString() + "_" + uploadFileName;
-
-			//File saveFile = new File(uploadPath, uploadFileName);
-
-			try {
-				//File savefile = new File(uploadFolder, multipartFile.getOriginalFilename());
-				File savefile = new File(uploadFolder, uuidUploadFileName);
-				// multipartFile.transferTo(saveFile);
-				multipartFile.transferTo(savefile);
-
-				attachDTO.setUuid(uuid.toString());
-				attachDTO.setUploadPath(uploadFolderPath);
-
-				// if (checkImageType(saveFile)) {
-				if (checkImageType(savefile)) {
-
-					attachDTO.setImage(1);
-
-					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uuidUploadFileName));
-					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
-					thumbnail.close();
-				}
-
-				list.add(attachDTO);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			} // end catch
-
-		} // end for
-
+	            list.add(dto);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
 		return new ResponseEntity<List<AttachFileDTO>>(list, HttpStatus.OK);
+	}
+	
+		// is_thumbnail_main 등의 boolean 플래그 처리 도우미
+	private int parseFlag(Map<String, String> params, String key) {
+	    return "1".equals(params.getOrDefault(key, "0")) ? 1 : 0;
 	}
 
 	private String getFolder() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		String str = sdf.format(date); // 2024-02-12
-		return str.replace("-", File.separator);
+		//return str.replace("-", File.separator);
+		return str.replace("-", "/");
 	}
 
 	private boolean checkImageType(File file) {
@@ -167,66 +180,60 @@ public class UploadController {
 
 		return result;
 	}
-	
+
 	@GetMapping("/download")
 	public ResponseEntity<Resource> downloadFile(String uuid, String path, String filename) throws Exception {
-	    //String fullPath = "c:\\upload\\" + path + "\\" + uuid + "_" + filename;
-	    String fullPath = "c:\\upload\\" + uuid + "_" + filename;
-	    Resource resource = new FileSystemResource(fullPath);
+		// String fullPath = "c:\\upload\\" + path + "\\" + uuid + "_" + filename;
+		String fullPath = "c:\\upload\\" + uuid + "_" + filename;
+		Resource resource = new FileSystemResource(fullPath);
 
-	    if (!resource.exists()) {
-	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	    }
+		if (!resource.exists()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 
-	    String encodedName = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
+		String encodedName = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
 
-	    return ResponseEntity.ok()
-	        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedName + "\"")
-	        .body(resource);
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedName + "\"").body(resource);
 	}
-	
+
 	@PostMapping("/deleteUploadedFile")
 	@ResponseBody
-	public ResponseEntity<String> deleteFile(
-			String datePath,
-			String fileName,
-			String uuid,
-			String type,
+	public ResponseEntity<String> deleteFile(String datePath, String fileName, String uuid, String type,
 			@RequestParam(required = false, defaultValue = "false") boolean isUpdate) {
-	    try {
-	    	
-	    	String decodedDatePath = URLDecoder.decode(datePath, "UTF-8");
-	    	String decodedFileName = URLDecoder.decode(fileName, "UTF-8");
-	    		    	
-	        // 1. 원본 파일 삭제
-	    	File file = new File("C:/upload/" + uuid + "_" + decodedFileName);
-	        log.info("delete file_path :" + file);
-	        if (file.exists()) {
-	            file.delete();
-	        }
+		try {
 
-	        // 2. 썸네일 삭제
-	        if ("image".equals(type)) {
-	        	File thumb = new File("C:/upload/" + decodedDatePath + "s_" + uuid + "_" + decodedFileName);
-	            log.info("delete thumb_path :" + thumb);
-	            if (thumb.exists()) {
-	                thumb.delete();
-	            }
-	        }
+			String decodedDatePath = URLDecoder.decode(datePath, "UTF-8");
+			String decodedFileName = URLDecoder.decode(fileName, "UTF-8");
 
-	        // 3. DB 삭제는 수정 페이지일 때만
-	        if (isUpdate) {
-	            int deletedCount = noticeService.deleteAttachByUuid(uuid);
-	            log.info("DB에서 삭제된 파일 개수: " + deletedCount);
-	        }
+			// 1. 원본 파일 삭제
+			File file = new File("C:/upload/" + uuid + "_" + decodedFileName);
+			log.info("delete file_path :" + file);
+			if (file.exists()) {
+				file.delete();
+			}
 
-	        return ResponseEntity.ok("deleted");
+			// 2. 썸네일 삭제
+			if ("image".equals(type)) {
+				File thumb = new File("C:/upload/" + decodedDatePath + "s_" + uuid + "_" + decodedFileName);
+				log.info("delete thumb_path :" + thumb);
+				if (thumb.exists()) {
+					thumb.delete();
+				}
+			}
 
-	    } catch (Exception e) {
-	        log.error("파일 삭제 중 오류", e);
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
+			// 3. DB 삭제는 수정 페이지일 때만
+			if (isUpdate) {
+				int deletedCount = noticeService.deleteAttachByUuid(uuid);
+				log.info("DB에서 삭제된 파일 개수: " + deletedCount);
+			}
+
+			return ResponseEntity.ok("deleted");
+
+		} catch (Exception e) {
+			log.error("파일 삭제 중 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
 	}
-	
-	
+
 }
