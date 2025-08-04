@@ -27,7 +27,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 
 
 	@Override
-	public List<ProductDTO> get(Long id) {
+	public ProductVO get(Long id) {
 	      log.info("product get....." + id);
 	      return mapper.read(id);
 	}
@@ -89,13 +89,13 @@ public class AdminProductServiceImpl implements AdminProductService{
 	}
 	
     @Override
-    public List<AttachFileDTO> findByProductId(Long productId) {
+    public List<ImgpathVO> findByProductId(Long productId) {
         return mapper.findByProductId(productId);
     }
     
     @Override
-    public int deleteAttachByUuid(String uuid) {
-        return mapper.deleteAttachByUuid(uuid);
+    public int deleteImgpathByUuid(String uuid) {
+        return mapper.deleteImgpathByUuid(uuid);
     }
     
     @Override    

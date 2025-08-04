@@ -55,23 +55,23 @@
 
   <resultMap id="attachMap" type="com.myrium.domain.AttachFileDTO">
     <id property="id" column="id"/>
-    <result property="user_id" column="user_id"/>
-    <result property="product_id" column="product_id"/>
-    <result property="file_name" column="file_name"/>
-    <result property="upload_path" column="upload_path"/>
+    <result property="userId" column="user_id"/>
+    <result property="noticeId" column="notice_id"/>
+    <result property="fileName" column="file_name"/>
+    <result property="uploadPath" column="upload_path"/>
     <result property="uuid" column="uuid"/>
     <result property="image" column="image"/>
     <result property="isThumbnail" column="is_thumbnail"/>
     <result property="isThumbnailMain" column="is_thumbnail_main"/>
-    <result property="isDatail" column="is_detail"/>
-    <result property="customer_id" column="customer_id"/>
-    <result property="upload_date" column="upload_date"/>
-    <result property="created_at" column="created_at"/>
-    <result property="created_by" column="created_by"/>
-    <result property="updated_at" column="updated_at"/>
-    <result property="updated_by" column="updated_by"/>
+    <result property="isDetail" column="is_detail"/>
+    <result property="customerId" column="customer_id"/>
+    <result property="uploadDate" column="upload_date"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="createdBy" column="created_by"/>
+    <result property="updatedAt" column="updated_at"/>
+    <result property="updatedBy" column="updated_by"/>
   </resultMap>
-
+  
   <!-- <select id="getList" resultMap="productMap">
     SELECT * FROM product
     WHERE id > 0
@@ -122,61 +122,44 @@
       SELECT *
       FROM product p
       WHERE 1 = 1
+      
+      <if test="cri.category != null and cri.category != ''">
+        AND EXISTS (
+          SELECT 1 FROM category c
+          WHERE c.product_id = p.id
+          <choose>
+            <when test="cri.category eq '원예용품'">AND c.gardening = 1</when>
+            <when test="cri.category eq '식물키트모음'">AND c.plantkit = 1</when>
+            <when test="cri.category eq '허브키우기'">AND c.hurb = 1</when>
+            <when test="cri.category eq '채소키우기'">AND c.vegetable = 1</when>
+            <when test="cri.category eq '꽃씨키우기'">AND c.flower = 1</when>
+            <when test="cri.category eq '기타키우기키트'">AND c.etc = 1</when>
+          </choose>
+        )
+      </if>
 
-        <!-- 카테고리 필터 -->
-        <if test="cri.category != null and cri.category != ''">
-          AND EXISTS (
-            SELECT 1 FROM category c
-            WHERE c.product_id = p.id
-            <choose>
-              <when test="cri.category == '원예용품'">AND c.gardening = 1</when>
-              <when test="cri.category == '식물키트모음'">AND c.plantkit = 1</when>
-              <when test="cri.category == '허브키우기'">AND c.hurb = 1</when>
-              <when test="cri.category == '채소키우기'">AND c.vegetable = 1</when>
-              <when test="cri.category == '꽃씨키우기'">AND c.flower = 1</when>
-              <when test="cri.category == '기타키우기키트'">AND c.etc = 1</when>
-            </choose>
-          )
-        </if>
+      <if test="cri.is_discount != -1">
+        AND is_discount = #{cri.is_discount}
+      </if>
+      <if test="cri.is_timeSales != -1">
+        AND is_timesales = #{cri.is_timeSales}
+      </if>
+      <if test="cri.is_deleted != -1">
+        AND is_deleted = #{cri.is_deleted}
+      </if>
 
-        <!-- 할인, 타임세일, 삭제여부 -->
-        <if test="cri.is_discount != -1">
-          AND is_discount = #{cri.is_discount}
-        </if>
-        <if test="cri.is_timeSales != -1">
-          AND is_timesales = #{cri.is_timesales}
-        </if>
-        <if test="cri.is_deleted != -1">
-          AND is_deleted = #{cri.is_deleted}
-        </if>
-
-        <!-- 검색 필터 (title, content, customer_id) -->
-        <if test="cri.keyword != null and cri.keyword != '' and cri.typeArr != null">
-          <trim prefix="AND (" suffix=")" prefixOverrides="OR">
-            <foreach item="type" collection="cri.typeArr">
-              <choose>
-                <when test="type == 'T'">
-                  OR LOWER(p.title) LIKE '%' || LOWER(#{cri.keyword}) || '%'
-                </when>
-                <when test="type == 'C'">
-                  OR LOWER(p.product_content) LIKE '%' || LOWER(#{cri.keyword}) || '%'
-                </when>
-                <when test="type == 'W'">
-                  OR LOWER(p.customer_id) LIKE '%' || LOWER(#{cri.keyword}) || '%'
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-
-        <!-- 정렬 -->
-        ORDER BY p.id DESC
-
+	  <if test="cri.keyword != null and cri.keyword != '' and cri.type != null">
+		<trim prefix="AND " >
+			LOWER(p.product_name) LIKE '%' || LOWER(#{cri.keyword}) || '%'
+		</trim>
+	  </if>
+      ORDER BY p.id DESC
     ) inner_query
     WHERE ROWNUM &lt;= #{cri.pageNum} * #{cri.amount}
   )
   WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
 </select>
+
 	
   <select id="getCategoryList" resultMap="categoryMap">
 	select * from category where product_id = ${id}
@@ -330,11 +313,11 @@
   </insert>
   
 
-  <select id="findByProductId" resultMap="attachMap">
+  <select id="findByProductId" resultMap="imgpathMap">
     SELECT * FROM img_path WHERE product_id = #{product_id}
   </select>
 
-  <delete id="deleteAttachByUuid" parameterType="string">
+  <delete id="deleteImgpathByUuid" parameterType="string">
     DELETE FROM img_path WHERE uuid = #{uuid}
   </delete>
 

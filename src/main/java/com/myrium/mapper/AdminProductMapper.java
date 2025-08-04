@@ -17,7 +17,7 @@ public interface AdminProductMapper {
 	public List<ProductVO> getList();	
 	public void insert(ProductVO product);
 	public void insertSelectKey(ProductVO product);
-	public List<ProductDTO> read(Long id);
+	public ProductVO read(Long id);
 	public int harddel(Long id); //하드(영구) 삭제
 	public int softdel(Long id); //소프트 삭제
 	public int restore(Long id); //복구
@@ -29,9 +29,9 @@ public interface AdminProductMapper {
     // 파일 정보 저장
 	public void insertAttach(AttachFileDTO dto);
     // 해당 공지의 파일 목록 조회
-	public List<AttachFileDTO> findByProductId(Long productId);	
+	public List<ImgpathVO> findByProductId(Long productId);	
 	// 파일 정보 삭제
-	public int deleteAttachByUuid(String uuid);	
+	public int deleteImgpathByUuid(String uuid);	
 	public void updateReadCnt(Long id);	
 	public List<ProductVO> getProductList(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);
 	public CategoryVO getCategoryList(int id);

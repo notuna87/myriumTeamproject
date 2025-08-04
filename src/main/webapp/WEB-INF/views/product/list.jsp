@@ -34,6 +34,10 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="panel panel-default">
+				<sec:authorize access="isAuthenticated()">
+					<input type="hidden" name="customerId"
+						value='<sec:authentication property="principal.member.id"/>' />
+				</sec:authorize>
 				<sec:authorize access="hasAuthority('ADMIN')">
 					<div class="panel-heading">
 						새상품은 상품등록을 클릭하고 등록하세요.
@@ -79,7 +83,7 @@
 				            <option value= 1 <c:if test="${param.is_deleted == 1}">selected</c:if>>비노출</option>
 				        </select>
 				        <button type="submit" class="btn btn-primary">필터</button>
-				        <button type="button" class="btn btn-default" onclick="location.href='/product/list'">필터 초기화</button>
+				        <button type="button" class="btn btn-info" onclick="location.href='/product/list'">필터 초기화</button>
 
 				    </form>
 				
@@ -120,29 +124,29 @@
 									
 				                    <td class="text-left"><a class="move" href="${product.product.id}">${product.product.product_name}</a>
    					                    <!-- NEW 라벨: 3일 이내 등록 -->
-					                    <c:if test="${notice.createdAt.time + (1000*60*60*24*3) > now.time}">
+					                    <c:if test="${product.product.created_at.time + (1000*60*60*24*3) > now.time}">
 					                        <span class="badge badge-danger ml-1">NEW</span>
 					                    </c:if>
 					                </td>
 				                    <td class="text-right">${product.product.product_stock}</td>
 				                    <td class="text-right"><fmt:formatNumber value="${product.product.product_price}" pattern="#.##"/></td>
 				                    <td class="text-right"><fmt:formatNumber value="${product.product.discount_price}" pattern="#.##"/></td>
-				                    <td class="text-center">${product.product.is_discount ==1 ? '할인중' : '없음'}</td>
+				                    <td class="text-center">${product.product.is_discount ==1 ? '<span class="label label-success ml-1">할인중</span>' : '없음'}</td>
 				                    <td class="text-right">${product.product.discount_rate}%</td>
-				                    <td class="text-center">${product.product.is_timesales == 1 ? '할인중' : '없음'}</td>
+				                    <td class="text-center">${product.product.is_timesales == 1 ? '<span class="label label-success ml-1">할인중</span>' : '없음'}</td>
 				                    <td class="text-right">${product.product.timesalediscount_rate}%</td>
-				                    <td class="text-center">${product.product.is_deleted == 0 ? '전시중' : '비노출'}</td>
+				                    <td class="text-center">${product.product.is_deleted == 0 ? '<span class="label label-success ml-1">전시중</span>' : '비노출'}</td>
 				                    <td>
 				                        <button class="btn btn-sm btn-primary" onclick="location.href='/product/modify?id=${product.product.id}'">수정</button>
 				                        <c:choose>
 				                            <c:when test="${product.product.is_deleted == 0}">
-				                                <button class="btn btn-sm btn-warning toggle-visibility" data-id="${product.product.id}" data-display="false">비노출</button>
+				                                <button class="btn btn-sm btn-warning softdel-btn" data-id="${product.product.id}" data-display="false">비노출</button>
 				                            </c:when>
 				                            <c:otherwise>
-				                                <button class="btn btn-sm btn-success toggle-visibility" data-id="${product.product.id}" data-display="true">전시복구</button>
+				                                <button class="btn btn-sm btn-success restore-btn" data-id="${product.product.id}" data-display="true">전시복구</button>
 				                            </c:otherwise>
 				                        </c:choose>
-				                        <button class="btn btn-sm btn-danger delete-product" data-id="${product.product.id}">삭제</button>
+				                        <button class="btn btn-sm btn-danger harddel-btn" data-id="${product.product.id}">삭제</button>
 				                    </td>
 				                </tr>
 				            </c:forEach>
@@ -154,25 +158,17 @@
 					<div class='row'>
 						<div class="col-lg-12">
 							<form id='searchForm' action="/product/list" method='get'>
-								<select name='type'>
-									<option value="" <c:out value="${pageMaker.cri.type == null?'selected':''}"/>>선택하세요</option>
-									<option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':''}"/>>제목</option>
-									<option value="C" <c:out value="${pageMaker.cri.type eq 'C'?'selected':''}"/>>내용</option>
-									<option value="W" <c:out value="${pageMaker.cri.type eq 'W'?'selected':''}"/>>작성자</option>
-									<option value="TC" <c:out value="${pageMaker.cri.type eq 'TC'?'selected':''}"/>>제목
-										or 내용</option>
-									<option value="TW" <c:out value="${pageMaker.cri.type eq 'TW'?'selected':''}"/>>제목
-										or 작성자</option>
-									<option value="TWC" <c:out value="${pageMaker.cri.type eq 'TWC'?'selected':''}"/>>제목
-										or 내용 or 작성자</option>
-								</select> 
-								
+								<!-- <select name='type' >
+									<option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':''}"/>>상품명</option>
+								</select> --> 
+								<input type='hidden' name='type' value="T" />
 								<input type='text' name='keyword' value='<c:out value="${pageMaker.cri.keyword}"/>' /> 
 								<input type='hidden' name='pageNum' value='<c:out value="${pageMaker.cri.pageNum}"/>' /> 
 								<input type='hidden' name='amount' value='<c:out value="${pageMaker.cri.amount}"/>' />
+
 								
 								<button type="submit" class="btn btn-sm btn-primary">
-									<i class="fa fa-search"></i> 검색
+									<i class="fa fa-search"></i> 상품검색
 								</button>
 							</form>
 						</div>
@@ -253,7 +249,7 @@ $(document).ready(function(){
 			return ;
 		}else{
 			if(parseInt(result)>0){
-				$(".modal-body").html("게시글 " + parseInt(result) + "번이 등록되었습니다.");
+				$(".modal-body").html("상품 " + parseInt(result) + "번이 등록되었습니다.");
 			}
 			$("#myModal").modal("show");
 		}
@@ -289,15 +285,15 @@ $(document).ready(function(){
 	var searchForm = $("#searchForm");
 
 	$("#searchForm button").on("click", function(e){
-		if(!searchForm.find("option:selected").val()){
-			alert("검색종류를 선택하세요");
-			return false;
-		}
+		//if(!searchForm.find("option:selected").val()){
+		//	alert("검색종류를 선택하세요");
+		//	return false;
+		//}
 
-		if(!searchForm.find("input[name='keyword']").val()){
-			alert("키워드를 입력하세요");
-			return false;
-		}
+		//if(!searchForm.find("input[name='keyword']").val()){
+		//	alert("키워드를 입력하세요");
+		//	return false;
+		//}
 		searchForm.find("input[name='pageNum']").val("1");
 		e.preventDefault();
 		
@@ -330,7 +326,7 @@ $(document).ready(function(){
 	
 	$(document).on("click", ".softdel-btn", function () {
 	    const id = $(this).data("id");
-	    if (confirm("글이 노출되지 않습니다. 정말 하시겠습니까?")) {
+	    if (confirm("상품이 노출되지 않습니다.")) {
 	        $.ajax({
 	            type: "post",
 	            url: "/product/softdel",
@@ -347,7 +343,7 @@ $(document).ready(function(){
 
 	$(document).on("click", ".restore-btn", function () {
 	    const id = $(this).data("id");
-	    if (confirm("복구하시겠습니까?")) {
+	    if (confirm("상품이 노출됩니다.")) {
 	        $.ajax({
 	            type: "post",
 	            url: "/product/restore",

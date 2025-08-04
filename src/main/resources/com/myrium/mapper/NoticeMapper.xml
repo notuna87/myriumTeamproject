@@ -21,25 +21,24 @@
 		<result property="hasFiles" column="has_files" />
 	</resultMap>
 
-	<resultMap id="attachMap"
-		type="com.myrium.domain.AttachFileDTO">
-		<id property="id" column="id" />
-		<result property="user_id" column="user_id" />
-		<result property="product_id" column="product_id" />
-		<result property="file_name" column="file_name" />
-		<result property="upload_path" column="upload_path" />
-		<result property="uuid" column="uuid" />
-		<result property="image" column="image" />
-		<result property="isThumbnail" column="is_thumbnail" />
-		<result property="isThumbnailMain" column="is_thumbnail_main" />
-		<result property="isDatail" column="is_datail" />
-		<result property="customer_id" column="customer_id" />
-		<result property="upload_date" column="upload_date" />
-		<result property="created_at" column="created_at" />
-		<result property="created_by" column="created_by" />
-		<result property="updated_at" column="updated_at" />
-		<result property="updated_by" column="updated_by" />
-	</resultMap>
+  <resultMap id="attachMap" type="com.myrium.domain.AttachFileDTO">
+    <id property="id" column="id"/>
+    <result property="userId" column="user_id"/>
+    <result property="noticeId" column="notice_id"/>
+    <result property="fileName" column="file_name"/>
+    <result property="uploadPath" column="upload_path"/>
+    <result property="uuid" column="uuid"/>
+    <result property="image" column="image"/>
+    <result property="isThumbnail" column="is_thumbnail"/>
+    <result property="isThumbnailMain" column="is_thumbnail_main"/>
+    <result property="isDetail" column="is_detail"/>
+    <result property="customerId" column="customer_id"/>
+    <result property="uploadDate" column="upload_date"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="createdBy" column="created_by"/>
+    <result property="updatedAt" column="updated_at"/>
+    <result property="updatedBy" column="updated_by"/>
+  </resultMap>
 
 	<select id="getList" resultMap="noticeMap">
 		SELECT id, user_id, title, content, customer_id, write_date,

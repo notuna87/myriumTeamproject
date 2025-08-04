@@ -31,17 +31,18 @@ public interface AdminProductService {
 
 	   public void insertAttach(AttachFileDTO dto);
 	   
-	   public List<AttachFileDTO> findByProductId(Long noticeId);
+	   public List<ImgpathVO> findByProductId(Long productId);
 
-	   public int deleteAttachByUuid(String uuid);
+	   public int deleteImgpathByUuid(String uuid);
 
 	   public void incrementReadCnt(Long id);
 
 	   public List<ProductDTO> getProductListWithCategory(Criteria cri, boolean isAdmin);
 	   
-	   public List<ProductDTO> get(Long id);
+	   public ProductVO get(Long id);
 
 	   public void insertCategory(CategoryVO cat);
 	   
 	   public void insertImgpath(ImgpathVO imgVO);
+
 }
