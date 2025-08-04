@@ -21,12 +21,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myrium.domain.AttachFileDTO;
+import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
+import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.PageDTO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 import com.myrium.service.AdminProductService;
-import com.myrium.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -84,10 +85,13 @@ public class AdminProductController {
 	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/register")
-	public String register(ProductVO vo,
+	public String register(ProductVO vo, 
+						   CategoryVO cat,
 	                       @RequestParam("attachList") String attachListJson,
 	                       RedirectAttributes rttr) {
 		log.info("(product) register......." + vo);
+		log.info("(product) register......." + cat);
+		log.info("(product) register......." + attachListJson);
 
 	    // 1. JSON 파싱
 	    ObjectMapper mapper = new ObjectMapper();
@@ -98,26 +102,38 @@ public class AdminProductController {
 	        e.printStackTrace();
 	    }
 	    
-	    // hasFiles 설정
-//	    vo.setHasFiles((attachList != null && !attachList.isEmpty()) ? 1 : 0);
-	    // 2. 공지사항 저장
+	    // 2. 상품 등록
 	    service.register(vo);
 	    
-	    // 3. 첨부파일 목록 저장
-//	    if (attachList != null && !attachList.isEmpty()) {
-//	        for (AttachFileDTO dto : attachList) {
-//	            dto.setUserId(vo.getUserId()); // NotiveVO 에서 가져옴
-//	            dto.setProductId(vo.getId());
-//	            dto.setCustomerId(vo.getCustomerId());
-//	            dto.setCreatedBy(vo.getCustomerId());
-//	            dto.setUpdatedAt(vo.getUpdatedAt());
-//	            dto.setUpdatedBy(vo.getUpdatedBy());
-//	            
-//	            log.info("(product) AttachFileDTO......." + dto);
-//
-//	            service.insertAttach(dto);
-//	        }
-//	    }
+	    // 3. 카테고리 등록
+	    cat.setProduct_id(vo.getId());
+	    service.insertCategory(cat);
+	    
+	    // 3. 이미지 경로(첨부파일) 등록
+	    if (attachList != null && !attachList.isEmpty()) {
+	        for (AttachFileDTO dto : attachList) {
+	            ImgpathVO imgVO = new ImgpathVO();
+
+	            imgVO.setProduct_id(vo.getId());
+	            imgVO.setImg_path(dto.getUploadPath() + "/" + dto.getUuid() + "_" + dto.getFileName());	            
+	            imgVO.setUuid(dto.getUuid());
+	            imgVO.setCreated_by(vo.getCreated_by());
+	            imgVO.setCreated_at(vo.getCreated_at());
+	            imgVO.setUpdated_by(vo.getUpdated_by());
+	            imgVO.setUpdated_at(vo.getUpdated_at());
+	            imgVO.setIs_thumbnail(dto.getIsThumbnail());
+	            imgVO.setIs_thumbnail_main(dto.getIsThumbnailMain());
+	            imgVO.setIs_detail(dto.getIsDetail());
+	            imgVO.setIs_deleted(0);
+	            
+	            if(dto.getIsThumbnail() == 1) {
+	            	imgVO.setImg_path_thumb(dto.getUploadPath() + "/" + "s_" + dto.getUuid() + "_" + dto.getFileName());
+	            }
+
+	            log.info("Saving ImgpathVO: " + imgVO);
+	            service.insertImgpath(imgVO);
+	        }
+	    }
 
 	    return "redirect:/product/list";
 	}
@@ -130,12 +146,12 @@ public class AdminProductController {
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping({"/get", "/modify"})
 	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) {
-		service.incrementReadCnt(id);  // 조회수 증가 로직 (추가)
+		//service.incrementReadCnt(id);  // 조회수 증가 로직 (추가)
 		model.addAttribute("product", service.get(id));
 		//model.addAttribute("attachFiles", productservice.findByProductId(id));
-		List<AttachFileDTO> attachFiles = service.findByProductId(id);
-		System.out.println("첨부파일 수: " + attachFiles.size()); // 디버깅
-		model.addAttribute("attachFiles", attachFiles);
+		//List<AttachFileDTO> attachFiles = service.findByProductId(id);
+		//System.out.println("첨부파일 수: " + attachFiles.size()); // 디버깅
+		//model.addAttribute("attachFiles", attachFiles);
 
 	}
 	
@@ -210,7 +226,7 @@ public class AdminProductController {
 	    log.info("product harddelete..." + id);
 
 	    try {
-	    	ProductVO product = service.get(id);
+	    	List<ProductDTO> product = service.get(id);
 	        if (product == null) {
 	            rttr.addFlashAttribute("error", "존재하지 않는 게시글입니다.");
 	            return "redirect:/product/list";

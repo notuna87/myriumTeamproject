@@ -7,13 +7,13 @@ import lombok.Data;
 
 @Data
 public class CategoryVO {
-	private Long product_id;
-	private int gardening;
-	private int plantkit;
-	private int hurb;
-	private int vegetable;
-	private int flower;
-	private int etc;
+	private int product_id = 0;
+	private int gardening = 0;
+	private int plantkit = 0;
+	private int hurb = 0;
+	private int vegetable = 0;
+	private int flower = 0;
+	private int etc = 0;
 	
     public List<String> getCategoryTags() {
         List<String> tags = new ArrayList<>();

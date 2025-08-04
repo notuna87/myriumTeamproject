@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
+import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 import com.myrium.mapper.AdminProductMapper;
@@ -26,7 +27,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 
 
 	@Override
-	public ProductVO get(Long id) {
+	public List<ProductDTO> get(Long id) {
 	      log.info("product get....." + id);
 	      return mapper.read(id);
 	}
@@ -106,16 +107,28 @@ public class AdminProductServiceImpl implements AdminProductService{
 	@Override
 	public List<ProductDTO> getProductListWithCategory(Criteria cri, boolean isAdmin) {
 		List<ProductVO> productList = mapper.getProductList(cri, isAdmin);
-		List<ProductDTO> productDTO = new ArrayList<>();
-		
+		List<ProductDTO> productDTO = new ArrayList<>();		
 		for (ProductVO product : productList) {
 			CategoryVO category = mapper.getCategoryList(product.getId());
+			ImgpathVO imgpath = mapper.getImgPathList(product.getId());
 			ProductDTO dto = new ProductDTO();
 			dto.setProduct(product);
+			dto.setThumbnail(imgpath);
 			dto.setCategory(category);
 			productDTO.add(dto);
 		}
 		return productDTO;
 	}
+
+	@Override
+	public void insertCategory(CategoryVO cat) {
+		mapper.insertCategory(cat);		
+	}
+	
+	@Override
+	public void insertImgpath(ImgpathVO imgVO) {
+		mapper.insertImgpath(imgVO);		
+	}	
+	
 	
 }

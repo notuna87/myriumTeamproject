@@ -36,6 +36,22 @@
     <result property="flower" column="flower"/>
     <result property="etc" column="etc"/>
   </resultMap>
+  
+  <resultMap id="imgpathMap" type="com.myrium.domain.ImgpathVO">
+    <id property="id" column="id" />
+    <result property="product_id" column="product_id" />
+    <result property="img_path" column="img_path"/>
+    <result property="created_at" column="created_at"/>
+    <result property="created_by" column="created_by"/>
+    <result property="updated_at" column="updated_at"/>
+    <result property="updated_by" column="updated_by"/>
+    <result property="is_deleted" column="is_deleted"/>
+    <result property="is_thumbnail" column="is_thumbnail"/>
+    <result property="is_thumbnail_main" column="is_thumbnail_main"/>
+    <result property="is_detail" column="is_detail"/>
+    <result property="uuid" column="uuid"/>
+    <result property="img_path_thumb" column="img_path_thumb"/>
+  </resultMap>
 
   <resultMap id="attachMap" type="com.myrium.domain.AttachFileDTO">
     <id property="id" column="id"/>
@@ -45,6 +61,9 @@
     <result property="upload_path" column="upload_path"/>
     <result property="uuid" column="uuid"/>
     <result property="image" column="image"/>
+    <result property="isThumbnail" column="is_thumbnail"/>
+    <result property="isThumbnailMain" column="is_thumbnail_main"/>
+    <result property="isDatail" column="is_detail"/>
     <result property="customer_id" column="customer_id"/>
     <result property="upload_date" column="upload_date"/>
     <result property="created_at" column="created_at"/>
@@ -98,6 +117,10 @@
   <select id="getCategoryList" resultMap="categoryMap">
 	select * from category where product_id = ${id}
   </select>
+  
+  <select id="getImgPathList" resultMap="imgpathMap">
+	select * from img_path where product_id = ${id} and is_thumbnail_main = 1
+  </select>
 
   <insert id="insert">
     INSERT INTO product (
@@ -114,7 +137,7 @@
   </insert>
 
   <insert id="insertSelectKey">
-    <selectKey keyProperty="id" order="BEFORE" resultType="long">
+    <selectKey keyProperty="id" order="BEFORE" resultType="int">
       SELECT product_seq.NEXTVAL FROM dual
     </selectKey>
     INSERT INTO product (
@@ -126,7 +149,7 @@
       #{id}, #{product_name}, #{product_content}, #{product_stock}, #{product_price},
       #{is_deleted}, #{is_timesales}, #{is_mainone}, #{is_maintwo}, #{is_discount},
       #{discount_rate}, #{timesalediscount_rate}, #{total_discountrate}, #{discount_price}, #{sales_count},
-      #{created_at}, #{created_by}
+      SYSDATE, #{created_by}
     )
   </insert>
 
@@ -210,26 +233,45 @@
     SELECT COUNT(*) FROM product WHERE id > 0
   </select>
 
-  <update id="updateReadCnt">
+  <!--  <update id="updateReadCnt">
     UPDATE product SET read_cnt = read_cnt + 1 WHERE id = #{id}
-  </update>
+  </update> -->
 
-  <insert id="insertAttach" parameterType="com.myrium.domain.AttachFileDTO">
-    INSERT INTO product_files (
-      id, user_id, product_id, file_name, upload_path, uuid, image,
-      customer_id, upload_date, created_at, created_by
+  <!-- <insert id="insertAttach" parameterType="com.myrium.domain.AttachFileDTO">
+    INSERT INTO img_path (
+      id, product_id, img_path, created_at, created_by, updated_at, updated_by,
+      is_deleted, is_thumbnail, is_thumbnail_main, is_detail, uuid
     ) VALUES (
-      PRODUCT_FILES_SEQ.NEXTVAL, #{user_id}, #{product_id}, #{file_name}, #{upload_path}, #{uuid}, #{image},
-      #{customer_id}, SYSDATE, SYSDATE, #{created_by}
+      PRODUCT_FILES_SEQ.NEXTVAL, #{product_id}, #{img_path}, SYSDATE, #{created_by}, #{updated_at}, #{updated_by},
+      #{is_deleted}, #{is_thumbnail}, #{is_thumbnail_main}, #{is_detail}, #{uuid}
+    )
+  </insert> -->
+
+  <insert id="insertCategory" parameterType="com.myrium.domain.CategoryVO">
+    INSERT INTO category (
+      product_id, gardening, plantkit, hurb, vegetable, flower, etc
+    ) VALUES (
+      #{product_id}, #{gardening}, #{plantkit}, #{hurb}, #{vegetable}, #{flower}, #{etc}
     )
   </insert>
+  
+  <insert id="insertImgpath" parameterType="com.myrium.domain.ImgpathVO">
+    INSERT INTO img_path (
+      id, product_id, img_path, created_at, created_by,
+      is_deleted, is_thumbnail, is_thumbnail_main, is_detail, uuid, img_path_thumb
+    ) VALUES (
+      seq_img_id.NEXTVAL, #{product_id}, #{img_path}, SYSDATE, #{created_by},
+      #{is_deleted}, #{is_thumbnail}, #{is_thumbnail_main}, #{is_detail}, #{uuid}, #{img_path_thumb, jdbcType=VARCHAR}
+    )
+  </insert>
+  
 
   <select id="findByProductId" resultMap="attachMap">
-    SELECT * FROM product_files WHERE product_id = #{product_id}
+    SELECT * FROM img_path WHERE product_id = #{product_id}
   </select>
 
   <delete id="deleteAttachByUuid" parameterType="string">
-    DELETE FROM product_files WHERE uuid = #{uuid}
+    DELETE FROM img_path WHERE uuid = #{uuid}
   </delete>
 
 </mapper>

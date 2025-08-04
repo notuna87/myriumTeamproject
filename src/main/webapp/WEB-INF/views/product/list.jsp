@@ -89,6 +89,7 @@
 				            <tr>
 				                <th class="text-center">상품번호</th>
 				                <th class="text-center">카테고리</th>
+				                <th class="text-center">이미지</th>
 				                <th class="text-center">상품명</th>
 				                <th class="text-center">재고량</th>
 				                <th class="text-center">가격</th>
@@ -112,7 +113,17 @@
 									        </c:forEach>
 									    </div>
 									</td>
-				                    <td class="text-left">${product.product.product_name}</td>
+					            	<!-- 썸네일 -->
+						            <td class="text-center">
+						            	<img src="${pageContext.request.contextPath}/upload/${product.thumbnail.img_path_thumb}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+						            </td>
+									
+				                    <td class="text-left"><a class="move" href="${product.product.id}">${product.product.product_name}</a>
+   					                    <!-- NEW 라벨: 3일 이내 등록 -->
+					                    <c:if test="${notice.createdAt.time + (1000*60*60*24*3) > now.time}">
+					                        <span class="badge badge-danger ml-1">NEW</span>
+					                    </c:if>
+					                </td>
 				                    <td class="text-right">${product.product.product_stock}</td>
 				                    <td class="text-right"><fmt:formatNumber value="${product.product.product_price}" pattern="#.##"/></td>
 				                    <td class="text-right"><fmt:formatNumber value="${product.product.discount_price}" pattern="#.##"/></td>
@@ -122,7 +133,7 @@
 				                    <td class="text-right">${product.product.timesalediscount_rate}%</td>
 				                    <td class="text-center">${product.product.is_deleted == 0 ? '전시중' : '비노출'}</td>
 				                    <td>
-				                        <button class="btn btn-sm btn-primary" onclick="location.href='/product/edit?id=${product.product.id}'">수정</button>
+				                        <button class="btn btn-sm btn-primary" onclick="location.href='/product/modify?id=${product.product.id}'">수정</button>
 				                        <c:choose>
 				                            <c:when test="${product.product.is_deleted == 0}">
 				                                <button class="btn btn-sm btn-warning toggle-visibility" data-id="${product.product.id}" data-display="false">비노출</button>

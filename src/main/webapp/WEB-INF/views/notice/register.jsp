@@ -96,7 +96,7 @@
 						
 						<div class="text-right mt-3">
 							<button type="submit" class="btn btn-success">등록</button>
-							<button type="reset" class="btn btn-warning">다시작성</button>
+							<button type="reset" class="btn btn-warning" id="resetBtn">다시작성</button>
 						</div>
 					</form>
 				</div>
@@ -238,15 +238,16 @@ $(document).ready(function () {
 
       content.append($("<span>").text(file.name));
 
+	  const delBtnWrapper = $("<div>").addClass("text-right mt-3");
       const delBtn = $("<button type='button'>")
         .addClass("btn btn-sm btn-danger ml-2")
         .text("삭제")
-        .on("click", function () {
-          selectedFiles.splice(index, 1); // 배열에서 제거
-          updateFileListUI();             // UI 다시 그림
+        .on("click", () => {
+        this.selectedFiles.splice(idx, 1);
+        this.updatePreviewList();
         });
-
-      li.append(content).append(delBtn);
+	  delBtnWrapper.append(delBtn);
+      li.append(content, delBtnWrapper);
       list.append(li);
     });
   }
@@ -341,6 +342,16 @@ $(document).ready(function () {
 	  $("#uploadList").empty(); // 업로드 리스트 UI 초기화
 	  $("#uploadInput").val(''); // 파일 input 초기화 (필수)
 	  $("#uploadBtn").hide(); // 업로드 후 숨김
+	});
+  
+  // 뒤로가기 시 업로드 된 파일 삭제
+  window.addEventListener("beforeunload", function (e) {
+	  // 이미 업로드된 파일이 있을 경우에만 작동
+	  if (attachList.length > 0) {
+	    document.getElementById("resetBtn").click();
+	    e.preventDefault();
+	    e.returnValue = ""; // 겅고창 노출
+	  }
 	});
   
   // 등록 버튼 클릭 시 유효성 검사
