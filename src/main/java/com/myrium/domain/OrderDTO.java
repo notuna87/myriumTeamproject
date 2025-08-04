@@ -28,7 +28,6 @@ public class OrderDTO {
 	    private int productId;
 	    private String orderDisplayId;
 
-
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
         setOrderDisplayId(); // orderDate가 바뀌면 다시 계산
