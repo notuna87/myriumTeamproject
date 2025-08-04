@@ -79,7 +79,7 @@
 	          <div class="order-date">
 	            <strong>${orders[0].orderDate}</strong> <span>(${orders[0].orderDisplayId})</span>
 	          </div>
-	          <a href="${pageContext.request.contextPath}/mypage/order_detail" class="detail-link">상세보기 &gt;</a>
+	       <a href="${pageContext.request.contextPath}/mypage/order_detail?orderId=${orders[0].id}" class="detail-link">상세보기 &gt;</a>
 	        </div>
 	
 	        <!-- 상품 목록 -->
@@ -133,7 +133,7 @@
 	          <div class="order-date">
 	            <strong>${orders[0].orderDate}</strong> <span>(${orders[0].orderDisplayId})</span>
 	          </div>
-	          <a href="${pageContext.request.contextPath}/mypage/order_detail" class="detail-link">상세보기 &gt;</a>
+	          <a href="${pageContext.request.contextPath}/mypage/order_detail?orderId=${orders[0].id}&productId=${orders[0].productId}">상세보기 &gt;</a>
 	        </div>
 	
 	        <!-- 상품 목록 -->

@@ -15,4 +15,6 @@ public interface OrderMapper {
 	 int getTotalPaidOrderAmount(String customerId);
 	 
 	 List<OrderDTO> findOrderDetailById(Long orderId);
+	 
+	 int getValidOrderTotalAmount(Long orderId);
 }

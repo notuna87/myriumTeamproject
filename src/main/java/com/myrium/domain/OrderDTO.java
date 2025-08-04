@@ -18,7 +18,10 @@ public class OrderDTO {
     private int productPrice;
     private int quantity;
     private String orderStatus;
-
+    private String paymentMethod;
+    private String zipcode;
+    private String deliveryMsg;
+    private int productId;
     private String orderDisplayId;
 
     public void setOrderDate(String orderDate) {

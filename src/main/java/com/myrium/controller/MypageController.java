@@ -178,10 +178,13 @@ public class MypageController {
         model.addAttribute("groupedOrders", groupedOrders);
         model.addAttribute("orderCount", orderList.size());
 
+        log.info(groupedOrders);
         // 교환/환불 내역 조회
         List<OrderDTO> cancelList = orderService.getCanceledOrdersByCustomerId(customerId);
         Map<String, List<OrderDTO>> cancelGroupedOrders = new LinkedHashMap<>();
         for (OrderDTO order : cancelList) {
+            order.setOrderDisplayId();
+            log.info("환불 주문번호 표시용 ID: " + order.getOrderDisplayId());
             cancelGroupedOrders.computeIfAbsent(order.getOrdersId(), k -> new ArrayList<>()).add(order);
         }
         model.addAttribute("cancelGroupedOrders", cancelGroupedOrders);
