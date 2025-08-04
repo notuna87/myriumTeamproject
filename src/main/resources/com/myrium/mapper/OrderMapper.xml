@@ -28,6 +28,66 @@ WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
 ORDER BY o.order_date DESC, o.orders_id
 </select>
 
+
+<insert id="insertOrders">
+
+    <selectKey keyProperty="id" resultType="long" order="BEFORE">
+        SELECT ORDER_SEQ.NEXTVAL FROM dual
+    </selectKey>
+    
+	INSERT INTO orders (
+    id,
+    user_id,
+    orders_id,
+    order_date,
+    customer_name,
+    order_status,
+    address,
+    zipcode,
+    phone_number,
+    delivery_msg,
+    payment_method,
+    is_refundable,
+    is_exchanged,
+    is_apprefund,
+    is_appexchanged
+) VALUES (
+    #{id},
+    #{userId},
+    '20250804-0000001',
+    SYSDATE,
+    #{customerId},
+    0,
+    #{address},
+    #{zipcode},
+    #{phoneNumber},
+    #{message},
+    #{payment},
+    0,
+    0,
+    0,
+    0
+)
+</insert>
+
+<insert id="insertOrdersProduct" >
+	INSERT INTO orders_product (
+    ID, PRODUCT_ID, ORDERS_ID, USER_ID, 
+    CREATED_BY, CREATED_AT, 
+    UPDATED_BY, UPDATED_AT, 
+    IS_DELETED, QUANTITY, ORDER_STATUS
+) VALUES (
+    ORDERS_PRODUCT_SEQ.NEXTVAL, #{productid} ,#{orderId}, #{userId},
+    #{customerName}, SYSDATE,
+    NULL, NULL,
+    0, #{quantity}, 0
+)
+</insert>
+
+<delete id="deletePurchaseCart">
+	delete from cart where user_id=#{userId} and product_id = #{productid}
+</delete>
+
   <!-- 취소/반품/교환 완료 주문 조회 -->
   <select id="selectCanceledOrdersByCustomerId" resultType="com.myrium.domain.OrderDTO" parameterType="String">
     SELECT
@@ -52,6 +112,7 @@ ORDER BY o.order_date DESC, o.orders_id
       AND op.order_status IN ('환불완료', '교환완료','교환신청중','환불신청중')
     ORDER BY o.order_date DESC, o.orders_id
   </select>
+
 
 <!-- 마이페이지 주문 처리 현황 -->
 <select id="countOrdersByStatus" resultType="map" parameterType="String">

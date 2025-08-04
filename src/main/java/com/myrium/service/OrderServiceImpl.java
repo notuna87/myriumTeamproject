@@ -20,6 +20,26 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDTO> getOrderListByCustomerId(String customerId) {
         return orderMapper.findOrdersByCustomerId(customerId);
     }
+
+	@Override
+	public int insertOrders(OrderDTO orders) {
+		
+		return orderMapper.insertOrders(orders);
+	}
+
+
+	@Override
+	public void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName) {
+		
+		orderMapper.insertOrdersProduct(productid, orderId, userId, quantity, customerName);
+	}
+
+
+	@Override
+	public void deletePurchaseCart(Long userId, int productid) {
+		
+		orderMapper.deletePurchaseCart(userId, productid);
+	}
     
     // 교환/환불 데이터 조회 구현
     @Override

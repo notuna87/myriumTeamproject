@@ -91,7 +91,7 @@
 		AND user_id = #{userId, jdbcType=BIGINT}
 	</select>
 
-	<update id="updateQuantity">
+	<update id="updateQuantity" parameterType="com.myrium.domain.OrderDTO">
 		UPDATE cart SET quantity = #{newQuantity, jdbcType=INTEGER}, updated_at = sysdate 
 		WHERE product_id = #{productId, jdbcType=BIGINT} AND user_id = #{userId,jdbcType=BIGINT} AND is_deleted = 0
 	</update>

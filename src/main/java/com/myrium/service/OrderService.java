@@ -7,6 +7,13 @@ import com.myrium.domain.OrderDTO;
 
 public interface OrderService {
 
+
+  	int insertOrders(OrderDTO orders);
+
+	  void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName);
+
+  	void deletePurchaseCart(Long userId, int productid); 
+
 	  List<OrderDTO> getOrderListByCustomerId(String customerId);
 	  
 	  List<OrderDTO> getCanceledOrdersByCustomerId(String customerId);

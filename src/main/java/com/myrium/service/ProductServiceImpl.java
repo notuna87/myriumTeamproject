@@ -118,7 +118,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		// 중복된 제품을 담을 시 +1 
 		if (existingCart != null) {
-			int newQuantity = existingCart.getQuantity() + 1;
+			int newQuantity = existingCart.getQuantity() + quantity;
 			vo = productmapper.addQuantity(productId, userId, newQuantity);
 		} else {
 			vo = productmapper.inCart(quantity, productId, userId, customerId);
@@ -145,7 +145,6 @@ public class ProductServiceImpl implements ProductService {
 			productDTOs.add(dto);
 		}
 
-		log.info(productDTOs);
 
 		return productDTOs;
 	}

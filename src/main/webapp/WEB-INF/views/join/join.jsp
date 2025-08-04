@@ -20,7 +20,6 @@
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
-
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 </head>
@@ -96,8 +95,6 @@
 	    <input type="text" id="roadAddress" name="addr1" placeholder="기본주소" readonly />
 	    <input type="text" id="detailAddress" name="addr2" placeholder="나머지 주소" />
 	</div>
-
-
 
 	<div class="form_section phone">
 	  <label>휴대전화 <span class="required">*</span></label>
