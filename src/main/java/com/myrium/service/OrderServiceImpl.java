@@ -21,7 +21,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.findOrdersByCustomerId(customerId);
     }
     
-    // ✅ 교환/환불 데이터 조회 구현
+    // 교환/환불 데이터 조회 구현
     @Override
     public List<OrderDTO> getCanceledOrdersByCustomerId(String customerId) {
         return orderMapper.selectCanceledOrdersByCustomerId(customerId);
@@ -40,5 +40,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDTO> getOrderDetail(Long orderId) {
         return orderMapper.findOrderDetailById(orderId);
+    }
+    
+    @Override
+    public int getValidOrderTotalAmount(Long orderId) {
+        return orderMapper.getValidOrderTotalAmount(orderId);
     }
 }

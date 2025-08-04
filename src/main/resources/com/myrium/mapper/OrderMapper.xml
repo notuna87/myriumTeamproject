@@ -6,6 +6,7 @@
 
 <select id="findOrdersByCustomerId" resultType="com.myrium.domain.OrderDTO" parameterType="String">
 SELECT
+	o.id AS id,
   m.customer_id        AS customerId,
   m.customer_name      AS receiver,
   m.phone_number       AS phoneNumber,
@@ -30,11 +31,12 @@ ORDER BY o.order_date DESC, o.orders_id
   <!-- 취소/반품/교환 완료 주문 조회 -->
   <select id="selectCanceledOrdersByCustomerId" resultType="com.myrium.domain.OrderDTO" parameterType="String">
     SELECT
+    o.id AS id,
       m.customer_id        AS customerId,
       m.customer_name      AS receiver,
       m.phone_number       AS phoneNumber,
       m.zipcode || ' ' || m.addr1 || ' ' || NVL(m.addr2, '') AS address,
-      o.orders_id          AS ordersId,
+      o.id AS ordersId,
       TO_CHAR(o.order_date, 'YYYY-MM-DD') AS orderDate,
       p.product_name       AS productName,
       p.product_price      AS productPrice,
@@ -93,12 +95,35 @@ ORDER BY o.order_date DESC, o.orders_id
     op.orders_id AS ordersId,      
     op.quantity,
     op.order_status AS orderStatus,
-    p.product_name,
-    p.product_price
+    p.product_name AS productName,
+    p.product_price AS productPrice,
+    p.id AS productId,
+    o.payment_method AS paymentMethod,
+
+    o.customer_name AS receiver,
+    o.phone_number AS phoneNumber,
+    o.zipcode AS zipcode,
+    o.address AS address,
+    o.delivery_msg AS deliveryMsg
+
   FROM
     orders o
   JOIN orders_product op ON o.id = op.orders_id
   JOIN product p ON op.product_id = p.id
+
   WHERE o.id = #{orderId}
+</select>
+
+<!-- 주문상세내역 금액합산 -->
+
+<select id="getValidOrderTotalAmount" parameterType="long" resultType="int">
+  SELECT
+    NVL(SUM(p.product_price * op.quantity), 0)
+  FROM
+    orders_product op
+  JOIN product p ON op.product_id = p.id
+  WHERE op.orders_id = #{orderId}
+    AND op.order_status NOT IN ('환불완료', '환불신청중', '교환완료', '교환신청중')
+    AND op.is_deleted = 0
 </select>
 </mapper>

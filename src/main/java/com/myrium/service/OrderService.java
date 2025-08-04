@@ -16,5 +16,7 @@ public interface OrderService {
 	  int getTotalPaidOrderAmount(String customerId);
 	  
 	  List<OrderDTO> getOrderDetail(Long orderId);
+	  
+	  int getValidOrderTotalAmount(Long orderId);
 
 }
