@@ -162,11 +162,11 @@
 
 	
   <select id="getCategoryList" resultMap="categoryMap">
-	select * from category where product_id = ${id}
+	select * from category where product_id = #{id}
   </select>
   
   <select id="getImgPathList" resultMap="imgpathMap">
-	select * from img_path where product_id = ${id} and is_thumbnail_main = 1
+	select * from img_path where product_id = #{id} and is_thumbnail_main = 1
   </select>
 
   <insert id="insert">
@@ -301,6 +301,17 @@
       #{product_id}, #{gardening}, #{plantkit}, #{hurb}, #{vegetable}, #{flower}, #{etc}
     )
   </insert>
+  
+  <update id="updateCategory" parameterType="com.myrium.domain.CategoryVO">
+    update category set
+    	gardening = #{gardening},
+    	plantkit = #{plantkit},
+    	hurb = #{hurb},
+    	vegetable = #{vegetable},
+    	flower = #{flower},
+    	etc = #{etc}
+    WHERE product_id = #{product_id}
+  </update>
   
   <insert id="insertImgpath" parameterType="com.myrium.domain.ImgpathVO">
     INSERT INTO img_path (

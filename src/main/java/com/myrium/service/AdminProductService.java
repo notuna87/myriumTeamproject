@@ -17,9 +17,9 @@ public interface AdminProductService {
 	   
 	   public boolean modify(ProductVO notice);
 	   
-	   public boolean harddel(Long id);
+	   public boolean harddel(int id);
 	
-	   public boolean softdel(Long id);
+	   public boolean softdel(int id);
 	   
 	   public List<ProductVO> getList();
 	   
@@ -27,21 +27,23 @@ public interface AdminProductService {
 	   
 	   public int getTotal(Criteria cri, boolean isAdmin);
 
-	   public boolean restore(Long id);
+	   public boolean restore(int id);
 
 	   public void insertAttach(AttachFileDTO dto);
 	   
-	   public List<ImgpathVO> findByProductId(Long productId);
+	   public List<ImgpathVO> findByProductId(int id);
 
 	   public int deleteImgpathByUuid(String uuid);
 
-	   public void incrementReadCnt(Long id);
+	   public void incrementReadCnt(int id);
 
 	   public List<ProductDTO> getProductListWithCategory(Criteria cri, boolean isAdmin);
 	   
-	   public ProductVO get(Long id);
+	   public ProductVO get(int id);
 
 	   public void insertCategory(CategoryVO cat);
+	
+	   public void updateCategory(CategoryVO cat);
 	   
 	   public void insertImgpath(ImgpathVO imgVO);
 

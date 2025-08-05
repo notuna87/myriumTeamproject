@@ -212,7 +212,7 @@ class UploadManager {
       },
       success: result => {
   	    console.log("Attatch result: " + result);
-	    console.log(JSON.stringify(result, null, 2));  // JSON 형식으로 보기 좋게 출력
+	    console.log(JSON.stringify(result, null, 2));  // JSON 형식 출력
 	    	    
         this.uploadedFiles = result;
         attachList = attachList.concat(result);

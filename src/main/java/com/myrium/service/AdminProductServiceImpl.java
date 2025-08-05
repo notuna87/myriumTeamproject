@@ -27,7 +27,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 
 
 	@Override
-	public ProductVO get(Long id) {
+	public ProductVO get(int id) {
 	      log.info("product get....." + id);
 	      return mapper.read(id);
 	}
@@ -40,13 +40,13 @@ public class AdminProductServiceImpl implements AdminProductService{
 	}
 
 	@Override
-	public boolean harddel(Long id) {
+	public boolean harddel(int id) {
 	     log.info("product harddel...." + id);
 	     return mapper.harddel(id)==1;
 	}
 
 	@Override
-	public boolean softdel(Long id) {
+	public boolean softdel(int id) {
 		log.info("product softdel...." + id);
 		return mapper.softdel(id)==1;
 	}
@@ -77,7 +77,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 		return mapper.getTotalCount(cri, isAdmin);	}
 	
 	@Override
-	public boolean restore(Long id) {
+	public boolean restore(int id) {
 		log.info("product restore...." + id);
 		return mapper.restore(id)==1;
 	}
@@ -89,8 +89,8 @@ public class AdminProductServiceImpl implements AdminProductService{
 	}
 	
     @Override
-    public List<ImgpathVO> findByProductId(Long productId) {
-        return mapper.findByProductId(productId);
+    public List<ImgpathVO> findByProductId(int id) {
+        return mapper.findByProductId(id);
     }
     
     @Override
@@ -99,7 +99,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     }
     
     @Override    
-    public void incrementReadCnt(Long id) {
+    public void incrementReadCnt(int id) {
         mapper.updateReadCnt(id);
     }
 
@@ -111,6 +111,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 		for (ProductVO product : productList) {
 			CategoryVO category = mapper.getCategoryList(product.getId());
 			ImgpathVO imgpath = mapper.getImgPathList(product.getId());
+			log.info("getImgPathList:" + imgpath);
 			ProductDTO dto = new ProductDTO();
 			dto.setProduct(product);
 			dto.setThumbnail(imgpath);
@@ -126,9 +127,13 @@ public class AdminProductServiceImpl implements AdminProductService{
 	}
 	
 	@Override
-	public void insertImgpath(ImgpathVO imgVO) {
-		mapper.insertImgpath(imgVO);		
+	public void updateCategory(CategoryVO cat) {
+		mapper.updateCategory(cat);		
 	}	
 	
+	@Override
+	public void insertImgpath(ImgpathVO imgVO) {
+		mapper.insertImgpath(imgVO);		
+	}
 	
 }

@@ -1,357 +1,365 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 
 <%@include file="../main/header.jsp"%>
-<%@include file="../includes_admin/header.jsp" %> 
+<%@include file="../includes_admin/header.jsp"%>
 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>공지사항 등록</title>
+<style>
+.uploadResult {
+	width: 100%;
+	background-color: lightgray;
+}
+
+.uploadResult ul {
+	display: flex;
+	flex-flow: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.uploadResult ul li {
+	list-style: none;
+	padding: 10px;
+}
+
+.uploadResult ul li img {
+	width: 100px;
+}
+</style>
+
+</head>
 <body>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">상품정보 수정(관리자)</h1>
+		</div>
+	</div>
 
-<div class="row">
-     <div class="col-lg-12">
-        <sec:authorize access="hasAuthority('ADMIN')">
-        	<h1 class="page-header">공지사항 수정(관리자)</h1>
-        </sec:authorize>
-        <sec:authorize access="!hasAuthority('ADMIN')">
-        	<h1 class="page-header">공지사항 수정</h1>
-        </sec:authorize>
-    </div>
-</div>
+	<!-- /.row -->
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">(※) 표시는 필수 입력사항입니다.</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<form role="form" action="/product/modify" method="post" enctype="multipart/form-data">
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
-<!-- /.row -->
-<div class="row">
-	<div class="col-lg-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">수정 후 수정 버튼을 클릭하세요.</div>
-
-			<!-- /.panel-heading -->
-			<div class="panel-body">
-				<form role="form" action="/notice/modify" method="post" enctype="multipart/form-data">
-					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
-					<input type='hidden' name='pageNum' value='${cri.pageNum}'>
-					<input type='hidden' name='amount' value='${cri.amount}'>
-					<input type='hidden' name='type' value='${cri.type}'>
-					<input type='hidden' name='keyword' value='${cri.keyword}'>
-					
-					<sec:authorize access="isAuthenticated()">
-						<input type="hidden" name="updatedBy" value='<sec:authentication property="principal.member.customerId"/>' />
-					</sec:authorize>
-					
-					<div class="form-group">
-					       <label>No.</label> 
-                           <input class="form-control" name='id' value="${notice.id}" readonly="readonly">
-					</div>
-
-					<div class="form-group">
-					      <label>제목</label> 	
-                      	  <input class="form-control" name='title' value="${notice.title}">
-					</div>
-
-					<div class="form-group">
-		                  <label>내용</label>
-					      <textarea class="form-control" rows="3" name='content'>${notice.content}</textarea>
-					</div>
-
-					<div class="form-group">
-					      <label>작성자</label> 
-                          <input class="form-control" name='customerId' value="${notice.customerId}" readonly="readonly">
-					</div>
-
-                   <sec:authentication property="principal" var="pinfo"/>
-					<c:choose>
-						<c:when test="${not empty attachFiles}">
-							<div class="form-group">
-						        <label>첨부파일</label>
-						        <ul class="list-group uploadList">
-						            <c:forEach items="${attachFiles}" var="file">
-						                <li class="list-group-item uploadedFile">
-											<a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
-											    ${file.fileName}
-											</a>
-											<button type="button" id="fileDeleteBtn" class="btn btn-xs btn-danger remove-file-btn" data-uuid="${file.uuid}">삭제</button>
-						                </li>
-						            </c:forEach>
-						        </ul>
-						    </div>
-						</c:when>
-						<c:otherwise>
+						<sec:authorize access="isAuthenticated()">
+							<input type="hidden" name="updated_by"
+								value='<sec:authentication property="principal.username"/>' />
+							<input type="hidden" name="created_by"
+								value='<sec:authentication property="principal.username"/>' />
+							<input type="hidden" name="userId"
+								value='<sec:authentication property="principal.member.id"/>' />
+							<input type="hidden" name="id" value="${product.id}" />
+						</sec:authorize>
+        
 						<div class="form-group">
-						        <label>첨부파일</label>
-							<ul class="list-group uploadList">
-								<li class="list-group">첨부파일이 없습니다.
-							</ul>
-							 </div>
-						</c:otherwise>
-					</c:choose>
-					
-					
+						    <label class="required">(※)카테고리</label>
+						    <div>
+						        <label class="radio-inline">
+						            <input type="checkbox" class="category" name="gardening" value="1" ${category.gardening ==1 ? 'checked' : ''}> 🧰 원예용품
+						        </label>
+						        <label class="radio-inline">
+						            <input type="checkbox" class="category" name="plantkit" value="1" ${category.plantkit ==1 ? 'checked' : ''}> 🌱 식물키트모음
+						        </label>
+						        <label class="radio-inline">
+						            <input type="checkbox" class="category" name="hurb" value="1" ${category.hurb ==1 ? 'checked' : ''}> 🌿 허브키우기
+						        </label>
+						        <label class="radio-inline">
+						            <input type="checkbox" class="category" name="vegetable" value="1" ${category.vegetable ==1 ? 'checked' : ''}> 🥬 채소키우기
+						        </label>
+						        <label class="radio-inline">
+						            <input type="checkbox" class="category" name="flower" value="1" ${category.flower ==1 ? 'checked' : ''}> 🌸 꽃씨키우기
+						        </label>
+						        <label class="radio-inline">
+						            <input type="checkbox" class="category" name="etc" value="1" ${category.etc ==1 ? 'checked' : ''}> 📦 기타키우기키트
+						        </label>
+						    </div>
+						</div>
+						
+						<!-- <input type="hidden" name="category" id="selectedCategory"> -->
+						
+						<div class="form-group">
+						    <label class="required">전시영역</label>
+						    <div>
+						        <label class="radio-inline">
+						            <input type="checkbox" name="is_mainone" value="1" ${product.is_mainone ==1 ? 'checked' : ''}> 메인 1
+						        </label>
+						        <label class="radio-inline">
+						            <input type="checkbox" name="is_maintwo" value="1" ${product.is_maintwo ==1 ? 'checked' : ''}> 메인 2
+						        </label>
+						    </div>
+						</div>
+						
+				        <div class="form-group">
+				            <label class="required">(※)상품명</label>
+				            <input type="text" name="product_name" class="form-control" value="${product.product_name}">
+				        </div>
+				        
+				        <div class="form-group">
+				            <label class="required">상품부제(설명)</label>
+				            <input type="text" name="product_content" class="form-control" value="${product.product_content}">
+				        </div>
+				
+				        <div class="form-group">
+				            <label class="required">(※)가격(원)</label>
+				            <input type="number" name="product_price" class="form-control" value="${product.product_price}">
+				        </div>
+				
+				        <div class="form-group">
+					        <!-- 입반할인 -->
+							<div class="form-group row">
+							    <label class="col-sm-2 col-form-label">일반할인</label>
+							    <div class="col-sm-10">
+							        <select id="is_discount" name="is_discount" class="form-control" >
+							            <option value="0" ${product.is_discount ==0 ? 'selected' : ''}>없음</option>
+							            <option value="1" ${product.is_discount ==1 ? 'selected' : ''}>적용</option>
+							        </select>
+							    </div>
+							</div>
+							
+							<!-- 일반 할인율 -->
+							<div id="discount_fields" style="display: none;">
+							    <div class="form-group row">
+							        <label class="col-sm-2 col-form-label">▶ 일반 할인율(%)</label>
+							        <div class="col-sm-10">
+							            <input type="number" id="discount_rate" name="discount_rate" value="${product.discount_rate}" class="form-control" min="0" max="100">
+							        </div>
+							    </div>
+							</div>
+							
+							<!-- 타임세일 여부 -->
+							<div class="form-group row">
+							    <label class="col-sm-2 col-form-label">타임세일</label>
+							    <div class="col-sm-10">
+							        <select id="is_timesales" name="is_timesales" class="form-control">
+							            <option value="0" ${product.is_timesales ==0 ? 'selected' : ''}>없음</option>
+							            <option value="1" ${product.is_timesales ==1 ? 'selected' : ''}>적용</option>
+							        </select>
+							    </div>
+							</div>
+							
+							<!-- 타임세일 할인율 -->
+							<div id="timesales_fields" style="display: none;">
+							    <div class="form-group row">
+							        <label class="col-sm-2 col-form-label">▶ 타임세일 할인율(%)</label>
+							        <div class="col-sm-10">
+							            <input type="number" id="timesalediscount_rate" name="timesalediscount_rate" value="${product.timesalediscount_rate}" class="form-control" min="0" max="100">
+							        </div>
+							    </div>
+							</div>
+							
+							<!-- 총 할인율 표시 -->
+							<div class="form-group row">
+							    <label class="col-sm-2 col-form-label">총 할인율(%)</label>
+							    <div class="col-sm-10">
+							        <input type="text" id="total_discountrate" name="total_discountrate" class="form-control" readonly>
+							    </div>
+							</div>
+							<!-- 최종 가격 표시 -->
+							<div class="form-group row">
+							    <label class="col-sm-2 col-form-label">최종 할인가격(원)</label>
+							    <div class="col-sm-10">
+							        <input type="text" id="discount_price" name="discount_price" class="form-control" readonly>
+							    </div>
+							</div>
+						</div>
+						
+				        <div class="form-group">
+				            <label>(※)배송비(원)</label>
+				            <input type="number" name="delivery_fee" value="3500" class="form-control">
+				        </div>
+				
+				        <div class="form-group">
+				            <label>(※)발송기한(일)</label>
+				            <input type="number" name="delivery_days" value="3" class="form-control">
+				        </div>
+				
+						<div class="form-group">
+						    <label>(※)기초재고수량(개)</label>
+						    <input type="number" name="product_stock" id="product_stock" value="${product.product_stock}" class="form-control" min="0">
+						</div>
+						
+						<div class="form-group">
+						    <label>상품상태</label>
+						    <select name="product_status" id="product_status" class="form-control">
+						        <option value="0">판매중지</option>
+						        <option value="1">정상</option>
+						        <option value="2">품절</option>
+						    </select>
+						</div>	
+			     			        
+				        <!--  <div class="form-group">
+				            <label class="required">상품 이미지 (최대 10장)</label>
+				            <input type="file" name="thumbnailImages" multiple accept="image/*">
+				            <small>썸네일로 사용할 이미지는 체크하세요.</small><br>
+				            <input type="checkbox" name="thumbnailCheck"> 썸네일 여부
+				        </div>
+				
+				        <div class="form-group">
+				            <label>상품설명 이미지 (최대 5장)</label>
+				            <input type="file" name="detailImages" multiple accept="image/*">
+				        </div> -->
+				        
 						<!-- 업로드 영역 -->
 						<div class="form-group">
-							<label class="form-label"><strong>첨부파일 업로드</strong></label>
-
+							<label class="form-label"><strong>상품 이미지 (최대 10장)</strong></label>
 							<!-- 설명 문구 -->
 							<p class="text-muted small mb-2">
-								※ 파일은 <strong>3개</strong> 까지 업로드할 수 있습니다.<br>
+								※ 상품 이미지는 <strong>10개</strong> 까지 업로드할 수 있습니다.<br>
 								※ 여러 파일을 선택하려면 <strong>Ctrl 키</strong>를 누른 상태에서 클릭하세요.<br>
-								※ 첨부파일은 <strong>등록 전에 반드시 업로드</strong>해야 합니다.
+								※ <strong>등록 전에 반드시 업로드</strong>해야 합니다.
 							</p>
 
 							<div class="upload-box p-3 rounded"
 								style="background-color: #f8f9fa; border: 1px solid #ddd;">
-								<input type="file" id="uploadInput" multiple>
-								<ul id="uploadList" class="list-group mt-2"></ul>
-								<button id="uploadBtn" class="btn btn-primary">업로드</button>
+								<input type="file" id="uploadInputThumbnail" name="thumbnailImages" multiple accept="image/*">
+								<small>썸네일로 사용할 이미지는 체크하세요.</small><br>
+								<ul id="uploadListThumbnail" class="list-group mt-2"></ul>
+								<button id="uploadBtnThumbnail" class="btn btn-primary">업로드</button>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="form-label"><strong>상품상세정보 이미지 (최대 5장)</strong></label>
+							<!-- 설명 문구 -->
+							<p class="text-muted small mb-2">
+								※ 상품상세정보 이미지는 <strong>5개</strong> 까지 업로드할 수 있습니다.<br>
+								※ 여러 파일을 선택하려면 <strong>Ctrl 키</strong>를 누른 상태에서 클릭하세요.<br>
+								※ <strong>등록 전에 반드시 업로드</strong>해야 합니다.
+							</p>
+
+							<div class="upload-box p-3 rounded"
+								style="background-color: #f8f9fa; border: 1px solid #ddd;">
+								<input type="file" id="uploadInputDetail" name="detailImages" multiple accept="image/*">
+								<ul id="uploadListDetail" class="list-group mt-2"></ul>
+								<button id="uploadBtnDetail" class="btn btn-primary">업로드</button>
 							</div>
 						</div>
 						
-					<input type="hidden" name="deleteFiles" id="deleteFiles">
-					<input type="hidden" name="attachList" id="attachListJson" >
-					<input type="hidden" name="userId" value="${notice.userId}">
-
-
-                   <div class="text-right mt-3">
-	   					<sec:authorize access="hasAuthority('ADMIN')">
-			            	<button type="submit" data-oper='modify' class="btn btn-success">등록</button>
-	                        <button type="submit" data-oper='remove' class="btn btn-danger">삭제</button>
-			            </sec:authorize>	
-						<button type="submit" data-oper='list' class="btn btn-info">목록</button>
-					</div>
-				</form>
+						<input type="hidden" name="attachList" id="attachListJson">
+						
+						<div class="text-right mt-3">
+							<button type="submit" class="btn btn-success">등록</button>
+							<button type="reset" class="btn btn-warning" id="resetBtn">다시작성</button>
+						</div>
+						
+						<ul id="uploadListThumbnail" class="list-group mt-3"></ul>
+						<ul id="uploadListDetail" class="list-group mt-3"></ul>
+						
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
-<!-- <script src="/resources/js/upload_manager.js"></script> -->
+<script src="/resources/js/RegisterUploadManager.js"></script>
+<script src="/resources/js/PreviewUploader.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
+  let isSubmitting = false;  // 제출 여부를 추적하는 플래그
   const csrfHeader = $("meta[name='_csrf_header']").attr("content");
   const csrfToken = $("meta[name='_csrf']").attr("content");
   
-  var regex = new RegExp("(.*?)\\.(exe|sh|zip|alz)$", "i");
-  var maxSize = 5242880; // 5MB
-  
-  // uploadedFile 갯수
-  const uploadedCount = document.querySelectorAll(".uploadedFile").length;  
-  console.log("uploadedCount:" + uploadedCount);
-  
-  function checkExtension(fileName, fileSize) {
-    const fileSizeMB = (fileSize / (1024 * 1024)).toFixed(2);
-    const maxSizeMB = (maxSize / (1024 * 1024)).toFixed(2);
-    
-
-    if (regex.test(fileName)) {
-      alert("❗ 파일 [ " + fileName + " ]은 허용되지 않는 확장자입니다.");
-      return false;
-    }
-    
-    if (fileSize >= maxSize) {
-      alert("❗ 파일이 [ " + fileName + " ]" + fileSizeMB + "MB 너무 큽니다. (허용 용량 : " + maxSizeMB + "MB)");
-      return false;
-    }
-    
-    return true;
-  }
-  
-  // 선택된 파일 리스트를 전역에서 관리
-  let selectedFiles = [];
-  let uploadedFileList = []; // 업로드 완료된 파일 정보
-  let uploadCompleted = false; // 업로드 완료 여부 flag
-
-  
-  // 업로드 버튼 처음에 숨김
-  $("#uploadBtn").hide(); 
-  
-  //파일 선택 시 UI 표시 및 배열에 저장
-  $("#uploadInput").on("change", function (e) {
-    const files = Array.from(e.target.files);
-
-    // 최대 3개 제한
-    const totalCount = selectedFiles.length + document.querySelectorAll(".uploadedFile").length + files.length;
-	    
-    console.log("[uploadInput]totalCount:" + totalCount);
-	    
-    if (totalCount > 3) {
-	       alert("❗ 최대 3개까지 파일을 업로드할 수 있습니다.");
-	    $(this).val('');
-	    return;
-	  }
-
-    files.forEach(file => {
-      if (checkExtension(file.name, file.size)) {
-        selectedFiles.push(file);
-      }
-    });
-    
-    if (selectedFiles.length > 0) {
-        $("#uploadBtn").show(); // 파일이 선택되면 보여줌
-      }
-
-    updateFileListUI();
-
-    // input 초기화 (같은 파일 다시 선택할 경우에도 change 이벤트 발생하게 하기 위함)
-    $(this).val('');
+  document.querySelector("select[id='is_discount']").addEventListener("change", function () {
+      const box = document.getElementById("discount_fields");
+      const selected = this.value;
+      box.style.display = (selected === "1") ? "block" : "none";
   });
-
-  // 업로드 버튼 클릭 시 실제 업로드
-  $("#uploadBtn").on("click", function (e) {
-    e.preventDefault(); // 기본 submit 방지
-    if(selectedFiles.length === 0){
-      alert("업로드할 파일을 먼저 선택해주세요.");
-      return;
-    }
-    
-    console.log("[uploadBtn]selectedFiles + uploadedFileList:" + (selectedFiles.length + document.querySelectorAll(".uploadedFile").length));
-    
-    if (selectedFiles.length + uploadedFileList.length > 3) {
-    	  alert("❗ 최대 3개까지 파일을 업로드할 수 있습니다.");
-    	  return;
-    	}
-
-    const formData = new FormData();
-    selectedFiles.forEach(file => formData.append("uploadFile", file));
-
-    $.ajax({
-      url: '/uploadAjaxAction',
-      processData: false,
-      contentType: false,
-      data: formData,
-      type: 'POST',
-      dataType: 'json',
-      beforeSend: function (xhr) {
-        if (csrfHeader && csrfToken) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        }
-      },
-      success: function (result) {
-    	  
-    	  console.log("Attatch result: " + result);
-    	  console.log(JSON.stringify(result, null, 2));  // JSON 형식으로 보기 좋게 출력
-    	  
-    	  showUploadedFiles(result);
-    	  uploadedFileList = uploadedFileList.concat(result); // 누적 저장 // 업로드 완료된 파일 저장
-    	  selectedFiles = [];            // 선택 목록 초기화
-    	  uploadCompleted = true;        // 업로드 완료 플래그 true
-    	  setAttachListJson(result);     // 숨은 input에 JSON으로 저장
-    	  $("#uploadBtn").hide(); // 업로드 후 숨김
-    	}
-    });
+  document.querySelector("select[id='is_timesales']").addEventListener("change", function () {
+      const box = document.getElementById("timesales_fields");
+      const selected = this.value;
+      box.style.display = (selected === "1") ? "block" : "none";
   });
   
+  
+  const priceInput = document.querySelector('input[name="product_price"]');
+  const discountSelect = document.getElementById('is_discount');
+  const timesaleSelect = document.getElementById('is_timesales');
+  const discountRateInput = document.getElementById('discount_rate');
+  const timesaleRateInput = document.getElementById('timesalediscount_rate');
+  const totalRateInput = document.getElementById('total_discountrate');
+  const finalPriceInput = document.getElementById('discount_price');
 
-  // 미리보기 영역 업데이트
-  function updateFileListUI() {
-	  
-    const list = $("#uploadList");
-    list.empty();
-
-    selectedFiles.forEach((file, index) => {
-      const li = $("<li>").addClass("list-group-item d-flex align-items-center justify-content-between");
-      const content = $("<div>").addClass("d-flex align-items-center");
-
-      // 이미지 파일이면 미리보기 생성
-      if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const img = $("<img>").attr("src", e.target.result).css({
-            width: "40px",
-            height: "40px",
-            objectFit: "cover",
-            marginRight: "10px"
-          });
-          content.prepend(img);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        content.append(
-          $("<i>").addClass("fas fa-file-alt mr-2")
-        );
-      }
-
-      content.append($("<span>").text(file.name));
-
-      const delBtn = $("<button type='button'>")
-        .addClass("btn btn-sm btn-danger ml-2")
-        .text("삭제")
-        .on("click", function () {
-          selectedFiles.splice(index, 1); // 배열에서 제거
-          updateFileListUI();             // UI 다시 그림
-        });
-
-      li.append(content).append(delBtn);
-      list.append(li);
-    });
+  function toggleFields() {
+      document.getElementById('discount_fields').style.display = discountSelect.value === "1" ? 'block' : 'none';
+      document.getElementById('timesales_fields').style.display = timesaleSelect.value === "1" ? 'block' : 'none';
   }
 
-  function showUploadedFiles(uploadResultArr) {
-	  const list = $("#uploadList");
-	  list.empty();
+  function calculateDiscount() {
+      const price = parseFloat(priceInput.value) || 0;
+      const discountRate = discountSelect.value === "1" ? (parseFloat(discountRateInput.value) || 0) : 0;
+      const timesaleRate = timesaleSelect.value === "1" ? (parseFloat(timesaleRateInput.value) || 0) : 0;
 
-	  uploadResultArr.forEach(obj => {
-	    const fileCallPath = encodeURIComponent(obj.uploadPath.replace(/\\/g, '/') + "/" + obj.uuid + "_" + obj.fileName);
+      const totalRate = discountRate + timesaleRate;
+      const finalPrice = Math.round(price * (1 - totalRate / 100));
 
-	    const li = $("<li>").addClass("list-group-item d-flex justify-content-between align-items-center");
-
-	    const content = $("<div>").addClass("d-flex align-items-center");
-
-	    if (obj.image) {
-	      const thumbPath = "/display?fileName=" + encodeURIComponent(obj.uploadPath.replace(/\\/g, '/') + "/s_" + obj.uuid + "_" + obj.fileName);
-	      content.append(
-	        $("<img>").attr("src", thumbPath).css({
-	          width: "40px",
-	          height: "40px",
-	          objectFit: "cover",
-	          marginRight: "10px"
-	        })
-	      );
-	    } else {
-	      content.append(
-	        $("<i>").addClass("fas fa-file-alt mr-2")
-	      );
-	    }
-
-	    content.append($("<span>").text(obj.fileName));
-
-	    const delBtn = $("<button type='button'>")
-	      .addClass("btn btn-danger btn-sm")
-	      .text("삭제")
-	      .hide() // 업로드 후 삭제버튼 숨김
-	      .on("click", function () {
-	        deleteFile(fileCallPath, obj.image ? "image" : "file", $(this).closest("li"));
-		    // 업로드 목록에서 제거 (UUID 기준)
-		    uploadedFileList = uploadedFileList.filter(file => file.uuid !== obj.uuid);
-		    setAttachListJson(uploadedFileList);
-	      });
-	    
-	    li.append(content).append(delBtn);
-	    list.append(li);
+      totalRateInput.value = totalRate;
+      //finalPriceInput.value = finalPrice.toLocaleString();
+      finalPriceInput.value = finalPrice;
+  }
+  
+	  // 이벤트 연결
+	  discountSelect.addEventListener('change', () => {
+	      toggleFields();
+	      calculateDiscount();
 	  });
-	}
+	
+	  timesaleSelect.addEventListener('change', () => {
+	      toggleFields();
+	      calculateDiscount();
+	  });
+	
+	  [priceInput, discountRateInput, timesaleRateInput].forEach(input => {
+	      input.addEventListener('input', calculateDiscount);
+	  });
+	
+	  // 재고수량 입력값 감지 후 상품상태 자동 변경
+	  document.getElementById('product_stock').addEventListener('input', function() {
+	    const stockValue = parseInt(this.value) || 0;
+	    const statusSelect = document.getElementById('product_status');
 
-
-  function deleteFile(fileName, type, liElement) {
-    $.ajax({
-      url: '/deleteFile',
-      data: { fileName: fileName, type: type },
-      type: 'POST',
-      success: function (result) {
-        liElement.remove();
-      }
-    });
-  }
+	    if (stockValue > 0) {
+	      statusSelect.value = "1";  // 정상
+	    } else if (stockValue === 0) {
+	      statusSelect.value = "2" ;  // 품절
+	    } 
+	  });
+	  
+	  // 페이지 로딩 후 초기화
+	  toggleFields();
+	  calculateDiscount();
   
-  function setAttachListJson(attachList) {
-	  document.getElementById("attachListJson").value = JSON.stringify(attachList);
-	}
+
+  // 선택된 파일 리스트를 전역에서 관리
+  //let selectedImgsThumbnail = [];
+  //let selectedImgsDetail = [];
+  //let uploadedThumbnailList = []; // 썸네일 업로드 완료된 파일 정보
+  //let uploadedDetailList = []; // 상품상세정보 업로드 완료된 파일 정보
+  //let uploadCompletedThumbnail = false; // 썸네일 업로드 완료 여부 flag
+  //let uploadCompletedDetail = false; // 상품상세정보 업로드 완료 여부 flag
+
+  // 업로드 버튼 처음에 숨김
+  //$("#uploadBtnThumbnail").hide(); 
+  //$("#uploadBtnDetail").hide(); 
+  
+
+
+
   
   $("button[type='reset']").on("click", function() {
-    if (uploadedFileList.length > 0) {
-    	uploadedFileList.forEach(function (file) {
+    if (attachList.length > 0) {
+    	attachList.forEach(function (file) {
           const fileCallPath = encodeURIComponent(file.uploadPath.replace(/\\/g, '/') + "/");
           const fileName = encodeURIComponent(file.fileName);
           const uuid = file.uuid;
@@ -375,91 +383,178 @@ $(document).ready(function () {
           });
         });
       }  	  
-	  selectedFiles = [];       // 선택된 파일 배열 초기화
-	  uploadCompleted = false;  // 업로드 완료 상태 초기화
-	  uploadedFileList = [];    // 업로드된 파일 목록 초기화
-	  $("#uploadList").empty(); // 업로드 리스트 UI 초기화
-	  $("#uploadInput").val(''); // 파일 input 초기화 (필수)
-	  $("#uploadBtn").hide(); // 업로드 후 숨김
-	  setAttachListJson([]); // 숨은 필드 초기화
+      selectedFiles = [];       // 선택된 파일 배열 초기화
+	  uploadedFiles = [];    // 업로드된 파일 목록 초기화
+	  uploadCompletedThumbnail = false;  // 업로드 완료 상태 초기화
+	  uploadCompletedDetail = false;  // 업로드 완료 상태 초기화
+	  $("#uploadListThumbnail").empty(); // 업로드 리스트 UI 초기화
+	  $("#uploadListDetail").empty(); // 업로드 리스트 UI 초기화
+	  $("#uploadInputThumbnail").val(''); // 파일 input 초기화 (필수)
+	  $("#uploadInputDetail").val(''); // 파일 input 초기화 (필수)
+	  $("#uploadBtnThumbnail").hide(); // 업로드 숨김
+	  $("#uploadBtnDetail").hide(); // 업로드 숨김
 	});
   
-  
-  let deleteFileUuids = [];
-  
-  $(".remove-file-btn").on("click", function () {
-	  const uuid = $(this).data("uuid");
-	  // uploadedFileList 에서 제거
-	  uploadedFileList = uploadedFileList.filter(file => file.uuid !== uuid);
-	  setAttachListJson(uploadedFileList);
-	  
-	  deleteFileUuids.push(uuid);
-	  $("#deleteFiles").val(deleteFileUuids.join(","));
-	  $(this).closest("li").remove();
-	});
-  
-  
-  var formObj = $("form");
-  
-  // 등록 버튼 클릭 시 유효성 검사
-  $("form button[type=submit]").on("click", function (e) {
-	  
-	const title = $("input[name='title']").val().trim();
-    const content = $("textarea[name='content']").val().trim();
 
-    if (!title) {
-      alert("제목을 입력해주세요.");
-      $("input[name='title']").focus();
+  // 등록 버튼 클릭 시 유효성 검사
+  $("form").on("submit", function (e) {
+	e.preventDefault();
+	isSubmitting = true;  
+	//const checkedCategories = $("input.category:checked");
+	//const checkedCategories = $("input[type='checkbox'][name='gardening'],input[name='plantkit'],input[name='hurb'],input[name='vegetable'],input[name='flower'],input[name='etc']").filter(":checked");
+    const product_name = $("input[name='product_name']").val().trim();
+    const product_price = $("input[name='product_price']").val().trim();
+    const delivery_fee = $("input[name='delivery_fee']").val().trim();
+    const delivery_days = $("input[name='delivery_days']").val().trim();
+    const product_stock = $("input[name='product_stock']").val().trim();
+
+    
+    
+    const checkedCount = $("input[type='checkbox']:checked").length;
+    console.log("checkedCategories:" + checkedCount);
+    if (checkedCount === 0) {
+      alert("카테고리를 하나 이상 선택해주세요.");
       e.preventDefault();
       return;
     }
 
-    if (!content) {
-      alert("내용을 입력해주세요.");
-      $("textarea[name='content']").focus();
+    if (!product_name) {      
+      alert("상품명을 입력해주세요.");
+      $("input[name='product_name']").focus();
+      e.preventDefault();
+      return;
+    }
+    
+    if (!product_price) {
+      alert("가격을 입력해주세요.");
+      $("input[name='product_price']").focus();
+      e.preventDefault();
+      return;
+    }
+    
+    if (!delivery_fee) {
+      alert("배송비를 입력해주세요.");
+      $("input[name='delivery_fee']").focus();
+      e.preventDefault();
+      return;
+    }
+    
+    if (!delivery_days) {
+      alert("배송기한를 입력해주세요.");
+      $("input[name='delivery_days']").focus();
+      e.preventDefault();
+      return;
+    }
+    
+    if (!product_stock) {
+      alert("기초재고수량를 입력해주세요.");
+      $("input[name='product_stock']").focus();
       e.preventDefault();
       return;
     }
 
     // 파일이 선택된 경우 업로드 완료 여부 체크
-    if (selectedFiles.length > 0 && !uploadCompleted) {
-      alert("파일 업로드를 먼저 완료해주세요.");
+    if (uploadThumbnailManager.selectedFiles.length > 0) {
+      alert("상품 이미지 업로드 버튼을 눌러주세요.");
       e.preventDefault();
       return;
     }
-    
-	e.preventDefault();
-	
-	  const operation = $(this).data("oper");
-	
-	console.log(operation);
-	
-	if(operation === 'remove'){
-		if (confirm("삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
-			formObj.attr("action", "/notice/harddel"); // 소프트 삭제 => softdel, 하드(영구) 삭제 => harddel 
-		}
-	}else if(operation === 'list'){
-		formObj.attr("action", "/notice/list").attr("method", "get");
-		var pageNumTag = $("input[name='pageNum']").clone();
-		var amountTag = $("input[name='amount']").clone();
-		var keywordTag = $("input[name='keyword']").clone();
-		var typeTag = $("input[name='type']").clone();
-		
-		formObj.empty();
-		formObj.append(pageNumTag);
-		formObj.append(amountTag);
-		formObj.append(keywordTag);
-		formObj.append(typeTag);
-	}
-	
-	formObj.submit();
-    
+    if (uploadDetailManager.selectedFiles.length > 0) {
+      alert("상품상세정보 이미지 업로드 버튼을 눌러주세요.");
+      e.preventDefault();
+      return;
+    }
+    if (!uploadThumbnailManager.uploadCompletedThumbnail) {
+      alert("상품 이미지 업로드를 완료해주세요.");
+      e.preventDefault();
+      return;
+    }
+    if (!uploadDetailManager.uploadCompletedDetail) {
+      alert("상품상세정보 이미지 업로드를 완료해주세요.");
+      e.preventDefault();
+      return;
+    }
+    $("form").off("submit").submit();
   });
+  
+  
+  // 뒤로가기 시 업로드 된 파일 삭제
+	window.addEventListener("beforeunload", function (e) {
+	    if (!isSubmitting && attachList.length > 0) {
+	        document.getElementById("resetBtn").click();
+	        e.preventDefault();
+	        e.returnValue = ""; // 경고창
+	    }
+	});
+  
+	  const uploadThumbnailManager = new UploadManager({
+		    inputId: "uploadInputThumbnail",
+		    buttonId: "uploadBtnThumbnail",
+		    maxCount: 3,
+		    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
+		    maxSize: 5242880,
+		    type: "Thumbnail"
+		    //productId: $("input[name='product_id']").val()
+		  });
+
+	  const uploadDetailManager = new UploadManager({
+	    inputId: "uploadInputDetail",
+	    buttonId: "uploadBtnDetail",
+	    maxCount: 2,
+	    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
+	    maxSize: 5242880,
+	    type: "Detail"
+	    //productId: $("input[name='product_id']").val()
+	  });
+	  
+	  
+	  function renderImagesFromServer(attachImgs) {
+			const grouped = {
+				Thumbnail: [],
+				Detail: []
+			};
+
+			attachImgs.forEach(img => {
+				const fileData = {
+					id: img.id,
+					product_id: img.product_id,
+					uuid: img.uuid,
+					name: img.img_path.split('/').pop(),  // 파일 이름만 추출
+					//type: img.is_detail ? 'image/jpeg' : 'image/png', // 단순 예시로 이미지 유형 지정
+					type: "image",
+					is_thumbnail: img.is_thumbnail,
+					is_thumbnail_main: img.is_thumbnail_main,
+					is_detail: img.is_detail,
+					img_path: img.img_path,
+					img_path_thumb: img.img_path_thumb
+				};
+
+				if (img.is_thumbnail) grouped.Thumbnail.push(fileData);
+				if (img.is_detail) grouped.Detail.push(fileData);
+			});
+
+			// 인스턴스 초기화 및 렌더링
+			["Thumbnail", "Detail"].forEach(type => {
+				const uploader = new PreviewUploader(type, grouped[type]);
+				uploader.updatePreviewList();
+				window[type.toLowerCase() + "Uploader"] = uploader;  // 예: window.thumbnailUploader
+			});
+		}
+	  
+	  
+		console.log('${attachImgsJson}');
+		const attachImgs = JSON.parse('${attachImgsJson}');
+		console.log(attachImgs);
+		renderImagesFromServer(attachImgs);
+	  
+	  
 
 });
 </script>
-  
+
 </body>
 
-<%@include file="../includes_admin/footer.jsp" %> 
+<%@include file="../includes_admin/footer.jsp"%>
 <%@include file="../main/footer.jsp"%>
+
+</html>

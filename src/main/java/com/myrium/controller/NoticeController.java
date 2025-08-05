@@ -138,6 +138,7 @@ public class NoticeController {
 
 	}
 	
+	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
 	@PostMapping("/modify")
 	public String modify(NoticeVO vo,

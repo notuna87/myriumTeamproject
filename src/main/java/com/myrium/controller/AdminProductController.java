@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +28,7 @@ import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.PageDTO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
+import com.myrium.mapper.AdminProductMapper;
 import com.myrium.service.AdminProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +42,10 @@ import lombok.extern.log4j.Log4j;
 public class AdminProductController {
 
 	private final AdminProductService service;
+	
+	private final AdminProductMapper mapper;
 
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
 		log.info("list__________");
@@ -143,19 +148,28 @@ public class AdminProductController {
 	public void register() {
 	}
 	
-	@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping({"/get", "/modify"})
-	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) {
+	public void get(@RequestParam("id") int id, @ModelAttribute("cri") Criteria cri, Model model) throws JacksonException {
 		//service.incrementReadCnt(id);  // 조회수 증가 로직 (추가)
-		model.addAttribute("product", service.get(id));
-		//model.addAttribute("attachFiles", productservice.findByProductId(id));
-		//List<AttachFileDTO> attachFiles = service.findByProductId(id);
-		//System.out.println("첨부파일 수: " + attachFiles.size()); // 디버깅
-		//model.addAttribute("attachFiles", attachFiles);
-
+		ProductVO productInfo = service.get(id);
+		model.addAttribute("product", productInfo);
+		System.out.println("product: " + productInfo); // 디버깅
+		CategoryVO categoryList = mapper.getCategoryList(id);
+		System.out.println("categoryList: " + categoryList); // 디버깅
+		model.addAttribute("category", categoryList);
+		//model.addAttribute("attachFiles", service.findByProductId(id));
+		List<ImgpathVO> attachImgs = service.findByProductId(id);
+		System.out.println("attachImgs: " + attachImgs); // 디버깅
+		System.out.println("attachImgs cnt: " + attachImgs.size()); // 디버깅
+		//model.addAttribute("attachImgs", attachImgs);
+		model.addAttribute("attachImgsJson", new ObjectMapper().writeValueAsString(attachImgs));
+		System.out.println("attachImgsJson: " + new ObjectMapper().writeValueAsString(attachImgs)); // 디버깅
+		
 	}
 	
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@Transactional
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/modify")
 	public String modify(ProductVO vo,
 				CategoryVO cat,
@@ -195,7 +209,7 @@ public class AdminProductController {
 	    
 	    // 3. 카테고리 등록
 	    cat.setProduct_id(vo.getId());
-	    service.insertCategory(cat);
+	    service.updateCategory(cat);
 	    
 	    // 3. 이미지 경로(첨부파일) 등록
 	    if (attachList != null && !attachList.isEmpty()) {
@@ -229,7 +243,7 @@ public class AdminProductController {
 	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/harddel")
-	public String harddel(@RequestParam("id") Long id,
+	public String harddel(@RequestParam("id") int id,
 	                      @ModelAttribute("cri") Criteria cri,
 	                      RedirectAttributes rttr,
 	                      String customerId) {
@@ -285,9 +299,9 @@ public class AdminProductController {
 	    return "redirect:/product/list";
 	}
 
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/softdel")
-	public String softdel(@RequestParam("id") Long productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
+	public String softdel(@RequestParam("id") int productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
 		log.info("product softdelete..." + productId);
 		if(service.softdel(productId)) {
 			rttr.addFlashAttribute("result","success");
@@ -301,9 +315,9 @@ public class AdminProductController {
 		return "redirect:/product/list";
 	}
 
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/restore")
-	public String restore(@RequestParam("id") Long productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
+	public String restore(@RequestParam("id") int productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
 		log.info("product restore..." + productId);
 		if(service.restore(productId)) {
 			rttr.addFlashAttribute("result","success");
