@@ -194,6 +194,8 @@ public class AdminProductController {
 	        }
 	    }
 	    
+	    log.info("deleteFiles:" + deleteFiles);
+	    
 	    // 1. 기존 첨부파일 삭제
 	    if (deleteFiles != null && !deleteFiles.isEmpty()) {
 	        String[] uuids = deleteFiles.split(",");
@@ -211,7 +213,7 @@ public class AdminProductController {
 	    cat.setProduct_id(vo.getId());
 	    service.updateCategory(cat);
 	    
-	    // 3. 이미지 경로(첨부파일) 등록
+	    // 4. 이미지 경로(첨부파일) 등록
 	    if (attachList != null && !attachList.isEmpty()) {
 	        for (AttachFileDTO dto : attachList) {
 	            ImgpathVO imgVO = new ImgpathVO();

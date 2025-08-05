@@ -223,7 +223,7 @@
 							<div class="upload-box p-3 rounded"
 								style="background-color: #f8f9fa; border: 1px solid #ddd;">
 								<input type="file" id="uploadInputThumbnail" name="thumbnailImages" multiple accept="image/*">
-								<small>썸네일로 사용할 이미지는 체크하세요.</small><br>
+								<small>대표이미지를 체크하세요.</small><br>
 								<ul id="uploadListThumbnail" class="list-group mt-2"></ul>
 								<button id="uploadBtnThumbnail" class="btn btn-primary">업로드</button>
 							</div>
@@ -267,6 +267,82 @@
 <script src="/resources/js/PreviewUploader.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
+	
+	let currentPage = "modify";
+	
+	console.log('${attachImgsJson}');
+	//console.log('${attachImgsn}');
+	//const attachImgs = JSON.parse('${attachImgsJson}');
+	const attachImgs = ${attachImgsJson};
+	console.log("attachImgs:" + attachImgs);
+	
+	const filesFromServer = attachImgs;
+
+	// uploadManager에 맞게 변환
+	const convertedFiles = filesFromServer.map(convertServerImageToUploadFormat);
+	console.log("convertedFiles:" + convertedFiles);
+	// 초기 렌더링 시 서버 데이터 받아서 변환
+	const convertedThumbnailFiles = filesFromServer.map(convertServerImageToUploadFormat).filter(f => f.isThumbnail);
+	console.log("convertedThumbnailFiles:" + convertedThumbnailFiles);
+	const convertedDetailFiles = filesFromServer.map(convertServerImageToUploadFormat).filter(f => f.isDetail);
+	console.log("convertedDetailFiles:" + convertedDetailFiles);
+	
+	function convertServerImageToUploadFormat(serverFile) {
+	  // 예: "product/img/thumbnail/2025/08/04/87f45b6b..._db.jpg"
+	  const fullPath = serverFile.img_path;
+	 console.log("fullPath:" + fullPath);
+	  const uuid = serverFile.uuid;
+	  console.log("uuid:" + uuid);
+	  const pathParts = fullPath.split("/");
+	  console.log("pathParts:" + pathParts);
+	  const fileNameWithUUID = pathParts[pathParts.length - 1]; // "87f45b6b..._db.jpg"
+	  console.log("fileNameWithUUID:" + fileNameWithUUID);
+	  const fileName = fileNameWithUUID.substring(fileNameWithUUID.indexOf("_") + 1); // "db.jpg"
+	  console.log("fileName:" + fileName);
+	  const uploadPath = pathParts.slice(0, pathParts.length - 1).join("/"); // "product/img/thumbnail/2025/08/04"
+	  console.log("uploadPath:" + uploadPath);
+	  
+	  return {
+	    fileName: fileName,
+	    uploadPath: uploadPath,
+	    uuid: uuid,
+	    image: 1,  // 이미지이므로 1
+	    isThumbnail: serverFile.is_thumbnail,
+	    isThumbnailMain: serverFile.is_thumbnail_main,
+	    isDetail: serverFile.is_detail
+	  };
+	}
+	
+	window.uploadThumbnailManager = new UploadManager({
+		    inputId: "uploadInputThumbnail",
+		    buttonId: "uploadBtnThumbnail",
+		    maxCount: 10,
+		    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
+		    maxSize: 5242880,
+		    type: "Thumbnail"
+		    //productId: $("input[name='product_id']").val()
+		  });
+
+	window.uploadDetailManager = new UploadManager({
+	    inputId: "uploadInputDetail",
+	    buttonId: "uploadBtnDetail",
+	    maxCount: 5,
+	    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
+	    maxSize: 5242880,
+	    type: "Detail"
+	    //productId: $("input[name='product_id']").val()
+	  });
+	
+	// 업로드 매니저에 전달
+	
+	
+	uploadThumbnailManager.editMode(convertedThumbnailFiles);
+	uploadDetailManager.editMode(convertedDetailFiles);
+	//selectedFiles = convertedThumbnailFiles;
+	//console.log("selectedFiles:", JSON.stringify(selectedFiles, null, 2));
+	
+	
+	
   let isSubmitting = false;  // 제출 여부를 추적하는 플래그
   const csrfHeader = $("meta[name='_csrf_header']").attr("content");
   const csrfToken = $("meta[name='_csrf']").attr("content");
@@ -487,67 +563,41 @@ $(document).ready(function () {
 	    }
 	});
   
-	  const uploadThumbnailManager = new UploadManager({
-		    inputId: "uploadInputThumbnail",
-		    buttonId: "uploadBtnThumbnail",
-		    maxCount: 3,
-		    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
-		    maxSize: 5242880,
-		    type: "Thumbnail"
-		    //productId: $("input[name='product_id']").val()
-		  });
 
-	  const uploadDetailManager = new UploadManager({
-	    inputId: "uploadInputDetail",
-	    buttonId: "uploadBtnDetail",
-	    maxCount: 2,
-	    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
-	    maxSize: 5242880,
-	    type: "Detail"
-	    //productId: $("input[name='product_id']").val()
-	  });
 	  
 	  
-	  function renderImagesFromServer(attachImgs) {
-			const grouped = {
-				Thumbnail: [],
-				Detail: []
-			};
+	  
 
-			attachImgs.forEach(img => {
-				const fileData = {
-					id: img.id,
-					product_id: img.product_id,
-					uuid: img.uuid,
-					name: img.img_path.split('/').pop(),  // 파일 이름만 추출
-					//type: img.is_detail ? 'image/jpeg' : 'image/png', // 단순 예시로 이미지 유형 지정
-					type: "image",
-					is_thumbnail: img.is_thumbnail,
-					is_thumbnail_main: img.is_thumbnail_main,
-					is_detail: img.is_detail,
-					img_path: img.img_path,
-					img_path_thumb: img.img_path_thumb
-				};
+	  
+		// 썸네일 버튼 토글
+	    if (uploadThumbnailManager.uploadCompletedThumbnail) {
+	    	console.log("uploadCompletedThumbnail: checked")
+	        $('#uploadBtnThumbnail').hide();
+	        $('#deleteBtnThumbnail').hide();
+	        $('#uploadInputThumbnail').hide();
+	    }
 
-				if (img.is_thumbnail) grouped.Thumbnail.push(fileData);
-				if (img.is_detail) grouped.Detail.push(fileData);
+	    if (uploadDetailManager.uploadCompletedDetail) {
+	    	console.log("uploadCompletedDetail: checked")
+	        $('#uploadBtnDetail').hide();
+	        $('#deleteBtnDetail').hide();
+	        $('#uploadInputDetail').hide();
+	    }
+		  
+		  $('#modifyBtnThumbnail').on('click', function () {
+			    $('#uploadBtnThumbnail, #deleteBtnThumbnail, #uploadInputThumbnail').show();
+			    $('#modifyBtnThumbnail').hide();
+			    uploadThumbnailManager.uploadCompletedThumbnail = false;
 			});
 
-			// 인스턴스 초기화 및 렌더링
-			["Thumbnail", "Detail"].forEach(type => {
-				const uploader = new PreviewUploader(type, grouped[type]);
-				uploader.updatePreviewList();
-				window[type.toLowerCase() + "Uploader"] = uploader;  // 예: window.thumbnailUploader
+			$('#modifyBtnDetail').on('click', function () {
+			    $('#uploadBtnDetail, #deleteBtnDetail, #uploadInputDetail').show();
+			    $('#modifyBtnDetail').hide();
+			    uploadDetailManager.uploadCompletedDetail = false;
 			});
-		}
-	  
-	  
-		console.log('${attachImgsJson}');
-		const attachImgs = JSON.parse('${attachImgsJson}');
-		console.log(attachImgs);
-		renderImagesFromServer(attachImgs);
-	  
-	  
+			
+			
+
 
 });
 </script>

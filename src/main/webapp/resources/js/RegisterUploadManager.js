@@ -210,18 +210,23 @@ class UploadManager {
           xhr.setRequestHeader(this.csrfHeader, this.csrfToken);
         }
       },
-      success: result => {
-  	    console.log("Attatch result: " + result);
-	    console.log(JSON.stringify(result, null, 2));  // JSON 형식 출력
-	    	    
-        this.uploadedFiles = result;
-        attachList = attachList.concat(result);
-        this.updateAttachInput();
-        this.updateUploadedUI(result);  // 업로드 후 UI 다시 그림
-        this.selectedFiles = [];
-        this["uploadCompleted" + this.type] = true
-        $(`#${this.buttonId}`).hide();
-      }
+success: result => {
+    console.log("Attatch result: " + result);
+    console.log(JSON.stringify(result, null, 2));  // JSON 형식 출력
+
+    // 기존 uploadedFiles와 합치되 중복 uuid는 제거
+    const existingUuids = new Set(this.uploadedFiles.map(f => f.uuid));
+    const newFiles = result.filter(f => !existingUuids.has(f.uuid));
+
+    this.uploadedFiles = [...this.uploadedFiles, ...newFiles];
+    attachList = [...attachList, ...newFiles];
+
+    this.updateAttachInput();
+    this.updateUploadedUI(this.uploadedFiles);  // 모든 업로드 결과를 다시 그림
+    this.selectedFiles = [];
+    this["uploadCompleted" + this.type] = true;
+    $(`#${this.buttonId}`).hide();
+}
     });
   }
 
@@ -289,17 +294,37 @@ class UploadManager {
 	      content.append(textWrapper);
 	  }
 	  
+	  const btnWrapper = $("<div>").addClass("text-right mt-3");
+	  
 	  const delBtn = $("<button type='button'>")
 	    .addClass("btn btn-danger btn-sm")
 	    .text("삭제")
 	    .hide() // 업로드 후 삭제버튼 숨김
-	    .on("click", () => {
-	      this.deleteFile(fileCallPath, file.image ? "image" : "file", $(this).closest("li"));
-	    });
+	  //  .on("click", () => {
+	  //    this.deleteFile(fileCallPath, file.image ? "image" : "file", $(this).closest("li"));
+	  //  });
 	
 	  li.append(content).append(delBtn);
+	  
+	  	  
+	  		        // 수정 버튼
+		        const editBtn = $("<button type='button'>")
+		            .addClass("btn btn-sm btn-primary ml-2")
+		            .text("수정")
+		            .on("click", () => {
+		                this.editMode([file]);
+		            });
+
+		        btnWrapper.append(editBtn);
+		        li.append(btnWrapper);
+	  
 	  list.append(li);      
-    });  
+    });
+    
+    console.log("this.selectedFiles:" + JSON.stringify(this.selectedFiles, null, 2)); 
+    console.log("this.uploadedFiles:" + JSON.stringify(this.uploadedFiles, null, 2)); 
+    console.log("this.attachList:" + JSON.stringify(this.attachList, null, 2)); 
+
   }
   
   deleteFile(fileName, type, liElement) {
@@ -311,6 +336,16 @@ class UploadManager {
         liElement.remove();
       }
     });
+  }
+  
+  editMode(existingFiles) {
+  console.log("existingFiles:" + JSON.stringify(existingFiles, null, 2));
+    this.selectedFiles = [...existingFiles];  // 외부에서 받은 파일들로 설정
+    this.uploadCompleted = false;
+    this["uploadCompleted" + this.type] = false;
+
+    this.updateUploadedUI(this.selectedFiles);
+    $(`#${this.buttonId}`).show();
   }
 
 
