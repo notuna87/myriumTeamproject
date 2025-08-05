@@ -27,6 +27,7 @@ public class OrderDTO {
 	    private String paymentMethod; // 결제
 	    private int productId;
 	    private String orderDisplayId;
+	    private String ordersIdfull;
 
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;

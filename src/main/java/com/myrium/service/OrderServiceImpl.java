@@ -14,56 +14,59 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderMapper orderMapper;
+	private final OrderMapper orderMapper;
 
-    @Override
-    public List<OrderDTO> getOrderListByCustomerId(String customerId) {
-        return orderMapper.findOrdersByCustomerId(customerId);
-    }
+	@Override
+	public List<OrderDTO> getOrderListByCustomerId(String customerId) {
+		return orderMapper.findOrdersByCustomerId(customerId);
+	}
 
 	@Override
 	public int insertOrders(OrderDTO orders) {
-		
+
 		return orderMapper.insertOrders(orders);
 	}
 
-
 	@Override
 	public void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName) {
-		
+
 		orderMapper.insertOrdersProduct(productid, orderId, userId, quantity, customerName);
 	}
 
-
 	@Override
 	public void deletePurchaseCart(Long userId, int productid) {
-		
+
 		orderMapper.deletePurchaseCart(userId, productid);
 	}
-    
-    // 교환/환불 데이터 조회 구현
-    @Override
-    public List<OrderDTO> getCanceledOrdersByCustomerId(String customerId) {
-        return orderMapper.selectCanceledOrdersByCustomerId(customerId);
-    }
-    
-    @Override
-    public List<Map<String, Object>> countOrdersByStatus(String customerId) {
-        return orderMapper.countOrdersByStatus(customerId);
-    }
-    
-    @Override
-    public int getTotalPaidOrderAmount(String customerId) {
-        return orderMapper.getTotalPaidOrderAmount(customerId);
-    }
-    
-    @Override
-    public List<OrderDTO> getOrderDetail(Long orderId) {
-        return orderMapper.findOrderDetailById(orderId);
-    }
-    
-    @Override
-    public int getValidOrderTotalAmount(Long orderId) {
-        return orderMapper.getValidOrderTotalAmount(orderId);
-    }
+
+	// 교환/환불 데이터 조회 구현
+	@Override
+	public List<OrderDTO> getCanceledOrdersByCustomerId(String customerId) {
+		return orderMapper.selectCanceledOrdersByCustomerId(customerId);
+	}
+
+	@Override
+	public List<Map<String, Object>> countOrdersByStatus(String customerId) {
+		return orderMapper.countOrdersByStatus(customerId);
+	}
+
+	@Override
+	public int getTotalPaidOrderAmount(String customerId) {
+		return orderMapper.getTotalPaidOrderAmount(customerId);
+	}
+
+	@Override
+	public List<OrderDTO> getOrderDetail(Long orderId) {
+		return orderMapper.findOrderDetailById(orderId);
+	}
+
+	@Override
+	public int getValidOrderTotalAmount(Long orderId) {
+		return orderMapper.getValidOrderTotalAmount(orderId);
+	}
+
+	@Override
+	public int countOrdersToday(String today) {
+		return orderMapper.countOrdersToday(today);
+	}
 }

@@ -72,6 +72,9 @@ import lombok.extern.log4j.Log4j;
 	            }
 	        }
 	        firstOrder.setOrderDisplayId();
+	        log.info("first : " + firstOrder);
+	        log.info("orders :" + orders);
+	        
 	        model.addAttribute("firstOrder", firstOrder);
 	        model.addAttribute("orders", orders);
 
