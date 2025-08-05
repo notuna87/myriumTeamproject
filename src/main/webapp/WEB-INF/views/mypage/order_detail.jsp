@@ -68,7 +68,7 @@
 		  <table class="info-table">
 			<tr>
 			  <th>주문번호</th>
-			  <td>${firstOrder.orderDisplayId}</td>
+			  <td>${firstOrder.ordersIdfull}</td>
 			</tr>
 			<tr>
 			  <th>주문일자</th>

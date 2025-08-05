@@ -14,30 +14,28 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderMapper orderMapper;
+	private final OrderMapper orderMapper;
 
-    @Override
-    public List<OrderDTO> getOrderListByCustomerId(String customerId) {
-        return orderMapper.findOrdersByCustomerId(customerId);
-    }
+	@Override
+	public List<OrderDTO> getOrderListByCustomerId(String customerId) {
+		return orderMapper.findOrdersByCustomerId(customerId);
+	}
 
 	@Override
 	public int insertOrders(OrderDTO orders) {
-		
+
 		return orderMapper.insertOrders(orders);
 	}
 
-
 	@Override
 	public void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName) {
-		
+
 		orderMapper.insertOrdersProduct(productid, orderId, userId, quantity, customerName);
 	}
 
-
 	@Override
 	public void deletePurchaseCart(Long userId, int productid) {
-		
+
 		orderMapper.deletePurchaseCart(userId, productid);
 	}
     
@@ -79,4 +77,9 @@ public class OrderServiceImpl implements OrderService {
         int updated = orderMapper.updateExchangeStatus(orderId, productId);
         return updated > 0;
     }
+  
+  	@Override
+	public int countOrdersToday(String today) {
+		return orderMapper.countOrdersToday(today);
+	}
 }

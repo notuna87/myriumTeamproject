@@ -31,5 +31,7 @@ public interface OrderMapper {
 	 //환불,교환처리
 	 int updateRefundStatus(@Param("orderId") Long orderId, @Param("productId") Long productId);
 	 int updateExchangeStatus(@Param("orderId") Long orderId, @Param("productId") Long productId);
+  
+	int countOrdersToday(String today);
 
 }

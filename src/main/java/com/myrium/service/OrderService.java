@@ -7,12 +7,13 @@ import com.myrium.domain.OrderDTO;
 
 public interface OrderService {
 
+	int insertOrders(OrderDTO orders);
 
-  	int insertOrders(OrderDTO orders);
+	void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName);
 
-	  void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName);
+	void deletePurchaseCart(Long userId, int productid);
 
-  	void deletePurchaseCart(Long userId, int productid); 
+	List<OrderDTO> getOrderListByCustomerId(String customerId);
 
 	  List<OrderDTO> getOrderListByCustomerId(String customerId);
 	  
@@ -29,5 +30,7 @@ public interface OrderService {
 	  //교환,환불
 	  boolean applyRefund(Long orderId, Long productId);
 	  boolean applyExchange(Long orderId, Long productId);
+
+	int countOrdersToday(String today);
 
 }
