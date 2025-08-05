@@ -18,7 +18,7 @@ public class OrderDTO {
 	    private String productName; // 상품 이름
 	    private int productPrice; // 상품 가격
 	    private int quantity; // 상품 수량
-	    private String orderStatus; // 주문 상태
+	    private int orderStatus; // 주문 상태
 	    private String zipcode; // 우편 주소
 	    private Long userId; // 유저 아이디 
 	    private String title; // 제목
@@ -62,5 +62,29 @@ public class OrderDTO {
             this.orderDisplayId = "";
         }
     }
-}
+    
+    public OrderDTO(int orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+    
+    public OrderDTO() {
+	}
+
+	public String getOrderStatusText() {
+        switch (this.orderStatus) {
+            case 0: return "입금전";
+            case 1: return "배송준비중";
+            case 2: return "배송중";
+            case 3: return "배송완료";
+            case 4: return "교환신청중";
+            case 5: return "교환완료";
+            case 6: return "환불신청중";
+            case 7: return "환불완료";
+        }
+        return null;
+    }
+
+    }
+
+
 

@@ -80,7 +80,7 @@
 			</tr>
 			<tr>
 			  <th>주문처리상태</th>
-			  <td>${orders[0].orderStatus}</td>
+			  <td>${orders[0].orderStatusText}</td>
 			</tr>
 		  </table>
 		</section>
@@ -115,10 +115,10 @@
 				</section>
 
 			<c:forEach var="order" items="${orders}">
-			  <c:if test="${order.orderStatus != '환불완료' 
-			            && order.orderStatus != '환불신청중'
-			            && order.orderStatus != '교환완료' 
-			            && order.orderStatus != '교환신청중'}">
+			<c:if test="${order.orderStatus != '4' 
+				          && order.orderStatus != '5'
+				          && order.orderStatus != '6' 
+				          && order.orderStatus != '7'}">
 			
 			    <div class="product-box">
 			      <div class="product-img">
@@ -188,8 +188,8 @@
 				</div>
 					<div class="btn-group-right">
 						<button class="btn-order-list"
-							onclick="location.href='${pageContext.request.contextPath}/mypage/order_history'">
-							주문목록보기
+						    onclick="location.href='${pageContext.request.contextPath}/mypage/order-history'">
+						    주문목록보기
 						</button>
 					</div>
 			</div>

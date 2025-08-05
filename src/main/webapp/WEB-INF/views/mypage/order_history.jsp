@@ -98,7 +98,7 @@
 	
 	        <!--주문 상태 및 버튼 -->
 	        <div class="order-status">
-	          <p class="status">${orders[0].orderStatus}</p>
+	          <p class="status">${orders[0].orderStatusText}</p>
 	          <div class="status-buttons">
 	            <button>배송조회</button>
 	            <button>구매후기</button>
@@ -151,7 +151,7 @@
 	
 	        <!-- 주문별 상태 및 버튼 -->
 	        <div class="order-status">
-	          <p class="status">${orders[0].orderStatus}</p>
+	          <p class="status">${orders[0].orderStatusText}</p>
 	          <div class="status-buttons">
 	            <button>환불영수증</button>
 	            <button class="confirm-btn">환불확인</button>

@@ -101,10 +101,10 @@ public class MypageController {
         // 주문 상태별 개수 조회 추가
         List<Map<String, Object>> statusCounts = orderService.countOrdersByStatus(customerId);
         Map<String, Integer> statusMap = new LinkedHashMap<>();
-        statusMap.put("입금전", 0);
-        statusMap.put("배송준비중", 0);
-        statusMap.put("배송중", 0);
-        statusMap.put("배송완료", 0);
+        statusMap.put("0", 0); // 입금전
+        statusMap.put("1", 0); // 배송준비중
+        statusMap.put("2", 0); // 배송중
+        statusMap.put("3", 0); // 배송완료
 
         for (Map<String, Object> row : statusCounts) {
             String status = (String) row.get("ORDER_STATUS");
@@ -143,8 +143,8 @@ public class MypageController {
 
         model.addAttribute("totalPaidAmount", totalPaidAmount);
 
- 
-        model.addAttribute("orderStatusMap", statusMap);
+        model.addAttribute("statusMap", statusMap);
+        //model.addAttribute("orderStatusMap", statusMap);
 
         return "mypage/mypage"; // mypage.jsp
     }

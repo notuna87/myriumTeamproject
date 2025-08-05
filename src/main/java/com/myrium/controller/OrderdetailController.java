@@ -44,9 +44,9 @@ import lombok.extern.log4j.Log4j;
 	        // 유효 상품만 추출 (환불/교환 제외)
 	        List<OrderDTO> validOrders = new ArrayList<>();
 	        for (OrderDTO dto : orders) {
-	            String status = dto.getOrderStatus();
-	            if (!status.equals("환불완료") && !status.equals("환불신청중")
-	                    && !status.equals("교환완료") && !status.equals("교환신청중")) {
+	            int status = dto.getOrderStatus();
+	            if (status!=7 && status!=6
+	                    && status!=5 && status!=4) {
 	                validOrders.add(dto);
 	            }
 	        }
@@ -77,12 +77,12 @@ import lombok.extern.log4j.Log4j;
 
 	        // 상태 표시용 로직
 	        if (productId != null) {
-	            model.addAttribute("orderStatus", firstOrder.getOrderStatus());
+	            model.addAttribute("orderStatus", validOrders.get(0).getOrderStatusText());
 	        } else {
 	            if (!validOrders.isEmpty()) {
-	                model.addAttribute("orderStatus", validOrders.get(0).getOrderStatus());
+	                model.addAttribute("orderStatus", validOrders.get(0).getOrderStatusText());
 	            } else {
-	                model.addAttribute("orderStatus", "환불완료");
+	                model.addAttribute("orderStatus", new OrderDTO(7).getOrderStatusText());
 	            }
 	        }
 
