@@ -54,7 +54,7 @@ public interface ProductMapper {
 	public CartVO findCartItem(@Param("productId") int productId, @Param("userId") Long userId);
 
 	// 중복일시 update set
-	public CartVO addQuantity(@Param("productId") int productId, @Param("userId") Long userId,@Param("newQuantity") Integer newQuantity);
+	public CartVO addQuantity(@Param("productId") int productId, @Param("userId") Long userId, @Param("newQuantity") Integer newQuantity);
 
 	// 중복일시 update set
 	int updateQuantity(@Param("productId") Long productId, @Param("userId") Long userId,@Param("newQuantity") Integer newQuantity);

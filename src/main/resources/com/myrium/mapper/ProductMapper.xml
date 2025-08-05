@@ -91,10 +91,12 @@
 		AND user_id = #{userId, jdbcType=BIGINT}
 	</select>
 
-	<update id="updateQuantity">
-		UPDATE cart SET quantity = #{newQuantity, jdbcType=INTEGER}, updated_at = sysdate 
-		WHERE product_id = #{productId, jdbcType=BIGINT} AND user_id = #{userId,jdbcType=BIGINT} AND is_deleted = 0
-	</update>
+<update id="updateQuantity" parameterType="com.myrium.domain.OrderDTO">
+    UPDATE cart SET quantity = #{newQuantity, jdbcType=INTEGER}, updated_at = sysdate 
+    WHERE product_id = #{productId, javaType=java.lang.Long, jdbcType=BIGINT} 
+      AND user_id = #{userId, javaType=java.lang.Long, jdbcType=BIGINT} 
+      AND is_deleted = 0
+</update>
 	
 	<update id="deleteCart">
 		UPDATE cart SET is_deleted = 1, quantity = 0 WHERE product_id = #{productId} AND user_id = #{userId}

@@ -2,6 +2,7 @@ package com.myrium.service;
 
 import java.util.List;
 
+import com.myrium.domain.MemberDTO;
 import com.myrium.domain.MemberVO;
 
 public interface MemberService {
@@ -31,4 +32,7 @@ public interface MemberService {
     //회원정보수정
     void updateMemberInfo(MemberVO member);
     public MemberVO readById(long id);
+
+    
+    
 }

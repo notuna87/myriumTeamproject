@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.myrium.domain.AuthVO;
+import com.myrium.domain.MemberDTO;
 import com.myrium.domain.MemberVO;
 import com.myrium.mapper.MemberMapper;
 
@@ -151,4 +152,5 @@ public class MemberServiceImpl implements MemberService {
     public MemberVO readById(long id) {
         return memberMapper.readById(id);
     }
+
 }

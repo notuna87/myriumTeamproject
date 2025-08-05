@@ -81,28 +81,28 @@
 					<div class="status-grid">
 						<div class="status-step">
 							<div class="count">
-								<c:out value="${statusMap['입금전']}" default="0" />
+								<c:out value="${statusMap['0']}" default="0" />
 							</div>
 							<div class="label">입금전</div>
 						</div>
 						<div class="arrow">&gt;</div>
 						<div class="status-step">
 							<div class="count">
-								<c:out value="${statusMap['배송준비중']}" default="0" />
+      							<c:out value="${statusMap['1']}" default="0" />
 							</div>
 							<div class="label">배송준비중</div>
 						</div>
 						<div class="arrow">&gt;</div>
 						<div class="status-step">
 							<div class="count">
-								<c:out value="${statusMap['배송중']}" default="0" />
+      							<c:out value="${statusMap['2']}" default="0" />
 							</div>
 							<div class="label">배송중</div>
 						</div>
 						<div class="arrow">&gt;</div>
 						<div class="status-step">
 							<div class="count">
-								<c:out value="${statusMap['배송완료']}" default="0" />
+     							 <c:out value="${statusMap['3']}" default="0" />
 							</div>
 							<div class="label">배송완료</div>
 						</div>
@@ -124,7 +124,7 @@
           <div class="order-header">
   <div class="order-date">
     <strong>${firstOrder.orderDate}</strong>
-    <span>(${firstOrder.orderDisplayId})</span>
+    <span>(${firstOrder.ordersIdfull})</span>
   </div>
   <a href="${pageContext.request.contextPath}/mypage/order_detail?orderId=${ordersId}" class="detail-link">상세보기 &gt;</a>
 </div>
@@ -144,10 +144,10 @@
 
           <!--주문 상태 바-->
           <div class="order-status-bar">
-            <div class="status-text">${orders[0].orderStatus}</div>
+			<div class="status-text">${orders[0].orderStatusText}</div>
             <div class="status-buttons">
-              <button class="order-btn">배송조회</button>
               <button class="order-btn">구매후기</button>
+              <button class="order-btn">배송조회</button>
             </div>
           </div>
         </div>

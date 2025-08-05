@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.myrium.domain.AuthVO;
+import com.myrium.domain.MemberDTO;
 import com.myrium.domain.MemberVO;
 
 public interface MemberMapper {
@@ -43,6 +44,7 @@ public interface MemberMapper {
     //회원정보수정
     void updateMemberInfo(MemberVO member);
     public MemberVO readById(Long id);
+
 }
 
 

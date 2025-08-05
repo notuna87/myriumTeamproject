@@ -106,7 +106,7 @@
 			</p>
 
 				<sec:authorize access="!isAuthenticated()">
-					<button type="submit" class="inCart" id="cartLinkNotLoggedIn">장바구니</button>
+					<button type="submit" class="inCart" id="cartLinkNotLoggedInSub">장바구니</button>
 					<div class="purchase" id="purchaseLinkNotLoggedIn">구매하기</div>
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
@@ -202,11 +202,9 @@
 			document.addEventListener("DOMContentLoaded", updateTotalPrice);
 		}
 
-		
-		
 		// 로그인 확인
 		document.addEventListener("DOMContentLoaded", function() {
-			const cartLink = document.getElementById('cartLinkNotLoggedIn');
+			const cartLink = document.getElementById('cartLinkNotLoggedInSub');
 			const purchaseLink = document.getElementById('purchaseLinkNotLoggedIn');
 			
 			if (cartLink) {
