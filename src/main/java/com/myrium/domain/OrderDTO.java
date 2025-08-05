@@ -24,7 +24,7 @@ public class OrderDTO {
 	    private String title; // 제목
 	    private String content; // 내용
 	    private String deliveryMsg; // 상품요청사항
-	    private String paymentmethod; // 결제
+	    private String paymentMethod; // 결제
 	    private int productId;
 	    private String orderDisplayId;
 
