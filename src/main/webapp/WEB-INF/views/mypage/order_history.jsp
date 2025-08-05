@@ -96,15 +96,16 @@
 	          </div>
 	        </c:forEach>
 	
-	        <!--주문 상태 및 버튼 -->
-	        <div class="order-status">
-	          <p class="status">${orders[0].orderStatusText}</p>
-	          <div class="status-buttons">
-	            <button>배송조회</button>
-	            <button>구매후기</button>
-	            <button class="confirm-btn">구매확정</button>
-	          </div>
-	        </div>
+	        <!-- 주문 상태 및 버튼 -->
+			<div class="order-status">
+			  <p class="status">${orders[0].orderStatusText}</p>
+			  <div class="status-buttons">
+			  	<button>구매후기</button>
+			  	<!--  <button class="confirm-btn">구매후기</button>-->
+			    <button onclick="submitRequest('exchange', ${order.id}, ${order.productId})">교환신청</button>
+			    <button onclick="submitRequest('refund', ${orders[0].id}, ${orders[0].productId})">환불신청</button>
+			  </div>
+			</div>
 	      </div>
 	    </c:forEach>
 	  </c:otherwise>
@@ -171,6 +172,8 @@
 	    <button>&gt;</button>
 	  </div>
 	</div>
+	<c:out value="${orders[0].id}" default="id 없음" />
+<c:out value="${orders[0].productId}" default="productId 없음" />
   </div> <!-- /order-container -->
 </div> <!-- /mypage-layout -->
 
@@ -213,6 +216,36 @@ const paginationHTML = {
 		    document.getElementById('pagination-content').innerHTML = paginationHTML[targetTab];
 		  });
 		});
+		
+		//환불,교환처리
+function submitRequest(type, orderId, productId) {
+  const url = `${ctx}/mypage/request-${type}`;
+  const payload = {
+    orderId: orderId,
+    productId: productId
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+    alert((type === 'refund' ? '환불' : '교환') + ' 신청이 완료되었습니다.');
+      location.reload(); // 새로고침으로 상태 갱신
+    } else {
+      alert(data.message || '처리 중 오류가 발생했습니다.');
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert('요청 처리 중 오류가 발생했습니다.');
+  });
+}
 </script>
 </body>
 </html>

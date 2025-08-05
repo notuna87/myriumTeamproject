@@ -38,34 +38,47 @@ public class OrderServiceImpl implements OrderService {
 
 		orderMapper.deletePurchaseCart(userId, productid);
 	}
-
-	// 교환/환불 데이터 조회 구현
-	@Override
-	public List<OrderDTO> getCanceledOrdersByCustomerId(String customerId) {
-		return orderMapper.selectCanceledOrdersByCustomerId(customerId);
-	}
-
-	@Override
-	public List<Map<String, Object>> countOrdersByStatus(String customerId) {
-		return orderMapper.countOrdersByStatus(customerId);
-	}
-
-	@Override
-	public int getTotalPaidOrderAmount(String customerId) {
-		return orderMapper.getTotalPaidOrderAmount(customerId);
-	}
-
-	@Override
-	public List<OrderDTO> getOrderDetail(Long orderId) {
-		return orderMapper.findOrderDetailById(orderId);
-	}
-
-	@Override
-	public int getValidOrderTotalAmount(Long orderId) {
-		return orderMapper.getValidOrderTotalAmount(orderId);
-	}
-
-	@Override
+    
+    // 교환/환불 데이터 조회 구현
+    @Override
+    public List<OrderDTO> getCanceledOrdersByCustomerId(String customerId) {
+        return orderMapper.selectCanceledOrdersByCustomerId(customerId);
+    }
+    
+    @Override
+    public List<Map<String, Object>> countOrdersByStatus(String customerId) {
+        return orderMapper.countOrdersByStatus(customerId);
+    }
+    
+    @Override
+    public int getTotalPaidOrderAmount(String customerId) {
+        return orderMapper.getTotalPaidOrderAmount(customerId);
+    }
+    
+    @Override
+    public List<OrderDTO> getOrderDetail(Long orderId) {
+        return orderMapper.findOrderDetailById(orderId);
+    }
+    
+    @Override
+    public int getValidOrderTotalAmount(Long orderId) {
+        return orderMapper.getValidOrderTotalAmount(orderId);
+    }
+    
+    //환불버튼처리
+    @Override
+    public boolean applyRefund(Long orderId, Long productId) {
+        int updated = orderMapper.updateRefundStatus(orderId, productId);
+        return updated > 0;
+    }
+    //교환버튼처리
+    @Override
+    public boolean applyExchange(Long orderId, Long productId) {
+        int updated = orderMapper.updateExchangeStatus(orderId, productId);
+        return updated > 0;
+    }
+  
+  	@Override
 	public int countOrdersToday(String today) {
 		return orderMapper.countOrdersToday(today);
 	}

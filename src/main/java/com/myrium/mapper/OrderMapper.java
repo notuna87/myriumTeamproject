@@ -16,18 +16,22 @@ public interface OrderMapper {
 
 	void deletePurchaseCart(@Param("userId") Long userId, @Param("productid") int productid);
 
-	List<OrderDTO> findOrdersByCustomerId(String customerId);
-
-	List<OrderDTO> selectCanceledOrdersByCustomerId(String customerId);
-
-	List<Map<String, Object>> countOrdersByStatus(String customerId);
-
-	int getTotalPaidOrderAmount(String customerId);
-
-	List<OrderDTO> findOrderDetailById(Long orderId);
-
-	int getValidOrderTotalAmount(Long orderId);
-
+	 List<OrderDTO> findOrdersByCustomerId(String customerId);
+	 
+	 List<OrderDTO> selectCanceledOrdersByCustomerId(String customerId);
+	 
+	 List<Map<String, Object>> countOrdersByStatus(String customerId);
+	 
+	 int getTotalPaidOrderAmount(String customerId);
+	 
+	 List<OrderDTO> findOrderDetailById(Long orderId);
+	 
+	 int getValidOrderTotalAmount(Long orderId);
+	 
+	 //환불,교환처리
+	 int updateRefundStatus(@Param("orderId") Long orderId, @Param("productId") Long productId);
+	 int updateExchangeStatus(@Param("orderId") Long orderId, @Param("productId") Long productId);
+  
 	int countOrdersToday(String today);
 
 }
