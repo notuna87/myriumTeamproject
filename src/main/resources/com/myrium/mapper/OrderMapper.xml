@@ -16,6 +16,7 @@ SELECT
   TO_CHAR(o.order_date, 'YYYY-MM-DD') AS orderDate,
   p.product_name       AS productName,
   p.product_price      AS productPrice,
+  p.id                 AS productId, 
   op.quantity          AS quantity
 FROM
   orders_product op
@@ -77,7 +78,7 @@ ORDER BY o.order_date DESC, o.orders_id
     UPDATED_BY, UPDATED_AT, 
     IS_DELETED, QUANTITY, ORDER_STATUS
 ) VALUES (
-    ORDERS_PRODUCT_SEQ.NEXTVAL, #{productid} ,#{orderId}, #{userId},
+    ORDERS_PRODUCT_SEQ.NEXTVAL, #{productId} ,#{orderId}, #{userId},
     #{customerName}, SYSDATE,
     NULL, NULL,
     0, #{quantity}, 0
@@ -85,7 +86,7 @@ ORDER BY o.order_date DESC, o.orders_id
 </insert>
 
 <delete id="deletePurchaseCart">
-	delete from cart where user_id=#{userId} and product_id = #{productid}
+	delete from cart where user_id=#{userId} and product_id = #{productId}
 </delete>
 
   <!-- 취소/반품/교환 완료 주문 조회 -->
@@ -187,4 +188,30 @@ ORDER BY o.order_date DESC, o.orders_id
     AND op.order_status NOT IN (4, 5, 6, 7)
     AND op.is_deleted = 0
 </select>
+
+
+<!-- 환불,교환버튼 처리 -->
+<update id="updateRefundStatus">
+  UPDATE orders
+  SET is_apprefund = 1
+  WHERE id = #{orderId}
+</update>
+
+<update id="updateExchangeStatus">
+  UPDATE orders
+  SET is_appexchanged = 1
+  WHERE id = #{orderId}
+</update>
+
+<update id="updateProductRefundStatus">
+  UPDATE orders_product
+  SET order_status = 6  -- 환불신청중
+  WHERE orders_id = #{orderId} AND product_id = #{productId}
+</update>
+
+<update id="updateProductExchangeStatus">
+  UPDATE orders_product
+  SET order_status = 4  -- 교환신청중
+  WHERE orders_id = #{orderId} AND product_id = #{productId}
+</update>
 </mapper>

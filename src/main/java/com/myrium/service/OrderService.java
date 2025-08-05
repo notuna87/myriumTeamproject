@@ -25,5 +25,9 @@ public interface OrderService {
 	  List<OrderDTO> getOrderDetail(Long orderId);
 	  
 	  int getValidOrderTotalAmount(Long orderId);
+	  
+	  //교환,환불
+	  boolean applyRefund(Long orderId, Long productId);
+	  boolean applyExchange(Long orderId, Long productId);
 
 }

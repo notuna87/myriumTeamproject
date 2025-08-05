@@ -146,8 +146,8 @@
           <div class="order-status-bar">
 			<div class="status-text">${orders[0].orderStatusText}</div>
             <div class="status-buttons">
-              <button class="order-btn">배송조회</button>
               <button class="order-btn">구매후기</button>
+              <button class="order-btn">배송조회</button>
             </div>
           </div>
         </div>

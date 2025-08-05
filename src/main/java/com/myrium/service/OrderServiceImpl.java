@@ -66,4 +66,17 @@ public class OrderServiceImpl implements OrderService {
     public int getValidOrderTotalAmount(Long orderId) {
         return orderMapper.getValidOrderTotalAmount(orderId);
     }
+    
+    //환불버튼처리
+    @Override
+    public boolean applyRefund(Long orderId, Long productId) {
+        int updated = orderMapper.updateRefundStatus(orderId, productId);
+        return updated > 0;
+    }
+    //교환버튼처리
+    @Override
+    public boolean applyExchange(Long orderId, Long productId) {
+        int updated = orderMapper.updateExchangeStatus(orderId, productId);
+        return updated > 0;
+    }
 }

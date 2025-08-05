@@ -17,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.myrium.domain.MemberVO;
@@ -193,7 +195,34 @@ public class MypageController {
         return "mypage/order_history";
     }
 
+	
+	//환불신청
+	@PostMapping("/mypage/request-refund")
+	@ResponseBody
+	public Map<String, Object> requestRefund(@RequestBody Map<String, Object> payload) {
+	    Long orderId = Long.valueOf(payload.get("orderId").toString());
+	    Long productId = Long.valueOf(payload.get("productId").toString());
 
+	    boolean result = orderService.applyRefund(orderId, productId);
+
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("success", result);
+	    return response;
+	}
+
+	//교환신청
+	@PostMapping("/mypage/request-exchange")
+	@ResponseBody
+	public Map<String, Object> requestExchange(@RequestBody Map<String, Object> payload) {
+	    Long orderId = Long.valueOf(payload.get("orderId").toString());
+	    Long productId = Long.valueOf(payload.get("productId").toString());
+
+	    boolean result = orderService.applyExchange(orderId, productId);
+
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("success", result);
+	    return response;
+	}
     }
     
 
