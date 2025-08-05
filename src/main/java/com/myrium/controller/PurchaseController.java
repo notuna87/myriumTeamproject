@@ -96,7 +96,7 @@ public class PurchaseController {
 		orders.setAddress(addr);
 		orders.setDeliveryMsg(messageSelect);
 		orders.setPhoneNumber(phone);
-		orders.setPaymentmethod(payment);
+		orders.setPaymentMethod(payment);
 		
 		orderservice.insertOrders(orders);
 		Long OrderId = orders.getId(); // select키로 반환받은 orderid 값 가져오기
