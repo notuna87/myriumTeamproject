@@ -24,7 +24,7 @@ JOIN product p ON op.product_id = p.id
 JOIN member m ON op.user_id = m.id
 WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
   AND m.customer_id = #{customerId}
-  AND op.order_status NOT IN ('환불완료', '교환완료','환불신청중','교환신청중')
+  AND op.order_status NOT IN (4, 5, 6, 7)
 ORDER BY o.order_date DESC, o.orders_id
 </select>
 
@@ -109,7 +109,7 @@ ORDER BY o.order_date DESC, o.orders_id
     JOIN member m ON op.user_id = m.id
     WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
       AND m.customer_id = #{customerId}
-      AND op.order_status IN ('환불완료', '교환완료','교환신청중','환불신청중')
+     	AND op.order_status IN (4, 5, 6, 7)
     ORDER BY o.order_date DESC, o.orders_id
   </select>
 
@@ -125,7 +125,7 @@ ORDER BY o.order_date DESC, o.orders_id
   JOIN member m ON o.user_id = m.id
   WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
     AND m.customer_id = #{customerId}
-    AND TRIM(op.order_status) IN ('입금전', '배송준비중', '배송중', '배송완료')
+    AND TRIM(op.order_status) IN (0, 1, 2, 3)
     AND o.order_date >= ADD_MONTHS(SYSDATE, -3)
   GROUP BY TRIM(op.order_status)
 </select>
@@ -143,7 +143,7 @@ ORDER BY o.order_date DESC, o.orders_id
   LEFT JOIN product p ON op.product_id = p.id
   WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
     AND m.customer_id = #{customerId}
-    AND op.order_status IN ('배송준비중', '배송중', '배송완료')
+    AND op.order_status IN (0, 1, 2, 3)
     AND o.order_date >= ADD_MONTHS(SYSDATE, -3)
 </select>
 
@@ -184,7 +184,7 @@ ORDER BY o.order_date DESC, o.orders_id
     orders_product op
   JOIN product p ON op.product_id = p.id
   WHERE op.orders_id = #{orderId}
-    AND op.order_status NOT IN ('환불완료', '환불신청중', '교환완료', '교환신청중')
+    AND op.order_status NOT IN (4, 5, 6, 7)
     AND op.is_deleted = 0
 </select>
 </mapper>
