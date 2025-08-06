@@ -101,9 +101,9 @@
 			  <p class="status">${orders[0].orderStatusText}</p>
 			  <div class="status-buttons">
 			  	<button>구매후기</button>
-			  	<!--  <button class="confirm-btn">구매후기</button>-->
-			    <button onclick="submitRequest('exchange', ${order.id}, ${order.productId})">교환신청</button>
-			    <button onclick="submitRequest('refund', ${orders[0].id}, ${orders[0].productId})">환불신청</button>
+
+			  <button onclick="submitRequest('exchange', ${orders[0].id}, ${orders[0].productId})">교환신청</button>
+    			<button onclick="submitRequest('refund', ${orders[0].id}, ${orders[0].productId})">환불신청</button>
 			  </div>
 			</div>
 	      </div>
@@ -217,35 +217,51 @@ const paginationHTML = {
 		  });
 		});
 		
-		//환불,교환처리
+		//환불,교환처
+	
 function submitRequest(type, orderId, productId) {
-  const url = `${ctx}/mypage/request-${type}`;
-  const payload = {
-    orderId: orderId,
-    productId: productId
-  };
+			
+	console.log(type);
+	console.log(orderId);
+	console.log(productId);
 
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-    alert((type === 'refund' ? '환불' : '교환') + ' 신청이 완료되었습니다.');
-      location.reload(); // 새로고침으로 상태 갱신
+    let status = 0;
+
+    if (type === 'exchange') {
+        status = 4;
+    } else if (type === 'refund') {
+        status = 6;
     } else {
-      alert(data.message || '처리 중 오류가 발생했습니다.');
+        alert("잘못된 요청입니다.");
+        return;
     }
-  })
-  .catch(err => {
-    console.error(err);
-    alert('요청 처리 중 오류가 발생했습니다.');
-  });
+    
+    fetch('/mypage/updateOrderStatus', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            orderId: orderId,
+            productId: productId,
+            orderStatus: status
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("요청이 처리되었습니다.");
+            location.reload(); // 새로고침으로 상태 갱신
+        } else {
+            alert("처리에 실패했습니다.");
+        }
+    })
+    .catch(error => {
+        console.error("에러 발생:", error);
+        alert("서버 요청 중 오류가 발생했습니다.");
+    });
+
 }
+
 </script>
 </body>
 </html>

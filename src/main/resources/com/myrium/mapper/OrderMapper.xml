@@ -17,8 +17,10 @@ SELECT
   p.product_name       AS productName,
   p.product_price      AS productPrice,
   p.id                 AS productId, 
+
   op.quantity          AS quantity,
   o.orders_id AS ordersIdfull
+
 FROM
   orders_product op
 JOIN orders o ON op.orders_id = o.id
@@ -56,7 +58,7 @@ ORDER BY o.order_date DESC, o.orders_id
 ) VALUES (
     #{id},
     #{userId},
-    #{ordersId},
+    '20250804-0000001',
     SYSDATE,
     #{customerId},
     0,
@@ -64,7 +66,7 @@ ORDER BY o.order_date DESC, o.orders_id
     #{zipcode},
     #{phoneNumber},
     #{deliveryMsg},
-    #{paymentMethod},
+    #{payment},
     0,
     0,
     0,
@@ -87,7 +89,7 @@ ORDER BY o.order_date DESC, o.orders_id
 </insert>
 
 <delete id="deletePurchaseCart">
-	delete from cart where user_id=#{userId} and product_id = #{productid}
+	delete from cart where user_id=#{userId} and product_id = #{productId}
 </delete>
 
   <!-- 취소/반품/교환 완료 주문 조회 -->
@@ -103,8 +105,7 @@ ORDER BY o.order_date DESC, o.orders_id
       p.product_name       AS productName,
       p.product_price      AS productPrice,
       op.quantity          AS quantity,
-      op.order_status       AS orderStatus,
-      o.orders_id AS ordersIdfull
+      op.order_status       AS orderStatus
     FROM
       orders_product op
     JOIN orders o ON op.orders_id = o.id
@@ -168,8 +169,7 @@ ORDER BY o.order_date DESC, o.orders_id
     o.phone_number AS phoneNumber,
     o.zipcode AS zipcode,
     o.address AS address,
-    o.delivery_msg AS deliveryMsg,
-     o.orders_id AS ordersIdfull
+    o.delivery_msg AS deliveryMsg
 
   FROM
     orders o
@@ -193,34 +193,59 @@ ORDER BY o.order_date DESC, o.orders_id
 </select>
 
 <!-- 환불,교환버튼 처리 -->
-<update id="updateRefundStatus">
+<update id="updateOrderStatus">
+    UPDATE orders_product
+    SET order_status = #{orderStatus}
+    WHERE orders_id = #{orderId}
+    AND product_id = #{productId}
+</update>
+<update id="updateOrdersStatus">
+  UPDATE orders
+  SET order_status = #{orderStatus}
+  WHERE id = #{orderId}
+</update>
+
+<!-- 환불 신청 여부 1로 업데이트 -->
+<update id="updateRefundFlag">
   UPDATE orders
   SET is_apprefund = 1
   WHERE id = #{orderId}
 </update>
 
-<update id="updateExchangeStatus">
+<!-- 교환 신청 여부 1로 업데이트 -->
+<update id="updateExchangeFlag">
   UPDATE orders
   SET is_appexchanged = 1
   WHERE id = #{orderId}
 </update>
 
-<update id="updateProductRefundStatus">
+<!-- 환불 완료 시 두 테이블 상태 변경 -->
+<update id="completeRefundStatus">
+  UPDATE orders
+  SET order_status = 7
+  WHERE id = #{orderId};
+  
   UPDATE orders_product
-  SET order_status = 6  -- 환불신청중
-  WHERE orders_id = #{orderId} AND product_id = #{productId}
+  SET order_status = 7
+  WHERE orders_id = #{orderId};
 </update>
 
-<update id="updateProductExchangeStatus">
+<!-- 교환 완료 시 두 테이블 상태 변경 -->
+<update id="completeExchangeStatus">
+  UPDATE orders
+  SET order_status = 5
+  WHERE id = #{orderId};
+  
   UPDATE orders_product
-  SET order_status = 4  -- 교환신청중
-  WHERE orders_id = #{orderId} AND product_id = #{productId}
+  SET order_status = 5
+  WHERE orders_id = #{orderId};
 </update>
- 
-<select id="countOrdersToday" resultType="int">
-  SELECT COUNT(*) 
-  FROM orders 
-  WHERE SUBSTR(orders_id, 1, 8) = #{today}
+
+<select id="findOrderById" resultType="com.myrium.domain.OrderDTO">
+  SELECT id, is_refundable, is_exchanged
+  FROM orders
+  WHERE id = #{orderId}
+
 </select>
 
 <select id="productList" resultType="com.myrium.domain.OrderDTO">
