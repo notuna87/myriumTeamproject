@@ -3,7 +3,6 @@ package com.myrium.controller;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,8 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -197,32 +198,26 @@ public class MypageController {
 
 	
 	//환불신청
-	@PostMapping("/mypage/request-refund")
-	@ResponseBody
-	public Map<String, Object> requestRefund(@RequestBody Map<String, Object> payload) {
-	    Long orderId = Long.valueOf(payload.get("orderId").toString());
-	    Long productId = Long.valueOf(payload.get("productId").toString());
+    @PostMapping("/mypage/updateOrderStatus")
+    @ResponseBody
+    public ResponseEntity<String> updateOrderStatus(@RequestBody Map<String, Object> requestData) {
+        try {
+            Long orderId = ((Number) requestData.get("orderId")).longValue();
+            int productId = ((Number) requestData.get("productId")).intValue();
+            int orderStatus = ((Number) requestData.get("orderStatus")).intValue();
 
-	    boolean result = orderService.applyRefund(orderId, productId);
+            log.info(orderId);
+            log.info(productId);
+            log.info(orderStatus);
+            
+            orderService.updateOrderStatus(orderId, productId, orderStatus);
 
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("success", result);
-	    return response;
-	}
-
-	//교환신청
-	@PostMapping("/mypage/request-exchange")
-	@ResponseBody
-	public Map<String, Object> requestExchange(@RequestBody Map<String, Object> payload) {
-	    Long orderId = Long.valueOf(payload.get("orderId").toString());
-	    Long productId = Long.valueOf(payload.get("productId").toString());
-
-	    boolean result = orderService.applyExchange(orderId, productId);
-
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("success", result);
-	    return response;
-	}
+            return ResponseEntity.ok("상태 변경 완료");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러 발생");
+        }
+    }
     }
     
 

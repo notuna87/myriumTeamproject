@@ -28,6 +28,12 @@ public class OrderDTO {
 	    private String paymentMethod; // 결제
 	    private int productId;
 	    private String orderDisplayId;
+	    
+	    private int isApprefund;   //환불신청여부
+	    private int isAppexchanged;  //교환신청여부
+	    
+	    private int isRefundable; //환불완료
+	    private int isExchanged;	//교환완료
 
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;

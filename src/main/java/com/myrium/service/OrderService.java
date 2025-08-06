@@ -27,7 +27,6 @@ public interface OrderService {
 	  int getValidOrderTotalAmount(Long orderId);
 	  
 	  //교환,환불
-	  boolean applyRefund(Long orderId, Long productId);
-	  boolean applyExchange(Long orderId, Long productId);
-
+	  void updateOrderStatus(Long orderId, int productId, int orderStatus);
+	  void checkAndCompleteStatus(Long orderId);
 }

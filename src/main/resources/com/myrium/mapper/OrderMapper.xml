@@ -191,27 +191,57 @@ ORDER BY o.order_date DESC, o.orders_id
 
 
 <!-- 환불,교환버튼 처리 -->
-<update id="updateRefundStatus">
+<update id="updateOrderStatus">
+    UPDATE orders_product
+    SET order_status = #{orderStatus}
+    WHERE orders_id = #{orderId}
+    AND product_id = #{productId}
+</update>
+<update id="updateOrdersStatus">
+  UPDATE orders
+  SET order_status = #{orderStatus}
+  WHERE id = #{orderId}
+</update>
+
+<!-- 환불 신청 여부 1로 업데이트 -->
+<update id="updateRefundFlag">
   UPDATE orders
   SET is_apprefund = 1
   WHERE id = #{orderId}
 </update>
 
-<update id="updateExchangeStatus">
+<!-- 교환 신청 여부 1로 업데이트 -->
+<update id="updateExchangeFlag">
   UPDATE orders
   SET is_appexchanged = 1
   WHERE id = #{orderId}
 </update>
 
-<update id="updateProductRefundStatus">
+<!-- 환불 완료 시 두 테이블 상태 변경 -->
+<update id="completeRefundStatus">
+  UPDATE orders
+  SET order_status = 7
+  WHERE id = #{orderId};
+  
   UPDATE orders_product
-  SET order_status = 6  -- 환불신청중
-  WHERE orders_id = #{orderId} AND product_id = #{productId}
+  SET order_status = 7
+  WHERE orders_id = #{orderId};
 </update>
 
-<update id="updateProductExchangeStatus">
+<!-- 교환 완료 시 두 테이블 상태 변경 -->
+<update id="completeExchangeStatus">
+  UPDATE orders
+  SET order_status = 5
+  WHERE id = #{orderId};
+  
   UPDATE orders_product
-  SET order_status = 4  -- 교환신청중
-  WHERE orders_id = #{orderId} AND product_id = #{productId}
+  SET order_status = 5
+  WHERE orders_id = #{orderId};
 </update>
+
+<select id="findOrderById" resultType="com.myrium.domain.OrderDTO">
+  SELECT id, is_refundable, is_exchanged
+  FROM orders
+  WHERE id = #{orderId}
+</select>
 </mapper>

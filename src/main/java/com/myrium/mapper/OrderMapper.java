@@ -28,8 +28,19 @@ public interface OrderMapper {
 	 
 	 int getValidOrderTotalAmount(Long orderId);
 	 
-	 //환불,교환처리
-	 int updateRefundStatus(@Param("orderId") Long orderId, @Param("productId") Long productId);
-	 int updateExchangeStatus(@Param("orderId") Long orderId, @Param("productId") Long productId);
-
+	 //교환,환불 버튼처리
+	 void updateOrderStatus(@Param("orderId") Long orderId,
+             @Param("productId") int productId,
+             @Param("orderStatus") int orderStatus);
+	 void updateOrdersStatus(@Param("orderId") Long orderId,
+             @Param("orderStatus") int orderStatus);
+	 
+	 //교환,환불 신청여부
+	 void updateRefundFlag(@Param("orderId") Long orderId);
+	 void updateExchangeFlag(@Param("orderId") Long orderId);
+	 
+	 //교환,환불 완료
+	 void completeRefundStatus(@Param("orderId") Long orderId);
+	 void completeExchangeStatus(@Param("orderId") Long orderId);
+	 OrderDTO findOrderById(@Param("orderId") Long orderId);
 }
