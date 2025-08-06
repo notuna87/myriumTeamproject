@@ -29,6 +29,7 @@ public class OrderDTO {
 	    private int paymentMethod; // 결제
 	    private int productId;
 	    private String orderDisplayId;
+	    private String ordersIdfull;
 	    
 	    private int isApprefund;   //환불신청여부
 	    private int isAppexchanged;  //교환신청여부

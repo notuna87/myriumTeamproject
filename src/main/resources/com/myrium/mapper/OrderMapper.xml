@@ -58,7 +58,7 @@ ORDER BY o.order_date DESC, o.orders_id
 ) VALUES (
     #{id},
     #{userId},
-    '20250804-0000001',
+    #{ordersId},
     SYSDATE,
     #{customerId},
     0,
@@ -66,7 +66,7 @@ ORDER BY o.order_date DESC, o.orders_id
     #{zipcode},
     #{phoneNumber},
     #{deliveryMsg},
-    #{payment},
+    #{paymentMethod},
     0,
     0,
     0,
@@ -89,7 +89,7 @@ ORDER BY o.order_date DESC, o.orders_id
 </insert>
 
 <delete id="deletePurchaseCart">
-	delete from cart where user_id=#{userId} and product_id = #{productId}
+	delete from cart where user_id=#{userId} and product_id = #{productid}
 </delete>
 
   <!-- 취소/반품/교환 완료 주문 조회 -->
@@ -105,6 +105,7 @@ ORDER BY o.order_date DESC, o.orders_id
       p.product_name       AS productName,
       p.product_price      AS productPrice,
       op.quantity          AS quantity,
+      o.orders_id AS ordersIdfull
       op.order_status       AS orderStatus
     FROM
       orders_product op
@@ -169,6 +170,7 @@ ORDER BY o.order_date DESC, o.orders_id
     o.phone_number AS phoneNumber,
     o.zipcode AS zipcode,
     o.address AS address,
+     o.orders_id AS ordersIdfull
     o.delivery_msg AS deliveryMsg
 
   FROM
@@ -240,6 +242,13 @@ ORDER BY o.order_date DESC, o.orders_id
   SET order_status = 5
   WHERE orders_id = #{orderId};
 </update>
+
+<select id="countOrdersToday" resultType="int">
+  SELECT COUNT(*) 
+  FROM orders 
+  WHERE SUBSTR(orders_id, 1, 8) = #{today}
+</select>
+
 
 <select id="findOrderById" resultType="com.myrium.domain.OrderDTO">
   SELECT id, is_refundable, is_exchanged
