@@ -6,8 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.myrium.domain.CartVO;
-import com.myrium.domain.CategoryVO;
 import com.myrium.domain.ImgpathVO;
+import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 
 // 작성자 : 노기원
@@ -71,5 +71,7 @@ public interface ProductMapper {
 
 	public void increaseSalesCount(@Param("increaseSalesCount") int increaseSalesCount,
 			@Param("productid") int productid);
-
+	
+	//상품리뷰
+	public ProductDTO findById(Long id);
 }

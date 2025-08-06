@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myrium.domain.CartVO;
-import com.myrium.domain.CategoryVO;
-import com.myrium.domain.Criteria;
 import com.myrium.domain.ImgpathVO;
-import com.myrium.domain.OrderDTO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 import com.myrium.mapper.ProductMapper;
@@ -25,6 +22,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ProductMapper productmapper;
+	
 
 	// controller에서 지정한 카테고리에 해당하는 목록 불러오기
 	@Override
@@ -181,5 +179,10 @@ public class ProductServiceImpl implements ProductService {
 		productmapper.increaseSalesCount(increaseSalesCount, productid);
 	}
 	
+	//상품리뷰
+	@Override
+	public ProductDTO getProductById(Long id) {
+		return productmapper.findById(id); 
+	}
 
 }

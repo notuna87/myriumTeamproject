@@ -262,5 +262,33 @@ JOIN orders_product op ON p.id = op.product_id
 WHERE op.orders_id = #{orderId}
 </select>
 
+<!-- 상품리뷰 -->
+<select id="findProductInOrder" resultType="com.myrium.domain.OrderDTO">
+  SELECT
+    o.id AS id,
+    TO_CHAR(o.order_date, 'yyyy-MM-dd') AS orderDate,
+    op.orders_id AS ordersId,
+    op.quantity,
+    op.order_status AS orderStatus,
+    p.product_name AS productName,
+    p.product_price AS productPrice,
+    p.id AS productId,
+    o.payment_method AS paymentMethod,
+    o.customer_name AS receiver,
+    o.phone_number AS phoneNumber,
+    o.zipcode AS zipcode,
+    o.address AS address,
+    o.orders_id AS ordersIdfull,
+    o.delivery_msg AS deliveryMsg
+  FROM
+    orders o
+  JOIN orders_product op ON o.id = op.orders_id
+  LEFT JOIN product p ON op.product_id = p.id
+  WHERE o.id = #{orderId}
+    AND p.id = #{productId}
+</select>
+
+
+
 
 </mapper>

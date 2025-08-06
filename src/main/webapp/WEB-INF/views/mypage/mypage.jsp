@@ -147,7 +147,10 @@
 			<div class="status-text">${orders[0].orderStatusText}</div>
            <div class="status-buttons">
 			  <c:if test="${orders[0].orderStatus == 3}">
-			    <button class="order-btn">구매후기</button>
+			    <button 
+  onclick="location.href='${pageContext.request.contextPath}/mypage/review?orderId=${orders[0].id}&productId=${orders[0].productId}'">
+  구매후기
+</button>
 			  </c:if>
 			  <button class="order-btn">배송조회</button>
 			</div>

@@ -108,5 +108,9 @@ public class OrderServiceImpl implements OrderService {
 		return orderMapper.productList(orderId);
 	}
 
-
+	//상품리뷰
+	@Override
+	public OrderDTO getOrderProduct(Long orderId, int productId) {
+	    return orderMapper.findProductInOrder(orderId, productId);
+	}
 }

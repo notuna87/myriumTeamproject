@@ -123,4 +123,9 @@
 	<update id="increaseSalesCount">
 		UPDATE product SET sales_count = #{increaseSalesCount} where id = #{productid}
 	</update>
+	
+	<!-- 상품리뷰 -->
+	<select id="findById" parameterType="long" resultType="com.myrium.domain.ProductDTO">
+  	SELECT * FROM product WHERE id = #{id}
+	</select>
 </mapper>

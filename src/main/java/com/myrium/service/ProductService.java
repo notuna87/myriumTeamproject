@@ -2,8 +2,6 @@ package com.myrium.service;
 
 import java.util.List;
 
-import com.myrium.domain.Criteria;
-import com.myrium.domain.OrderDTO;
 import com.myrium.domain.ProductDTO;
 
 public interface ProductService {
@@ -19,6 +17,9 @@ public interface ProductService {
 	public ProductDTO productSliderImg(int id);
 	
 	public ProductDTO productDetailImg(int id);
+	
+	//상품리뷰
+	public ProductDTO getProductById(Long id);
 	
 	// 판매량 순 10개까지 리스트 불러오기
 	public List<ProductDTO> getPopularProduct();
