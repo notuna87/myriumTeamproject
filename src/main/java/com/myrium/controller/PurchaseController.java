@@ -1,6 +1,8 @@
 package com.myrium.controller;
 
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -98,12 +100,25 @@ public class PurchaseController {
 		orders.setPhoneNumber(phone);
 		orders.setPaymentMethod(payment);
 		
+		// 오늘 날짜 가져오기
+		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+		
+		// 날짜별 주문 카운트
+		int count = orderservice.countOrdersToday(today);
+		
+		String sequence = String.format("%08d", count + 1);
+		String ordersId = today + "-" + sequence;
+		
+		orders.setOrdersId(ordersId);
+		
 		orderservice.insertOrders(orders);
 		Long OrderId = orders.getId(); // select키로 반환받은 orderid 값 가져오기
 		
 		// 상품 ID 여러 개 받기
 		String[] productIdArray = request.getParameterValues("productId");
 		String[] quantityArray = request.getParameterValues("quantity");
+		
+
 		
 		if (productIdArray != null && quantityArray != null) {
 			for (int i = 0; i < productIdArray.length; i++) {

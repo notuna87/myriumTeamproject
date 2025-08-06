@@ -124,7 +124,7 @@
           <div class="order-header">
   <div class="order-date">
     <strong>${firstOrder.orderDate}</strong>
-    <span>(${firstOrder.orderDisplayId})</span>
+    <span>(${firstOrder.ordersIdfull})</span>
   </div>
   <a href="${pageContext.request.contextPath}/mypage/order_detail?orderId=${ordersId}" class="detail-link">상세보기 &gt;</a>
 </div>

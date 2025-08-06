@@ -100,7 +100,7 @@ public class MypageController {
         }
 
         model.addAttribute("groupedOrders", groupedOrders);
-
+        
         // 주문 상태별 개수 조회 추가
         List<Map<String, Object>> statusCounts = orderService.countOrdersByStatus(customerId);
         Map<String, Integer> statusMap = new LinkedHashMap<>();
@@ -165,6 +165,7 @@ public class MypageController {
 
         // 주문 내역 조회
         List<OrderDTO> orderList = orderService.getOrderListByCustomerId(customerId);
+        log.info("orderList" + orderList);
         
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         for (OrderDTO dto : orderList) {
