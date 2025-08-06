@@ -115,4 +115,12 @@
 	<update id="decreaseStock">
 		UPDATE product SET product_stock = #{decreaseStock} where id = #{productid}
 	</update>
+	
+	<select id="getSalesCount">
+		SELECT sales_count from product where id = #{productid}
+	</select>
+	
+	<update id="increaseSalesCount">
+		UPDATE product SET sales_count = #{increaseSalesCount} where id = #{productid}
+	</update>
 </mapper>

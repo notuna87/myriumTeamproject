@@ -130,8 +130,8 @@
 			<!-- 결제 정보 끝-->
 			<!-- 버튼 시작 -->
 			<div class="buttonWrap">
-				<input type="button" class="orderCheck" value="주문확인하기">
-				<input type="button" class="moreShopping" value="쇼핑계속하기">
+				<input onclick="location.href='${pageContext.request.contextPath}/mypage'" type="button" class="orderCheck" value="주문확인하기">
+				<input onclick="location.href='${pageContext.request.contextPath}/'" type="button"" type="button" class="moreShopping" value="쇼핑계속하기">
 			</div>
 			<!-- 버튼 끝 -->
 		</section>

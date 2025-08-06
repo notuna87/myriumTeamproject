@@ -171,5 +171,15 @@ public class ProductServiceImpl implements ProductService {
 		productmapper.decreaseStock(decreaseStock, productid);
 	}
 
+	@Override
+	public int getSalesCount(int productid) {
+		return productmapper.getSalesCount(productid);
+	}
+
+	@Override
+	public void increaseSalesCount(int increaseSalesCount, int productid) {
+		productmapper.increaseSalesCount(increaseSalesCount, productid);
+	}
+	
 
 }

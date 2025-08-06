@@ -37,4 +37,8 @@ public interface ProductService {
 
 	public void decreaseStock(int decreaseStock, int productid);
 
+	public int getSalesCount(int productid);
+
+	public void increaseSalesCount(int increaseSalesCount, int productid);
+
 }

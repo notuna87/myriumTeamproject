@@ -97,6 +97,16 @@ public class OrderServiceImpl implements OrderService {
             orderMapper.completeExchangeStatus(orderId);
         }
     }
-    
+  
+  	@Override
+	public int countOrdersToday(String today) {
+		return orderMapper.countOrdersToday(today);
+	}
+  
+	@Override
+	public List<OrderDTO> productList(Long orderId) {
+		return orderMapper.productList(orderId);
+	}
+
 
 }

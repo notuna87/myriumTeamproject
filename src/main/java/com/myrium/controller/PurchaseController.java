@@ -130,10 +130,13 @@ public class PurchaseController {
 				orderservice.insertOrdersProduct(productid, OrderId , userId, quantity, customerName);
 				orderservice.deletePurchaseCart(userId, productid);
 				int getStock = productservice.getStock(productid);
-			
+				int getSalesCount = productservice.getSalesCount(productid);
+				
 				int decreaseStock = getStock - quantity;
+				int increaseSalesCount = getSalesCount + quantity;
 				
 				productservice.decreaseStock(decreaseStock, productid);
+				productservice.increaseSalesCount(increaseSalesCount, productid);
 			}
 		} else {
 			log.warn("상품 없음");

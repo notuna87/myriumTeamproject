@@ -43,26 +43,33 @@ public interface ProductMapper {
 	// 장바구니 상품 추가
 	public CartVO inCart(@Param("quantity") int quantity, @Param("productId") int productId,
 			@Param("userId") Long userId, @Param("customerId") String customerId);
-	
+
 	// 장바구니 리스트 가져오기
 	public List<ProductVO> CartList(Long userId);
-	
+
 	// 카트 수량 불러오기
-	public CartVO getCartInfo(@Param("productId") int productId,  @Param("userId") Long userId);
-	
+	public CartVO getCartInfo(@Param("productId") int productId, @Param("userId") Long userId);
+
 	// 중복된 상품이 장바구니에 담겼는지 확인하기
 	public CartVO findCartItem(@Param("productId") int productId, @Param("userId") Long userId);
 
 	// 중복일시 update set
-	public CartVO addQuantity(@Param("productId") int productId, @Param("userId") Long userId, @Param("newQuantity") Integer newQuantity);
+	public CartVO addQuantity(@Param("productId") int productId, @Param("userId") Long userId,
+			@Param("newQuantity") Integer newQuantity);
 
 	// 중복일시 update set
-	int updateQuantity(@Param("productId") Long productId, @Param("userId") Long userId,@Param("newQuantity") Integer newQuantity);
+	int updateQuantity(@Param("productId") Long productId, @Param("userId") Long userId,
+			@Param("newQuantity") Integer newQuantity);
 
 	int deleteCart(@Param("productId") Long productId, @Param("userId") Long userId);
 
 	public int getStock(int productid);
 
 	public void decreaseStock(@Param("decreaseStock") int decreaseStock, @Param("productid") int productid);
+
+	public int getSalesCount(int productid);
+
+	public void increaseSalesCount(@Param("increaseSalesCount") int increaseSalesCount,
+			@Param("productid") int productid);
 
 }
