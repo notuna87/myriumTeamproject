@@ -194,11 +194,15 @@ public class MypageController {
         model.addAttribute("cancelGroupedOrders", cancelGroupedOrders);
         model.addAttribute("cancelCount", cancelList.size());
 
+        log.info(cancelGroupedOrders);
+        log.info(groupedOrders);
+        
         return "mypage/order_history";
     }
 
 	
 	//환불신청
+
     @PostMapping("/mypage/updateOrderStatus")
     @ResponseBody
     public ResponseEntity<String> updateOrderStatus(@RequestBody Map<String, Object> requestData) {
@@ -219,6 +223,7 @@ public class MypageController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러 발생");
         }
     }
+
     }
     
 

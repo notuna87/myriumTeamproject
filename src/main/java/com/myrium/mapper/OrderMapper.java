@@ -11,7 +11,7 @@ public interface OrderMapper {
 
 	int insertOrders(OrderDTO orders);
 
-	void insertOrdersProduct(@Param("productid") int productid, @Param("orderId") Long orderId,
+	void insertOrdersProduct(@Param("productId") int productid, @Param("orderId") Long orderId,
 			@Param("userId") Long userId, @Param("quantity") int quantity, @Param("customerName") String customerName);
 
 	void deletePurchaseCart(@Param("userId") Long userId, @Param("productid") int productid);
@@ -43,4 +43,6 @@ public interface OrderMapper {
 	 void completeRefundStatus(@Param("orderId") Long orderId);
 	 void completeExchangeStatus(@Param("orderId") Long orderId);
 	 OrderDTO findOrderById(@Param("orderId") Long orderId);
+
+
 }

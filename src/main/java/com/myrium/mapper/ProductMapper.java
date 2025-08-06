@@ -61,4 +61,8 @@ public interface ProductMapper {
 
 	int deleteCart(@Param("productId") Long productId, @Param("userId") Long userId);
 
+	public int getStock(int productid);
+
+	public void decreaseStock(@Param("decreaseStock") int decreaseStock, @Param("productid") int productid);
+
 }

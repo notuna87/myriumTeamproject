@@ -101,6 +101,7 @@
 			  <p class="status">${orders[0].orderStatusText}</p>
 			  <div class="status-buttons">
 			  	<button>구매후기</button>
+
 			  <button onclick="submitRequest('exchange', ${orders[0].id}, ${orders[0].productId})">교환신청</button>
     			<button onclick="submitRequest('refund', ${orders[0].id}, ${orders[0].productId})">환불신청</button>
 			  </div>
@@ -171,6 +172,8 @@
 	    <button>&gt;</button>
 	  </div>
 	</div>
+	<c:out value="${orders[0].id}" default="id 없음" />
+<c:out value="${orders[0].productId}" default="productId 없음" />
   </div> <!-- /order-container -->
 </div> <!-- /mypage-layout -->
 
@@ -214,7 +217,7 @@ const paginationHTML = {
 		  });
 		});
 		
-		//환불,교환처리
+		//환불,교환처
 	
 function submitRequest(type, orderId, productId) {
 			
@@ -250,7 +253,6 @@ function submitRequest(type, orderId, productId) {
             location.reload(); // 새로고침으로 상태 갱신
         } else {
             alert("처리에 실패했습니다.");
-        	console.log("범인");
         }
     })
     .catch(error => {
@@ -259,7 +261,6 @@ function submitRequest(type, orderId, productId) {
     });
 
 }
-
 
 </script>
 </body>
