@@ -62,17 +62,19 @@
 
 		<div class="searchBoxWrap">
 			<fieldset class="headerFieldset">
-				<input class="searchBox" type="text" placeholder="내가 키운 채소 내가 먹기" style="height: 18px;">
-				<a href="#" class="searchIcon"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_search.svg" alt="search_icon">
-				</a>
+				<form id="searchForm" style="display: flex; align-items: center;" action="/search" method="post">
+					<input name="productSearch" class="searchBox" type="text" placeholder="내가 키운 채소 내가 먹기" style="height: 18px;">
+					<a href="#" class="searchIcon"> <img onclick="document.getElementById('searchForm').submit();" src="${pageContext.request.contextPath}/resources/img/logo/icon_search.svg" alt="search_icon">
+					</a>
+				</form>
 			</fieldset>
 			<a href="#" class="cartIcon"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_user.svg" alt="user_icon">
 			</a>
 			<sec:authorize access="!isAuthenticated()">
-			<a href="#" class="cartIcon" id="cartLinkNotLoggedIn"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_cart.svg" alt="cart_icon"></a>
+				<a href="#" class="cartIcon" id="cartLinkNotLoggedIn"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_cart.svg" alt="cart_icon"></a>
 			</sec:authorize>
 			<sec:authorize access="isAuthenticated()">
-			<a href="${pageContext.request.contextPath}/cart" class="cartIcon"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_cart.svg" alt="cart_icon"></a>
+				<a href="${pageContext.request.contextPath}/cart" class="cartIcon"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_cart.svg" alt="cart_icon"></a>
 			</sec:authorize>
 
 

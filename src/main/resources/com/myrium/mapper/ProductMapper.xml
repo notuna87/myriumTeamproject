@@ -96,10 +96,13 @@
 
 	<update id="updateQuantity"
 		parameterType="com.myrium.domain.OrderDTO">
-		UPDATE cart SET quantity = #{newQuantity, jdbcType=INTEGER}, updated_at =
+		UPDATE cart SET quantity = #{newQuantity,
+		jdbcType=INTEGER}, updated_at =
 		sysdate
-		WHERE product_id = #{productId, javaType=java.lang.Long, jdbcType=BIGINT}
-		AND user_id = #{userId, javaType=java.lang.Long, jdbcType=BIGINT}
+		WHERE product_id = #{productId,
+		javaType=java.lang.Long, jdbcType=BIGINT}
+		AND user_id = #{userId,
+		javaType=java.lang.Long, jdbcType=BIGINT}
 		AND is_deleted = 0
 	</update>
 
@@ -107,22 +110,31 @@
 		UPDATE cart SET is_deleted = 1, quantity = 0 WHERE
 		product_id = #{productId} AND user_id = #{userId}
 	</update>
-	
+
 	<select id="getStock" resultType="int">
-		SELECT product_stock FROM product WHERE id = #{productid}
+		SELECT product_stock FROM
+		product WHERE id = #{productid}
 	</select>
-	
+
 	<update id="decreaseStock">
-		UPDATE product SET product_stock = #{decreaseStock} where id = #{productid}
+		UPDATE product SET product_stock = #{decreaseStock}
+		where id = #{productid}
 	</update>
-	
+
 	<select id="getSalesCount">
-		SELECT sales_count from product where id = #{productid}
+		SELECT sales_count from product where id =
+		#{productid}
 	</select>
-	
+
 	<update id="increaseSalesCount">
-		UPDATE product SET sales_count = #{increaseSalesCount} where id = #{productid}
+		UPDATE product SET sales_count =
+		#{increaseSalesCount} where id = #{productid}
 	</update>
+
+	<select id="getSearchProductList"
+		resultType="com.myrium.domain.ProductVO">
+		SELECT * FROM product
+		WHERE LOWER(product_name) LIKE '%' || #{searchKeyword} || '%'
 	
 	<!-- 상품리뷰 -->
 	<select id="findById" parameterType="long" resultType="com.myrium.domain.ProductDTO">

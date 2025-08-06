@@ -51,6 +51,7 @@
 
 .searchInput>img {
 	width: 22px;
+	cursor: pointer;
 }
 /* 검색 input 끝 */
 /* 상단 검색 창 끝 */
@@ -93,9 +94,11 @@
 .searchProduct {
 	width: 290px;
 	margin: 10px 10px;
+	cursor: pointer;
 }
 
 .searchProduct>img {
+	border-radius : 10px;
 	width: 100%;
 }
 

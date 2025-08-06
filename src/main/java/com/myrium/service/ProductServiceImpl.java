@@ -178,6 +178,21 @@ public class ProductServiceImpl implements ProductService {
 	public void increaseSalesCount(int increaseSalesCount, int productid) {
 		productmapper.increaseSalesCount(increaseSalesCount, productid);
 	}
+
+	@Override
+	public List<ProductDTO> getSearchProductList(String searchKeyword) {
+		List<ProductVO> products = productmapper.getSearchProductList(searchKeyword);
+		List<ProductDTO> productDTOs = new ArrayList<>();
+
+		for (ProductVO product : products) {
+			ImgpathVO thumbnail = productmapper.getThumbnail(product.getId());
+			ProductDTO dto = new ProductDTO();
+			dto.setProduct(product);
+			dto.setThumbnail(thumbnail);
+			productDTOs.add(dto);
+		}
+		return productDTOs;
+	}
 	
 	//상품리뷰
 	@Override

@@ -42,4 +42,6 @@ public interface ProductService {
 
 	public void increaseSalesCount(int increaseSalesCount, int productid);
 
+	public List<ProductDTO> getSearchProductList(String searchKeyword);
+
 }

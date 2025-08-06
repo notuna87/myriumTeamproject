@@ -42,10 +42,5 @@ public class HomeController {
     public String adminPage() {
     	return "admin"; // leedy
     }
-    
-    @GetMapping("/search")
-    public String searchPage() {
-    	
-    	return "/search/searchPage";
-    }
+
 }
