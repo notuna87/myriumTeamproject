@@ -99,9 +99,10 @@
 	        <!-- 주문 상태 및 버튼 -->
 			<div class="order-status">
 			  <p class="status">${orders[0].orderStatusText}</p>
-			  <div class="status-buttons">
-			  	<button>구매후기</button>
-
+				<div class="status-buttons">
+				  <c:if test="${orders[0].orderStatus == 3}">
+				    <button>구매후기</button>
+				  </c:if>
 			  <button onclick="submitRequest('exchange', ${orders[0].id}, ${orders[0].productId})">교환신청</button>
     			<button onclick="submitRequest('refund', ${orders[0].id}, ${orders[0].productId})">환불신청</button>
 			  </div>
@@ -132,7 +133,7 @@
 	        <!-- 주문 정보 상단 -->
 	        <div class="order-header">
 	          <div class="order-date">
-	            <strong>${orders[0].orderDate}</strong> <span>(${orders[0].orderDisplayId})</span>
+	            <strong>${orders[0].orderDate}</strong> <span>(${orders[0].ordersIdfull})</span>
 	          </div>
 	          <a href="${pageContext.request.contextPath}/mypage/order_detail?orderId=${orders[0].id}&productId=${orders[0].productId}">상세보기 &gt;</a>
 	        </div>
@@ -172,8 +173,6 @@
 	    <button>&gt;</button>
 	  </div>
 	</div>
-	<c:out value="${orders[0].id}" default="id 없음" />
-<c:out value="${orders[0].productId}" default="productId 없음" />
   </div> <!-- /order-container -->
 </div> <!-- /mypage-layout -->
 
