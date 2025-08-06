@@ -82,4 +82,15 @@ public class OrderServiceImpl implements OrderService {
 	public int countOrdersToday(String today) {
 		return orderMapper.countOrdersToday(today);
 	}
+  
+	@Override
+	public List<OrderDTO> productList(Long orderId) {
+		
+		return orderMapper.productList(orderId);
+	}
+
+	@Override
+	public void decreaseStock(int productid, int quantity) {
+		orderMapper.decreaseStock(productid, quantity);
+	}
 }

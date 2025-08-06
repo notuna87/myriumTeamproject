@@ -74,8 +74,6 @@
 						<button type="button" class="buttonPlus" onclick="changeQuantity('increase', this)" data-product-id="${item.product.id}">+</button>
 					</div>
 
-
-
 					<!-- 상품 삭제 -->
 					<div class="cartDelete">
 						<button type="submit" class="productDel" onclick="deleteProduct('increase', this)" data-product-id="${item.product.id}">상품삭제</button>

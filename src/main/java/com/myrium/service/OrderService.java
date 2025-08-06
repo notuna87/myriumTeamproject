@@ -15,6 +15,7 @@ public interface OrderService {
 
 	List<OrderDTO> getOrderListByCustomerId(String customerId);
 
+  
 	  List<OrderDTO> getOrderListByCustomerId(String customerId);
 	  
 	  List<OrderDTO> getCanceledOrdersByCustomerId(String customerId);
@@ -31,6 +32,10 @@ public interface OrderService {
 	  boolean applyRefund(Long orderId, Long productId);
 	  boolean applyExchange(Long orderId, Long productId);
 
-	int countOrdersToday(String today);
+	  int countOrdersToday(String today);
+  
+  	void decreaseStock(int productid, int quantity);
+  
+    List<OrderDTO> productList(Long orderId);
 
 }

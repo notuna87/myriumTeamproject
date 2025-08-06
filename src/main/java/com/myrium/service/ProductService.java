@@ -3,6 +3,7 @@ package com.myrium.service;
 import java.util.List;
 
 import com.myrium.domain.Criteria;
+import com.myrium.domain.OrderDTO;
 import com.myrium.domain.ProductDTO;
 
 public interface ProductService {
@@ -31,5 +32,9 @@ public interface ProductService {
 	void updateQuantity(Long productId, Integer newQuantity, Long userId);
 
 	void deleteCart(Long productId, Long userId);
-	
+
+	public int getStock(int productid);
+
+	public void decreaseStock(int decreaseStock, int productid);
+
 }

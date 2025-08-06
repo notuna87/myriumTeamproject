@@ -15,7 +15,7 @@ public interface OrderMapper {
 			@Param("userId") Long userId, @Param("quantity") int quantity, @Param("customerName") String customerName);
 
 	void deletePurchaseCart(@Param("userId") Long userId, @Param("productid") int productid);
-
+  
 	 List<OrderDTO> findOrdersByCustomerId(String customerId);
 	 
 	 List<OrderDTO> selectCanceledOrdersByCustomerId(String customerId);
@@ -33,5 +33,10 @@ public interface OrderMapper {
 	 int updateExchangeStatus(@Param("orderId") Long orderId, @Param("productId") Long productId);
   
 	int countOrdersToday(String today);
+  
+	List<OrderDTO> productList(Long orderId);
+  
+  	void decreaseStock(int productid, int quantity);
+
 
 }

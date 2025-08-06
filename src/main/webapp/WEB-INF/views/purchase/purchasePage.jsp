@@ -68,10 +68,7 @@
 							</tr>
 							<tr>
 								<th>휴대전화</th>
-								<td>
-									<c:set var="phoneParts" value="${fn:split(memberInfo.phoneNumber, '-')}" /> 
-									<c:set var="phoneFirst" value="${phoneParts[0]}" /> 
-									<select class="phoneTextBox" name="phone1" style="padding: 7px;">
+								<td><c:set var="phoneParts" value="${fn:split(memberInfo.phoneNumber, '-')}" /> <c:set var="phoneFirst" value="${phoneParts[0]}" /> <select class="phoneTextBox" name="phone1" style="padding: 7px;">
 										<option value="010" <c:if test="${phoneFirst == '010'}">selected</c:if>>010</option>
 										<option value="011" <c:if test="${phoneFirst == '011'}">selected</c:if>>011</option>
 										<option value="016" <c:if test="${phoneFirst == '016'}">selected</c:if>>016</option>
@@ -104,11 +101,9 @@
 								<table style="border-bottom: 1px dashed #E9E9E9; width: 100%;">
 									<tr>
 										<th><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgcKJBzVf6xWEHZX3rvDJU-W8IQ1O45zsU_g&s" alt="test" class="orderProductThumbnail"></th>
-										<td>
-											<input type="text" name="productId" value="${item.product.id}">
+										<td><input type="hidden" name="productId" value="${item.product.id}">
 											<p style="margin-bottom: 10px;">${item.product.product_name}</p>
-											<p style="color: #888">${item.product.product_content}</p>
-											<input type="text" name="quantity" value="${item.inCart.quantity}">
+											<p style="color: #888">${item.product.product_content}</p> <input type="hidden" name="quantity" value="${item.inCart.quantity}">
 											<p class="productQty" style="color: #888; margin-bottom: 10px;" data-qty="${item.inCart.quantity}">수량 : ${item.inCart.quantity}개</p>
 											<p style="margin-bottom: 10px;">
 												<c:if test="${item.product.discount_price != 0 }">
@@ -117,10 +112,9 @@
 												<c:if test="${item.product.discount_price == 0}">
 													<span class="productPrice" data-price="${item.product.product_price}"><fmt:formatNumber value="${item.product.product_price * item.inCart.quantity}" type="number" groupingUsed="true" />원</span>
 												</c:if>
-											</p>
-										</td>
+											</p></td>
 										<td style="width: 77px;">
-											<button type="submit" class="deleteButton" onclick="deleteProduct('increase', this)" data-product-id="${item.product.id}">삭제하기</button>
+											<button type="button" class="deleteButton" onclick="deleteProduct('increase', this)" data-product-id="${item.product.id}">삭제하기</button>
 										</td>
 									</tr>
 								</table>
@@ -152,6 +146,7 @@
 							<tr>
 								<th>최종 결제 금액</th>
 								<td class="cartTotalwithDelivery"></td>
+
 							</tr>
 						</table>
 					</div>
@@ -164,22 +159,22 @@
 						<p>결제수단 선택</p>
 						<div class="methodSelect">
 							<label>
-								<input type="radio" name="payment" value="bankTransfer" checked>
+								<input type="radio" name="payment" value="0" checked>
 								<span>무통장입금</span>
 							</label>
 
 							<label>
-								<input type="radio" name="payment" value="card">
+								<input type="radio" name="payment" value="1">
 								<span>신용카드</span>
 							</label>
 
 							<label>
-								<input type="radio" name="payment" value="virtualAccount">
+								<input type="radio" name="payment" value="2">
 								<span>가상계좌</span>
 							</label>
 
 							<label>
-								<input type="radio" name="payment" value="realTimeTransfer">
+								<input type="radio" name="payment" value="3">
 								<span>실시간 계좌이체</span>
 							</label>
 						</div>
@@ -270,10 +265,12 @@
 
 		  document.querySelector('.cartTotal').innerHTML = `
 			  <span style="float: right;">$${'{formattedTotal}'}원</span>
+			  <input type="hidden" name="formattedTotal" value="$${'{total}'}">
 		  `;
 		  
 		  document.querySelector('.cartTotalwithDelivery').innerHTML = `
 			  <span style="float: right;">$${'{deliveryTotal}'}원</span>
+			  <input type="hidden" name="totalprice" value="$${'{newtotal}'}">
 		  `;
 
 		  document.querySelector('.purchaseButton').innerHTML = `

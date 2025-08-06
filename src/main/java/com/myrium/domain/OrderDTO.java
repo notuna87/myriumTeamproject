@@ -2,6 +2,7 @@ package com.myrium.domain;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,10 +26,16 @@ public class OrderDTO {
 	    private String title; // 제목
 	    private String content; // 내용
 	    private String deliveryMsg; // 상품요청사항
-	    private String paymentMethod; // 결제
+	    private int paymentMethod; // 결제
 	    private int productId;
 	    private String orderDisplayId;
 	    private String ordersIdfull;
+
+	  private String product_name;
+		private int discount_price;
+		private int product_price;
+		private String product_content;
+
 
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
@@ -82,6 +89,16 @@ public class OrderDTO {
             case 5: return "교환완료";
             case 6: return "환불신청중";
             case 7: return "환불완료";
+        }
+        return null;
+    }
+	
+	public String getPayment() {
+        switch (this.paymentMethod) {
+            case 0: return "입금전";
+            case 1: return "배송준비중";
+            case 2: return "배송중";
+            case 3: return "배송완료";
         }
         return null;
     }
