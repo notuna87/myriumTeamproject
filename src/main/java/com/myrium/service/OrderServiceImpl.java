@@ -90,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public void decreaseStock(int productid, int quantity) {
-		orderMapper.decreaseStock(productid, quantity);
+	public void decreaseStock(int productId, int quantity) {
+		orderMapper.decreaseStock(productId, quantity);
 	}
 }

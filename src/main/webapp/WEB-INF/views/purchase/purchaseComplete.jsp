@@ -47,7 +47,7 @@
 				<table>
 					<tr>
 						<th>결제수단</th>
-						<td><span>${orders.paymentMethod}</span></td>
+						<td><span>${paymentStatusText}</span></td>
 					</tr>
 				</table>
 			</div>

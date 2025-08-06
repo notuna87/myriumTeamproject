@@ -11,32 +11,32 @@ public interface OrderMapper {
 
 	int insertOrders(OrderDTO orders);
 
-	void insertOrdersProduct(@Param("productid") int productid, @Param("orderId") Long orderId,
+	void insertOrdersProduct(@Param("productId") int productid, @Param("orderId") Long orderId,
 			@Param("userId") Long userId, @Param("quantity") int quantity, @Param("customerName") String customerName);
 
 	void deletePurchaseCart(@Param("userId") Long userId, @Param("productid") int productid);
-  
-	 List<OrderDTO> findOrdersByCustomerId(String customerId);
-	 
-	 List<OrderDTO> selectCanceledOrdersByCustomerId(String customerId);
-	 
-	 List<Map<String, Object>> countOrdersByStatus(String customerId);
-	 
-	 int getTotalPaidOrderAmount(String customerId);
-	 
-	 List<OrderDTO> findOrderDetailById(Long orderId);
-	 
-	 int getValidOrderTotalAmount(Long orderId);
-	 
-	 //환불,교환처리
-	 int updateRefundStatus(@Param("orderId") Long orderId, @Param("productId") Long productId);
-	 int updateExchangeStatus(@Param("orderId") Long orderId, @Param("productId") Long productId);
-  
-	int countOrdersToday(String today);
-  
-	List<OrderDTO> productList(Long orderId);
-  
-  	void decreaseStock(int productid, int quantity);
 
+	List<OrderDTO> findOrdersByCustomerId(String customerId);
+
+	List<OrderDTO> selectCanceledOrdersByCustomerId(String customerId);
+
+	List<Map<String, Object>> countOrdersByStatus(String customerId);
+
+	int getTotalPaidOrderAmount(String customerId);
+
+	List<OrderDTO> findOrderDetailById(Long orderId);
+
+	int getValidOrderTotalAmount(Long orderId);
+
+	// 환불,교환처리
+	int updateRefundStatus(@Param("orderId") Long orderId, @Param("productId") Long productId);
+
+	int updateExchangeStatus(@Param("orderId") Long orderId, @Param("productId") Long productId);
+
+	int countOrdersToday(String today);
+
+	List<OrderDTO> productList(Long orderId);
+
+	void decreaseStock(int productId, int quantity);
 
 }

@@ -87,7 +87,7 @@ ORDER BY o.order_date DESC, o.orders_id
 </insert>
 
 <delete id="deletePurchaseCart">
-	delete from cart where user_id=#{userId} and product_id = #{productId}
+	delete from cart where user_id=#{userId} and product_id = #{productid}
 </delete>
 
   <!-- 취소/반품/교환 완료 주문 조회 -->

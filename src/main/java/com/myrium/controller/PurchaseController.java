@@ -100,6 +100,9 @@ public class PurchaseController {
 		orders.setPhoneNumber(phone);
 		orders.setPaymentMethod(payment);
 		
+	    String paymentStatusText = orders.getPayment(); // getPayment() 호출해서 문자 받아오기
+
+	    log.info(paymentStatusText);
 		// 오늘 날짜 가져오기
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		
@@ -148,6 +151,7 @@ public class PurchaseController {
 		List<OrderDTO> productList = orderservice.productList(OrderId);
 		
 		model.addAttribute("productList", productList);
+		model.addAttribute("paymentStatusText",paymentStatusText);
 		
 		return "purchase/purchaseComplete";
 	}

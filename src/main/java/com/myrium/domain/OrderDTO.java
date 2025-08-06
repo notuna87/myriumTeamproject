@@ -95,10 +95,10 @@ public class OrderDTO {
 	
 	public String getPayment() {
         switch (this.paymentMethod) {
-            case 0: return "입금전";
-            case 1: return "배송준비중";
-            case 2: return "배송중";
-            case 3: return "배송완료";
+            case 0: return "무통장입금";
+            case 1: return "신용카드";
+            case 2: return "가상계좌";
+            case 3: return "실시간 계좌이체";
         }
         return null;
     }
