@@ -212,7 +212,8 @@
 				        
 						<!-- 업로드 영역 -->
 						<div class="form-group">
-							<label class="form-label"><strong>상품 이미지 (최대 10장)</strong></label>
+							<button type='button' id="editBtnThumbnail" class="btn btn-success ml-2">수정</button>
+							<label class="form-label"><h4><strong>상품 이미지 (최대 10장)</strong></h4></label>
 							<!-- 설명 문구 -->
 							<p class="text-muted small mb-2">
 								※ 상품 이미지는 <strong>10개</strong> 까지 업로드할 수 있습니다.<br>
@@ -221,15 +222,17 @@
 							</p>
 
 							<div class="upload-box p-3 rounded"
-								style="background-color: #f8f9fa; border: 1px solid #ddd;">
+								style="background-color: #f8f9fa; border: 1px solid #fff;">
 								<input type="file" id="uploadInputThumbnail" name="thumbnailImages" multiple accept="image/*">
 								<small>대표이미지를 체크하세요.</small><br>
 								<ul id="uploadListThumbnail" class="list-group mt-2"></ul>
 								<button id="uploadBtnThumbnail" class="btn btn-primary">업로드</button>
+								<button id="cancelBtnThumbnail" class="btn btn-dark">취소</button>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="form-label"><strong>상품상세정보 이미지 (최대 5장)</strong></label>
+							<button type='button' id="editBtnDetail" class="btn btn-success ml-2">수정</button>
+							<label class="form-label"><h4><strong>상품상세정보 이미지 (최대 5장)</strong></h4></label>
 							<!-- 설명 문구 -->
 							<p class="text-muted small mb-2">
 								※ 상품상세정보 이미지는 <strong>5개</strong> 까지 업로드할 수 있습니다.<br>
@@ -238,10 +241,11 @@
 							</p>
 
 							<div class="upload-box p-3 rounded"
-								style="background-color: #f8f9fa; border: 1px solid #ddd;">
+								style="background-color: #f8f9fa; border: 1px solid #fff;">
 								<input type="file" id="uploadInputDetail" name="detailImages" multiple accept="image/*">
 								<ul id="uploadListDetail" class="list-group mt-2"></ul>
 								<button id="uploadBtnDetail" class="btn btn-primary">업로드</button>
+								<button id="cancelBtnDetail" class="btn btn-dark">취소</button>
 							</div>
 						</div>
 						
@@ -263,89 +267,146 @@
 
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
-<script src="/resources/js/RegisterUploadManager.js"></script>
-<script src="/resources/js/PreviewUploader.js"></script>
+<!-- <script src="/resources/js/RegisterUploadManager.js"></script> -->
+<script src="/resources/js/ProductEditManager.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
-	
+
 	let currentPage = "modify";
 	
-	console.log('${attachImgsJson}');
-	//console.log('${attachImgsn}');
-	//const attachImgs = JSON.parse('${attachImgsJson}');
-	const attachImgs = ${attachImgsJson};
-	console.log("attachImgs:" + attachImgs);
+	let isSubmitting = false;  // 제출 여부를 추적하는 플래그
+	const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+	const csrfToken = $("meta[name='_csrf']").attr("content");
 	
-	const filesFromServer = attachImgs;
+	const priceInput = document.querySelector('input[name="product_price"]');
+	const discountSelect = document.getElementById('is_discount');
+	const timesaleSelect = document.getElementById('is_timesales');
+	const discountRateInput = document.getElementById('discount_rate');
+	const timesaleRateInput = document.getElementById('timesalediscount_rate');
+	const totalRateInput = document.getElementById('total_discountrate');
+	const finalPriceInput = document.getElementById('discount_price');
+	
+	
 
-	// uploadManager에 맞게 변환
-	const convertedFiles = filesFromServer.map(convertServerImageToUploadFormat);
-	console.log("convertedFiles:" + convertedFiles);
-	// 초기 렌더링 시 서버 데이터 받아서 변환
-	const convertedThumbnailFiles = filesFromServer.map(convertServerImageToUploadFormat).filter(f => f.isThumbnail);
-	console.log("convertedThumbnailFiles:" + convertedThumbnailFiles);
-	const convertedDetailFiles = filesFromServer.map(convertServerImageToUploadFormat).filter(f => f.isDetail);
-	console.log("convertedDetailFiles:" + convertedDetailFiles);
+	// 서버에서 받은 JSON 문자열
+	const attachImgs = JSON.parse('${attachImgsJson}');
 	
+	console.log("attachImgs:" + JSON.stringify(attachImgs), null, 2);
+
+	// 공통 변환 함수
 	function convertServerImageToUploadFormat(serverFile) {
-	  // 예: "product/img/thumbnail/2025/08/04/87f45b6b..._db.jpg"
 	  const fullPath = serverFile.img_path;
-	 console.log("fullPath:" + fullPath);
-	  const uuid = serverFile.uuid;
-	  console.log("uuid:" + uuid);
 	  const pathParts = fullPath.split("/");
-	  console.log("pathParts:" + pathParts);
-	  const fileNameWithUUID = pathParts[pathParts.length - 1]; // "87f45b6b..._db.jpg"
-	  console.log("fileNameWithUUID:" + fileNameWithUUID);
-	  const fileName = fileNameWithUUID.substring(fileNameWithUUID.indexOf("_") + 1); // "db.jpg"
-	  console.log("fileName:" + fileName);
-	  const uploadPath = pathParts.slice(0, pathParts.length - 1).join("/"); // "product/img/thumbnail/2025/08/04"
-	  console.log("uploadPath:" + uploadPath);
-	  
+	  const fileNameWithUUID = pathParts[pathParts.length - 1];
+	  const fileName = fileNameWithUUID.substring(fileNameWithUUID.indexOf("_") + 1);
+	  const uploadPath = pathParts.slice(0, pathParts.length - 1).join("/");
+
 	  return {
+	    id: serverFile.id,
 	    fileName: fileName,
 	    uploadPath: uploadPath,
-	    uuid: uuid,
-	    image: 1,  // 이미지이므로 1
-	    isThumbnail: serverFile.is_thumbnail,
+	    uuid: serverFile.uuid,
+	    image: 1,
+	    is_thumbnail: serverFile.is_thumbnail,
 	    isThumbnailMain: serverFile.is_thumbnail_main,
-	    isDetail: serverFile.is_detail
+	    is_detail: serverFile.is_detail,
+	    img_path: fullPath,
+	    createdAt: serverFile.created_at,
+	    createdBy: serverFile.created_by,
+	    updatedAt: serverFile.updated_at,
+	    updatedBy: serverFile.updated_by,
+	    toDelete: false,
+	    isNew: false,
 	  };
 	}
-	
-	window.uploadThumbnailManager = new UploadManager({
-		    inputId: "uploadInputThumbnail",
-		    buttonId: "uploadBtnThumbnail",
-		    maxCount: 10,
-		    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
-		    maxSize: 5242880,
-		    type: "Thumbnail"
-		    //productId: $("input[name='product_id']").val()
-		  });
 
-	window.uploadDetailManager = new UploadManager({
-	    inputId: "uploadInputDetail",
-	    buttonId: "uploadBtnDetail",
-	    maxCount: 5,
-	    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
-	    maxSize: 5242880,
-	    type: "Detail"
-	    //productId: $("input[name='product_id']").val()
-	  });
+	// 썸네일 / 디테일 구분
+	const thumbnailImages = attachImgs
+	  .filter(file => file.is_thumbnail)
+	  .map(convertServerImageToUploadFormat);
+
+	const detailImages = attachImgs
+	  .filter(file => file.is_detail)
+	  .map(convertServerImageToUploadFormat);
+
+	// 썸네일 ProductEditManager
+	window.uploadThumbnailManager = new ProductEditManager({
+	  currentPage,
+	  inputId: "uploadInputThumbnail",
+	  buttonId: "uploadBtnThumbnail",
+	  editBtn: "editBtnThumbnail",
+	  cancelBtn: "cancelBtnThumbnail",
+	  maxCount: 10,
+	  type: "Thumbnail",
+	  regex: /(.*?)\.(exe|sh|zip|alz)$/i,
+	  maxSize: 5242880,
+	});
+
+	// 디테일 ProductEditManager
+	window.uploadDetailManager = new ProductEditManager({
+	  currentPage,
+	  inputId: "uploadInputDetial",
+	  buttonId: "uploadDetailBtn",
+	  editBtn: "editBtnDetail",
+	  cancelBtn: "cancelBtnDetail",
+	  maxCount: 5,
+	  type: "Detail",
+	  regex: /(.*?)\.(exe|sh|zip|alz)$/i,
+	  maxSize: 5242880,
+	});
+
+	// 각각 초기화
+	uploadThumbnailManager.initializeFromServerData(thumbnailImages);
+	uploadDetailManager.initializeFromServerData(detailImages);
+
+
+
+   
+	//const filesFromServer = attachImgs;
+
+	// uploadManager에 맞게 변환
+	//const convertedFiles = filesFromServer.map(convertServerImageToUploadFormat);
+	//console.log("convertedFiles:" + convertedFiles);
+	// 초기 렌더링 시 서버 데이터 받아서 변환
+	//const convertedThumbnailFiles = filesFromServer.map(convertServerImageToUploadFormat).filter(f => f.isThumbnail);
+	//console.log("convertedThumbnailFiles:" + convertedThumbnailFiles);
+	//const convertedDetailFiles = filesFromServer.map(convertServerImageToUploadFormat).filter(f => f.isDetail);
+	//console.log("convertedDetailFiles:" + convertedDetailFiles);
+	
+	//function convertServerImageToUploadFormat(serverFile) {
+	  // 예: "product/img/thumbnail/2025/08/04/87f45b6b..._db.jpg"
+	//  const fullPath = serverFile.img_path;
+	  //console.log("fullPath:" + fullPath);
+	//  const uuid = serverFile.uuid;
+	  //console.log("uuid:" + uuid);
+	//  const pathParts = fullPath.split("/");
+	  //console.log("pathParts:" + pathParts);
+	//  const fileNameWithUUID = pathParts[pathParts.length - 1]; // "87f45b6b..._db.jpg"
+	  //console.log("fileNameWithUUID:" + fileNameWithUUID);
+	//  const fileName = fileNameWithUUID.substring(fileNameWithUUID.indexOf("_") + 1); // "db.jpg"
+	  //console.log("fileName:" + fileName);
+	//  const uploadPath = pathParts.slice(0, pathParts.length - 1).join("/"); // "product/img/thumbnail/2025/08/04"
+	  //console.log("uploadPath:" + uploadPath);
+	  
+	//  return {
+	//    fileName: fileName,
+	//    uploadPath: uploadPath,
+	//    uuid: uuid,
+	//    image: 1,  // 이미지이므로 1
+	//    isThumbnail: serverFile.is_thumbnail,
+	//    isThumbnailMain: serverFile.is_thumbnail_main,
+	//    isDetail: serverFile.is_detail
+	//  };
+	//}
+	
+
 	
 	// 업로드 매니저에 전달
+	//uploadThumbnailManager.editMode(convertedThumbnailFiles);
+	//uploadDetailManager.editMode(convertedDetailFiles);
 	
-	
-	uploadThumbnailManager.editMode(convertedThumbnailFiles);
-	uploadDetailManager.editMode(convertedDetailFiles);
 	//selectedFiles = convertedThumbnailFiles;
 	//console.log("selectedFiles:", JSON.stringify(selectedFiles, null, 2));
-	
-	
-	
-  let isSubmitting = false;  // 제출 여부를 추적하는 플래그
-  const csrfHeader = $("meta[name='_csrf_header']").attr("content");
-  const csrfToken = $("meta[name='_csrf']").attr("content");
   
   document.querySelector("select[id='is_discount']").addEventListener("change", function () {
       const box = document.getElementById("discount_fields");
@@ -359,14 +420,6 @@ $(document).ready(function () {
   });
   
   
-  const priceInput = document.querySelector('input[name="product_price"]');
-  const discountSelect = document.getElementById('is_discount');
-  const timesaleSelect = document.getElementById('is_timesales');
-  const discountRateInput = document.getElementById('discount_rate');
-  const timesaleRateInput = document.getElementById('timesalediscount_rate');
-  const totalRateInput = document.getElementById('total_discountrate');
-  const finalPriceInput = document.getElementById('discount_price');
-
   function toggleFields() {
       document.getElementById('discount_fields').style.display = discountSelect.value === "1" ? 'block' : 'none';
       document.getElementById('timesales_fields').style.display = timesaleSelect.value === "1" ? 'block' : 'none';
@@ -556,11 +609,14 @@ $(document).ready(function () {
   
   // 뒤로가기 시 업로드 된 파일 삭제
 	window.addEventListener("beforeunload", function (e) {
-	    if (!isSubmitting && attachList.length > 0) {
-	        document.getElementById("resetBtn").click();
-	        e.preventDefault();
-	        e.returnValue = ""; // 경고창
-	    }
+	    
+		if (currentPage !== "modify"){
+			if (!isSubmitting && attachList.length > 0) {
+		        document.getElementById("resetBtn").click();
+		        e.preventDefault();
+		        e.returnValue = ""; // 경고창
+		    }			
+		}
 	});
   
 
@@ -570,33 +626,37 @@ $(document).ready(function () {
 
 	  
 		// 썸네일 버튼 토글
-	    if (uploadThumbnailManager.uploadCompletedThumbnail) {
+	    if (window.uploadThumbnailManager.uploadCompletedThumbnail) {
 	    	console.log("uploadCompletedThumbnail: checked")
 	        $('#uploadBtnThumbnail').hide();
 	        $('#deleteBtnThumbnail').hide();
 	        $('#uploadInputThumbnail').hide();
+	        $('#cancelBtnThumbnail').hide();
+	        $('.delBtnThumbnail').hide();
 	    }
 
-	    if (uploadDetailManager.uploadCompletedDetail) {
+	    if (window.uploadDetailManager.uploadCompletedDetail) {
 	    	console.log("uploadCompletedDetail: checked")
 	        $('#uploadBtnDetail').hide();
 	        $('#deleteBtnDetail').hide();
 	        $('#uploadInputDetail').hide();
+	        $('#cancelBtnDetail').hide();
+	        $('.delBtnDetail').hide();
 	    }
 		  
-		  $('#modifyBtnThumbnail').on('click', function () {
-			    $('#uploadBtnThumbnail, #deleteBtnThumbnail, #uploadInputThumbnail').show();
-			    $('#modifyBtnThumbnail').hide();
-			    uploadThumbnailManager.uploadCompletedThumbnail = false;
-			});
+//		$('#modifyBtnThumbnail').on('click', function () {
+//		    $('#uploadBtnThumbnail, #deleteBtnThumbnail, #uploadInputThumbnail').show();
+//		    $('#modifyBtnThumbnail').hide();
+//		    window.uploadThumbnailManager.uploadCompletedThumbnail = false;
+//		});
 
-			$('#modifyBtnDetail').on('click', function () {
-			    $('#uploadBtnDetail, #deleteBtnDetail, #uploadInputDetail').show();
-			    $('#modifyBtnDetail').hide();
-			    uploadDetailManager.uploadCompletedDetail = false;
-			});
-			
-			
+//		$('#modifyBtnDetail').on('click', function () {
+//		    $('#uploadBtnDetail, #deleteBtnDetail, #uploadInputDetail').show();
+//		    $('#modifyBtnDetail').hide();
+//		    window.uploadDetailManager.uploadCompletedDetail = false;
+//		});
+		
+
 
 
 });

@@ -276,7 +276,7 @@ $(document).ready(function () {
       content.append($("<span>").text(file.name));
 
       const delBtn = $("<button type='button'>")
-        .addClass("btn btn-sm btn-danger ml-2")
+        .addClass("btn btn-sm btn-danger delBtn")
         .text("삭제")
         .on("click", function () {
           selectedFiles.splice(index, 1); // 배열에서 제거
@@ -318,11 +318,11 @@ $(document).ready(function () {
 	    content.append($("<span>").text(obj.fileName));
 
 	    const delBtn = $("<button type='button'>")
-	      .addClass("btn btn-danger btn-sm")
+	      .addClass("btn btn-danger btn-sm delBtn")
 	      .text("삭제")
-	      .hide() // 업로드 후 삭제버튼 숨김
+	      //.hide() // 업로드 후 삭제버튼 숨김
 	      .on("click", function () {
-	        deleteFile(fileCallPath, obj.image ? "image" : "file", $(this).closest("li"));
+	        deleteFile(obj.uploadPath, obj.fileName, obj.image ? "image" : "file", obj.uuid, $(this).closest("li"));
 		    // 업로드 목록에서 제거 (UUID 기준)
 		    uploadedFileList = uploadedFileList.filter(file => file.uuid !== obj.uuid);
 		    setAttachListJson(uploadedFileList);
@@ -334,12 +334,13 @@ $(document).ready(function () {
 	}
 
 
-  function deleteFile(fileName, type, liElement) {
+  function deleteFile(fileCallPath, fileName, type, uuid, liElement) {
     $.ajax({
-      url: '/deleteFile',
-      data: { fileName: fileName, type: type },
+      url: '/deleteUploadedFile',
+      data: { datePath: fileCallPath, fileName: fileName, uuid: uuid, type: type },
       type: 'POST',
       success: function (result) {
+    	  console.log("delete - result:" + result);
         liElement.remove();
       }
     });

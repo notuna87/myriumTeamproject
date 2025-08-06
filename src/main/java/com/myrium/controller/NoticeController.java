@@ -139,7 +139,7 @@ public class NoticeController {
 	}
 	
 	@Transactional
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/modify")
 	public String modify(NoticeVO vo,
 			@RequestParam(value = "attachList", required = false) String attachListJson,
@@ -160,7 +160,7 @@ public class NoticeController {
 	        }
 	    }
 	    
-	    // 1. 기존 첨부파일 삭제
+	    // 1. 기존 첨부파일 목록 삭제
 	    if (deleteFiles != null && !deleteFiles.isEmpty()) {
 	        String[] uuids = deleteFiles.split(",");
 	        for (String uuid : uuids) {
@@ -220,7 +220,7 @@ public class NoticeController {
 
 	        for (AttachFileDTO file : attachList) {
 	            String baseDir = "C:/upload/";
-	            String filePath = baseDir + "/" + file.getUuid() + "_" + file.getFileName();
+	            String filePath = baseDir + file.getUploadPath() + file.getUuid() + "_" + file.getFileName();
 	            File target = new File(filePath);
 
 	            if (target.exists() && !target.delete()) {
@@ -258,7 +258,7 @@ public class NoticeController {
 	    return "redirect:/notice/list";
 	}
 
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/softdel")
 	public String softdel(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
 		log.info("notice softdelete..." + id);
@@ -274,7 +274,7 @@ public class NoticeController {
 		return "redirect:/notice/list";
 	}
 
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/restore")
 	public String restore(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
 		log.info("notice restore..." + id);

@@ -38,7 +38,7 @@
 <body>
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">신규 상품 등록(관리자)</h1>
+			<h1 class="page-header">상품정보 수정(관리자)</h1>
 		</div>
 	</div>
 
@@ -49,38 +49,39 @@
 				<div class="panel-heading">(※) 표시는 필수 입력사항입니다.</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
-					<form role="form" action="/product/register" method="post" enctype="multipart/form-data">
+					<form role="form" action="/product/modify" method="post" enctype="multipart/form-data">
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
 						<sec:authorize access="isAuthenticated()">
-							<!-- <input type="hidden" name="created_at"
-								value='<sec:authentication property="principal.username"/>' /> -->
+							<input type="hidden" name="updated_by"
+								value='<sec:authentication property="principal.username"/>' />
 							<input type="hidden" name="created_by"
 								value='<sec:authentication property="principal.username"/>' />
-							<!-- <input type="hidden" name="userId"
-								value='<sec:authentication property="principal.member.id"/>' /> -->
+							<input type="hidden" name="userId"
+								value='<sec:authentication property="principal.member.id"/>' />
+							<input type="hidden" name="id" value="${product.id}" />
 						</sec:authorize>
         
 						<div class="form-group">
 						    <label class="required">(※)카테고리</label>
 						    <div>
 						        <label class="radio-inline">
-						            <input type="checkbox" class="category" name="gardening" value="1" checked> 🧰 원예용품
+						            <input type="checkbox" class="category" name="gardening" value="1" ${category.gardening ==1 ? 'checked' : ''}> 🧰 원예용품
 						        </label>
 						        <label class="radio-inline">
-						            <input type="checkbox" class="category" name="plantkit" value="1"> 🌱 식물키트모음
+						            <input type="checkbox" class="category" name="plantkit" value="1" ${category.plantkit ==1 ? 'checked' : ''}> 🌱 식물키트모음
 						        </label>
 						        <label class="radio-inline">
-						            <input type="checkbox" class="category" name="hurb" value="1"> 🌿 허브키우기
+						            <input type="checkbox" class="category" name="hurb" value="1" ${category.hurb ==1 ? 'checked' : ''}> 🌿 허브키우기
 						        </label>
 						        <label class="radio-inline">
-						            <input type="checkbox" class="category" name="vegetable" value="1"> 🥬 채소키우기
+						            <input type="checkbox" class="category" name="vegetable" value="1" ${category.vegetable ==1 ? 'checked' : ''}> 🥬 채소키우기
 						        </label>
 						        <label class="radio-inline">
-						            <input type="checkbox" class="category" name="flower" value="1"> 🌸 꽃씨키우기
+						            <input type="checkbox" class="category" name="flower" value="1" ${category.flower ==1 ? 'checked' : ''}> 🌸 꽃씨키우기
 						        </label>
 						        <label class="radio-inline">
-						            <input type="checkbox" class="category" name="etc" value="1"> 📦 기타키우기키트
+						            <input type="checkbox" class="category" name="etc" value="1" ${category.etc ==1 ? 'checked' : ''}> 📦 기타키우기키트
 						        </label>
 						    </div>
 						</div>
@@ -91,27 +92,27 @@
 						    <label class="required">전시영역</label>
 						    <div>
 						        <label class="radio-inline">
-						            <input type="checkbox" name="is_mainone" value="1"> 메인 1
+						            <input type="checkbox" name="is_mainone" value="1" ${product.is_mainone ==1 ? 'checked' : ''}> 메인 1
 						        </label>
 						        <label class="radio-inline">
-						            <input type="checkbox" name="is_maintwo" value="1"> 메인 2
+						            <input type="checkbox" name="is_maintwo" value="1" ${product.is_maintwo ==1 ? 'checked' : ''}> 메인 2
 						        </label>
 						    </div>
 						</div>
 						
 				        <div class="form-group">
 				            <label class="required">(※)상품명</label>
-				            <input type="text" name="product_name" class="form-control" >
+				            <input type="text" name="product_name" class="form-control" value="${product.product_name}">
 				        </div>
 				        
 				        <div class="form-group">
 				            <label class="required">상품부제(설명)</label>
-				            <input type="text" name="product_content" class="form-control" >
+				            <input type="text" name="product_content" class="form-control" value="${product.product_content}">
 				        </div>
 				
 				        <div class="form-group">
 				            <label class="required">(※)가격(원)</label>
-				            <input type="number" name="product_price" class="form-control" >
+				            <input type="number" name="product_price" class="form-control" value="${product.product_price}">
 				        </div>
 				
 				        <div class="form-group">
@@ -119,9 +120,9 @@
 							<div class="form-group row">
 							    <label class="col-sm-2 col-form-label">일반할인</label>
 							    <div class="col-sm-10">
-							        <select id="is_discount" name="is_discount" class="form-control">
-							            <option value="0">없음</option>
-							            <option value="1">적용</option>
+							        <select id="is_discount" name="is_discount" class="form-control" >
+							            <option value="0" ${product.is_discount ==0 ? 'selected' : ''}>없음</option>
+							            <option value="1" ${product.is_discount ==1 ? 'selected' : ''}>적용</option>
 							        </select>
 							    </div>
 							</div>
@@ -131,7 +132,7 @@
 							    <div class="form-group row">
 							        <label class="col-sm-2 col-form-label">▶ 일반 할인율(%)</label>
 							        <div class="col-sm-10">
-							            <input type="number" id="discount_rate" name="discount_rate" value="0" class="form-control" min="0" max="100">
+							            <input type="number" id="discount_rate" name="discount_rate" value="${product.discount_rate}" class="form-control" min="0" max="100">
 							        </div>
 							    </div>
 							</div>
@@ -141,8 +142,8 @@
 							    <label class="col-sm-2 col-form-label">타임세일</label>
 							    <div class="col-sm-10">
 							        <select id="is_timesales" name="is_timesales" class="form-control">
-							            <option value="0">없음</option>
-							            <option value="1">적용</option>
+							            <option value="0" ${product.is_timesales ==0 ? 'selected' : ''}>없음</option>
+							            <option value="1" ${product.is_timesales ==1 ? 'selected' : ''}>적용</option>
 							        </select>
 							    </div>
 							</div>
@@ -152,7 +153,7 @@
 							    <div class="form-group row">
 							        <label class="col-sm-2 col-form-label">▶ 타임세일 할인율(%)</label>
 							        <div class="col-sm-10">
-							            <input type="number" id="timesalediscount_rate" name="timesalediscount_rate" value="0" class="form-control" min="0" max="100">
+							            <input type="number" id="timesalediscount_rate" name="timesalediscount_rate" value="${product.timesalediscount_rate}" class="form-control" min="0" max="100">
 							        </div>
 							    </div>
 							</div>
@@ -185,7 +186,7 @@
 				
 						<div class="form-group">
 						    <label>(※)기초재고수량(개)</label>
-						    <input type="number" name="product_stock" id="product_stock" value="" class="form-control" min="0">
+						    <input type="number" name="product_stock" id="product_stock" value="${product.product_stock}" class="form-control" min="0">
 						</div>
 						
 						<div class="form-group">
@@ -209,10 +210,10 @@
 				            <input type="file" name="detailImages" multiple accept="image/*">
 				        </div> -->
 				        
-				        
 						<!-- 업로드 영역 -->
 						<div class="form-group">
-							<label class="form-label"><strong>상품 이미지 (최대 10장)</strong></label>
+							<button type='button' id="editBtnThumbnail" class="btn btn-success ml-2">수정</button>
+							<label class="form-label"><h4><strong>상품 이미지 (최대 10장)</strong></h4></label>
 							<!-- 설명 문구 -->
 							<p class="text-muted small mb-2">
 								※ 상품 이미지는 <strong>10개</strong> 까지 업로드할 수 있습니다.<br>
@@ -221,15 +222,17 @@
 							</p>
 
 							<div class="upload-box p-3 rounded"
-								style="background-color: #f8f9fa; border: 1px solid #ddd;">
+								style="background-color: #f8f9fa; border: 1px solid #fff;">
 								<input type="file" id="uploadInputThumbnail" name="thumbnailImages" multiple accept="image/*">
-								<small>썸네일로 사용할 이미지는 체크하세요.</small><br>
+								<small>대표이미지를 체크하세요.</small><br>
 								<ul id="uploadListThumbnail" class="list-group mt-2"></ul>
 								<button id="uploadBtnThumbnail" class="btn btn-primary">업로드</button>
+								<button id="cancelBtnThumbnail" class="btn btn-dark">취소</button>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="form-label"><strong>상품상세정보 이미지 (최대 5장)</strong></label>
+							<button type='button' id="editBtnDetail" class="btn btn-success ml-2">수정</button>
+							<label class="form-label"><h4><strong>상품상세정보 이미지 (최대 5장)</strong></h4></label>
 							<!-- 설명 문구 -->
 							<p class="text-muted small mb-2">
 								※ 상품상세정보 이미지는 <strong>5개</strong> 까지 업로드할 수 있습니다.<br>
@@ -238,10 +241,11 @@
 							</p>
 
 							<div class="upload-box p-3 rounded"
-								style="background-color: #f8f9fa; border: 1px solid #ddd;">
+								style="background-color: #f8f9fa; border: 1px solid #fff;">
 								<input type="file" id="uploadInputDetail" name="detailImages" multiple accept="image/*">
 								<ul id="uploadListDetail" class="list-group mt-2"></ul>
 								<button id="uploadBtnDetail" class="btn btn-primary">업로드</button>
+								<button id="cancelBtnDetail" class="btn btn-dark">취소</button>
 							</div>
 						</div>
 						
@@ -251,6 +255,10 @@
 							<button type="submit" class="btn btn-success">등록</button>
 							<button type="reset" class="btn btn-warning" id="resetBtn">다시작성</button>
 						</div>
+						
+						<ul id="uploadListThumbnail" class="list-group mt-3"></ul>
+						<ul id="uploadListDetail" class="list-group mt-3"></ul>
+						
 					</form>
 				</div>
 			</div>
@@ -260,11 +268,155 @@
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
 <script src="/resources/js/RegisterUploadManager.js"></script>
+<script src="/resources/js/PreviewUploader.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
-  let isSubmitting = false;  // 제출 여부를 추적하는 플래그
-  const csrfHeader = $("meta[name='_csrf_header']").attr("content");
-  const csrfToken = $("meta[name='_csrf']").attr("content");
+	
+	let currentPage = "modify";
+	
+	let isSubmitting = false;  // 제출 여부를 추적하는 플래그
+	const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+	const csrfToken = $("meta[name='_csrf']").attr("content");
+	
+	const priceInput = document.querySelector('input[name="product_price"]');
+	const discountSelect = document.getElementById('is_discount');
+	const timesaleSelect = document.getElementById('is_timesales');
+	const discountRateInput = document.getElementById('discount_rate');
+	const timesaleRateInput = document.getElementById('timesalediscount_rate');
+	const totalRateInput = document.getElementById('total_discountrate');
+	const finalPriceInput = document.getElementById('discount_price');
+	
+///////////////// 렌더링 후 ///////////////////  
+    // 전역 리스트 초기화
+    attachList = [];
+    //console.log('${attachImgsJson}');
+    console.log('${attachImgJson}');
+    const attachImgs = JSON.parse('${attachImgsJson}');
+    //const attachImgs = '${attachImgsJson}';
+    console.log(attachImgs);
+    
+ // 서버 데이터 변환
+    const allFiles = attachImgs.map(convertServerImageToUploadFormat);
+ 	console.log("allFiles:" + JSON.stringify(allFiles, null, 2));
+    const thumbnailFiles = allFiles.filter(f => f.isThumbnail === 1);
+    console.log("thumbnailFiles:" + JSON.stringify(thumbnailFiles, null, 2));
+    const detailFiles = allFiles.filter(f => f.isDetail === 1);
+    console.log("detailFiles:" + JSON.stringify(detailFiles, null, 2));
+
+
+
+    
+    //attachList = [...allFiles];
+    
+    function convertServerImageToUploadFormat(serverFile) {
+    	  const fullPath = serverFile.img_path;
+    	  const thumbPath = serverFile.img_path_thumb;
+
+    	  const pathParts = fullPath.split("/");
+    	  const fileNameWithUUID = pathParts[pathParts.length - 1]; // 예: uuid_filename.jpg
+    	  const fileName = fileNameWithUUID.substring(fileNameWithUUID.indexOf("_") + 1); // filename.jpg
+    	  const uploadPath = pathParts.slice(0, pathParts.length - 1).join("/");
+
+    	  return {
+    	    id: serverFile.id,
+    	    fileName: fileName,
+    	    uploadPath: uploadPath,
+    	    uuid: serverFile.uuid,
+    	    image: 1,
+    	    isThumbnail: serverFile.is_thumbnail,
+    	    isThumbnailMain: serverFile.is_thumbnail_main,
+    	    isDetail: serverFile.is_detail,
+    	    img_path: fullPath,
+    	    img_path_thumb: thumbPath,
+    	    createdAt: serverFile.created_at,
+    	    createdBy: serverFile.created_by,
+    	    updatedAt: serverFile.updated_at,
+    	    updatedBy: serverFile.updated_by,
+    	  };
+    	}
+   
+    function initUploadManagerFromServerData(currentPage, type, files) {
+    	  const manager = new UploadManager({
+    		currentPage:  currentPage === "modify" ? "modify" : "register",
+    	    inputId: "uploadInput" + type,
+    	    buttonId: "uploadBtn" + type,
+    	    editBtn: "editBtn" + type,
+    	    cancelBtn: "cancelBtn" + type,
+    	    maxCount: type === "Thumbnail" ? 10 : 5,
+    	    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
+    	    maxSize: 5242880,
+    	    type: type
+    	  });
+    	  // ⚠️ 필터링 추가 위치
+    	  console.log("selectedFiles(before filter):", JSON.stringify(files, null, 2));
+    	  const filteredFiles = files.filter(f => f instanceof File);
+    	  console.log("selectedFiles(after filter):", JSON.stringify(filteredFiles, null, 2));
+    	  
+    	  manager.selectedFiles = [];
+    	  manager.selectedFiles = [...files];
+    	  console.log("1- selectedFiles:" + JSON.stringify(manager.selectedFiles, null, 2));
+    	  manager.uploadedFiles = [];
+    	  manager.uploadedFiles = [...files];
+    	  console.log("2- uploadedFiles:" + JSON.stringify(manager.uploadedFiles, null, 2));
+    	  console.log("3- attachList(before):" + JSON.stringify(attachList, null, 2));
+    	  manager.updateAttachInput();
+    	  console.log("4- attachList(after):" + JSON.stringify(attachList, null, 2));
+    	  
+    	  manager["uploadCompleted" + type] = true;
+    	  manager.updatePreviewList();    	  
+    	  
+    	  return manager;
+    	}
+
+    	window.uploadThumbnailManager = initUploadManagerFromServerData(currentPage,"Thumbnail", thumbnailFiles);
+    	window.uploadDetailManager = initUploadManagerFromServerData(currentPage, "Detail", detailFiles);
+   
+   
+	//const filesFromServer = attachImgs;
+
+	// uploadManager에 맞게 변환
+	//const convertedFiles = filesFromServer.map(convertServerImageToUploadFormat);
+	//console.log("convertedFiles:" + convertedFiles);
+	// 초기 렌더링 시 서버 데이터 받아서 변환
+	//const convertedThumbnailFiles = filesFromServer.map(convertServerImageToUploadFormat).filter(f => f.isThumbnail);
+	//console.log("convertedThumbnailFiles:" + convertedThumbnailFiles);
+	//const convertedDetailFiles = filesFromServer.map(convertServerImageToUploadFormat).filter(f => f.isDetail);
+	//console.log("convertedDetailFiles:" + convertedDetailFiles);
+	
+	//function convertServerImageToUploadFormat(serverFile) {
+	  // 예: "product/img/thumbnail/2025/08/04/87f45b6b..._db.jpg"
+	//  const fullPath = serverFile.img_path;
+	  //console.log("fullPath:" + fullPath);
+	//  const uuid = serverFile.uuid;
+	  //console.log("uuid:" + uuid);
+	//  const pathParts = fullPath.split("/");
+	  //console.log("pathParts:" + pathParts);
+	//  const fileNameWithUUID = pathParts[pathParts.length - 1]; // "87f45b6b..._db.jpg"
+	  //console.log("fileNameWithUUID:" + fileNameWithUUID);
+	//  const fileName = fileNameWithUUID.substring(fileNameWithUUID.indexOf("_") + 1); // "db.jpg"
+	  //console.log("fileName:" + fileName);
+	//  const uploadPath = pathParts.slice(0, pathParts.length - 1).join("/"); // "product/img/thumbnail/2025/08/04"
+	  //console.log("uploadPath:" + uploadPath);
+	  
+	//  return {
+	//    fileName: fileName,
+	//    uploadPath: uploadPath,
+	//    uuid: uuid,
+	//    image: 1,  // 이미지이므로 1
+	//    isThumbnail: serverFile.is_thumbnail,
+	//    isThumbnailMain: serverFile.is_thumbnail_main,
+	//    isDetail: serverFile.is_detail
+	//  };
+	//}
+	
+
+	
+	// 업로드 매니저에 전달
+	//uploadThumbnailManager.editMode(convertedThumbnailFiles);
+	//uploadDetailManager.editMode(convertedDetailFiles);
+	
+	//selectedFiles = convertedThumbnailFiles;
+	//console.log("selectedFiles:", JSON.stringify(selectedFiles, null, 2));
   
   document.querySelector("select[id='is_discount']").addEventListener("change", function () {
       const box = document.getElementById("discount_fields");
@@ -278,14 +430,6 @@ $(document).ready(function () {
   });
   
   
-  const priceInput = document.querySelector('input[name="product_price"]');
-  const discountSelect = document.getElementById('is_discount');
-  const timesaleSelect = document.getElementById('is_timesales');
-  const discountRateInput = document.getElementById('discount_rate');
-  const timesaleRateInput = document.getElementById('timesalediscount_rate');
-  const totalRateInput = document.getElementById('total_discountrate');
-  const finalPriceInput = document.getElementById('discount_price');
-
   function toggleFields() {
       document.getElementById('discount_fields').style.display = discountSelect.value === "1" ? 'block' : 'none';
       document.getElementById('timesales_fields').style.display = timesaleSelect.value === "1" ? 'block' : 'none';
@@ -345,8 +489,8 @@ $(document).ready(function () {
   //let uploadCompletedDetail = false; // 상품상세정보 업로드 완료 여부 flag
 
   // 업로드 버튼 처음에 숨김
-  $("#uploadBtnThumbnail").hide(); 
-  $("#uploadBtnDetail").hide(); 
+  //$("#uploadBtnThumbnail").hide(); 
+  //$("#uploadBtnDetail").hide(); 
   
 
 
@@ -475,32 +619,55 @@ $(document).ready(function () {
   
   // 뒤로가기 시 업로드 된 파일 삭제
 	window.addEventListener("beforeunload", function (e) {
-	    if (!isSubmitting && attachList.length > 0) {
-	        document.getElementById("resetBtn").click();
-	        e.preventDefault();
-	        e.returnValue = ""; // 경고창
-	    }
+	    
+		if (currentPage !== "modify"){
+			if (!isSubmitting && attachList.length > 0) {
+		        document.getElementById("resetBtn").click();
+		        e.preventDefault();
+		        e.returnValue = ""; // 경고창
+		    }			
+		}
 	});
   
-	  const uploadThumbnailManager = new UploadManager({
-		    inputId: "uploadInputThumbnail",
-		    buttonId: "uploadBtnThumbnail",
-		    maxCount: 10,
-		    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
-		    maxSize: 5242880,
-		    type: "Thumbnail"
-		    //productId: $("input[name='product_id']").val()
-		  });
 
-	  const uploadDetailManager = new UploadManager({
-	    inputId: "uploadInputDetail",
-	    buttonId: "uploadBtnDetail",
-	    maxCount: 5,
-	    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
-	    maxSize: 5242880,
-	    type: "Detail"
-	    //productId: $("input[name='product_id']").val()
-	  });
+	  
+	  
+	  
+
+	  
+		// 썸네일 버튼 토글
+	    if (window.uploadThumbnailManager.uploadCompletedThumbnail) {
+	    	console.log("uploadCompletedThumbnail: checked")
+	        $('#uploadBtnThumbnail').hide();
+	        $('#deleteBtnThumbnail').hide();
+	        $('#uploadInputThumbnail').hide();
+	        $('#cancelBtnThumbnail').hide();
+	        $('.delBtnThumbnail').hide();
+	    }
+
+	    if (window.uploadDetailManager.uploadCompletedDetail) {
+	    	console.log("uploadCompletedDetail: checked")
+	        $('#uploadBtnDetail').hide();
+	        $('#deleteBtnDetail').hide();
+	        $('#uploadInputDetail').hide();
+	        $('#cancelBtnDetail').hide();
+	        $('.delBtnDetail').hide();
+	    }
+		  
+//		$('#modifyBtnThumbnail').on('click', function () {
+//		    $('#uploadBtnThumbnail, #deleteBtnThumbnail, #uploadInputThumbnail').show();
+//		    $('#modifyBtnThumbnail').hide();
+//		    window.uploadThumbnailManager.uploadCompletedThumbnail = false;
+//		});
+
+//		$('#modifyBtnDetail').on('click', function () {
+//		    $('#uploadBtnDetail, #deleteBtnDetail, #uploadInputDetail').show();
+//		    $('#modifyBtnDetail').hide();
+//		    window.uploadDetailManager.uploadCompletedDetail = false;
+//		});
+		
+
+
 
 });
 </script>

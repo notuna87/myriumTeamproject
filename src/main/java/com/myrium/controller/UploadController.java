@@ -106,7 +106,13 @@ public class UploadController {
 	            dto.setUploadPath(subFolder + "/" + dateFolder);
 
 	            // 타입별 처리
-	            if (type.equalsIgnoreCase("thumbnail")) {
+	            if (type.equalsIgnoreCase("detail")) {
+	                dto.setIsThumbnail(0);
+	                dto.setIsThumbnailMain(0);
+	                dto.setIsDetail(1);
+	                dto.setImage(1);
+	                // 썸네일 생략	            
+	            } else if (type.equalsIgnoreCase("thumbnail") || checkImageType(saveFile)) {
 	                dto.setIsThumbnail(1);
 	                dto.setIsThumbnailMain(parseFlag(params, "is_thumbnail_main_" + i));
 	                dto.setIsDetail(0);
@@ -117,12 +123,6 @@ public class UploadController {
 	                thumbnail.close();
 
 	                dto.setImage(1); // 이미지 여부
-	            } else if (type.equalsIgnoreCase("detail")) {
-	                dto.setIsThumbnail(0);
-	                dto.setIsThumbnailMain(0);
-	                dto.setIsDetail(1);
-	                dto.setImage(checkImageType(saveFile) ? 1 : 0);
-	                // 썸네일 생략
 	            } else {
 	                // file type (기존 로직 유지)
 	                dto.setImage(checkImageType(saveFile) ? 1 : 0);
@@ -199,15 +199,19 @@ public class UploadController {
 
 	@PostMapping("/deleteUploadedFile")
 	@ResponseBody
-	public ResponseEntity<String> deleteFile(String datePath, String fileName, String uuid, String type,
-			@RequestParam(required = false, defaultValue = "false") boolean isUpdate) {
+	public ResponseEntity<String> deleteFile(String datePath, String fileName,
+			@RequestParam(required = false) String uuid,
+			@RequestParam(required = false) String type,
+			@RequestParam(required = false, defaultValue = "false") boolean isUpdate
+			) {
+		
 		try {
 
 			String decodedDatePath = URLDecoder.decode(datePath, "UTF-8");
 			String decodedFileName = URLDecoder.decode(fileName, "UTF-8");
 
 			// 1. 원본 파일 삭제
-			File file = new File("C:/upload/" + uuid + "_" + decodedFileName);
+			File file = new File("C:/upload/" + decodedDatePath + "\\" + uuid + "_" + decodedFileName);
 			log.info("delete file_path :" + file);
 			if (file.exists()) {
 				file.delete();
@@ -215,7 +219,7 @@ public class UploadController {
 
 			// 2. 썸네일 삭제
 			if ("image".equals(type)) {
-				File thumb = new File("C:/upload/" + decodedDatePath + "s_" + uuid + "_" + decodedFileName);
+				File thumb = new File("C:/upload/" + decodedDatePath + "\\s_" + uuid + "_" + decodedFileName);
 				log.info("delete thumb_path :" + thumb);
 				if (thumb.exists()) {
 					thumb.delete();

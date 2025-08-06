@@ -15,7 +15,7 @@ public interface OrderService {
 
 	List<OrderDTO> getOrderListByCustomerId(String customerId);
 
-	  List<OrderDTO> getOrderListByCustomerId(String customerId);
+	  //List<OrderDTO> getOrderListByCustomerId(String customerId); //중복
 	  
 	  List<OrderDTO> getCanceledOrdersByCustomerId(String customerId);
 	  

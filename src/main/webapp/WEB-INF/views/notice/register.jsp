@@ -106,7 +106,6 @@
 
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
-<script src="/resources/js/upload_manager.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
   const csrfHeader = $("meta[name='_csrf_header']").attr("content");
