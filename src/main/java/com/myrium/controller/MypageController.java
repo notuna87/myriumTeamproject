@@ -41,6 +41,7 @@ public class MypageController {
         return "mypage/change_password";
     }
     
+    
     @GetMapping("/mypage/order/list")
     public String showOrderList(Authentication authentication, RedirectAttributes rttr) {
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -110,7 +111,7 @@ public class MypageController {
         statusMap.put("3", 0); // 배송완료
 
         for (Map<String, Object> row : statusCounts) {
-            String status = (String) row.get("ORDER_STATUS");
+            String status = row.get("ORDER_STATUS") != null ? row.get("ORDER_STATUS").toString() : null;
             Object countObj = row.get("COUNT");
 
             log.info("===> 상태 원본 값: [" + status + "]");
@@ -139,7 +140,6 @@ public class MypageController {
             log.info(">> 정리된 상태명: " + status + ", 최종 개수: " + count);
         }
 
-        
         //총주문금액
         int totalPaidAmount = orderService.getTotalPaidOrderAmount(customerId);
         log.info("총주문 금액: " + totalPaidAmount);
@@ -147,7 +147,6 @@ public class MypageController {
         model.addAttribute("totalPaidAmount", totalPaidAmount);
 
         model.addAttribute("statusMap", statusMap);
-        //model.addAttribute("orderStatusMap", statusMap);
 
         return "mypage/mypage"; // mypage.jsp
     }

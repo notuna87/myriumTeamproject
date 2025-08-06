@@ -109,7 +109,7 @@
 				    </tr>
 				    <tr>
 				      <th>결제수단</th>
-				      <td>${firstOrder.paymentMethod}<br />명세서에 이니시스(으)로 표기됩니다</td>
+				      <td>${firstOrder.payment}<br />명세서에 이니시스(으)로 표기됩니다</td>
 				    </tr>
 				  </table>
 				</section>
@@ -149,7 +149,6 @@
 			        <fmt:formatNumber value="${totalPrice}" pattern="#,###" />원
 			      </strong>
 			    </p>
-			    <button class="btn-confirm">구매후기</button>
 			  </div>
 			</section>
 

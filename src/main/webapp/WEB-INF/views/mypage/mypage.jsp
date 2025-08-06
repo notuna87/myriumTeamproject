@@ -72,7 +72,7 @@
         </div>
       </div>
       
-      <c:set var="statusMap" value="${orderStatusMap}" />
+      <c:set var="statusMap" value="${statusMap}" />
 <section class="order-status-section">
   <h3 class="order-status-title">
     나의 주문처리 현황 <span class="subtitle">(최근 3개월 기준)</span>
@@ -145,10 +145,12 @@
           <!--주문 상태 바-->
           <div class="order-status-bar">
 			<div class="status-text">${orders[0].orderStatusText}</div>
-            <div class="status-buttons">
-              <button class="order-btn">구매후기</button>
-              <button class="order-btn">배송조회</button>
-            </div>
+           <div class="status-buttons">
+			  <c:if test="${orders[0].orderStatus == 3}">
+			    <button class="order-btn">구매후기</button>
+			  </c:if>
+			  <button class="order-btn">배송조회</button>
+			</div>
           </div>
         </div>
       </c:forEach>
