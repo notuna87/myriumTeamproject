@@ -101,7 +101,7 @@
 			  <p class="status">${orders[0].orderStatusText}</p>
 				<div class="status-buttons">
 				  <c:if test="${orders[0].orderStatus == 3}">
-				    <button>구매후기</button>
+				    <button onclick="location.href='${pageContext.request.contextPath}/mypage/review?orderId=${orders[0].id}&productId=${orders[0].productId}'">구매후기</button>
 				  </c:if>
 			  <button onclick="submitRequest('exchange', ${orders[0].id}, ${orders[0].productId})">교환신청</button>
     			<button onclick="submitRequest('refund', ${orders[0].id}, ${orders[0].productId})">환불신청</button>

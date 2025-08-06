@@ -49,5 +49,8 @@ public interface OrderMapper {
 	int countOrdersToday(String today);
 
 	List<OrderDTO> productList(Long orderId);
+	
+	//상품리뷰
+	OrderDTO findProductInOrder(@Param("orderId") Long orderId, @Param("productId") int productId);
 
 }
