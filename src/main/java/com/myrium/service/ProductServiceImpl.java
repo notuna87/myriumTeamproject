@@ -10,6 +10,7 @@ import com.myrium.domain.CartVO;
 import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
+import com.myrium.domain.SearchCriteria;
 import com.myrium.mapper.ProductMapper;
 
 import lombok.AllArgsConstructor;
@@ -180,8 +181,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDTO> getSearchProductList(String searchKeyword) {
-		List<ProductVO> products = productmapper.getSearchProductList(searchKeyword);
+	public List<ProductDTO> getSearchProductList(String searchKeyword, SearchCriteria searchcri) {
+		List<ProductVO> products = productmapper.getSearchProductList(searchKeyword, searchcri);
 		List<ProductDTO> productDTOs = new ArrayList<>();
 
 		for (ProductVO product : products) {
@@ -198,6 +199,11 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public ProductDTO getProductById(Long id) {
 		return productmapper.findById(id); 
+	}
+
+	@Override
+	public int searchResultCount(String searchKeyword) {
+		return productmapper.searchResultCount(searchKeyword);
 	}
 
 }

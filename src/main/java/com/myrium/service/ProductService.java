@@ -3,6 +3,7 @@ package com.myrium.service;
 import java.util.List;
 
 import com.myrium.domain.ProductDTO;
+import com.myrium.domain.SearchCriteria;
 
 public interface ProductService {
 	// product_id와 일치하는 썸네일 불러오기 is_thumbnail이 1일때만
@@ -42,6 +43,8 @@ public interface ProductService {
 
 	public void increaseSalesCount(int increaseSalesCount, int productid);
 
-	public List<ProductDTO> getSearchProductList(String searchKeyword);
+	public List<ProductDTO> getSearchProductList(String searchKeyword, SearchCriteria searchcri);
+
+	public int searchResultCount(String searchKeyword);
 
 }

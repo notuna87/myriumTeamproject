@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.myrium.domain.ProductDTO;
+import com.myrium.domain.SearchCriteria;
+import com.myrium.domain.SearchPageDTO;
 import com.myrium.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,13 +35,19 @@ public class SearchController {
     }
 	
     @GetMapping("/search/result")
-    public String searchResult(@RequestParam("searchKeyword") String searchKeyword, Model model) {
-        List<ProductDTO> searchProductList = productservice.getSearchProductList(searchKeyword);
+    public String searchResult(SearchCriteria searchcri,@RequestParam("searchKeyword") String searchKeyword, Model model) {
+       
+    	List<ProductDTO> searchProductList = productservice.getSearchProductList(searchKeyword, searchcri);
         log.info("결과: " + searchProductList);
+        int searchResultCount = productservice.searchResultCount(searchKeyword);
+        
+        log.info(searchResultCount);
         
         model.addAttribute("searchProductList", searchProductList);
         model.addAttribute("searchKeyword", searchKeyword);
-        
+    	model.addAttribute("pageMaker", new SearchPageDTO(searchcri,searchResultCount));
+    	model.addAttribute("searchResultCount",searchResultCount);
+
         log.info("리스트 : "+searchProductList);
         
         return "/search/searchPage";

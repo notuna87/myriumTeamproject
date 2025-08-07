@@ -131,13 +131,29 @@
 		#{increaseSalesCount} where id = #{productid}
 	</update>
 
-	<select id="getSearchProductList"
-		resultType="com.myrium.domain.ProductVO">
-		SELECT * FROM product
-		WHERE LOWER(product_name) LIKE '%' || #{searchKeyword} || '%'
+	<select id="getSearchProductList" resultType="com.myrium.domain.ProductVO">
+ <![CDATA[ 
+	SELECT id,product_name,product_content, product_stock, product_price,
+	is_deleted, created_at, created_by, updated_at, updated_by,
+	is_timesales, is_mainone, is_maintwo, is_discount, discount_rate,
+	timesalediscount_rate, total_discountrate, discount_price, sales_count
+	FROM (
+	SELECT /*+INDEX_DESC(product pk_product)*/ rownum rn, id,product_name,product_content, product_stock, product_price,
+	is_deleted, created_at, created_by, updated_at, updated_by,
+	is_timesales, is_mainone, is_maintwo, is_discount, discount_rate,
+	timesalediscount_rate, total_discountrate, discount_price, sales_count
+	FROM product WHERE LOWER(product_name) LIKE '%' || #{searchKeyword} ||
+	'%' AND rownum <= #{searchcri.pageNum}*#{searchcri.amount}) where rn > (#{searchcri.pageNum} -1) * #{searchcri.amount}
+   ]]> 
 	</select>
+
 	<!-- 상품리뷰 -->
-	<select id="findById" parameterType="long" resultType="com.myrium.domain.ProductDTO">
-  	SELECT * FROM product WHERE id = #{id}
+	<select id="findById" parameterType="long"
+		resultType="com.myrium.domain.ProductDTO">
+		SELECT * FROM product WHERE id = #{id}
+	</select>
+	<!-- 검색결과 카운트 -->
+	<select id="searchResultCount" resultType="int">
+		select count(*) from product where LOWER(product_name) LIKE '%' || #{searchKeyword} || '%'
 	</select>
 </mapper>

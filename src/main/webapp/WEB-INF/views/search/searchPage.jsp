@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,7 +33,7 @@
 		<!-- 하단 검색 결과 카운트 및 정렬 시작 -->
 		<div class="searchResult">
 			<p class="countItems">
-				<span style="font-weight: 500;">8</span> items
+				<span style="font-weight: 500;">${searchResultCount}</span> items
 			</p>
 			<select class="orderBy">
 				<option>::: 기준선택 :::</option>
@@ -62,7 +64,7 @@
 						</p>
 					</c:if>
 					<c:if test="${item.product.discount_price == 0}">
-						<p class="SearchPrice" style="margin-top : 15px;">
+						<p class="SearchPrice" style="margin-top: 15px;">
 							<fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />
 							원
 						</p>
@@ -76,16 +78,49 @@
 		</div>
 		<!-- 하단 상품 결과 끝 -->
 		<!-- 페이징 버튼 시작 -->
-		<div class="pagingButtonWrap">
-			<a href="#" class="first"></a> <a href="#" class="prev"></a>
-			<ul>
-				<li><a href="#">1</a></li>
-			</ul>
-			<a href="#" class="next"></a> <a href="#" class="last"></a>
+		<div class="pagingButtonWrap paginate_button">
+			<a href="1" class="first"></a>
+			<c:if test="${pageMaker.cri.pageNum != 1}">
+				<a href="${pageMaker.cri.pageNum-1}" class="prev page-link"></a>
+			</c:if>
+			<c:if test="${pageMaker.cri.pageNum == 1}">
+				<a href="1" class="prev page-link"></a>
+			</c:if>
+
+			<c:forEach var="num" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
+				<ul>
+					<li class="paginate_button ${pageMaker.cri.pageNum == num ? 'active': ''}"><a href="${num}">${num}</a></li>
+				</ul>
+			</c:forEach>
+
+			<c:if test="${pageMaker.endPage != pageMaker.endPage}">
+				<a href="${pageMaker.cri.pageNum+1}" class="next page-link"></a>
+			</c:if>
+			<c:if test="${pageMaker.endPage == pageMaker.endPage}">
+				<a href="${pageMaker.endPage}" class="next page-link"></a>
+			</c:if>
+			<a href="${pageMaker.endPage}" class="last"></a>
 		</div>
 		<!-- 페이징 버튼 끝 -->
 	</div>
+	<form id='actionForm' action="/search/result" method='get'>
+		<input type='hidden' name='searchKeyword' value='${searchKeyword}'>
+		<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'>
+		<input type='hidden' name='amount' value='${pageMaker.cri.amount}'>
+	</form>
 	<%@ include file="/WEB-INF/views/main/footer.jsp"%>
-
 </body>
+<script>
+	$(document).ready(function() {
+		var actionForm = $("#actionForm");
+		$(".paginate_button a").on("click", function(e) {
+			e.preventDefault();
+			console.log("click");
+			// 클릭된 요소의 href 값을 찾아서 input 폼 안의 pageNum 필드에 설정		
+			actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+			actionForm.submit();
+		});
+	});
+</script>
+
 </html>
