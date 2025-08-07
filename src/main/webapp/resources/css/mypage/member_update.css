@@ -1,6 +1,6 @@
 .container {
     max-width: 1000px;
-    padding: 0 20px;
+    padding: 50px 20px;
     margin: 0 auto;
   }
   
@@ -26,11 +26,22 @@
     align-items: center;
   }
   
-  .profile-icon img {
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-  }
+ .profile-icon {
+  width: 60px;
+  height: 60px;
+  background-color: #ccc;
+  border-radius: 50%;    
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.profile-icon img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
   
   .profile-info {
     margin-left: 20px;
@@ -48,7 +59,7 @@
   }
   
   .benefit-info {
-    font-size: 14px;
+    font-size: 13px;
     color: #777;
     text-align: right;
     max-width: 320px;
