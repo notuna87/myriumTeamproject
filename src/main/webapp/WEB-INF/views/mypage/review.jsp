@@ -29,7 +29,8 @@
     </div>
   </div>
 
-  <form action="/review/submit" method="post" enctype="multipart/form-data" class="review-form">
+  <form action="${pageContext.request.contextPath}/mypage/review/submit" method="post" enctype="multipart/form-data" class="review-form">
+  <input type="hidden" name="productId" value="${product.productId}" />
     <div class="form-row">
       <label>제목</label>
       <input type="text" name="title" />
@@ -50,11 +51,12 @@
       <label>본문</label>
       <textarea name="content" rows="10"></textarea>
     </div>
-
+    
     <div class="form-row">
-      <label>첨부파일1</label>
-      <input type="file" name="uploadFile1" />
-    </div>
+	  <label>첨부파일</label>
+	  <input type="file" name="uploadFile1" onchange="previewImage(this)" />
+	</div>
+	<img id="preview" style="display:none; width:150px; margin-top:10px;" />
 
     <div class="btn-bottom-group">
 	  <button type="button" class="btn-list" onclick="location.href='/mypage/order-history'">목록</button>
@@ -65,5 +67,22 @@
   </div>
   
   <%@ include file="/WEB-INF/views/main/footer.jsp" %>
+  
+	<script>
+	function previewImage(input) {
+	  const preview = document.getElementById('preview');
+	  if (input.files && input.files[0]) {
+	    const reader = new FileReader();
+	    reader.onload = function(e) {
+	      preview.src = e.target.result;
+	      preview.style.display = "block";
+	    };
+	    reader.readAsDataURL(input.files[0]);
+	  }
+	}
+	</script>
+
+<input type="file" name="uploadFile1" onchange="previewImage(this)" />
+<img id="preview" src="#" alt="미리보기" style="width:150px; display:block; margin-top:10px;">
 </body>
 </html>
