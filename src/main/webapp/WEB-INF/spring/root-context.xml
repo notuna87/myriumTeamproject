@@ -6,12 +6,15 @@
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:security="http://www.springframework.org/schema/security"
-	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.2.xsd
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation=
+		"http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.2.xsd
 		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 		
@@ -42,6 +45,15 @@
            <!-- com.myrium.mapper 패키지 내의 MyBatis 매퍼 인터페이스를 자동으로 스캔하는 설정 -->
 	<mybatis-spring:scan	base-package="com.myrium.mapper" />
 	
+	<!-- 스케줄링을 위한 컴포넌트 스캔 0807-->
+	<context:component-scan base-package="com.myrium.scheduler" />
+	
+	<!-- @Scheduled 어노테이션을 통한 작업 스케줄링 활성화 0807-->
+	<task:annotation-driven scheduler="taskScheduler" />
+	
+	<!-- 스케줄러 빈 (pool-size는 1 이상이면 됨) 0807-->
+	<task:scheduler id="taskScheduler" pool-size="1" />
+	
 	<!-- com.myrium.service 패키지의 컴포넌트를 스캔하는 설정 -->
 	<context:component-scan base-package="com.myrium.service" />	
 
@@ -63,5 +75,7 @@
 
            <!-- 어노테이션 기반 트랜잭션 처리 활성화 -->
 	<tx:annotation-driven />
+		
+
 		
 </beans>

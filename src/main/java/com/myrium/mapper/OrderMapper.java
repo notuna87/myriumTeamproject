@@ -53,4 +53,6 @@ public interface OrderMapper {
 	//상품리뷰
 	OrderDTO findProductInOrder(@Param("orderId") Long orderId, @Param("productId") int productId);
 
+	//주문상태변경
+	List<OrderDTO> findOrdersForStatusUpdate();
 }
