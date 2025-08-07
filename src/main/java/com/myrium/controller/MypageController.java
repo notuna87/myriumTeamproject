@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.myrium.domain.MemberVO;
 import com.myrium.domain.OrderDTO;
+import com.myrium.scheduler.OrderStatusScheduler;
 import com.myrium.security.domain.CustomUser;
 import com.myrium.service.OrderService;
 

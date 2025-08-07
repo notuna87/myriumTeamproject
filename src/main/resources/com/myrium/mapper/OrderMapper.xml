@@ -84,7 +84,7 @@ ORDER BY o.order_date DESC, o.orders_id
     ORDERS_PRODUCT_SEQ.NEXTVAL, #{productId} ,#{orderId}, #{userId},
     #{customerName}, SYSDATE,
     NULL, NULL,
-    0, #{quantity}, 0
+    0, #{quantity}, 1
 )
 </insert>
 
@@ -288,7 +288,18 @@ WHERE op.orders_id = #{orderId}
     AND p.id = #{productId}
 </select>
 
-
+<!-- 주문상태변경 -->
+<select id="findOrdersForStatusUpdate" resultType="com.myrium.domain.OrderDTO">
+  SELECT 
+    o.id AS id,
+    op.product_id AS productId,
+    op.order_status AS orderStatus,
+    TO_CHAR(o.order_date, 'YYYY-MM-DD HH24:MI:SS') AS orderDate,
+    op.orders_id AS ordersId
+  FROM orders o
+  JOIN orders_product op ON o.id = op.orders_id
+  WHERE op.order_status IN (1, 2)
+</select>
 
 
 </mapper>

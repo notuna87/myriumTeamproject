@@ -1,5 +1,7 @@
 package com.myrium.service;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +11,9 @@ import com.myrium.domain.OrderDTO;
 import com.myrium.mapper.OrderMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
+@Log4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -113,4 +117,12 @@ public class OrderServiceImpl implements OrderService {
 	public OrderDTO getOrderProduct(Long orderId, int productId) {
 	    return orderMapper.findProductInOrder(orderId, productId);
 	}
+	
+	//주문상태변경
+	@Override
+	public List<OrderDTO> getOrdersToAutoUpdate() {
+		 log.info(">>>> OrderService: getOrdersToAutoUpdate() 호출됨");
+	    return orderMapper.findOrdersForStatusUpdate();
+	}
+	
 }
