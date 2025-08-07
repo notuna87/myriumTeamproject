@@ -227,7 +227,8 @@
 								<small>대표이미지를 체크하세요.</small><br>
 								<ul id="uploadListThumbnail" class="list-group mt-2"></ul>
 								<button id="uploadBtnThumbnail" class="btn btn-primary">업로드</button>
-								<button id="cancelBtnThumbnail" class="btn btn-dark">취소</button>
+								<button id="saveBtnThumbnail" class="btn btn-info">저장</button>
+								<button id="cancelBtnThumbnail" class="btn ">취소</button>
 							</div>
 						</div>
 						<div class="form-group">
@@ -245,19 +246,21 @@
 								<input type="file" id="uploadInputDetail" name="detailImages" multiple accept="image/*">
 								<ul id="uploadListDetail" class="list-group mt-2"></ul>
 								<button id="uploadBtnDetail" class="btn btn-primary">업로드</button>
-								<button id="cancelBtnDetail" class="btn btn-dark">취소</button>
+								<button id="saveBtnDetail" class="btn btn-info">저장</button>
+								<button id="cancelBtnDetail" class="btn ">취소</button>
 							</div>
 						</div>
 						
 						<input type="hidden" name="attachList" id="attachListJson">
+						<input type="hidden" name="deleteuuids" id="deleteuuids" />
 						
 						<div class="text-right mt-3">
 							<button type="submit" class="btn btn-success">등록</button>
 							<button type="reset" class="btn btn-warning" id="resetBtn">다시작성</button>
 						</div>
 						
-						<ul id="uploadListThumbnail" class="list-group mt-3"></ul>
-						<ul id="uploadListDetail" class="list-group mt-3"></ul>
+						<!-- <ul id="uploadListThumbnail" class="list-group mt-3"></ul>
+						<ul id="uploadListDetail" class="list-group mt-3"></ul> -->
 						
 					</form>
 				</div>
@@ -293,8 +296,19 @@ $(document).ready(function () {
 	
 	console.log("attachImgs:" + JSON.stringify(attachImgs), null, 2);
 
+	// 썸네일 / 디테일 구분
+	const thumbnailImages = attachImgs
+	  .filter(file => file.is_thumbnail)
+	  .map(convertServerImageToUploadFormat);
+
+	const detailImages = attachImgs
+	  .filter(file => file.is_detail)
+	  .map(convertServerImageToUploadFormat);
+	
+	
 	// 공통 변환 함수
 	function convertServerImageToUploadFormat(serverFile) {
+	  const productId = ${product.id};
 	  const fullPath = serverFile.img_path;
 	  const pathParts = fullPath.split("/");
 	  const fileNameWithUUID = pathParts[pathParts.length - 1];
@@ -302,15 +316,16 @@ $(document).ready(function () {
 	  const uploadPath = pathParts.slice(0, pathParts.length - 1).join("/");
 
 	  return {
+		productId: productId,
 	    id: serverFile.id,
 	    fileName: fileName,
 	    uploadPath: uploadPath,
 	    uuid: serverFile.uuid,
 	    image: 1,
-	    is_thumbnail: serverFile.is_thumbnail,
+	    isThumbnail: serverFile.is_thumbnail,
 	    isThumbnailMain: serverFile.is_thumbnail_main,
-	    is_detail: serverFile.is_detail,
-	    img_path: fullPath,
+	    isDetail: serverFile.is_detail,
+	    imgPath: fullPath,
 	    createdAt: serverFile.created_at,
 	    createdBy: serverFile.created_by,
 	    updatedAt: serverFile.updated_at,
@@ -320,15 +335,6 @@ $(document).ready(function () {
 	  };
 	}
 
-	// 썸네일 / 디테일 구분
-	const thumbnailImages = attachImgs
-	  .filter(file => file.is_thumbnail)
-	  .map(convertServerImageToUploadFormat);
-
-	const detailImages = attachImgs
-	  .filter(file => file.is_detail)
-	  .map(convertServerImageToUploadFormat);
-
 	// 썸네일 ProductEditManager
 	window.uploadThumbnailManager = new ProductEditManager({
 	  currentPage,
@@ -336,6 +342,7 @@ $(document).ready(function () {
 	  buttonId: "uploadBtnThumbnail",
 	  editBtn: "editBtnThumbnail",
 	  cancelBtn: "cancelBtnThumbnail",
+	  saveBtn: "saveBtnThumbnail",
 	  maxCount: 10,
 	  type: "Thumbnail",
 	  regex: /(.*?)\.(exe|sh|zip|alz)$/i,
@@ -345,10 +352,11 @@ $(document).ready(function () {
 	// 디테일 ProductEditManager
 	window.uploadDetailManager = new ProductEditManager({
 	  currentPage,
-	  inputId: "uploadInputDetial",
-	  buttonId: "uploadDetailBtn",
+	  inputId: "uploadInputDetail",
+	  buttonId: "uploadBtnDetail",
 	  editBtn: "editBtnDetail",
 	  cancelBtn: "cancelBtnDetail",
+	  saveBtn: "saveBtnDetail",
 	  maxCount: 5,
 	  type: "Detail",
 	  regex: /(.*?)\.(exe|sh|zip|alz)$/i,
@@ -628,10 +636,11 @@ $(document).ready(function () {
 		// 썸네일 버튼 토글
 	    if (window.uploadThumbnailManager.uploadCompletedThumbnail) {
 	    	console.log("uploadCompletedThumbnail: checked")
-	        $('#uploadBtnThumbnail').hide();
+	       $('#uploadBtnThumbnail').hide();
 	        $('#deleteBtnThumbnail').hide();
 	        $('#uploadInputThumbnail').hide();
 	        $('#cancelBtnThumbnail').hide();
+	        $('#saveBtnThumbnail').hide();
 	        $('.delBtnThumbnail').hide();
 	    }
 
@@ -641,7 +650,8 @@ $(document).ready(function () {
 	        $('#deleteBtnDetail').hide();
 	        $('#uploadInputDetail').hide();
 	        $('#cancelBtnDetail').hide();
-	        $('.delBtnDetail').hide();
+	        $('#saveBtnDetail').hide();
+	        $('.delBtnDetail').hide();	        
 	    }
 		  
 //		$('#modifyBtnThumbnail').on('click', function () {

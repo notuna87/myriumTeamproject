@@ -143,7 +143,7 @@ public class NoticeController {
 	@PostMapping("/modify")
 	public String modify(NoticeVO vo,
 			@RequestParam(value = "attachList", required = false) String attachListJson,
-			@RequestParam(value = "deleteFiles", required = false) String deleteFiles,
+			@RequestParam(value = "deleteUuids", required = false) String deleteUuids,
 			@ModelAttribute("cri") Criteria cri,
 			RedirectAttributes rttr) {
 		log.info("modify:" + vo);
@@ -161,8 +161,8 @@ public class NoticeController {
 	    }
 	    
 	    // 1. 기존 첨부파일 목록 삭제
-	    if (deleteFiles != null && !deleteFiles.isEmpty()) {
-	        String[] uuids = deleteFiles.split(",");
+	    if (deleteUuids != null && !deleteUuids.isEmpty()) {
+	        String[] uuids = deleteUuids.split(",");
 	        for (String uuid : uuids) {
 	            noticeservice.deleteAttachByUuid(uuid); // delete 쿼리 실행
 	        }

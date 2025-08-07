@@ -135,5 +135,11 @@ public class AdminProductServiceImpl implements AdminProductService{
 	public void insertImgpath(ImgpathVO imgVO) {
 		mapper.insertImgpath(imgVO);		
 	}
+
+
+	@Override
+	public List<ImgpathVO> findImgpathByUuid(String uuid) {
+		return mapper.findImgpathByUuid(uuid);
+	}
 	
 }

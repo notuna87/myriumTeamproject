@@ -107,7 +107,7 @@
 							</div>
 						</div>
 						
-					<input type="hidden" name="deleteFiles" id="deleteFiles">
+					<input type="hidden" name="deleteUuids" id="deleteUuids">
 					<input type="hidden" name="attachList" id="attachListJson" >
 					<input type="hidden" name="userId" value="${notice.userId}">
 
@@ -395,7 +395,7 @@ $(document).ready(function () {
 	  setAttachListJson(uploadedFileList);
 	  
 	  deleteFileUuids.push(uuid);
-	  $("#deleteFiles").val(deleteFileUuids.join(","));
+	  $("#deleteUuids").val(deleteFileUuids.join(","));
 	  $(this).closest("li").remove();
 	});
   

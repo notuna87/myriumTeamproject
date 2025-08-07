@@ -1,9 +1,13 @@
 package com.myrium.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -174,7 +178,7 @@ public class AdminProductController {
 	public String modify(ProductVO vo,
 				CategoryVO cat,
 				@RequestParam(value = "attachList", required = false) String attachListJson,
-				@RequestParam(value = "deleteFiles", required = false) String deleteFiles,
+				@RequestParam(value = "deleteuuids", required = false) String deleteUuids,
 				@ModelAttribute("cri") Criteria cri,
 				RedirectAttributes rttr) {
 		
@@ -194,15 +198,35 @@ public class AdminProductController {
 	        }
 	    }
 	    
-	    log.info("deleteFiles:" + deleteFiles);
+	    log.info("deleteUuids:" + deleteUuids);
 	    
 	    // 1. 기존 첨부파일 삭제
-	    if (deleteFiles != null && !deleteFiles.isEmpty()) {
-	        String[] uuids = deleteFiles.split(",");
+	    // 삭제 대상 처리
+	    if (deleteUuids != null && !deleteUuids.trim().isEmpty()) {
+	        String[] uuids = deleteUuids.split(",");
+
 	        for (String uuid : uuids) {
-	            service.deleteImgpathByUuid(uuid); // delete 쿼리 실행
+	            // DB 삭제
+	            service.deleteImgpathByUuid(uuid);
+
+	            // 저장소 경로
+	            String uploadFolder = "C:/upload";
+	            List<ImgpathVO> paths = service.findImgpathByUuid(uuid); // UUID로 기존 경로 찾기
+
+	            for (ImgpathVO pathVO : paths) {
+	                // 원본 이미지
+	                File file = new File(uploadFolder, pathVO.getImg_path());
+	                if (file.exists()) file.delete();
+
+	                // 썸네일 이미지
+	                if (pathVO.getImg_path_thumb() != null) {
+	                    File thumbFile = new File(uploadFolder, pathVO.getImg_path_thumb());
+	                    if (thumbFile.exists()) thumbFile.delete();
+	                }
+	            }
 	        }
 	    }
+
 		
 	    // hasFiles 설정
 //	    vo.setHasFiles((attachList != null && !attachList.isEmpty()) ? 1 : 0);
@@ -331,6 +355,23 @@ public class AdminProductController {
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
 		return "redirect:/product/list";
+	}
+	
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PostMapping("/updateThumbnailMain")
+	public ResponseEntity<String> updateMainImage(
+	    @RequestParam("productId") int productId,
+	    @RequestParam("uuid") String uuid) {
+	    
+	    try {
+	        mapper.updateThumbnailMain(productId, uuid);
+	        log.info("updateThumbnailMain: " + productId);
+	        log.info("updateThumbnailMain: " + uuid);
+	        return ResponseEntity.ok("Thumbnail_Main: update success");
+	    } catch (Exception e) {
+	        log.error("updateThumbnailMain error", e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Thumbnail_Main: update error");
+	    }
 	}
 	
 }

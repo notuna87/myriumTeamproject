@@ -114,7 +114,7 @@ public class UploadController {
 	                // 썸네일 생략	            
 	            } else if (type.equalsIgnoreCase("thumbnail") || checkImageType(saveFile)) {
 	                dto.setIsThumbnail(1);
-	                dto.setIsThumbnailMain(parseFlag(params, "is_thumbnail_main_" + i));
+	                dto.setIsThumbnailMain(parseFlag(params, "isThumbnailMain_" + i));
 	                dto.setIsDetail(0);
 
 	                // 썸네일 생성 (100x100) => s_파일명

@@ -38,6 +38,8 @@ public interface AdminProductMapper {
 	public void insertCategory(CategoryVO cat);
 	public void updateCategory(CategoryVO cat);
 	public void insertImgpath(ImgpathVO imgVO);
+	public void updateThumbnailMain(@Param("productId") int productId, @Param("uuid") String uuid);
+	public List<ImgpathVO> findImgpathByUuid(String uuid);
 
 
 

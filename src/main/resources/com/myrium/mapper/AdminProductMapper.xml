@@ -330,7 +330,17 @@
 
   <delete id="deleteImgpathByUuid" parameterType="string">
     DELETE FROM img_path WHERE uuid = #{uuid}
-  </delete>
+  </delete>  
+  
+  <update id="updateThumbnailMain" parameterType="com.myrium.domain.ImgpathVO">  
+		UPDATE img_path
+		SET is_thumbnail_main = CASE WHEN uuid = #{uuid} THEN 1 ELSE 0 END
+		WHERE product_id = #{productId} and is_thumbnail = 1
+  </update>
+  
+  <select id="findImgpathByUuid" resultMap="imgpathMap">
+    SELECT * FROM img_path WHERE uuid = #{uuid}
+  </select>
 
 </mapper>
 

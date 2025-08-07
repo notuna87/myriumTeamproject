@@ -47,4 +47,6 @@ public interface AdminProductService {
 	   
 	   public void insertImgpath(ImgpathVO imgVO);
 
+	   public List<ImgpathVO> findImgpathByUuid(String uuid);
+
 }
