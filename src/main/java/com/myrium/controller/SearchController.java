@@ -35,18 +35,24 @@ public class SearchController {
     }
 	
     @GetMapping("/search/result")
-    public String searchResult(SearchCriteria searchcri,@RequestParam("searchKeyword") String searchKeyword, Model model) {
+
+    public String searchResult(@RequestParam(value = "sort", required = false) String sort, SearchCriteria searchcri,@RequestParam("searchKeyword") String searchKeyword, Model model) {
        
-    	List<ProductDTO> searchProductList = productservice.getSearchProductList(searchKeyword, searchcri);
+    	List<ProductDTO> searchProductList = productservice.getSearchProductList(searchKeyword, searchcri, sort);
         log.info("결과: " + searchProductList);
+        log.info("검색 키워드: " + searchKeyword);
+        log.info("정렬: " + sort);
         int searchResultCount = productservice.searchResultCount(searchKeyword);
         
-        log.info(searchResultCount);
+        log.info("상품 수 카운트" + searchResultCount);
+
         
         model.addAttribute("searchProductList", searchProductList);
         model.addAttribute("searchKeyword", searchKeyword);
     	model.addAttribute("pageMaker", new SearchPageDTO(searchcri,searchResultCount));
     	model.addAttribute("searchResultCount",searchResultCount);
+    	model.addAttribute("sort",sort);
+
 
         log.info("리스트 : "+searchProductList);
         

@@ -132,20 +132,43 @@
 	</update>
 
 	<select id="getSearchProductList" resultType="com.myrium.domain.ProductVO">
- <![CDATA[ 
-	SELECT id,product_name,product_content, product_stock, product_price,
-	is_deleted, created_at, created_by, updated_at, updated_by,
-	is_timesales, is_mainone, is_maintwo, is_discount, discount_rate,
-	timesalediscount_rate, total_discountrate, discount_price, sales_count
-	FROM (
-	SELECT /*+INDEX_DESC(product pk_product)*/ rownum rn, id,product_name,product_content, product_stock, product_price,
-	is_deleted, created_at, created_by, updated_at, updated_by,
-	is_timesales, is_mainone, is_maintwo, is_discount, discount_rate,
-	timesalediscount_rate, total_discountrate, discount_price, sales_count
-	FROM product WHERE LOWER(product_name) LIKE '%' || #{searchKeyword} ||
-	'%' AND rownum <= #{searchcri.pageNum}*#{searchcri.amount}) where rn > (#{searchcri.pageNum} -1) * #{searchcri.amount}
-   ]]> 
-	</select>
+<![CDATA[
+SELECT *
+FROM (
+    SELECT /*+INDEX_DESC(product pk_product)*/ 
+           ROWNUM rn, p.*
+    FROM (
+        SELECT id, product_name, product_content, product_stock, product_price,
+               is_deleted, created_at, created_by, updated_at, updated_by,
+               is_timesales, is_mainone, is_maintwo, is_discount, discount_rate,
+               timesalediscount_rate, total_discountrate, discount_price, sales_count
+        FROM product
+        WHERE LOWER(product_name) LIKE '%' || #{searchKeyword} || '%'
+]]>
+<choose>
+    <when test="sort == 'new'">
+        ORDER BY created_at DESC
+    </when>
+    <when test="sort == 'name'">
+        ORDER BY product_name ASC
+    </when>
+    <when test="sort == 'lowPrice'">
+        ORDER BY (product_price - (product_price * COALESCE(discount_rate, 0) / 100)) ASC
+    </when>
+    <when test="sort == 'highPrice'">
+        ORDER BY (product_price - (product_price * COALESCE(discount_rate, 0) / 100)) DESC
+    </when>
+    <otherwise>
+        ORDER BY id DESC
+    </otherwise>
+</choose>
+<![CDATA[
+    ) p
+    WHERE ROWNUM <= #{searchcri.pageNum} * #{searchcri.amount}
+) 
+WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
+]]>
+</select>
 
 	<!-- 상품리뷰 -->
 	<select id="findById" parameterType="long"

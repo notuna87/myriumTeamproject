@@ -181,8 +181,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDTO> getSearchProductList(String searchKeyword, SearchCriteria searchcri) {
-		List<ProductVO> products = productmapper.getSearchProductList(searchKeyword, searchcri);
+	public List<ProductDTO> getSearchProductList(String searchKeyword, SearchCriteria searchcri, String sort) {
+		List<ProductVO> products = productmapper.getSearchProductList(searchKeyword, searchcri, sort);
+
 		List<ProductDTO> productDTOs = new ArrayList<>();
 
 		for (ProductVO product : products) {

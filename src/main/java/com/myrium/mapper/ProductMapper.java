@@ -73,7 +73,8 @@ public interface ProductMapper {
 	public void increaseSalesCount(@Param("increaseSalesCount") int increaseSalesCount,
 			@Param("productid") int productid);
 
-	public List<ProductVO> getSearchProductList(@Param("searchKeyword") String searchKeyword, @Param("searchcri") SearchCriteria searchcri);
+	public List<ProductVO> getSearchProductList(@Param("searchKeyword") String searchKeyword, @Param("searchcri") SearchCriteria searchcri,@Param("sort") String sort);
+
 
 	//상품리뷰
 	public ProductDTO findById(Long id);
