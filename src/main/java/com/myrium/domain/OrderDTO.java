@@ -41,6 +41,8 @@ public class OrderDTO {
 		private int discount_price;
 		private int product_price;
 		private String product_content;
+		
+		private String img_path;
 
 
     public void setOrderDate(String orderDate) {

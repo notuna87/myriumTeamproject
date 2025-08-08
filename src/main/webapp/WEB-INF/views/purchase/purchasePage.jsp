@@ -100,7 +100,7 @@
 							<div class="cartContentsWrap">
 								<table style="border-bottom: 1px dashed #E9E9E9; width: 100%;">
 									<tr>
-										<th><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgcKJBzVf6xWEHZX3rvDJU-W8IQ1O45zsU_g&s" alt="test" class="orderProductThumbnail"></th>
+										<th><img src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" alt="test" class="orderProductThumbnail"></th>
 										<td><input type="hidden" name="productId" value="${item.product.id}">
 											<p style="margin-bottom: 10px;">${item.product.product_name}</p>
 											<p style="color: #888">${item.product.product_content}</p> <input type="hidden" name="quantity" value="${item.inCart.quantity}">

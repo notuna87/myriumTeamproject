@@ -85,12 +85,17 @@
 	        <!-- 상품 목록 -->
 	        <c:forEach var="order" items="${orders}">
 	          <div class="order-content">
-	            <img src="${pageContext.request.contextPath}/resources/img/mypage/eco-cup.jpg" alt="상품 이미지" class="product-img">
+	            <img src="${pageContext.request.contextPath}/upload/${order.img_path}" alt="상품 이미지" class="product-img">
 	
 	            <div class="product-info">
 	              <p class="product-title">${order.productName}</p>
 	              <p class="product-price">
+	              <c:if test="${order.discount_price == 0}">
 	                <fmt:formatNumber value="${order.productPrice}" pattern="#,###" />원 (${order.quantity}개)
+	              </c:if>
+				  <c:if test="${order.discount_price != 0}">
+	                <fmt:formatNumber value="${order.discount_price}" pattern="#,###" />원 (${order.quantity}개)
+				  </c:if>
 	              </p>
 	            </div>
 	          </div>
@@ -141,11 +146,16 @@
 	        <!-- 상품 목록 -->
 	        <c:forEach var="order" items="${orders}">
 	          <div class="order-content">
-	            <img src="${pageContext.request.contextPath}/resources/img/mypage/eco-cup.jpg" alt="상품 이미지" class="product-img" />
+	            <img src="${pageContext.request.contextPath}/upload/${order.img_path}" alt="${order.product_name}" class="product-img" />
 	            <div class="product-info">
 	              <p class="product-title">${order.productName}</p>
 	              <p class="product-price">
+	              <c:if test="${order.discount_price == 0}">
 	                <fmt:formatNumber value="${order.productPrice}" pattern="#,###" />원 (${order.quantity}개)
+	              </c:if>
+				  <c:if test="${order.discount_price != 0}">
+	                <fmt:formatNumber value="${order.discount_price}" pattern="#,###" />원 (${order.quantity}개)
+				  </c:if>
 	              </p>
 	            </div>
 	          </div>

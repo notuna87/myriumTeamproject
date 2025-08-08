@@ -153,10 +153,10 @@ FROM (
         ORDER BY product_name ASC
     </when>
     <when test="sort == 'lowPrice'">
-        ORDER BY (product_price - (product_price * COALESCE(discount_rate, 0) / 100)) ASC
+        ORDER BY (product_price - (product_price * COALESCE(total_discountrate, 0) / 100)) ASC
     </when>
     <when test="sort == 'highPrice'">
-        ORDER BY (product_price - (product_price * COALESCE(discount_rate, 0) / 100)) DESC
+        ORDER BY (product_price - (product_price * COALESCE(total_discountrate, 0) / 100)) DESC
     </when>
     <otherwise>
         ORDER BY id DESC
