@@ -15,22 +15,30 @@ public interface OrderService {
 
 	List<OrderDTO> getOrderListByCustomerId(String customerId);
 
-	  //List<OrderDTO> getOrderListByCustomerId(String customerId); //중복
-	  
-	  List<OrderDTO> getCanceledOrdersByCustomerId(String customerId);
-	  
-	  List<Map<String, Object>> countOrdersByStatus(String customerId);
-	  
-	  int getTotalPaidOrderAmount(String customerId);
-	  
-	  List<OrderDTO> getOrderDetail(Long orderId);
-	  
-	  int getValidOrderTotalAmount(Long orderId);
-	  
-	  //교환,환불
-	  boolean applyRefund(Long orderId, Long productId);
-	  boolean applyExchange(Long orderId, Long productId);
+	List<OrderDTO> getCanceledOrdersByCustomerId(String customerId);
+
+	List<Map<String, Object>> countOrdersByStatus(String customerId);
+
+	int getTotalPaidOrderAmount(String customerId);
+
+	List<OrderDTO> getOrderDetail(Long orderId);
+
+	int getValidOrderTotalAmount(Long orderId);
+
+	// 교환,환불
+	void updateOrderStatus(Long orderId, int productId, int orderStatus);
+
+	void checkAndCompleteStatus(Long orderId);
 
 	int countOrdersToday(String today);
+
+	List<OrderDTO> productList(Long orderId);
+	
+	//상품리뷰
+	OrderDTO getOrderProduct(Long orderId, int productId);
+	
+	//주문상태변경
+	List<OrderDTO> getOrdersToAutoUpdate();
+	
 
 }

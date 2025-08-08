@@ -60,8 +60,8 @@ public class PurchaseController {
 	}
 
 	@PostMapping("/purchasecomplete")
-	public String purchaseComplete(HttpServletRequest request) {
-		
+	public String purchaseComplete(HttpServletRequest request, Model model) {
+	    
 		// 로그인한 사용자 id 가져오기
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUser userDetails = (CustomUser) authentication.getPrincipal();
@@ -87,9 +87,9 @@ public class PurchaseController {
 		String phone2 = request.getParameter("phone2");
 		String phone3 = request.getParameter("phone3");
 		String phone = phone1 + "-" + phone2 + "-" + phone3;
-		String payment = request.getParameter("payment");
+		String paymentStr = request.getParameter("payment");
+		int payment = Integer.parseInt(paymentStr);
 		
-
 		// dto에 정보 집어 넣기
 		OrderDTO orders = new OrderDTO();
 		orders.setUserId(userId);
@@ -100,6 +100,9 @@ public class PurchaseController {
 		orders.setPhoneNumber(phone);
 		orders.setPaymentMethod(payment);
 		
+	    String paymentStatusText = orders.getPayment(); // getPayment() 호출해서 문자 받아오기
+
+	    log.info(paymentStatusText);
 		// 오늘 날짜 가져오기
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		
@@ -117,25 +120,43 @@ public class PurchaseController {
 		// 상품 ID 여러 개 받기
 		String[] productIdArray = request.getParameterValues("productId");
 		String[] quantityArray = request.getParameterValues("quantity");
-		
-
-		
+    
+		// 상품 리스트를 받은 후 상품들 업데이트
 		if (productIdArray != null && quantityArray != null) {
 			for (int i = 0; i < productIdArray.length; i++) {
 				int productid = Integer.parseInt(productIdArray[i]);
 				int quantity = Integer.parseInt(quantityArray[i]);
 				
-				log.info(productid);
-				log.info(quantity);
-				
 				orderservice.insertOrdersProduct(productid, OrderId , userId, quantity, customerName);
 				orderservice.deletePurchaseCart(userId, productid);
+				int getStock = productservice.getStock(productid);
+				int getSalesCount = productservice.getSalesCount(productid);
+				
+				int decreaseStock = getStock - quantity;
+				int increaseSalesCount = getSalesCount + quantity;
+				
+				productservice.decreaseStock(decreaseStock, productid);
+				productservice.increaseSalesCount(increaseSalesCount, productid);
 			}
 		} else {
 			log.warn("상품 없음");
 		}
 		
+		// hidden으로부터 가격을 받아와 저장
+		String totalPrice = request.getParameter("totalprice");
+		String formattedTotal = request.getParameter("formattedTotal");
+
+		// 프론트로 정보 보내주기
+		model.addAttribute("orders", orders);
+		model.addAttribute("totalPrice", totalPrice);
+		model.addAttribute("formattedTotal", formattedTotal);
+		
+		List<OrderDTO> productList = orderservice.productList(OrderId);
+		
+		model.addAttribute("productList", productList);
+		model.addAttribute("paymentStatusText",paymentStatusText);
+		
 		return "purchase/purchaseComplete";
 	}
-
+	
 }

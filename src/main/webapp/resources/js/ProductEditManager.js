@@ -99,26 +99,12 @@ class ProductEditManager {
     return true;
   }
 
-//  toDelete(index, isUploaded) {
-//    console.log(`[Delete] ${this.type} - index: ${index}, isUploaded: ${isUploaded}`);
-
-//    if (isUploaded) {
-//      this.uploadedFiles[index].toDelete = true;
-//    } else {
-//      this.selectedFiles.splice(index, 1);
-//    }
-
-//    this.updatePreviewList();
-//  }
-  
   
 toDelete(index, isUploaded) {
   console.log(`[Delete] ${this.type} - index: ${index}, isUploaded: ${isUploaded}`);
 
   if (isUploaded) {
     const file = this.uploadedFiles[index];
-    
-
 
     // UUID를 삭제 목록에 추가
     if (file.uuid && !this.deleteUuids.includes(file.uuid)) {
@@ -228,70 +214,7 @@ toDelete(index, isUploaded) {
       const isUploaded = target.data("uploaded");
       this.setMainImage(index, isUploaded);
     });
-    
-    
-
   }
-
-//  buildFormData(formData, prefix) {
-//    console.log(`[FormData] ${this.type} - FormData 구성 시작`);
-
-//    this.uploadedFiles.forEach((file, i) => {
-//      if (file.toDelete) {
-//        formData.append(`${prefix}[${i}][delete]`, "true");
-//        formData.append(`${prefix}[${i}][uuid]`, file.uuid);
-//        formData.append(`${prefix}[${i}][fileName]`, file.fileName);
-//      } else {
-//        formData.append(`${prefix}[${i}][uuid]`, file.uuid);
-//        formData.append(`${prefix}[${i}][fileName]`, file.fileName);
-//        formData.append(`${prefix}[${i}][isThumbnailMain]`, file.isThumbnailMain === 1 ? "1" : "0");
-//      }
-//    });
-
-//    this.selectedFiles.forEach((file, i) => {
-//      formData.append(`${prefix}[new][${i}][uuid]`, file.uuid);
-//      formData.append(`${prefix}[new][${i}][file]`, file);
-//      formData.append(`${prefix}[new][${i}][isThumbnailMain]`, file.isThumbnailMain === 1 ? "1" : "0");
-//    });
-//  }
-
-
-
-//updateAttachInput() {
-//  console.log(`[AttachInput] ${this.type} - attachList 업데이트`);
-
-  // toDelete 되지 않은 파일만 전송
-//  const filteredFiles = this.uploadedFiles.filter(file => !file.toDelete);
-
-//  const attachData = filteredFiles.map(file => ({
-//    uuid: file.uuid,
-//    fileName: file.fileName,
-//    uploadPath: file.uploadPath,
-//    isThumbnail: this.type === 'Thumbnail' ? 1 : 0,
-//    isThumbnailMain: this.type === 'Thumbnail' ? (file.isThumbnailMain === 1 ? 1 : 0) : 0,
-//    isDetail: this.type === 'Detail' ? 1 : 0
-//  }));
-
-  // 전역 hidden input에 JSON 문자열로 저장
-//  const attachInput = document.getElementById("attachListJson");
-//  if (attachInput) {
-//    attachInput.value = JSON.stringify(attachData);
-//    console.log(`[AttachInput] attachListJson set:`, attachData);
-//  }
-//}
-
-//deleteFile(fileName, type, liElement) {
-//    $.ajax({
-//      url: "/deleteFile",
-//      data: { fileName: fileName, type: type },
-//      type: "POST",
-//      success: function (result) {
-//        liElement.remove();
-//      },
-//    });
-//  }
-
-
 
   uploadFiles(e) {
     console.log("uploadFiles(start)------------------>");
@@ -384,11 +307,6 @@ toDelete(index, isUploaded) {
       }
     });
   }
-  
-//  updateAttachInput() {  
-//	$("#attachListJson").val(JSON.stringify(this.attachList));
-//	console.log(`[AttachInput] ${this.type} - attachList 업데이트`);
-//  }
   
   editMode(e) {
     e.preventDefault();
@@ -498,41 +416,40 @@ toDelete(index, isUploaded) {
 	  
 
 	
-// === 3) 통합 데이터 구성 ===
-const thumbnailAttachList = Array.isArray(uploadThumbnailManager.uploadedFiles)
-  ? uploadThumbnailManager.uploadedFiles
-  : [];
-
-const detailAttachList = Array.isArray(uploadDetailManager.uploadedFiles)
-  ? uploadDetailManager.uploadedFiles
-  : [];
-
-const thumbnailDeleteUuids = Array.isArray(uploadThumbnailManager.deleteUuids)
-  ? uploadThumbnailManager.deleteUuids
-  : [];
-
-const detailDeleteUuids = Array.isArray(uploadDetailManager.deleteUuids)
-  ? uploadDetailManager.deleteUuids
-  : [];
-
-const combinedAttachList = [...thumbnailAttachList, ...detailAttachList];
-const combinedDeleteUuids = [...new Set([...thumbnailDeleteUuids, ...detailDeleteUuids])].join(",");
-
-const attachListJson = JSON.stringify(combinedAttachList);
-
-// === 4) Hidden input에 저장 (서버 제출용) ===
-document.querySelector("input[name='attachList']").value = attachListJson;
-document.querySelector("input[name='deleteuuids']").value = combinedDeleteUuids;
-
-console.log('Final - attachListJson:', JSON.stringify(attachListJson));
-console.log('Final - deleteUuids:', combinedDeleteUuids);
-
-console.log('uploadThumbnailManager - uploadedFiles:', uploadThumbnailManager.uploadedFiles);
-console.log('uploadThumbnailManager - deleteUuids:', uploadThumbnailManager.deleteUuids);
-console.log('uploadDetailManager - uploadedFiles:', uploadDetailManager.uploadedFiles);
-console.log('uploadDetailManager - deleteUuids:', uploadDetailManager.deleteUuids);
+	// === 3) 통합 데이터 구성 ===
+	const thumbnailAttachList = Array.isArray(uploadThumbnailManager.uploadedFiles)
+	  ? uploadThumbnailManager.uploadedFiles
+	  : [];
+	
+	const detailAttachList = Array.isArray(uploadDetailManager.uploadedFiles)
+	  ? uploadDetailManager.uploadedFiles
+	  : [];
+	
+	const thumbnailDeleteUuids = Array.isArray(uploadThumbnailManager.deleteUuids)
+	  ? uploadThumbnailManager.deleteUuids
+	  : [];
+	
+	const detailDeleteUuids = Array.isArray(uploadDetailManager.deleteUuids)
+	  ? uploadDetailManager.deleteUuids
+	  : [];
+	
+	const combinedAttachList = [...thumbnailAttachList, ...detailAttachList];
+	const combinedDeleteUuids = [...new Set([...thumbnailDeleteUuids, ...detailDeleteUuids])].join(",");
+	
+	const attachListJson = JSON.stringify(combinedAttachList);
+	
+	// === 4) Hidden input에 저장 (서버 제출용) ===
+	document.querySelector("input[name='attachList']").value = attachListJson;
+	document.querySelector("input[name='deleteuuids']").value = combinedDeleteUuids;
+	
+	console.log('Final - attachListJson:', JSON.stringify(attachListJson));
+	console.log('Final - deleteUuids:', combinedDeleteUuids);
+	
+	console.log('uploadThumbnailManager - uploadedFiles:', uploadThumbnailManager.uploadedFiles);
+	console.log('uploadThumbnailManager - deleteUuids:', uploadThumbnailManager.deleteUuids);
+	console.log('uploadDetailManager - uploadedFiles:', uploadDetailManager.uploadedFiles);
+	console.log('uploadDetailManager - deleteUuids:', uploadDetailManager.deleteUuids);
 
 	}
-
-
+	
 }

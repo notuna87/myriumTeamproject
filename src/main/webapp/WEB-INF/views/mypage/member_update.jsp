@@ -43,7 +43,7 @@
 		<div class="profile-section">
 			<div class="profile-left">
 				<div class="profile-icon">
-					<img src="" alt="프로필 이미지">
+					<img src="${pageContext.request.contextPath}/resources/img/mypage/user.png" alt="회원"/>
 				</div>
 				<div class="profile-info">
 					<p class="welcome">

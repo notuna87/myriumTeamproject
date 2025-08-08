@@ -3,7 +3,6 @@ package com.myrium.controller;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,8 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.myrium.domain.MemberVO;
 import com.myrium.domain.OrderDTO;
+import com.myrium.scheduler.OrderStatusScheduler;
 import com.myrium.security.domain.CustomUser;
 import com.myrium.service.OrderService;
 
@@ -39,6 +41,7 @@ public class MypageController {
     public String showchangepw() {
         return "mypage/change_password";
     }
+    
     
     @GetMapping("/mypage/order/list")
     public String showOrderList(Authentication authentication, RedirectAttributes rttr) {
@@ -109,7 +112,7 @@ public class MypageController {
         statusMap.put("3", 0); // 배송완료
 
         for (Map<String, Object> row : statusCounts) {
-            String status = (String) row.get("ORDER_STATUS");
+            String status = row.get("ORDER_STATUS") != null ? row.get("ORDER_STATUS").toString() : null;
             Object countObj = row.get("COUNT");
 
             log.info("===> 상태 원본 값: [" + status + "]");
@@ -138,7 +141,6 @@ public class MypageController {
             log.info(">> 정리된 상태명: " + status + ", 최종 개수: " + count);
         }
 
-        
         //총주문금액
         int totalPaidAmount = orderService.getTotalPaidOrderAmount(customerId);
         log.info("총주문 금액: " + totalPaidAmount);
@@ -146,7 +148,6 @@ public class MypageController {
         model.addAttribute("totalPaidAmount", totalPaidAmount);
 
         model.addAttribute("statusMap", statusMap);
-        //model.addAttribute("orderStatusMap", statusMap);
 
         return "mypage/mypage"; // mypage.jsp
     }
@@ -193,37 +194,36 @@ public class MypageController {
         model.addAttribute("cancelGroupedOrders", cancelGroupedOrders);
         model.addAttribute("cancelCount", cancelList.size());
 
+        log.info(cancelGroupedOrders);
+        log.info(groupedOrders);
+        
         return "mypage/order_history";
     }
 
 	
 	//환불신청
-	@PostMapping("/mypage/request-refund")
-	@ResponseBody
-	public Map<String, Object> requestRefund(@RequestBody Map<String, Object> payload) {
-	    Long orderId = Long.valueOf(payload.get("orderId").toString());
-	    Long productId = Long.valueOf(payload.get("productId").toString());
 
-	    boolean result = orderService.applyRefund(orderId, productId);
+    @PostMapping("/mypage/updateOrderStatus")
+    @ResponseBody
+    public ResponseEntity<String> updateOrderStatus(@RequestBody Map<String, Object> requestData) {
+        try {
+            Long orderId = ((Number) requestData.get("orderId")).longValue();
+            int productId = ((Number) requestData.get("productId")).intValue();
+            int orderStatus = ((Number) requestData.get("orderStatus")).intValue();
 
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("success", result);
-	    return response;
-	}
+            log.info(orderId);
+            log.info(productId);
+            log.info(orderStatus);
+            
+            orderService.updateOrderStatus(orderId, productId, orderStatus);
 
-	//교환신청
-	@PostMapping("/mypage/request-exchange")
-	@ResponseBody
-	public Map<String, Object> requestExchange(@RequestBody Map<String, Object> payload) {
-	    Long orderId = Long.valueOf(payload.get("orderId").toString());
-	    Long productId = Long.valueOf(payload.get("productId").toString());
+            return ResponseEntity.ok("상태 변경 완료");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러 발생");
+        }
+    }
 
-	    boolean result = orderService.applyExchange(orderId, productId);
-
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("success", result);
-	    return response;
-	}
     }
     
 

@@ -43,7 +43,7 @@
 			<div class="cartContentsWrap">
 				<!-- 상품 이미지 -->
 				<div class="cartImgWrap">
-					<a href="#"> <img class="cartImg" src="${pageContext.request.contextPath}/resources/img/${item.thumbnail.img_path}" />
+					<a href="sub?id=${item.product.id}"> <img class="cartImg" src="${pageContext.request.contextPath}/resources/img/${item.thumbnail.img_path}" />
 					</a>
 				</div>
 
@@ -73,8 +73,6 @@
 						<input type="number"  class="productQty" name="quantity" id="quantity" value="${item.inCart.quantity}" min="1" readonly />
 						<button type="button" class="buttonPlus" onclick="changeQuantity('increase', this)" data-product-id="${item.product.id}">+</button>
 					</div>
-
-
 
 					<!-- 상품 삭제 -->
 					<div class="cartDelete">

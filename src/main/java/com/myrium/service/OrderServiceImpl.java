@@ -1,5 +1,7 @@
 package com.myrium.service;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,33 +11,37 @@ import com.myrium.domain.OrderDTO;
 import com.myrium.mapper.OrderMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
+@Log4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-	private final OrderMapper orderMapper;
+    private final OrderMapper orderMapper;
 
-	@Override
-	public List<OrderDTO> getOrderListByCustomerId(String customerId) {
-		return orderMapper.findOrdersByCustomerId(customerId);
-	}
+    @Override
+    public List<OrderDTO> getOrderListByCustomerId(String customerId) {
+        return orderMapper.findOrdersByCustomerId(customerId);
+    }
 
 	@Override
 	public int insertOrders(OrderDTO orders) {
-
+		
 		return orderMapper.insertOrders(orders);
 	}
 
+
 	@Override
 	public void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName) {
-
+		
 		orderMapper.insertOrdersProduct(productid, orderId, userId, quantity, customerName);
 	}
 
+
 	@Override
 	public void deletePurchaseCart(Long userId, int productid) {
-
+		
 		orderMapper.deletePurchaseCart(userId, productid);
 	}
     
@@ -65,21 +71,58 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.getValidOrderTotalAmount(orderId);
     }
     
-    //환불버튼처리
+    //교환,환불버튼처리
     @Override
-    public boolean applyRefund(Long orderId, Long productId) {
-        int updated = orderMapper.updateRefundStatus(orderId, productId);
-        return updated > 0;
+    public void updateOrderStatus(Long orderId, int productId, int orderStatus) {
+        // 1. 상품 상태 업데이트
+        orderMapper.updateOrderStatus(orderId, productId, orderStatus);
+
+        // 2. 주문 상태 업데이트
+        orderMapper.updateOrdersStatus(orderId, orderStatus);
+
+        // 3. 환불/교환 신청 여부 업데이트
+        if (orderStatus == 4) { // 교환 신청
+            orderMapper.updateExchangeFlag(orderId);
+        } else if (orderStatus == 6) { // 환불 신청
+            orderMapper.updateRefundFlag(orderId);
+        }
     }
-    //교환버튼처리
+    
+    //교환,환불 완료처리 주문상태변경
     @Override
-    public boolean applyExchange(Long orderId, Long productId) {
-        int updated = orderMapper.updateExchangeStatus(orderId, productId);
-        return updated > 0;
+    public void checkAndCompleteStatus(Long orderId) {
+        // orders 테이블에서 현재 환불/교환 플래그 조회
+        OrderDTO order = orderMapper.findOrderById(orderId);
+        
+        if (order.getIsRefundable() == 1) {
+            orderMapper.completeRefundStatus(orderId);
+        }
+        if (order.getIsExchanged() == 1) {
+            orderMapper.completeExchangeStatus(orderId);
+        }
     }
   
   	@Override
 	public int countOrdersToday(String today) {
 		return orderMapper.countOrdersToday(today);
 	}
+  
+	@Override
+	public List<OrderDTO> productList(Long orderId) {
+		return orderMapper.productList(orderId);
+	}
+
+	//상품리뷰
+	@Override
+	public OrderDTO getOrderProduct(Long orderId, int productId) {
+	    return orderMapper.findProductInOrder(orderId, productId);
+	}
+	
+	//주문상태변경
+	@Override
+	public List<OrderDTO> getOrdersToAutoUpdate() {
+		 log.info(">>>> OrderService: getOrdersToAutoUpdate() 호출됨");
+	    return orderMapper.findOrdersForStatusUpdate();
+	}
+	
 }

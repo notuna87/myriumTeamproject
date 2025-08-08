@@ -503,6 +503,7 @@ $(document).ready(function () {
 
   
 $("button[type='reset']").on("click", function (e) {
+	confirm("주의❗ 모든 이미지가 삭제됩니다!");
 	console.log("reset:;;;;;;;;;;;" );
 	console.log("attachImgs:" + JSON.stringify(attachList));
   e.preventDefault();

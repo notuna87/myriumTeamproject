@@ -42,4 +42,5 @@ public class HomeController {
     public String adminPage() {
     	return "admin"; // leedy
     }
+
 }

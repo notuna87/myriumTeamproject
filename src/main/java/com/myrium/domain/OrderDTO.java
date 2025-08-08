@@ -2,6 +2,7 @@ package com.myrium.domain;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,10 +26,22 @@ public class OrderDTO {
 	    private String title; // 제목
 	    private String content; // 내용
 	    private String deliveryMsg; // 상품요청사항
-	    private String paymentMethod; // 결제
+	    private int paymentMethod; // 결제
 	    private int productId;
 	    private String orderDisplayId;
 	    private String ordersIdfull;
+	    
+	    private int isApprefund;   //환불신청여부
+	    private int isAppexchanged;  //교환신청여부
+	    
+	    private int isRefundable; //환불완료
+	    private int isExchanged;	//교환완료
+
+	  private String product_name;
+		private int discount_price;
+		private int product_price;
+		private String product_content;
+
 
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
@@ -85,6 +98,35 @@ public class OrderDTO {
         }
         return null;
     }
+	
+	public String getPayment() {
+        switch (this.paymentMethod) {
+            case 0: return "무통장입금";
+            case 1: return "신용카드";
+            case 2: return "가상계좌";
+            case 3: return "실시간 계좌이체";
+        }
+        return null;
+    }
+	
+	//주문상태변경
+	public Date getOrderDateAsDate() {
+	    try {
+	        // 날짜에 시간이 없을 경우 대비해서 00:00:00을 붙여줌
+	        String dateStr = this.orderDate;
+
+	        if (dateStr.length() <= 10) {
+	            // yyyy-MM-dd → yyyy-MM-dd 00:00:00 으로 변환
+	            dateStr = dateStr + " 00:00:00";
+	        }
+
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        return sdf.parse(dateStr);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
 
     }
 

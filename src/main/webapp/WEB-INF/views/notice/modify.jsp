@@ -354,6 +354,7 @@ $(document).ready(function () {
 	}
   
   $("button[type='reset']").on("click", function() {
+	  confirm("주의❗ 모든 이미지가 삭제됩니다!");
     if (uploadedFileList.length > 0) {
     	uploadedFileList.forEach(function (file) {
           const fileCallPath = encodeURIComponent(file.uploadPath.replace(/\\/g, '/') + "/");

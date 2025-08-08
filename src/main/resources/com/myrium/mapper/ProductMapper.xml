@@ -14,7 +14,7 @@
 	<select id="getThumbnail"
 		resultType="com.myrium.domain.ImgpathVO">
 		SELECT * FROM ( SELECT * FROM img_path WHERE product_id =
-		#{productid} AND is_thumbnail = 1 ORDER BY id) WHERE ROWNUM = 1
+		#{productid} AND is_thumbnail_main = 1 ORDER BY id) WHERE ROWNUM = 1
 	</select>
 
 	<!-- 타임세일 여부에 따른 리스트 조회 -->
@@ -33,20 +33,20 @@
 	<select id="productInfothumbnail"
 		resultType="com.myrium.domain.ImgpathVO">
 		select * from img_path where product_id=#{id} and
-		is_thumbnail = 1
+		is_thumbnail_main = 1
 	</select>
 
 	<select id="productSliderImg"
 		resultType="com.myrium.domain.ImgpathVO">
 		select * from img_path where product_id=#{id} and
-		is_thumbnail = 0 and is_detail = 0
+		is_thumbnail_main = 0 and is_detail = 0
 	</select>
 
 	<!-- 상품 상세정보 이미지 불러오기 -->
 	<select id="productDetailImg"
 		resultType="com.myrium.domain.ImgpathVO">
 		select * from (select * from img_path where
-		product_id=#{id} and is_thumbnail = 0 and is_detail = 1) WHERE ROWNUM
+		product_id=#{id} and is_thumbnail_main = 0 and is_detail = 1) WHERE ROWNUM
 		= 1
 	</select>
 
@@ -68,13 +68,14 @@
 	<!-- 장바구니 리스트 불러오기 -->
 	<select id="CartList" resultType="com.myrium.domain.ProductVO">
 		SELECT * FROM product WHERE id
-		IN(select product_id from cart where user_id = #{userId} AND is_deleted = 0) 
+		IN(select product_id from cart where user_id = #{userId} AND
+		is_deleted = 0)
 	</select>
 
 	<!-- 카트에 담긴 물건 수량 불러오기 -->
 	<select id="getCartInfo" resultType="com.myrium.domain.CartVO">
 		SELECT * FROM cart WHERE
-		product_id = #{productId} and user_id = #{userId} 
+		product_id = #{productId} and user_id = #{userId}
 	</select>
 
 	<!-- 장바구니에 상품이 존재하는지 확인 -->
@@ -85,21 +86,97 @@
 
 	<select id="addQuantity" resultType="com.myrium.domain.CartVO">
 		UPDATE cart
-		SET quantity = #{newQuantity, jdbcType=INTEGER},
+		SET quantity =
+		#{newQuantity, jdbcType=INTEGER},
 		updated_at = sysdate, is_deleted = 0
 		WHERE product_id = #{productId, jdbcType=BIGINT}
-		AND user_id = #{userId, jdbcType=BIGINT}
+		AND user_id =
+		#{userId, jdbcType=BIGINT}
 	</select>
 
-<update id="updateQuantity" parameterType="com.myrium.domain.OrderDTO">
-    UPDATE cart SET quantity = #{newQuantity, jdbcType=INTEGER}, updated_at = sysdate 
-    WHERE product_id = #{productId, javaType=java.lang.Long, jdbcType=BIGINT} 
-      AND user_id = #{userId, javaType=java.lang.Long, jdbcType=BIGINT} 
-      AND is_deleted = 0
-</update>
-	
-	<update id="deleteCart">
-		UPDATE cart SET is_deleted = 1, quantity = 0 WHERE product_id = #{productId} AND user_id = #{userId}
+	<update id="updateQuantity"
+		parameterType="com.myrium.domain.OrderDTO">
+		UPDATE cart SET quantity = #{newQuantity,
+		jdbcType=INTEGER}, updated_at =
+		sysdate
+		WHERE product_id = #{productId,
+		javaType=java.lang.Long, jdbcType=BIGINT}
+		AND user_id = #{userId,
+		javaType=java.lang.Long, jdbcType=BIGINT}
+		AND is_deleted = 0
 	</update>
 
+	<update id="deleteCart">
+		UPDATE cart SET is_deleted = 1, quantity = 0 WHERE
+		product_id = #{productId} AND user_id = #{userId}
+	</update>
+
+	<select id="getStock" resultType="int">
+		SELECT product_stock FROM
+		product WHERE id = #{productid}
+	</select>
+
+	<update id="decreaseStock">
+		UPDATE product SET product_stock = #{decreaseStock}
+		where id = #{productid}
+	</update>
+
+	<select id="getSalesCount">
+		SELECT sales_count from product where id =
+		#{productid}
+	</select>
+
+	<update id="increaseSalesCount">
+		UPDATE product SET sales_count =
+		#{increaseSalesCount} where id = #{productid}
+	</update>
+
+	<select id="getSearchProductList" resultType="com.myrium.domain.ProductVO">
+<![CDATA[
+SELECT *
+FROM (
+    SELECT /*+INDEX_DESC(product pk_product)*/ 
+           ROWNUM rn, p.*
+    FROM (
+        SELECT id, product_name, product_content, product_stock, product_price,
+               is_deleted, created_at, created_by, updated_at, updated_by,
+               is_timesales, is_mainone, is_maintwo, is_discount, discount_rate,
+               timesalediscount_rate, total_discountrate, discount_price, sales_count
+        FROM product
+        WHERE LOWER(product_name) LIKE '%' || #{searchKeyword} || '%'
+]]>
+<choose>
+    <when test="sort == 'new'">
+        ORDER BY created_at DESC
+    </when>
+    <when test="sort == 'name'">
+        ORDER BY product_name ASC
+    </when>
+    <when test="sort == 'lowPrice'">
+        ORDER BY (product_price - (product_price * COALESCE(discount_rate, 0) / 100)) ASC
+    </when>
+    <when test="sort == 'highPrice'">
+        ORDER BY (product_price - (product_price * COALESCE(discount_rate, 0) / 100)) DESC
+    </when>
+    <otherwise>
+        ORDER BY id DESC
+    </otherwise>
+</choose>
+<![CDATA[
+    ) p
+    WHERE ROWNUM <= #{searchcri.pageNum} * #{searchcri.amount}
+) 
+WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
+]]>
+</select>
+
+	<!-- 상품리뷰 -->
+	<select id="findById" parameterType="long"
+		resultType="com.myrium.domain.ProductDTO">
+		SELECT * FROM product WHERE id = #{id}
+	</select>
+	<!-- 검색결과 카운트 -->
+	<select id="searchResultCount" resultType="int">
+		select count(*) from product where LOWER(product_name) LIKE '%' || #{searchKeyword} || '%'
+	</select>
 </mapper>

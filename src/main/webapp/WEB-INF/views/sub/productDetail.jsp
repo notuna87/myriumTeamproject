@@ -16,7 +16,7 @@
 
   <div class="productDetailWrap">
     <div class="detailContents">
-        <img src="${pageContext.request.contextPath}/resources/img/${productDetailImg.img_path}" alt="${product.product_name}" />
+        <img src="${pageContext.request.contextPath}/upload/${productDetailImg.img_path}" alt="${product.product_name}" />
     </div>
   </div>
 

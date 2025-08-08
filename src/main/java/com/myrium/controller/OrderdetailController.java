@@ -38,30 +38,25 @@ import lombok.extern.log4j.Log4j;
 	        // 주문 상세 조회
 	        List<OrderDTO> orders = orderService.getOrderDetail(orderId);
 	        if (orders == null || orders.isEmpty()) {
-	            return "redirect:/mypage/order-history"; // 예외 처리
+	            return "redirect:/mypage/order-history";
 	        }
 
-	        // 유효 상품만 추출 (환불/교환 제외)
 	        List<OrderDTO> validOrders = new ArrayList<>();
 	        for (OrderDTO dto : orders) {
 	            int status = dto.getOrderStatus();
-	            if (status!=7 && status!=6
-	                    && status!=5 && status!=4) {
+	            if (status != 7 && status != 6 && status != 5 && status != 4) {
 	                validOrders.add(dto);
 	            }
 	        }
 
-	        // 결제 금액 계산 (환불/교환 제외)
 	        int totalAmount = orderService.getValidOrderTotalAmount(orderId);
-	        
 	        int shippingFee = (totalAmount == 0) ? 0 : (totalAmount < 50000 ? 3000 : 0);
 	        int totalPrice = totalAmount + shippingFee;
-	        
+
 	        model.addAttribute("totalAmount", totalAmount);
 	        model.addAttribute("shippingFee", shippingFee);
 	        model.addAttribute("totalPrice", totalPrice);
 
-	        // 대표 상품 설정
 	        OrderDTO firstOrder = orders.get(0);
 	        if (productId != null) {
 	            for (OrderDTO dto : orders) {
@@ -71,25 +66,17 @@ import lombok.extern.log4j.Log4j;
 	                }
 	            }
 	        }
+
 	        firstOrder.setOrderDisplayId();
-	        log.info("first : " + firstOrder);
-	        log.info("orders :" + orders);
-	        
 	        model.addAttribute("firstOrder", firstOrder);
 	        model.addAttribute("orders", orders);
 
-	        // 상태 표시용 로직
-	        if (productId != null) {
-	            model.addAttribute("orderStatus", validOrders.get(0).getOrderStatusText());
-	        } else {
-	            if (!validOrders.isEmpty()) {
-	                model.addAttribute("orderStatus", validOrders.get(0).getOrderStatusText());
-	            } else {
-	                model.addAttribute("orderStatus", new OrderDTO(7).getOrderStatusText());
-	            }
-	        }
+	        String statusText = !validOrders.isEmpty() ? validOrders.get(0).getOrderStatusText() : firstOrder.getOrderStatusText();
+	        model.addAttribute("orderStatus", statusText);
 
+	        // ✅ 누락되면 안 되는 최종 반환값
 	        return "mypage/order_detail";
 	    }
+	}
+	
 
-}
