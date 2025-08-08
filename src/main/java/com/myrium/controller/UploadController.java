@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.myrium.domain.AttachFileDTO;
 import com.myrium.service.AdminProductService;
-import com.myrium.service.NoticeService;
+import com.myrium.service.AdminNoticeService;
 
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -41,7 +41,7 @@ import net.coobird.thumbnailator.Thumbnailator;
 public class UploadController {
 
 	@Autowired
-	private NoticeService noticeService;
+	private AdminNoticeService noticeService;
 
 	@Autowired
 	private AdminProductService adminProductService;

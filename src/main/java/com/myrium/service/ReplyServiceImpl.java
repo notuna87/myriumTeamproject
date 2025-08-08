@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.ReplyPageDTO;
 import com.myrium.domain.ReplyVO;
-import com.myrium.mapper.BoardMapper;
+import com.myrium.mapper.AdminBoardMapper;
 import com.myrium.mapper.ReplyMapper;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class ReplyServiceImpl implements ReplyService {
 
 	@Autowired
 	private ReplyMapper mapper;
-	private BoardMapper boardMapper;
+	private AdminBoardMapper boardMapper;
 
 	@Transactional
 	@Override

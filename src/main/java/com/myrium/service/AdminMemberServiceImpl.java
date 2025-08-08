@@ -1,6 +1,5 @@
 package com.myrium.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +9,8 @@ import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.ImgpathVO;
-import com.myrium.domain.ProductDTO;
-import com.myrium.domain.ProductVO;
-import com.myrium.mapper.AdminProductMapper;
+import com.myrium.domain.MemberVO;
+import com.myrium.mapper.AdminMemberMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -20,53 +18,53 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @Service
 @AllArgsConstructor
-public class AdminMemberServiceImpl implements AdminProductService{
+public class AdminMemberServiceImpl implements AdminMemberService{
 	
 	@Autowired
-	private AdminProductMapper mapper;
+	private AdminMemberMapper mapper;
 
 
 	@Override
-	public ProductVO get(int id) {
-	      log.info("product get....." + id);
+	public MemberVO get(int id) {
+	      log.info("Member get....." + id);
 	      return mapper.read(id);
 	}
 
 
 	@Override
-	public boolean modify(ProductVO vo) {
-	     log.info("product modify.... " + vo);
+	public boolean modify(MemberVO vo) {
+	     log.info("Member modify.... " + vo);
 	     return mapper.update(vo)==1;
 	}
 
 	@Override
 	public boolean harddel(int id) {
-	     log.info("product harddel...." + id);
+	     log.info("Member harddel...." + id);
 	     return mapper.harddel(id)==1;
 	}
 
 	@Override
 	public boolean softdel(int id) {
-		log.info("product softdel...." + id);
+		log.info("Member softdel...." + id);
 		return mapper.softdel(id)==1;
 	}
 
 	@Override
-	public List<ProductVO> getList() {
-		log.info("product getList.....");
+	public List<MemberVO> getList() {
+		log.info("Member getList.....");
 		return mapper.getList();
 	}
 
 
 	@Override
-	public void register(ProductVO product) {
-		log.info("product register....." + product);
-		mapper.insertSelectKey(product);
+	public void register(MemberVO member) {
+		log.info("Member register....." + member);
+		mapper.insertSelectKey(member);
 	}
 	
 	@Override
-	public List<ProductVO> getList(Criteria cri, boolean isAdmin){
-		log.info("product getList...(Criteria cri)");
+	public List<MemberVO> getList(Criteria cri, boolean isAdmin){
+		log.info("Member getList...(Criteria cri)");
 		//return mapper.getList();
 		return mapper.getListWithPaging(cri, isAdmin);
 	}
@@ -78,19 +76,19 @@ public class AdminMemberServiceImpl implements AdminProductService{
 	
 	@Override
 	public boolean restore(int id) {
-		log.info("product restore...." + id);
+		log.info("Member restore...." + id);
 		return mapper.restore(id)==1;
 	}
 	
 	@Override
 	public void insertAttach(AttachFileDTO dto) {
-		log.info("product Attach...." + dto);
+		log.info("Member Attach...." + dto);
 		mapper.insertAttach(dto);
 	}
 	
     @Override
-    public List<ImgpathVO> findByProductId(int id) {
-        return mapper.findByProductId(id);
+    public List<ImgpathVO> findByMemberId(int id) {
+        return mapper.findByMemberId(id);
     }
     
     @Override
@@ -102,24 +100,6 @@ public class AdminMemberServiceImpl implements AdminProductService{
     public void incrementReadCnt(int id) {
         mapper.updateReadCnt(id);
     }
-
-	// 카테고리 및 상품 리스트
-	@Override
-	public List<ProductDTO> getProductListWithCategory(Criteria cri, boolean isAdmin) {
-		List<ProductVO> productList = mapper.getProductList(cri, isAdmin);
-		List<ProductDTO> productDTO = new ArrayList<>();		
-		for (ProductVO product : productList) {
-			CategoryVO category = mapper.getCategoryList(product.getId());
-			ImgpathVO imgpath = mapper.getImgPathList(product.getId());
-			log.info("getImgPathList:" + imgpath);
-			ProductDTO dto = new ProductDTO();
-			dto.setProduct(product);
-			dto.setThumbnail(imgpath);
-			dto.setCategory(category);
-			productDTO.add(dto);
-		}
-		return productDTO;
-	}
 
 	@Override
 	public void insertCategory(CategoryVO cat) {

@@ -6,22 +6,21 @@ import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.ImgpathVO;
-import com.myrium.domain.ProductDTO;
-import com.myrium.domain.ProductVO;
+import com.myrium.domain.MemberVO;
 
 public interface AdminMemberService {
 	
-	   public void register(ProductVO vo);	   
+	   public void register(MemberVO vo);	   
 	   
-	   public boolean modify(ProductVO vo);
+	   public boolean modify(MemberVO vo);
 	   
 	   public boolean harddel(int id);
 	
 	   public boolean softdel(int id);
 	   
-	   public List<ProductVO> getList();
+	   public List<MemberVO> getList();
 	   
-	   public List<ProductVO> getList(Criteria cri, boolean isAdmin);
+	   public List<MemberVO> getList(Criteria cri, boolean isAdmin);
 	   
 	   public int getTotal(Criteria cri, boolean isAdmin);
 
@@ -29,15 +28,13 @@ public interface AdminMemberService {
 
 	   public void insertAttach(AttachFileDTO dto);
 	   
-	   public List<ImgpathVO> findByProductId(int id);
+	   public List<ImgpathVO> findByMemberId(int id);
 
 	   public int deleteImgpathByUuid(String uuid);
 
 	   public void incrementReadCnt(int id);
 
-	   public List<ProductDTO> getProductListWithCategory(Criteria cri, boolean isAdmin);
-	   
-	   public ProductVO get(int id);
+	   public MemberVO get(int id);
 
 	   public void insertCategory(CategoryVO cat);
 	

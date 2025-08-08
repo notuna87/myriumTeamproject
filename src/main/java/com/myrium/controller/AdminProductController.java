@@ -41,7 +41,7 @@ import lombok.extern.log4j.Log4j;
 @Controller
 @Log4j
 //@AllArgsConstructor
-@RequestMapping("/product/*")
+@RequestMapping("/adminproduct/*")
 @RequiredArgsConstructor()
 public class AdminProductController {
 

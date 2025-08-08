@@ -42,13 +42,13 @@
 <%
     // 메뉴 항목 이름과 이동할 URL 매핑
     List<String[]> adminMenu = Arrays.asList(
-        new String[] {"상품 관리", "product/list"},
-        new String[] {"회원 관리(미구현)", "member/list"},
-        new String[] {"공지사항 관리", "notice/list"},
-        new String[] {"FAQ 관리", "faq/list"},
-        new String[] {"리뷰 관리(미구현)", "review/list"},
-        new String[] {"문의 관리", "board/list"},
-        new String[] {"주문 관리(미구현)", "order/list"}
+        new String[] {"상품 관리", "adminproduct/list"},
+        new String[] {"회원 관리(구현 중)", "adminmember/list"},
+        new String[] {"공지사항 관리", "adminnotice/list"},
+        new String[] {"FAQ 관리", "adminfaq/list"},
+        new String[] {"리뷰 관리(미구현)", "adminreview/list"},
+        new String[] {"문의 관리", "adminboard/list"},
+        new String[] {"주문 관리(미구현)", "adminorder/list"}
     );
     request.setAttribute("menuList", adminMenu);
 %>
