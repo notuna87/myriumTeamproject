@@ -89,7 +89,7 @@ public class AdminProductController {
 //		productservice.register(vo);
 //
 //		rttr.addFlashAttribute("result", vo.getId());
-//		return "redirect:/product/list";
+//		return "redirect:/adminproduct/list";
 //	}
 	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
@@ -144,7 +144,7 @@ public class AdminProductController {
 	        }
 	    }
 
-	    return "redirect:/product/list";
+	    return "redirect:/adminproduct/list";
 	}
 	
 	@PreAuthorize("hasAuthority('ADMIN')")
@@ -273,7 +273,7 @@ public class AdminProductController {
 	        }
 	    }
 
-	    return "redirect:/product/list";
+	    return "redirect:/adminproduct/list";
 	}
 	
 	@Transactional
@@ -290,7 +290,7 @@ public class AdminProductController {
 	    	ProductVO product = service.get(id);
 	        if (product == null) {
 	            rttr.addFlashAttribute("error", "존재하지 않는 상품입니다.");
-	            return "redirect:/product/list";
+	            return "redirect:/adminproduct/list";
 	        }
 
 	        List<ImgpathVO> imgpathList = service.findByProductId(id);
@@ -332,7 +332,7 @@ public class AdminProductController {
 	    rttr.addAttribute("type", cri.getType());
 	    rttr.addAttribute("keyword", cri.getKeyword());
 
-	    return "redirect:/product/list";
+	    return "redirect:/adminproduct/list";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
@@ -349,7 +349,7 @@ public class AdminProductController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/product/list";
+		return "redirect:/adminproduct/list";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
@@ -366,7 +366,7 @@ public class AdminProductController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/product/list";
+		return "redirect:/adminproduct/list";
 	}
 	
 //	@PreAuthorize("hasAuthority('ADMIN')")

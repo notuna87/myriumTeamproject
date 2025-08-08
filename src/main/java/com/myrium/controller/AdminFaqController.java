@@ -65,7 +65,7 @@ public class AdminFaqController {
 		faqservice.register(vo);
 
 		rttr.addFlashAttribute("result", vo.getId());
-		return "redirect:/faq/list";
+		return "redirect:/adminfaq/list";
 	}
 	
 	@PreAuthorize("isAuthenticated()")
@@ -86,7 +86,7 @@ public class AdminFaqController {
 		if(faqservice.modify(faq)) {
 			rttr.addFlashAttribute("result","success");
 		}
-		return "redirect:/faq/list";
+		return "redirect:/adminfaq/list";
 	}
 	
 	@PreAuthorize("hasAuthority('ADMIN')")
@@ -96,7 +96,7 @@ public class AdminFaqController {
 		if(faqservice.harddel(id)) {
 			rttr.addFlashAttribute("result","success");
 		}
-		return "redirect:/faq/list";
+		return "redirect:/adminfaq/list";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
@@ -106,7 +106,7 @@ public class AdminFaqController {
 		if(faqservice.softdel(id)) {
 			rttr.addFlashAttribute("result","success");
 		}
-		return "redirect:/faq/list";
+		return "redirect:/adminfaq/list";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
@@ -116,7 +116,7 @@ public class AdminFaqController {
 		if(faqservice.restore(id)) {
 			rttr.addFlashAttribute("result","success");
 		}
-		return "redirect:/faq/list";
+		return "redirect:/adminfaq/list";
 	}
 	
 	

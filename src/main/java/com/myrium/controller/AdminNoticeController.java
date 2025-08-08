@@ -78,7 +78,7 @@ public class AdminNoticeController {
 //		noticeservice.register(vo);
 //
 //		rttr.addFlashAttribute("result", vo.getId());
-//		return "redirect:/notice/list";
+//		return "redirect:/adminnotice/list";
 //	}
 	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
@@ -118,7 +118,7 @@ public class AdminNoticeController {
 	        }
 	    }
 
-	    return "redirect:/notice/list";
+	    return "redirect:/adminnotice/list";
 	}
 	
 	@PreAuthorize("hasAuthority('ADMIN')")
@@ -196,7 +196,7 @@ public class AdminNoticeController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/notice/list";
+		return "redirect:/adminnotice/list";
 	}
 	
 	@Transactional
@@ -213,7 +213,7 @@ public class AdminNoticeController {
 	        NoticeVO notice = noticeservice.get(id);
 	        if (notice == null) {
 	            rttr.addFlashAttribute("error", "존재하지 않는 게시글입니다.");
-	            return "redirect:/notice/list";
+	            return "redirect:/adminnotice/list";
 	        }
 
 	        List<AttachFileDTO> attachList = noticeservice.findByNoticeId(id);
@@ -255,7 +255,7 @@ public class AdminNoticeController {
 	    rttr.addAttribute("type", cri.getType());
 	    rttr.addAttribute("keyword", cri.getKeyword());
 
-	    return "redirect:/notice/list";
+	    return "redirect:/adminnotice/list";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
@@ -271,7 +271,7 @@ public class AdminNoticeController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/notice/list";
+		return "redirect:/adminnotice/list";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
@@ -287,7 +287,7 @@ public class AdminNoticeController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/notice/list";
+		return "redirect:/adminnotice/list";
 	}
 	
 }
