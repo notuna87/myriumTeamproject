@@ -1,7 +1,7 @@
 .review-container {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 20px;
+  padding:20px;
 }
 
 .review-title {
@@ -9,6 +9,7 @@
   margin-bottom: 25px;
   text-align: center;
   font-weight: bold;
+   margin-top: 40px; 
 }
 
 .product-info-box {
@@ -73,8 +74,9 @@
 }
 
 .btn-bottom-group {
-  display: flex;
-  justify-content: space-between;
+   display: flex;
+  justify-content: flex-end;
+  gap: 10px; 
   margin-top: 40px;
 }
 
@@ -88,7 +90,7 @@
 
 /* 목록 */
 .btn-list {
-  background-color: #fff;
+ background-color: #fff;
   font-weight: bold;
 }
 

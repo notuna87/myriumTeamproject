@@ -17,4 +17,96 @@
   )
 </insert>
 
+<select id="getReviewsByProductId" parameterType="long" resultType="com.myrium.domain.ReviewDTO">
+  SELECT 
+    r.id AS id,
+    r.user_id AS userId,
+    r.product_id AS productId,
+    r.review_title AS reviewTitle,
+    r.review_content AS reviewContent,
+    r.image_url AS imageUrl,
+    r.rating AS rating,
+    r.view_count AS viewCount,
+    r.review_date AS reviewDate,
+    r.created_at AS createdAt,
+    r.created_by AS createdBy,
+    m.customer_id AS customerId
+  FROM review r
+  JOIN member m ON r.user_id = m.id
+  WHERE r.product_id = #{productId}
+    AND r.is_deleted = 0
+  ORDER BY r.created_at DESC
+</select>
+
+<select id="findAllReviews" resultType="com.myrium.domain.ReviewDTO">
+  SELECT
+    id,
+    review_title,
+    review_content,
+    customer_id,
+    rating,
+    image_url,
+    review_date,
+    view_count
+  FROM
+    review
+  ORDER BY review_date DESC
+</select>
+
+<update id="incrementViewCount" parameterType="long">
+  UPDATE review
+  SET view_count = view_count + 1
+  WHERE id = #{reviewId}
+</update>
+
+<select id="getReviewById" resultType="com.myrium.domain.ReviewDTO" parameterType="long">
+  SELECT *
+  FROM review
+  WHERE id = #{reviewId}
+</select>
+
+<update id="incrementViewCountByProductId" parameterType="long">
+    UPDATE review
+    SET view_count = view_count + 1
+    WHERE product_id = #{productId}
+</update>
+
+<select id="getAverageRatingByProductId" parameterType="long" resultType="double">
+  SELECT NVL(ROUND(AVG(rating), 1), 0)
+  FROM review
+  WHERE product_id = #{productId}
+</select>
+
+<select id="countReviewsByProductId" resultType="int" parameterType="long">
+    SELECT COUNT(*) FROM review WHERE product_id = #{productId}
+</select>
+
+ <!-- 페이징된 리뷰 조회 -->
+<select id="getPagedReviewsByProductId" resultType="com.myrium.domain.ReviewDTO" parameterType="map">
+  SELECT * FROM (
+    SELECT inner_table.*, ROWNUM AS rn
+    FROM (
+      SELECT 
+        r.id,
+        r.user_id,
+        r.product_id,
+        r.review_title AS reviewTitle,
+        r.review_content AS reviewContent,
+        r.image_url AS imageUrl,
+        r.rating,
+        r.view_count AS viewCount,
+        r.review_date AS reviewDate,
+        r.created_at AS createdAt,
+        r.created_by AS createdBy,
+        m.customer_id AS customerId
+      FROM review r
+      JOIN member m ON r.user_id = m.id
+      WHERE r.product_id = #{productId}
+        AND r.is_deleted = 0
+      ORDER BY r.review_date DESC
+    ) inner_table
+    WHERE ROWNUM &lt;= #{endRow}
+  )
+  WHERE rn &gt;= #{startRow}
+</select>
 </mapper>

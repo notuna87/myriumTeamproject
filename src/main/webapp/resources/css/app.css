@@ -824,12 +824,37 @@ padding: 40px;
   cursor: pointer;
 }
 
+.page-arrow, .current-page {
+  display: inline-block;
+  border: 1px solid #999;
+  padding: 5px 10px;
+  margin: 0 3px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #333;
+}
+
+.page-arrow:hover {
+  background-color: #f0f0f0;
+}
+
+.current-page {
+  font-weight: bold;
+  background-color: #fff;
+}
+
+.disabled {
+  color: #ccc;
+  cursor: default;
+  pointer-events: none;
+  border: 1px solid #ccc;
+}
 /*디테일 리뷰 끝*/
 
 /*디테일 포토 리뷰 시작*/
 .photoreviewBox {
   width: 1240px;
-  height: 300px;
+  height: 100%;
   margin-top: 25px;
 }
 
@@ -881,9 +906,146 @@ padding: 40px;
   font-weight: 600;
 }
 
+  /* 리뷰 전체 박스 */
+.cartWrap {
+  width: 1240px;
+  margin: 0 auto;
+}
+
+/*디테일 포토 시작 끝*/
+.photoreviewBox {
+  width: 1240px;
+  margin: 25px auto 0 auto;
+}
+
+.photoreviewBox > h5 {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.photoreviewList {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.photoreviewItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.review-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 70%;
+}
+
+.review-image {
+  width: 100px;
+  height: auto;
+  border-radius: 5px;
+}
+
+.review-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.review-writer,
+.review-product,
+.review-price,
+.review-content {
+  font-size: 14px;
+  margin: 2px 0;
+  white-space: pre-line;
+  color: #333;
+}
+
+.review-right {
+  text-align: right;
+  min-width: 200px;
+}
+
+.review-rating,
+.review-date,
+.review-views {
+  font-size: 14px;
+  margin: 3px 0;
+  color: #555;
+}
+
+.photoreviewBulletin,
+.qnaBulletin {
+  width: 100%;
+  height: 65px;
+  background-color: #f7f8fa;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.writeButton,
+.contactButton {
+  float: right;
+  width: 135px;
+  height: 42px;
+  border-radius: 5px;
+  background-color: #56B770;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.allButton,
+.allqnaButton {
+  margin-right: 7px;
+  width: 135px;
+  height: 42px;
+  border-radius: 5px;
+  background-color: #fff;
+  float: right;
+  border: 1px solid #e5e5e5;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 리뷰 버튼 박스 */
+.review-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 60px;
+}
+
+.star {
+  color: #ff4d00; 
+  font-size: 16px;
+  margin-right: 1px;
+}
 
 /*디테일 포토 리뷰 끝*/
 /*QnA 시작*/
+.qna-section {
+  margin-top: 80px; /* Q&A와 리뷰 사이 충분한 간격 확보 */
+}
 .qnaWrap {
   width: 1240px;
   margin: 0 auto;
