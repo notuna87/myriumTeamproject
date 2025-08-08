@@ -11,11 +11,9 @@ import com.myrium.domain.ProductVO;
 
 public interface AdminProductService {
 	
-	   public void register(ProductVO notice);
+	   public void register(ProductVO vo);	   
 	   
-	   
-	   
-	   public boolean modify(ProductVO notice);
+	   public boolean modify(ProductVO vo);
 	   
 	   public boolean harddel(int id);
 	
@@ -48,5 +46,8 @@ public interface AdminProductService {
 	   public void insertImgpath(ImgpathVO imgVO);
 
 	   public List<ImgpathVO> findImgpathByUuid(String uuid);
+
+	   public void updateImgpath(int id);
+
 
 }

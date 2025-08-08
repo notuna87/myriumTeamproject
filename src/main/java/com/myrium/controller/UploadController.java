@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.myrium.domain.AttachFileDTO;
+import com.myrium.mapper.AdminProductMapper;
+import com.myrium.service.AdminProductService;
 import com.myrium.service.NoticeService;
 
 import lombok.extern.log4j.Log4j;
@@ -41,6 +43,8 @@ public class UploadController {
 
 	@Autowired
 	private NoticeService noticeService;
+	//private AdminProductService adminProductService;
+	private AdminProductMapper adminProductMapper;
 
 	@PostMapping("/uploadFormAction")
 	public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
@@ -64,6 +68,7 @@ public class UploadController {
 	@PostMapping(value = "/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(
+	        @RequestParam(required = false) int productId,
 	        @RequestParam(required = false, defaultValue = "File") String type,
 	        @RequestParam("uploadFile") MultipartFile[] uploadFile,
 	        @RequestParam Map<String, String> params
@@ -101,9 +106,10 @@ public class UploadController {
 	            multipartFile.transferTo(saveFile);
 
 	            AttachFileDTO dto = new AttachFileDTO();
+	            dto.setProductId(productId);
 	            dto.setFileName(originalFilename);
 	            dto.setUuid(uuid.toString());
-	            dto.setUploadPath(subFolder + "/" + dateFolder);
+	            dto.setUploadPath(subFolder + "/" + dateFolder);	            
 
 	            // 타입별 처리
 	            if (type.equalsIgnoreCase("detail")) {
@@ -202,7 +208,8 @@ public class UploadController {
 	public ResponseEntity<String> deleteFile(String datePath, String fileName,
 			@RequestParam(required = false) String uuid,
 			@RequestParam(required = false) String type,
-			@RequestParam(required = false, defaultValue = "false") boolean isUpdate
+			@RequestParam(required = false) boolean isUpdate,
+			@RequestParam(required = false, defaultValue = "false") String currentPage
 			) {
 		
 		try {
@@ -227,9 +234,17 @@ public class UploadController {
 			}
 
 			// 3. DB 삭제는 수정 페이지일 때만
+			log.info("isUpdate: " + isUpdate);
 			if (isUpdate) {
-				int deletedCount = noticeService.deleteAttachByUuid(uuid);
-				log.info("DB에서 삭제된 파일 개수: " + deletedCount);
+				log.info("currentPage: " + currentPage);
+				log.info("uuid: " + uuid);
+				if(currentPage == "product_modify"){
+					int deletedCount = adminProductMapper.deleteImgpathByUuid(uuid);
+					log.info("img_path DB에서 삭제된 파일 개수: " + deletedCount);
+				} else if(currentPage == "notice_modify") {
+					int deletedCount = noticeService.deleteAttachByUuid(uuid);
+					log.info("notice_file DB에서 삭제된 파일 개수: " + deletedCount);
+				}
 			}
 
 			return ResponseEntity.ok("deleted");

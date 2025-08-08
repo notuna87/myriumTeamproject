@@ -237,6 +237,20 @@
       updated_by = #{updated_by}
     WHERE id = #{id}
   </update>
+  
+  <update id="updateImgpath" parameterType="com.myrium.domain.ImgpathVO">
+    UPDATE img_path SET
+      img_path = #{img_path},
+      is_deleted = #{is_deleted},
+      is_thumbnail = #{is_thumbnail},
+      is_thumbnail_main = #{is_thumbnail_main},
+      is_detail = #{is_detail},
+      uuid = #{uuid},
+      img_path_thumb = #{img_path_thumb},
+      updated_at = SYSDATE,
+      updated_by = #{updated_by}
+    WHERE id = #{id}
+  </update>
 
   <sql id="criterial">
     <trim prefix="(" suffix=") AND" prefixOverrides="OR">
@@ -328,14 +342,23 @@
     SELECT * FROM img_path WHERE product_id = #{product_id}
   </select>
 
-  <delete id="deleteImgpathByUuid" parameterType="string">
+  <!-- <delete id="deleteImgpathByUuid" parameterType="java.lang.String">
     DELETE FROM img_path WHERE uuid = #{uuid}
-  </delete>  
+  </delete> -->  
+  	<delete id="deleteImgpathByUuid" parameterType="String">
+		delete from img_path 
+		where uuid = #{uuid};
+	</delete>
   
-  <update id="updateThumbnailMain" parameterType="com.myrium.domain.ImgpathVO">  
+  <!-- <update id="updateThumbnailMain" parameterType="com.myrium.domain.ImgpathVO">  
 		UPDATE img_path
 		SET is_thumbnail_main = CASE WHEN uuid = #{uuid} THEN 1 ELSE 0 END
-		WHERE product_id = #{productId} and is_thumbnail = 1
+		WHERE product_id = #{product_id} and is_thumbnail = 1
+  </update> -->
+  <update id="updateThumbnailMain" parameterType="com.myrium.domain.ImgpathVO">  
+		UPDATE img_path
+		SET is_thumbnail_main = #{is_thumbnail_main} 
+		WHERE id = #{id}
   </update>
   
   <select id="findImgpathByUuid" resultMap="imgpathMap">

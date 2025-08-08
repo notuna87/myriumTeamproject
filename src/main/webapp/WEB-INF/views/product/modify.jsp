@@ -162,14 +162,14 @@
 							<div class="form-group row">
 							    <label class="col-sm-2 col-form-label">총 할인율(%)</label>
 							    <div class="col-sm-10">
-							        <input type="text" id="total_discountrate" name="total_discountrate" class="form-control" readonly>
+							        <input type="text" id="total_discountrate" name="total_discountrate" class="form-control"  value="0" readonly>
 							    </div>
 							</div>
 							<!-- 최종 가격 표시 -->
 							<div class="form-group row">
 							    <label class="col-sm-2 col-form-label">최종 할인가격(원)</label>
 							    <div class="col-sm-10">
-							        <input type="text" id="discount_price" name="discount_price" class="form-control" readonly>
+							        <input type="text" id="discount_price" name="discount_price" class="form-control"  value="0" readonly>
 							    </div>
 							</div>
 						</div>
@@ -192,9 +192,9 @@
 						<div class="form-group">
 						    <label>상품상태</label>
 						    <select name="product_status" id="product_status" class="form-control">
-						        <option value="0">판매중지</option>
 						        <option value="1">정상</option>
 						        <option value="2">품절</option>
+						        <option value="0">판매중지</option>
 						    </select>
 						</div>	
 			     			        
@@ -274,8 +274,9 @@
 <script src="/resources/js/ProductEditManager.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
-
-	let currentPage = "modify";
+	
+	let currentPage = "product_modify";
+	const productId = ${product.id};
 	
 	let isSubmitting = false;  // 제출 여부를 추적하는 플래그
 	const csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -294,7 +295,9 @@ $(document).ready(function () {
 	// 서버에서 받은 JSON 문자열
 	const attachImgs = JSON.parse('${attachImgsJson}');
 	
-	console.log("attachImgs:" + JSON.stringify(attachImgs), null, 2);
+	
+	//console.log("attachImgs:" + JSON.stringify(attachImgs));
+	console.log("attachImgs:" + JSON.stringify(attachList));
 
 	// 썸네일 / 디테일 구분
 	const thumbnailImages = attachImgs
@@ -305,39 +308,43 @@ $(document).ready(function () {
 	  .filter(file => file.is_detail)
 	  .map(convertServerImageToUploadFormat);
 	
+	attachList = [...thumbnailImages, ...detailImages];
 	
 	// 공통 변환 함수
 	function convertServerImageToUploadFormat(serverFile) {
-	  const productId = ${product.id};
 	  const fullPath = serverFile.img_path;
 	  const pathParts = fullPath.split("/");
 	  const fileNameWithUUID = pathParts[pathParts.length - 1];
 	  const fileName = fileNameWithUUID.substring(fileNameWithUUID.indexOf("_") + 1);
 	  const uploadPath = pathParts.slice(0, pathParts.length - 1).join("/");
 
-	  return {
-		productId: productId,
+	  return {		
 	    id: serverFile.id,
-	    fileName: fileName,
-	    uploadPath: uploadPath,
-	    uuid: serverFile.uuid,
-	    image: 1,
-	    isThumbnail: serverFile.is_thumbnail,
-	    isThumbnailMain: serverFile.is_thumbnail_main,
-	    isDetail: serverFile.is_detail,
-	    imgPath: fullPath,
+	    //productId: serverFile.product_id,
+	    productId: productId,
+	    imgPath: serverFile.img_path,
 	    createdAt: serverFile.created_at,
 	    createdBy: serverFile.created_by,
 	    updatedAt: serverFile.updated_at,
-	    updatedBy: serverFile.updated_by,
+	    updatedBy: serverFile.updated_by,	    
+	    isDeleted: serverFile.is_deleted,
+	    isThumbnail: serverFile.is_thumbnail,
+	    isThumbnailMain: serverFile.is_thumbnail_main,
+	    isDetail: serverFile.is_detail,
+	    uuid: serverFile.uuid,
+	    imgPathThumb: serverFile.img_path_thumb,
+	    image: 1,
+	    fileName: fileName,
+	    uploadPath: uploadPath,
 	    toDelete: false,
-	    isNew: false,
+	    //isNew: false
 	  };
 	}
-
+	
 	// 썸네일 ProductEditManager
 	window.uploadThumbnailManager = new ProductEditManager({
 	  currentPage,
+	  productId,
 	  inputId: "uploadInputThumbnail",
 	  buttonId: "uploadBtnThumbnail",
 	  editBtn: "editBtnThumbnail",
@@ -346,12 +353,13 @@ $(document).ready(function () {
 	  maxCount: 10,
 	  type: "Thumbnail",
 	  regex: /(.*?)\.(exe|sh|zip|alz)$/i,
-	  maxSize: 5242880,
+	  maxSize: 5242880
 	});
 
 	// 디테일 ProductEditManager
 	window.uploadDetailManager = new ProductEditManager({
 	  currentPage,
+	  productId,
 	  inputId: "uploadInputDetail",
 	  buttonId: "uploadBtnDetail",
 	  editBtn: "editBtnDetail",
@@ -360,7 +368,7 @@ $(document).ready(function () {
 	  maxCount: 5,
 	  type: "Detail",
 	  regex: /(.*?)\.(exe|sh|zip|alz)$/i,
-	  maxSize: 5242880,
+	  maxSize: 5242880
 	});
 
 	// 각각 초기화
@@ -494,44 +502,72 @@ $(document).ready(function () {
 
 
   
-  $("button[type='reset']").on("click", function() {
-    if (attachList.length > 0) {
-    	attachList.forEach(function (file) {
-          const fileCallPath = encodeURIComponent(file.uploadPath.replace(/\\/g, '/') + "/");
-          const fileName = encodeURIComponent(file.fileName);
-          const uuid = file.uuid;
-          const data = { datePath: fileCallPath, fileName: fileName, uuid: uuid, type: file.image == 1 ? 'image' : 'file' };
+$("button[type='reset']").on("click", function (e) {
+	console.log("reset:;;;;;;;;;;;" );
+	console.log("attachImgs:" + JSON.stringify(attachList));
+  e.preventDefault();
 
-          $.ajax({
-            url: '/deleteUploadedFile',
-            type: 'POST',
-            data: data,
-            beforeSend: function (xhr) {
-              if (csrfHeader && csrfToken) {
-                xhr.setRequestHeader(csrfHeader, csrfToken);
-              }
-            },
-            success: function () {
-              console.log('삭제 성공:', fileCallPath);
-            },
-            error: function (xhr) {
-              console.error('삭제 실패:', xhr.responseText);
-            }
-          });
-        });
-      }  	  
-      selectedFiles = [];       // 선택된 파일 배열 초기화
-	  uploadedFiles = [];    // 업로드된 파일 목록 초기화
-	  uploadCompletedThumbnail = false;  // 업로드 완료 상태 초기화
-	  uploadCompletedDetail = false;  // 업로드 완료 상태 초기화
-	  $("#uploadListThumbnail").empty(); // 업로드 리스트 UI 초기화
-	  $("#uploadListDetail").empty(); // 업로드 리스트 UI 초기화
-	  $("#uploadInputThumbnail").val(''); // 파일 input 초기화 (필수)
-	  $("#uploadInputDetail").val(''); // 파일 input 초기화 (필수)
-	  $("#uploadBtnThumbnail").hide(); // 업로드 숨김
-	  $("#uploadBtnDetail").hide(); // 업로드 숨김
-	});
-  
+	console.log("reset:attachList", attachList);
+  // 업로드된 파일 서버에서 삭제
+  if (attachList.length > 0) {
+	  console.log("reset:업로드된 파일 서버에서 삭제" )
+    attachList.forEach(function (file) {
+    	console.log("file:", file);
+    	console.log("uuid:", file.uuid);
+      const fileCallPath = encodeURIComponent(file.uploadPath.replace(/\\/g, '/') + "/");
+      const fileName = encodeURIComponent(file.fileName);
+      const uuid = file.uuid;
+      const data = {
+        datePath: fileCallPath,
+        fileName: fileName,
+        uuid: uuid,
+        type: file.image == 1 ? 'image' : 'file',
+        isUpdate: true,
+        currentPage: currentPage        
+      };
+
+      $.ajax({
+        url: '/deleteUploadedFile',
+        type: 'POST',
+        data: data,
+        beforeSend: function (xhr) {
+          if (csrfHeader && csrfToken) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          }
+        },
+        success: function () {
+          console.log('삭제 성공:', fileCallPath);
+        },
+        error: function (xhr) {
+          console.error('삭제 실패:', xhr.responseText);
+        }
+      });
+    });
+  }
+
+  // 파일 관련 상태 초기화
+   console.log("reset:파일 관련 상태 초기화" );
+  attachList = [];
+  uploadThumbnailManager.selectedFiles = [];
+  uploadDetailManager.selectedFiles = [];
+  uploadThumbnailManager.uploadedFiles = [];
+  uploadDetailManager.uploadedFiles = [];
+  uploadThumbnailManager.uploadCompletedThumbnail = false;
+  uploadDetailManager.uploadCompletedDetail = false;
+  $("#uploadListThumbnail").empty();
+  $("#uploadListDetail").empty();
+  $("#uploadInputThumbnail").val('');
+  $("#uploadInputDetail").val('');
+  $("#uploadBtnThumbnail").hide();
+  $("#uploadBtnDetail").hide();
+
+  // 폼 입력값 초기화
+   console.log("reset:폼 입력값 초기화" );
+  const $form = $(this).closest("form")[0];
+  $form.reset();
+
+});
+
 
   // 등록 버튼 클릭 시 유효성 검사
   $("form").on("submit", function (e) {
@@ -618,7 +654,7 @@ $(document).ready(function () {
   // 뒤로가기 시 업로드 된 파일 삭제
 	window.addEventListener("beforeunload", function (e) {
 	    
-		if (currentPage !== "modify"){
+		if (!currentPage.include("modify")){
 			if (!isSubmitting && attachList.length > 0) {
 		        document.getElementById("resetBtn").click();
 		        e.preventDefault();

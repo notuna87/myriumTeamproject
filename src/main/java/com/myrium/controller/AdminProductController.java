@@ -47,7 +47,7 @@ public class AdminProductController {
 
 	private final AdminProductService service;
 	
-	private final AdminProductMapper mapper;
+	private final AdminProductMapper adminproductmapper;
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/list")
@@ -159,7 +159,7 @@ public class AdminProductController {
 		ProductVO productInfo = service.get(id);
 		model.addAttribute("product", productInfo);
 		System.out.println("product: " + productInfo); // 디버깅
-		CategoryVO categoryList = mapper.getCategoryList(id);
+		CategoryVO categoryList = adminproductmapper.getCategoryList(id);
 		System.out.println("categoryList: " + categoryList); // 디버깅
 		model.addAttribute("category", categoryList);
 		//model.addAttribute("attachFiles", service.findByProductId(id));
@@ -198,6 +198,7 @@ public class AdminProductController {
 	        }
 	    }
 	    
+	    log.info("attachList:" + attachList);
 	    log.info("deleteUuids:" + deleteUuids);
 	    
 	    // 1. 기존 첨부파일 삭제
@@ -210,7 +211,7 @@ public class AdminProductController {
 	            service.deleteImgpathByUuid(uuid);
 
 	            // 저장소 경로
-	            String uploadFolder = "C:/upload";
+	            String uploadFolder = "C:/upload/";
 	            List<ImgpathVO> paths = service.findImgpathByUuid(uuid); // UUID로 기존 경로 찾기
 
 	            for (ImgpathVO pathVO : paths) {
@@ -227,9 +228,6 @@ public class AdminProductController {
 	        }
 	    }
 
-		
-	    // hasFiles 설정
-//	    vo.setHasFiles((attachList != null && !attachList.isEmpty()) ? 1 : 0);
 	    // 2. 공지사항 업데이트
 	    service.modify(vo);
 	    
@@ -242,7 +240,8 @@ public class AdminProductController {
 	        for (AttachFileDTO dto : attachList) {
 	            ImgpathVO imgVO = new ImgpathVO();
 
-	            imgVO.setProduct_id(vo.getId());
+	            imgVO.setId(dto.getId());
+	            imgVO.setProduct_id(dto.getProductId());
 	            imgVO.setImg_path(dto.getUploadPath() + "/" + dto.getUuid() + "_" + dto.getFileName());	            
 	            imgVO.setUuid(dto.getUuid());
 	            imgVO.setCreated_by(vo.getCreated_by());
@@ -257,9 +256,20 @@ public class AdminProductController {
 	            if(dto.getIsThumbnail() == 1) {
 	            	imgVO.setImg_path_thumb(dto.getUploadPath() + "/" + "s_" + dto.getUuid() + "_" + dto.getFileName());
 	            }
-
-	            log.info("Saving ImgpathVO: " + imgVO);
-	            service.insertImgpath(imgVO);
+	            int id = imgVO.getId();
+	            int product_id = imgVO.getProduct_id();
+	            int is_thumbnail_main = imgVO.getIs_thumbnail_main();
+	            String uuid = imgVO.getUuid();
+        		if(id != 0) {
+    	            log.info("dto.getProduct_id: " + imgVO.getProduct_id());
+    	            log.info("dto.getImg_path: " + imgVO.getImg_path());
+    	            log.info("update ImgpathVO: " + imgVO);
+        			//service.updateImgpath(id);
+    	            adminproductmapper.updateThumbnailMain(id, is_thumbnail_main);
+        		} else {
+    	            log.info("insert ImgpathVO: " + imgVO);
+    	            service.insertImgpath(imgVO);
+        		}
 	        }
 	    }
 
@@ -271,8 +281,8 @@ public class AdminProductController {
 	@PostMapping("/harddel")
 	public String harddel(@RequestParam("id") int id,
 	                      @ModelAttribute("cri") Criteria cri,
-	                      RedirectAttributes rttr,
-	                      String customerId) {
+	                      RedirectAttributes rttr
+	                      ) {
 
 	    log.info("product harddelete..." + id);
 
@@ -327,7 +337,8 @@ public class AdminProductController {
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/softdel")
-	public String softdel(@RequestParam("id") int productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
+	public String softdel(@RequestParam("id") int productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr
+			) {
 		log.info("product softdelete..." + productId);
 		if(service.softdel(productId)) {
 			rttr.addFlashAttribute("result","success");
@@ -343,7 +354,8 @@ public class AdminProductController {
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/restore")
-	public String restore(@RequestParam("id") int productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
+	public String restore(@RequestParam("id") int productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr
+			) {
 		log.info("product restore..." + productId);
 		if(service.restore(productId)) {
 			rttr.addFlashAttribute("result","success");
@@ -357,21 +369,21 @@ public class AdminProductController {
 		return "redirect:/product/list";
 	}
 	
-	@PreAuthorize("hasAuthority('ADMIN')")
-	@PostMapping("/updateThumbnailMain")
-	public ResponseEntity<String> updateMainImage(
-	    @RequestParam("productId") int productId,
-	    @RequestParam("uuid") String uuid) {
-	    
-	    try {
-	        mapper.updateThumbnailMain(productId, uuid);
-	        log.info("updateThumbnailMain: " + productId);
-	        log.info("updateThumbnailMain: " + uuid);
-	        return ResponseEntity.ok("Thumbnail_Main: update success");
-	    } catch (Exception e) {
-	        log.error("updateThumbnailMain error", e);
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Thumbnail_Main: update error");
-	    }
-	}
+//	@PreAuthorize("hasAuthority('ADMIN')")
+//	@PostMapping("/updateThumbnailMain")
+//	public ResponseEntity<String> updateMainImage(
+//	    @RequestParam("productId") int productId,
+//	    @RequestParam("uuid") String uuid) {
+//	    
+//	    try {
+//	        mapper.updateThumbnailMain(productId, uuid);
+//	        log.info("updateThumbnailMain: " + productId);
+//	        log.info("updateThumbnailMain: " + uuid);
+//	        return ResponseEntity.ok("Thumbnail_Main: update success");
+//	    } catch (Exception e) {
+//	        log.error("updateThumbnailMain error", e);
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Thumbnail_Main: update error");
+//	    }
+//	}
 	
 }

@@ -34,9 +34,9 @@ public class AdminProductServiceImpl implements AdminProductService{
 
 
 	@Override
-	public boolean modify(ProductVO product) {
-	     log.info("product modify.... " + product);
-	     return mapper.update(product)==1;
+	public boolean modify(ProductVO vo) {
+	     log.info("product modify.... " + vo);
+	     return mapper.update(vo)==1;
 	}
 
 	@Override
@@ -141,5 +141,13 @@ public class AdminProductServiceImpl implements AdminProductService{
 	public List<ImgpathVO> findImgpathByUuid(String uuid) {
 		return mapper.findImgpathByUuid(uuid);
 	}
+
+
+	@Override
+	public void updateImgpath(int id) {
+		mapper.updateImgpath(id);	
+		
+	}
+
 	
 }

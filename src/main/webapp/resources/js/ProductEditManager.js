@@ -1,8 +1,11 @@
+let attachList = [];
+
 class ProductEditManager {
-  constructor({ currentPage, inputId, buttonId, editBtn, cancelBtn, saveBtn, maxCount, type, regex, maxSize }) {
+  constructor({ currentPage, productId, inputId, buttonId, editBtn, cancelBtn, saveBtn, maxCount, type, regex, maxSize }) {
     console.log(`[Init] ProductEditManager 생성됨: ${type}`);
     
     this.currentPage = currentPage;
+    this.productId = productId;
     this.inputId = inputId;
     this.buttonId = buttonId;
     this.editBtn = editBtn;
@@ -14,8 +17,7 @@ class ProductEditManager {
     this.type = type;
 
     this.selectedFiles = [];
-    this.uploadedFiles = [];
-    this.combinedAttachList = [];	
+    this.uploadedFiles = [];	
 	this.deleteUuids = [];	
     
     this["uploadCompleted" + this.type] = false;
@@ -40,13 +42,14 @@ class ProductEditManager {
     console.log(`[InitFromServer] ${this.type} 서버 데이터 초기화:`, serverFiles);
     
     this.selectedFiles = [];
-    this.uploadedFiles = serverFiles.slice();
+    this.uploadedFiles = serverFiles.slice();    
     this["uploadCompleted" + this.type] = true;
     
     this.originalUploadedFiles = JSON.parse(JSON.stringify(this.uploadedFiles)); // 백업
     console.log(`[초기상태 백업] ${this.type} - uploadedFiles 파일:`, this.originalUploadedFiles);
     this.originalMainImage = $(`input[name='mainImage${this.type}']:checked`).val(); // 대표 이미지 초기값 저장
     
+    console.log("Init:attachList", attachList);
     this.updatePreviewList();
   }
 
@@ -321,10 +324,12 @@ toDelete(index, isUploaded) {
         file.isThumbnailMain === 1 ? "1" : "0"
       );
       formData.append(`isDetail_${index}`, file.isDetail === 1 ? "1" : "0");
-
+      
       console.log("upload(after) :" + JSON.stringify(file, null, 2));
     });
     
+    formData.append("productId", this.productId);
+    console.log("upload(productId) :" + this.productId);
     formData.append("type", this.type);
 
     $.ajax({
@@ -348,7 +353,7 @@ toDelete(index, isUploaded) {
         console.log("upload(newFiles) :" + JSON.stringify(newFiles, null, 2));
 		console.log("upload(uploadedFiles-before) :" + JSON.stringify(this.uploadedFiles, null, 2));
         
-        //this.attachList = [...this.attachList, ...newFiles];
+        attachList = [...attachList, ...newFiles];
         //console.log("upload(attachList) :" + JSON.stringify(this.attachList, null, 2));
         this.uploadedFiles = [...this.uploadedFiles, ...newFiles];
         console.log("upload(uploadedFiles-after) :" + JSON.stringify(this.uploadedFiles, null, 2));
@@ -519,7 +524,7 @@ const attachListJson = JSON.stringify(combinedAttachList);
 document.querySelector("input[name='attachList']").value = attachListJson;
 document.querySelector("input[name='deleteuuids']").value = combinedDeleteUuids;
 
-console.log('Final - attachListJson:', attachListJson);
+console.log('Final - attachListJson:', JSON.stringify(attachListJson));
 console.log('Final - deleteUuids:', combinedDeleteUuids);
 
 console.log('uploadThumbnailManager - uploadedFiles:', uploadThumbnailManager.uploadedFiles);

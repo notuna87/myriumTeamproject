@@ -130,6 +130,9 @@
 <!-- <script src="/resources/js/upload_manager.js"></script> -->
 <script type="text/javascript">
 $(document).ready(function () {
+	
+  let currentPage = "notice_modify";
+	
   const csrfHeader = $("meta[name='_csrf_header']").attr("content");
   const csrfToken = $("meta[name='_csrf']").attr("content");
   
@@ -356,7 +359,7 @@ $(document).ready(function () {
           const fileCallPath = encodeURIComponent(file.uploadPath.replace(/\\/g, '/') + "/");
           const fileName = encodeURIComponent(file.fileName);
           const uuid = file.uuid;
-          const data = { datePath: fileCallPath, fileName: fileName, uuid: uuid, type: file.image == 1 ? 'image' : 'file' };
+          const data = { datePath: fileCallPath, fileName: fileName, uuid: uuid, type: file.image == 1 ? 'image' : 'file', isUpdate: true, currentPage: currentPage };
 
           $.ajax({
             url: '/deleteUploadedFile',
