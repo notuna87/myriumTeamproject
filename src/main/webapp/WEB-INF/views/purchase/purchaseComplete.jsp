@@ -82,19 +82,19 @@
 					<c:forEach var="item" items="${productList}">
 						<table style="border-bottom: 1px dashed #E9E9E9; width: 100%;">
 							<tr>
-								<th><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgcKJBzVf6xWEHZX3rvDJU-W8IQ1O45zsU_g&s" alt="test" class="orderProductThumbnail"></th>
+								<th><img src="${pageContext.request.contextPath}/upload/${item.img_path}" alt="test" class="orderProductThumbnail"></th>
 								<td>
 									<p style="margin-bottom: 10px;">${item.product_name}</p>
 									<p style="color: #888">${item.product_content }</p>
-									<p style="color: #888; margin-bottom: 10px;">수량 : ${item.quantity}개</p> 
-									<c:if test="${item.discount_price != 0}">
+									<p style="color: #888; margin-bottom: 10px;">수량 : ${item.quantity}개</p> <c:if test="${item.discount_price != 0}">
 										<p style="margin-bottom: 10px;">
-											<fmt:formatNumber value="${item.discount_price * item.quantity}" type="number" groupingUsed="true" />원
+											<fmt:formatNumber value="${item.discount_price * item.quantity}" type="number" groupingUsed="true" />
+											원
 										</p>
-									</c:if> 
-									<c:if test="${item.discount_price == 0}">
+									</c:if> <c:if test="${item.discount_price == 0}">
 										<p style="margin-bottom: 10px;">
-											<fmt:formatNumber value="${item.product_price * item.quantity}" type="number" groupingUsed="true" />원
+											<fmt:formatNumber value="${item.product_price * item.quantity}" type="number" groupingUsed="true" />
+											원
 										</p>
 									</c:if>
 								</td>
@@ -131,7 +131,7 @@
 			<!-- 버튼 시작 -->
 			<div class="buttonWrap">
 				<input onclick="location.href='${pageContext.request.contextPath}/mypage'" type="button" class="orderCheck" value="주문확인하기">
-				<input onclick="location.href='${pageContext.request.contextPath}/'" type="button"" type="button" class="moreShopping" value="쇼핑계속하기">
+				<input onclick="location.href='${pageContext.request.contextPath}/'" type="button" " type="button" class="moreShopping" value="쇼핑계속하기">
 			</div>
 			<!-- 버튼 끝 -->
 		</section>

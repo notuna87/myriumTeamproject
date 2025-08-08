@@ -43,7 +43,7 @@
 			<div class="cartContentsWrap">
 				<!-- 상품 이미지 -->
 				<div class="cartImgWrap">
-					<a href="sub?id=${item.product.id}"> <img class="cartImg" src="${pageContext.request.contextPath}/resources/img/${item.thumbnail.img_path}" />
+					<a href="sub?id=${item.product.id}"> <img class="cartImg" src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" />
 					</a>
 				</div>
 

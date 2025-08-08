@@ -21,11 +21,11 @@
       <p class="product-name">${product.productName}</p>
       <p class="product-price"><fmt:formatNumber value="${product.productPrice}" pattern="#,###" />원</p>
       <div class="product-buttons">
-        <button class="btn-detail"
-        onclick="location.href='${pageContext.request.contextPath}/sub?id=${product.productId}'">
-  상품상세보기
-</button>
-      </div>
+		  <button class="btn-detail"
+		  onclick="location.href='${pageContext.request.contextPath}/mypage/review/viewAndRedirect?productId=${product.productId}'">
+		  상품상세보기
+		</button>
+		</div>
     </div>
   </div>
 

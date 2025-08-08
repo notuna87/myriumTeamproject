@@ -1,13 +1,12 @@
 package com.myrium.service;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import com.myrium.domain.OrderDTO;
+import com.myrium.domain.ReviewDTO;
 import com.myrium.mapper.OrderMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -124,5 +123,7 @@ public class OrderServiceImpl implements OrderService {
 		 log.info(">>>> OrderService: getOrdersToAutoUpdate() 호출됨");
 	    return orderMapper.findOrdersForStatusUpdate();
 	}
+	
+
 	
 }
