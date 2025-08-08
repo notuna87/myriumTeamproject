@@ -57,6 +57,7 @@ public class ReviewController {
 	public String showProductDetail(@RequestParam("id") Long productId, Model model) {
 	    ProductDTO product = productService.getProductById(productId);
 	    model.addAttribute("product", product);
+	    
 	    return "/sub/sub"; 
 	}
 	
@@ -117,6 +118,19 @@ public class ReviewController {
 
 	    return "redirect:/mypage/order-history";
 	}
+	
+	@GetMapping("/review/view")
+	public String viewReview(@RequestParam("id") Long reviewId, Model model) {
+	    reviewService.incrementViewCount(reviewId);
+	    ReviewDTO review = reviewService.getReviewById(reviewId);
+	    model.addAttribute("review", review);
+	    return "mypage/review";
+	}
 
 
+	@GetMapping("/review/viewAndRedirect") 
+	public String viewAndRedirect(@RequestParam("productId") Long productId) {
+	    reviewService.incrementViewCountByProductId(productId);
+	    return "redirect:/sub?id=" + productId;
+	}
 }
