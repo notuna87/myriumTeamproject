@@ -30,7 +30,7 @@ public interface AdminProductMapper {
     // 해당 공지의 파일 목록 조회
 	public List<ImgpathVO> findByProductId(int id);	
 	// 파일 정보 삭제
-	public int deleteImgpathByUuid(String uuid);	
+	public int deleteImgpathByUuid(@Param("uuid") String uuid);	
 	public void updateReadCnt(int id);	
 	public List<ProductVO> getProductList(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);
 	public CategoryVO getCategoryList(int id);

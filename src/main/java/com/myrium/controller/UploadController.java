@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.myrium.domain.AttachFileDTO;
-import com.myrium.mapper.AdminProductMapper;
 import com.myrium.service.AdminProductService;
 import com.myrium.service.NoticeService;
 
@@ -43,8 +42,9 @@ public class UploadController {
 
 	@Autowired
 	private NoticeService noticeService;
-	//private AdminProductService adminProductService;
-	private AdminProductMapper adminProductMapper;
+
+	@Autowired
+	private AdminProductService adminProductService;
 
 	@PostMapping("/uploadFormAction")
 	public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
@@ -234,17 +234,16 @@ public class UploadController {
 			}
 
 			// 3. DB 삭제는 수정 페이지일 때만
-			log.info("isUpdate: " + isUpdate);
 			if (isUpdate) {
-				log.info("currentPage: " + currentPage);
-				log.info("uuid: " + uuid);
-				if(currentPage == "product_modify"){
-					int deletedCount = adminProductMapper.deleteImgpathByUuid(uuid);
-					log.info("img_path DB에서 삭제된 파일 개수: " + deletedCount);
-				} else if(currentPage == "notice_modify") {
-					int deletedCount = noticeService.deleteAttachByUuid(uuid);
-					log.info("notice_file DB에서 삭제된 파일 개수: " + deletedCount);
-				}
+			    if ("product_modify".equals(currentPage)) {
+			        int deletedCount = adminProductService.deleteImgpathByUuid(uuid);
+			        log.info("img_path DB에서 삭제된 파일 개수: " + deletedCount);
+			    } else if ("notice_modify".equals(currentPage)) {
+			        int deletedCount = noticeService.deleteAttachByUuid(uuid);
+			        log.info("notice_file DB에서 삭제된 파일 개수: " + deletedCount);
+			    } else {
+			        log.warn("currentPage 값이 올바르지 않음: " + currentPage);
+			    }
 			}
 
 			return ResponseEntity.ok("deleted");

@@ -347,7 +347,7 @@
   </delete> -->  
   	<delete id="deleteImgpathByUuid" parameterType="String">
 		delete from img_path 
-		where uuid = #{uuid};
+		where uuid = #{uuid}
 	</delete>
   
   <!-- <update id="updateThumbnailMain" parameterType="com.myrium.domain.ImgpathVO">  

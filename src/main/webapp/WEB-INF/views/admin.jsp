@@ -42,7 +42,7 @@
 <%
     // 메뉴 항목 이름과 이동할 URL 매핑
     List<String[]> adminMenu = Arrays.asList(
-        new String[] {"상품 관리(구현중)", "product/list"},
+        new String[] {"상품 관리", "product/list"},
         new String[] {"회원 관리(미구현)", "member/list"},
         new String[] {"공지사항 관리", "notice/list"},
         new String[] {"FAQ 관리", "faq/list"},

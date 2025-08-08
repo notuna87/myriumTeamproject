@@ -256,7 +256,7 @@
 						
 						<div class="text-right mt-3">
 							<button type="submit" class="btn btn-success">등록</button>
-							<button type="reset" class="btn btn-warning" id="resetBtn">다시작성</button>
+							<button type="reset" class="btn btn-warning" id="resetBtn">이미지 초기화</button>
 						</div>
 						
 						<!-- <ul id="uploadListThumbnail" class="list-group mt-3"></ul>
