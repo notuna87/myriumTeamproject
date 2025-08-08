@@ -68,7 +68,7 @@ public class AdminBoardController {
 		boardservice.register(vo);
 
 		rttr.addFlashAttribute("result", vo.getId());
-		return "redirect:/board/list";
+		return "redirect:/adminboard/list";
 	}
 	
 	@PreAuthorize("isAuthenticated()")
@@ -94,7 +94,7 @@ public class AdminBoardController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/board/list";
+		return "redirect:/adminboard/list";
 	}
 	
 	@PreAuthorize("hasAuthority('ADMIN')")
@@ -110,7 +110,7 @@ public class AdminBoardController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/board/list";
+		return "redirect:/adminboard/list";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
@@ -126,7 +126,7 @@ public class AdminBoardController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/board/list";
+		return "redirect:/adminboard/list";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
@@ -142,7 +142,7 @@ public class AdminBoardController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/board/list";
+		return "redirect:/adminboard/list";
 	}
 	
 	

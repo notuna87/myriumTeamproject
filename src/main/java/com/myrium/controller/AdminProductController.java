@@ -89,7 +89,7 @@ public class AdminProductController {
 //		productservice.register(vo);
 //
 //		rttr.addFlashAttribute("result", vo.getId());
-//		return "redirect:/product/list";
+//		return "redirect:/adminproduct/list";
 //	}
 	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
