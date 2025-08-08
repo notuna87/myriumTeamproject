@@ -1,13 +1,9 @@
 package com.myrium.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,11 +25,10 @@ import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.ImgpathVO;
+import com.myrium.domain.MemberVO;
 import com.myrium.domain.PageDTO;
-import com.myrium.domain.ProductDTO;
-import com.myrium.domain.ProductVO;
 import com.myrium.mapper.AdminProductMapper;
-import com.myrium.service.AdminProductService;
+import com.myrium.service.AdminMemberService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -41,13 +36,13 @@ import lombok.extern.log4j.Log4j;
 @Controller
 @Log4j
 //@AllArgsConstructor
-@RequestMapping("/adminproduct/*")
+@RequestMapping("/adminmember/*")
 @RequiredArgsConstructor()
-public class AdminProductController {
+public class AdminMemberController {
 
-	private final AdminProductService service;
+	private final AdminMemberService service;
 	
-	private final AdminProductMapper adminproductmapper;
+	private final AdminProductMapper adminmembermapper;
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/list")
@@ -60,7 +55,7 @@ public class AdminProductController {
 	    boolean isAdmin = authentication.getAuthorities().stream()
 	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));		
 		
-		List<ProductDTO> list = service.getProductListWithCategory(cri, isAdmin);
+	    List<MemberVO> list = service.getList(cri, isAdmin);
 		
 		log.info(list);
 		model.addAttribute("list", list);
@@ -94,13 +89,12 @@ public class AdminProductController {
 	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/register")
-	public String register(ProductVO vo, 
-						   CategoryVO cat,
+	public String register(MemberVO vo,
 	                       @RequestParam("attachList") String attachListJson,
 	                       RedirectAttributes rttr) {
-		log.info("(product) register......." + vo);
-		log.info("(product) register......." + cat);
-		log.info("(product) register......." + attachListJson);
+		log.info("(admin-member) register......." + vo);
+
+		log.info("(admin-member) register......." + attachListJson);
 
 	    // 1. JSON 파싱
 	    ObjectMapper mapper = new ObjectMapper();
@@ -114,37 +108,9 @@ public class AdminProductController {
 	    // 2. 상품 등록
 	    service.register(vo);
 	    
-	    // 3. 카테고리 등록
-	    cat.setProduct_id(vo.getId());
-	    service.insertCategory(cat);
+	    return "redirect:/adminmember/list";
 	    
-	    // 3. 이미지 경로(첨부파일) 등록
-	    if (attachList != null && !attachList.isEmpty()) {
-	        for (AttachFileDTO dto : attachList) {
-	            ImgpathVO imgVO = new ImgpathVO();
-
-	            imgVO.setProduct_id(vo.getId());
-	            imgVO.setImg_path(dto.getUploadPath() + "/" + dto.getUuid() + "_" + dto.getFileName());	            
-	            imgVO.setUuid(dto.getUuid());
-	            imgVO.setCreated_by(vo.getCreated_by());
-	            imgVO.setCreated_at(vo.getCreated_at());
-	            imgVO.setUpdated_by(vo.getUpdated_by());
-	            imgVO.setUpdated_at(vo.getUpdated_at());
-	            imgVO.setIs_thumbnail(dto.getIsThumbnail());
-	            imgVO.setIs_thumbnail_main(dto.getIsThumbnailMain());
-	            imgVO.setIs_detail(dto.getIsDetail());
-	            imgVO.setIs_deleted(0);
-	            
-	            if(dto.getIsThumbnail() == 1) {
-	            	imgVO.setImg_path_thumb(dto.getUploadPath() + "/" + "s_" + dto.getUuid() + "_" + dto.getFileName());
-	            }
-
-	            log.info("Saving ImgpathVO: " + imgVO);
-	            service.insertImgpath(imgVO);
-	        }
-	    }
-
-	    return "redirect:/product/list";
+   
 	}
 	
 	@PreAuthorize("hasAuthority('ADMIN')")
@@ -156,14 +122,14 @@ public class AdminProductController {
 	@GetMapping({"/get", "/modify"})
 	public void get(@RequestParam("id") int id, @ModelAttribute("cri") Criteria cri, Model model) throws JacksonException {
 		//service.incrementReadCnt(id);  // 조회수 증가 로직 (추가)
-		ProductVO productInfo = service.get(id);
-		model.addAttribute("product", productInfo);
-		System.out.println("product: " + productInfo); // 디버깅
-		CategoryVO categoryList = adminproductmapper.getCategoryList(id);
+		MemberVO memberInfo = service.get(id);
+		model.addAttribute("member", memberInfo);
+		System.out.println("member: " + memberInfo); // 디버깅
+		CategoryVO categoryList = adminmembermapper.getCategoryList(id);
 		System.out.println("categoryList: " + categoryList); // 디버깅
 		model.addAttribute("category", categoryList);
 		//model.addAttribute("attachFiles", service.findByProductId(id));
-		List<ImgpathVO> attachImgs = service.findByProductId(id);
+		List<ImgpathVO> attachImgs = service.findByMemberId(id);
 		System.out.println("attachImgs: " + attachImgs); // 디버깅
 		System.out.println("attachImgs cnt: " + attachImgs.size()); // 디버깅
 		//model.addAttribute("attachImgs", attachImgs);
@@ -175,16 +141,15 @@ public class AdminProductController {
 	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/modify")
-	public String modify(ProductVO vo,
-				CategoryVO cat,
+	public String modify(MemberVO vo,
 				@RequestParam(value = "attachList", required = false) String attachListJson,
 				@RequestParam(value = "deleteuuids", required = false) String deleteUuids,
 				@ModelAttribute("cri") Criteria cri,
 				RedirectAttributes rttr) {
 		
-		log.info("(product) modify......." + vo);
-		log.info("(product) modify......." + cat);
-		log.info("(product) modify......." + attachListJson);
+		log.info("(member) modify......." + vo);
+
+		log.info("(member) modify......." + attachListJson);
 		
 	    // 1. JSON 파싱
 		ObjectMapper mapper = new ObjectMapper();
@@ -231,49 +196,8 @@ public class AdminProductController {
 	    // 2. 공지사항 업데이트
 	    service.modify(vo);
 	    
-	    // 3. 카테고리 등록
-	    cat.setProduct_id(vo.getId());
-	    service.updateCategory(cat);
+	    return "redirect:/adminmember/list";
 	    
-	    // 4. 이미지 경로(첨부파일) 등록
-	    if (attachList != null && !attachList.isEmpty()) {
-	        for (AttachFileDTO dto : attachList) {
-	            ImgpathVO imgVO = new ImgpathVO();
-
-	            imgVO.setId(dto.getId());
-	            imgVO.setProduct_id(dto.getProductId());
-	            imgVO.setImg_path(dto.getUploadPath() + "/" + dto.getUuid() + "_" + dto.getFileName());	            
-	            imgVO.setUuid(dto.getUuid());
-	            imgVO.setCreated_by(vo.getCreated_by());
-	            imgVO.setCreated_at(vo.getCreated_at());
-	            imgVO.setUpdated_by(vo.getUpdated_by());
-	            imgVO.setUpdated_at(vo.getUpdated_at());
-	            imgVO.setIs_thumbnail(dto.getIsThumbnail());
-	            imgVO.setIs_thumbnail_main(dto.getIsThumbnailMain());
-	            imgVO.setIs_detail(dto.getIsDetail());
-	            imgVO.setIs_deleted(0);
-	            
-	            if(dto.getIsThumbnail() == 1) {
-	            	imgVO.setImg_path_thumb(dto.getUploadPath() + "/" + "s_" + dto.getUuid() + "_" + dto.getFileName());
-	            }
-	            int id = imgVO.getId();
-	            int product_id = imgVO.getProduct_id();
-	            int is_thumbnail_main = imgVO.getIs_thumbnail_main();
-	            String uuid = imgVO.getUuid();
-        		if(id != 0) {
-    	            log.info("dto.getProduct_id: " + imgVO.getProduct_id());
-    	            log.info("dto.getImg_path: " + imgVO.getImg_path());
-    	            log.info("update ImgpathVO: " + imgVO);
-        			//service.updateImgpath(id);
-    	            adminproductmapper.updateThumbnailMain(id, is_thumbnail_main);
-        		} else {
-    	            log.info("insert ImgpathVO: " + imgVO);
-    	            service.insertImgpath(imgVO);
-        		}
-	        }
-	    }
-
-	    return "redirect:/product/list";
 	}
 	
 	@Transactional
@@ -284,16 +208,16 @@ public class AdminProductController {
 	                      RedirectAttributes rttr
 	                      ) {
 
-	    log.info("product harddelete..." + id);
+	    log.info("member harddelete..." + id);
 
 	    try {
-	    	ProductVO product = service.get(id);
-	        if (product == null) {
+	    	MemberVO member = service.get(id);
+	        if (member == null) {
 	            rttr.addFlashAttribute("error", "존재하지 않는 상품입니다.");
-	            return "redirect:/product/list";
+	            return "redirect:/admin/member/list";
 	        }
 
-	        List<ImgpathVO> imgpathList = service.findByProductId(id);
+	        List<ImgpathVO> imgpathList = service.findByMemberId(id);
 
 	        for (ImgpathVO file : imgpathList) {
 	            String baseDir = "C:/upload/";
@@ -332,15 +256,15 @@ public class AdminProductController {
 	    rttr.addAttribute("type", cri.getType());
 	    rttr.addAttribute("keyword", cri.getKeyword());
 
-	    return "redirect:/product/list";
+	    return "redirect:/adminmember/list";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/softdel")
-	public String softdel(@RequestParam("id") int productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr
+	public String softdel(@RequestParam("id") int memberId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr
 			) {
-		log.info("product softdelete..." + productId);
-		if(service.softdel(productId)) {
+		log.info("member softdelete..." + memberId);
+		if(service.softdel(memberId)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		
@@ -349,15 +273,15 @@ public class AdminProductController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/product/list";
+		return "redirect:/adminmember/list";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/restore")
-	public String restore(@RequestParam("id") int productId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr
+	public String restore(@RequestParam("id") int memberId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr
 			) {
-		log.info("product restore..." + productId);
-		if(service.restore(productId)) {
+		log.info("member restore..." + memberId);
+		if(service.restore(memberId)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		
@@ -366,7 +290,7 @@ public class AdminProductController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
-		return "redirect:/product/list";
+		return "redirect:/adminmember/list";
 	}
 	
 //	@PreAuthorize("hasAuthority('ADMIN')")

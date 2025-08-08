@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myrium.mapper.AdminNoticeMapper">
+
+	<resultMap id="noticeMap" type="com.myrium.domain.NoticeVO">
+		<id property="id" column="id" />
+		<result property="userId" column="user_id" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="customerId" column="customer_id" />
+		<result property="writeDate" column="write_date" />
+		<result property="isDeleted" column="is_deleted" />
+		<result property="createdAt" column="created_at" />
+		<result property="createdBy" column="created_by" />
+		<result property="updatedAt" column="updated_at" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="readCnt" column="read_cnt" />
+		<result property="hasFiles" column="has_files" />
+	</resultMap>
+
+  <resultMap id="attachMap" type="com.myrium.domain.AttachFileDTO">
+    <id property="id" column="id"/>
+    <result property="userId" column="user_id"/>
+    <result property="noticeId" column="notice_id"/>
+    <result property="fileName" column="file_name"/>
+    <result property="uploadPath" column="upload_path"/>
+    <result property="uuid" column="uuid"/>
+    <result property="image" column="image"/>
+    <result property="isThumbnail" column="is_thumbnail"/>
+    <result property="isThumbnailMain" column="is_thumbnail_main"/>
+    <result property="isDetail" column="is_detail"/>
+    <result property="customerId" column="customer_id"/>
+    <result property="uploadDate" column="upload_date"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="createdBy" column="created_by"/>
+    <result property="updatedAt" column="updated_at"/>
+    <result property="updatedBy" column="updated_by"/>
+  </resultMap>
+
+	<select id="getList" resultMap="noticeMap">
+		SELECT id, user_id, title, content, customer_id, write_date,
+		is_deleted, created_at, created_by,
+		updated_at, updated_by, has_files, read_cnt
+		FROM notice
+		WHERE id > 0
+		<!-- <if test="!isAdmin"> AND is_deleted = 0 </if> -->
+		ORDER BY id DESC
+	</select>
+
+	<insert id="insert">
+		INSERT INTO notice (
+		id, title, content, customer_id, user_id, write_date, created_at,
+		created_by, is_deleted, has_files, read_cnt
+		) VALUES (
+		notice_seq.NEXTVAL, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE,
+		#{createdBy}, 0, #{hasFiles}, 0
+		)
+	</insert>
+
+	<insert id="insertSelectKey">
+		<selectKey keyProperty="id" order="BEFORE" resultType="long">
+			SELECT notice_seq.NEXTVAL FROM dual
+		</selectKey>
+		INSERT INTO notice (
+		id, title, content, customer_id, user_id, write_date, created_at,
+		created_by, is_deleted, has_files, read_cnt
+		) VALUES (
+		#{id}, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE,
+		#{createdBy}, 0, #{hasFiles}, 0
+		)
+	</insert>
+
+	<select id="read" resultMap="noticeMap">
+		SELECT id, user_id, title, content, customer_id, write_date,
+		is_deleted, created_at, created_by,
+		updated_at, updated_by, has_files, read_cnt
+		FROM notice
+		WHERE id = #{id}
+	</select>
+
+
+	<!-- 하드(영구) 삭제 -->
+	<delete id="harddel">
+		DELETE FROM notice WHERE id = #{id}
+	</delete>
+
+	<!-- 소프트 삭제 -->
+	<update id="softdel">
+		UPDATE notice
+		SET is_deleted = 1
+		WHERE id = #{id}
+	</update>
+
+	<!-- 복구 -->
+	<update id="restore">
+		UPDATE notice
+		SET is_deleted = 0
+		WHERE id = #{id}
+	</update>
+
+	<update id="update">
+		UPDATE notice
+		SET title = #{title}, content = #{content}, has_files = #{hasFiles},
+		updated_at = SYSDATE, updated_by = #{updatedBy}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 페이징용 검색 필터 -->
+	<sql id="criterial">
+		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+			<foreach item='type' collection="cri.typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							title LIKE '%' || #{cri.keyword} || '%'
+						</when>
+						<when test="type == 'C'.toString()">
+							content LIKE '%' || #{cri.keyword} || '%'
+						</when>
+						<when test="type == 'W'.toString()">
+							customer_id LIKE '%' || #{cri.keyword} || '%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+	<select id="getListWithPaging" resultMap="noticeMap">
+	  <![CDATA[
+	  SELECT id, user_id, title, content, customer_id, write_date,
+	         is_deleted, created_at, created_by,
+	         updated_at, updated_by, has_files, read_cnt
+	  FROM (
+	      SELECT /*+INDEX_DESC(notice pk_notice) */ 
+	             ROWNUM rn, id, user_id, title, content, customer_id, write_date,
+	             is_deleted, created_at, created_by,
+	             updated_at, updated_by, has_files, read_cnt
+	      FROM notice
+	      WHERE
+	  ]]>
+
+		<include refid="criterial" />
+	
+	  <![CDATA[
+	      ROWNUM <= #{cri.pageNum} * #{cri.amount}
+	  ) WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
+	  ]]>
+
+		<!-- isAdmin 파라미터가 false일 때만 is_deleted 필터 적용 -->
+		<if test="!isAdmin">
+	    <![CDATA[
+	    AND is_deleted = 0
+	    ]]>
+		</if>
+	</select>
+
+	<select id="getTotalCount" resultType="int">
+		SELECT COUNT(*)
+		FROM notice
+		WHERE id > 0
+		<if test="!isAdmin">
+			AND is_deleted = 0
+		</if>
+	</select>
+
+	<update id="updateReadCnt">
+		UPDATE notice SET read_cnt = read_cnt + 1 WHERE id = #{id}
+	</update>
+
+	<insert id="insertAttach"
+		parameterType="com.myrium.domain.AttachFileDTO">
+		INSERT INTO notice_files (id, user_id, notice_id, file_name, upload_path,
+		uuid, image,
+		customer_id, upload_date, created_at, created_by)
+		VALUES (
+		NOTICE_FILES_SEQ.NEXTVAL, #{userId}, #{noticeId}, #{fileName}, #{uploadPath}, #{uuid},
+		#{image},
+		#{customerId}, SYSDATE, SYSDATE, #{createdBy}
+		)
+	</insert>
+
+	<select id="findByNoticeId" resultMap="attachMap">
+		SELECT *
+		FROM notice_files
+		WHERE notice_id = #{noticeId}
+	</select>
+
+	<delete id="deleteAttachByUuid" parameterType="string">
+		DELETE FROM notice_files
+		WHERE uuid = #{uuid}
+	</delete>
+
+</mapper>

@@ -30,7 +30,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.myrium.domain.AttachFileDTO;
-import com.myrium.service.NoticeService;
+import com.myrium.service.AdminProductService;
+import com.myrium.service.AdminNoticeService;
 
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -40,7 +41,10 @@ import net.coobird.thumbnailator.Thumbnailator;
 public class UploadController {
 
 	@Autowired
-	private NoticeService noticeService;
+	private AdminNoticeService noticeService;
+
+	@Autowired
+	private AdminProductService adminProductService;
 
 	@PostMapping("/uploadFormAction")
 	public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
@@ -64,6 +68,7 @@ public class UploadController {
 	@PostMapping(value = "/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(
+	        @RequestParam(required = false) int productId,
 	        @RequestParam(required = false, defaultValue = "File") String type,
 	        @RequestParam("uploadFile") MultipartFile[] uploadFile,
 	        @RequestParam Map<String, String> params
@@ -101,14 +106,21 @@ public class UploadController {
 	            multipartFile.transferTo(saveFile);
 
 	            AttachFileDTO dto = new AttachFileDTO();
+	            dto.setProductId(productId);
 	            dto.setFileName(originalFilename);
 	            dto.setUuid(uuid.toString());
-	            dto.setUploadPath(subFolder + "/" + dateFolder);
+	            dto.setUploadPath(subFolder + "/" + dateFolder);	            
 
 	            // 타입별 처리
-	            if (type.equalsIgnoreCase("thumbnail")) {
+	            if (type.equalsIgnoreCase("detail")) {
+	                dto.setIsThumbnail(0);
+	                dto.setIsThumbnailMain(0);
+	                dto.setIsDetail(1);
+	                dto.setImage(1);
+	                // 썸네일 생략	            
+	            } else if (type.equalsIgnoreCase("thumbnail") || checkImageType(saveFile)) {
 	                dto.setIsThumbnail(1);
-	                dto.setIsThumbnailMain(parseFlag(params, "is_thumbnail_main_" + i));
+	                dto.setIsThumbnailMain(parseFlag(params, "isThumbnailMain_" + i));
 	                dto.setIsDetail(0);
 
 	                // 썸네일 생성 (100x100) => s_파일명
@@ -117,12 +129,6 @@ public class UploadController {
 	                thumbnail.close();
 
 	                dto.setImage(1); // 이미지 여부
-	            } else if (type.equalsIgnoreCase("detail")) {
-	                dto.setIsThumbnail(0);
-	                dto.setIsThumbnailMain(0);
-	                dto.setIsDetail(1);
-	                dto.setImage(checkImageType(saveFile) ? 1 : 0);
-	                // 썸네일 생략
 	            } else {
 	                // file type (기존 로직 유지)
 	                dto.setImage(checkImageType(saveFile) ? 1 : 0);
@@ -199,15 +205,20 @@ public class UploadController {
 
 	@PostMapping("/deleteUploadedFile")
 	@ResponseBody
-	public ResponseEntity<String> deleteFile(String datePath, String fileName, String uuid, String type,
-			@RequestParam(required = false, defaultValue = "false") boolean isUpdate) {
+	public ResponseEntity<String> deleteFile(String datePath, String fileName,
+			@RequestParam(required = false) String uuid,
+			@RequestParam(required = false) String type,
+			@RequestParam(required = false) boolean isUpdate,
+			@RequestParam(required = false, defaultValue = "false") String currentPage
+			) {
+		
 		try {
 
 			String decodedDatePath = URLDecoder.decode(datePath, "UTF-8");
 			String decodedFileName = URLDecoder.decode(fileName, "UTF-8");
 
 			// 1. 원본 파일 삭제
-			File file = new File("C:/upload/" + uuid + "_" + decodedFileName);
+			File file = new File("C:/upload/" + decodedDatePath + "\\" + uuid + "_" + decodedFileName);
 			log.info("delete file_path :" + file);
 			if (file.exists()) {
 				file.delete();
@@ -215,7 +226,7 @@ public class UploadController {
 
 			// 2. 썸네일 삭제
 			if ("image".equals(type)) {
-				File thumb = new File("C:/upload/" + decodedDatePath + "s_" + uuid + "_" + decodedFileName);
+				File thumb = new File("C:/upload/" + decodedDatePath + "\\s_" + uuid + "_" + decodedFileName);
 				log.info("delete thumb_path :" + thumb);
 				if (thumb.exists()) {
 					thumb.delete();
@@ -224,8 +235,15 @@ public class UploadController {
 
 			// 3. DB 삭제는 수정 페이지일 때만
 			if (isUpdate) {
-				int deletedCount = noticeService.deleteAttachByUuid(uuid);
-				log.info("DB에서 삭제된 파일 개수: " + deletedCount);
+			    if ("product_modify".equals(currentPage)) {
+			        int deletedCount = adminProductService.deleteImgpathByUuid(uuid);
+			        log.info("img_path DB에서 삭제된 파일 개수: " + deletedCount);
+			    } else if ("notice_modify".equals(currentPage)) {
+			        int deletedCount = noticeService.deleteAttachByUuid(uuid);
+			        log.info("notice_file DB에서 삭제된 파일 개수: " + deletedCount);
+			    } else {
+			        log.warn("currentPage 값이 올바르지 않음: " + currentPage);
+			    }
 			}
 
 			return ResponseEntity.ok("deleted");

@@ -6,7 +6,8 @@ import lombok.Data;
 
 @Data
 public class AttachFileDTO {
-	private Long id;
+	private int id;
+	private int productId;
 	private Long userId;
 	private Long noticeId;
 	private String fileName;
@@ -22,4 +23,9 @@ public class AttachFileDTO {
 	private String createdBy;
 	private Date updatedAt;
 	private String updatedBy;
+	private String imgPath;
+	private int isDeleted;
+	private String imgPathThumb;
+	private boolean toDelete;
+	private boolean isNew;
 }
