@@ -56,7 +56,7 @@
 				<div class="swiper-wrapper" id="timesale-container">
 					<c:forEach var="item" items="${timesaleList}">
 						<div class="swiper-slide timesaleSliderIn" onclick="location.href='sub?id=${item.product.id}'">
-							<img src="resources/img/${item.thumbnail.img_path}" alt="1000" style="margin-bottom:12px;"/>
+							<img src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" alt="1000" style="margin-bottom:12px;"/>
 							<h6>${item.product.product_name}</h6>
 							<p class="mainProductContent">${item.product.product_content}</p>
 							<p class="originalPrice">

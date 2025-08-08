@@ -54,10 +54,10 @@
 		<div class="productWrap">
 			<c:forEach var="item" items="${searchProductList}">
 				<div class="searchProduct" onclick="location.href='${pageContext.request.contextPath}/sub?id=${item.product.id}'">
-					<img src="${pageContext.request.contextPath}/resources/img/${item.thumbnail.img_path}" alt="${item.product.product_name}" style="margin-bottom: 12px;" />
+					<img src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" alt="${item.product.product_name}" style="margin-bottom: 12px;" />
 					<h4>${item.product.product_name}</h4>
 					<p class="searchProductContent">${item.product.product_content}</p>
-					<c:if test="${item.product.discount_price != 0}">
+					<c:if test="${item.product.total_discountrate != 0}">
 						<p class="SearchOriginalPrice" style="margin-top: 8px">
 							<fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />
 							원
@@ -68,7 +68,7 @@
 							원
 						</p>
 					</c:if>
-					<c:if test="${item.product.discount_price == 0}">
+					<c:if test="${item.product.total_discountrate == 0}">
 						<p class="SearchPrice" style="margin-top: 15px;">
 							<fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />
 							원

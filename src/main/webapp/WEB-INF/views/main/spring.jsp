@@ -32,20 +32,20 @@
 			<div class="springProductwrap" id="springProductwrap">
 				<c:forEach var="item" items="${springList}">
 					<div class="springProduct" onclick="location.href='sub?id=${item.product.id}'">
-						<img src="resources/img/${item.thumbnail.img_path}" alt="1" style="width: 100%; height: auto; margin-bottom:12px;" />
+						<img src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" alt="1" style="width: 100%; height: auto; margin-bottom:12px;" />
 						<h4>${item.product.product_name}</h4>
           
 						<p class="mainProductContent">${item.product.product_content}</p>
 						
 						<!-- 할인중인 가격이 null 값일 때 판매가만 출력 -->
-						<c:if test="${item.product.discount_price == 0}">
+						<c:if test="${item.product.total_discountrate == 0}">
 							<p class="salePrice" style="margin-top:5px;">
 								<fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />원
 							</p>
 						</c:if>
 						
 						<!-- 할인중일때 원가, 할인율, 할인가 출력 -->
-						<c:if test="${item.product.discount_price != 0}">
+						<c:if test="${item.product.total_discountrate != 0}">
 							<p class="originalPrice">
 								<s><fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />원</s>
 							</p>

@@ -40,7 +40,7 @@
 					<div class="swiper-slide">
 						<a href="sub?id=${item.product.id}">
 							<div class="timesaleSliderIn">
-								<img src="/resources/img/${item.thumbnail.img_path}" alt="${item.product.product_name}" />
+								<img src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" alt="${item.product.product_name}" />
 								<h6 style="font-size: 13px;">${item.product.product_name}</h6>
 								<p class="originalPrice">
 									<fmt:formatNumber value="${item.product.discount_price}" type="number" groupingUsed="true" />

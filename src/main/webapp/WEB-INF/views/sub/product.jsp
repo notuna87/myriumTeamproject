@@ -19,11 +19,11 @@
 		<div class="swiper gallery-thumbs">
 			<div class="swiper-wrapper">
 				<div class="swiper-slide">
-					<img class="miniSlider" src="/resources/img/${thumbnail.img_path}" alt="title" style="width: 100%; height: 97px; border-radius: 10px;" />
+					<img class="miniSlider" src="${pageContext.request.contextPath}/upload/${thumbnail.img_path}" alt="title" style="width: 100%; height: 97px; border-radius: 10px;" />
 				</div>
 				<c:forEach var="item" items="${productSliderImg}">
 					<div class="swiper-slide">
-						<img class="miniSlider" src="/resources/img/${item.img_path}" alt="title" style="width: 100%; height: 97px; border-radius: 10px;" />
+						<img class="miniSlider" src="${pageContext.request.contextPath}/upload/${item.img_path}" alt="title" style="width: 100%; height: 97px; border-radius: 10px;" />
 					</div>
 				</c:forEach>
 			</div>
@@ -33,11 +33,11 @@
 		<div class="swiper gallery-top">
 			<div class="swiper-wrapper">
 				<div class="swiper-slide">
-					<img src="/resources/img/${thumbnail.img_path}" alt="title" style="width: 100%; border-radius: 10px;" />
+					<img src="${pageContext.request.contextPath}/upload/${thumbnail.img_path}" alt="title" style="width: 100%; border-radius: 10px;" />
 				</div>
 				<c:forEach var="item" items="${productSliderImg}">
 					<div class="swiper-slide">
-						<img src="/resources/img/${item.img_path}" alt="title" style="width: 100%; border-radius: 10px;" />
+						<img src="${pageContext.request.contextPath}/upload/${item.img_path}" alt="title" style="width: 100%; border-radius: 10px;" />
 					</div>
 				</c:forEach>
 			</div>
@@ -51,7 +51,7 @@
 		<div class="productDescription">
 			<h3>${product.product_name}</h3>
 			<p class="detailContent">${product.product_content}</p>
-			<c:if test="${product.discount_price != 0}">
+			<c:if test="${product.total_discountrate != 0}">
 				<p>
 					<s><fmt:formatNumber value="${product.product_price}" type="number" />원</s>
 				</p>
@@ -61,7 +61,7 @@
 					원
 				</h2>
 			</c:if>
-			<c:if test="${product.discount_price == 0}">
+			<c:if test="${product.total_discountrate == 0}">
 				<h2>
 					<fmt:formatNumber value="${product.product_price}" type="number" />
 					원
