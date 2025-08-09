@@ -95,7 +95,8 @@
         r.image_url AS imageUrl,
         r.rating,
         r.view_count AS viewCount,
-        r.review_date AS reviewDate,
+		0 AS commentCount,
+		r.review_date AS reviewDate,
         r.created_at AS createdAt,
         r.created_by AS createdBy,
         m.customer_id AS customerId
@@ -108,5 +109,66 @@
     WHERE ROWNUM &lt;= #{endRow}
   )
   WHERE rn &gt;= #{startRow}
+</select>
+
+  <!-- 총 개수 -->
+  <select id="countReviews" parameterType="string" resultType="int">
+    SELECT COUNT(*)
+    FROM REVIEW R
+    JOIN PRODUCT P ON P.ID = R.PRODUCT_ID
+    WHERE R.IS_DELETED = 0
+    <if test="q != null and q != ''">
+      AND (
+        LOWER(R.REVIEW_TITLE)   LIKE '%' || LOWER(#{q}) || '%' OR
+        LOWER(R.REVIEW_CONTENT) LIKE '%' || LOWER(#{q}) || '%' OR
+        LOWER(P.PRODUCT_NAME)   LIKE '%' || LOWER(#{q}) || '%'
+      )
+    </if>
+  </select>
+
+  <!-- 리스트 -->
+<select id="findReviews" parameterType="map" resultType="com.myrium.domain.ReviewDTO">
+  SELECT * FROM (
+    SELECT T.*, ROWNUM RN
+    FROM (
+      SELECT
+        R.ID                 AS id,
+        R.USER_ID            AS userId,
+        R.PRODUCT_ID         AS productId,
+        R.CUSTOMER_ID        AS customerId,
+        R.REVIEW_TITLE       AS reviewTitle,
+        R.REVIEW_CONTENT     AS reviewContent,
+        SUBSTR(R.REVIEW_CONTENT, 1, 150) AS summary,
+        R.IMAGE_URL          AS imageUrl,
+        R.RATING             AS rating,
+        NVL(R.VIEW_COUNT,0)  AS viewCount,
+        0                    AS commentCount,   
+        R.REVIEW_DATE        AS reviewDate,
+        R.IS_DELETED         AS isDeleted,
+        R.CREATED_AT         AS createdAt,
+        R.CREATED_BY         AS createdBy,
+        P.PRODUCT_NAME       AS productName
+      FROM REVIEW R
+      JOIN PRODUCT P ON P.ID = R.PRODUCT_ID
+      WHERE R.IS_DELETED = 0
+      <if test="q != null and q != ''">
+        AND (
+          LOWER(R.REVIEW_TITLE)   LIKE '%' || LOWER(#{q}) || '%'
+          OR LOWER(R.REVIEW_CONTENT) LIKE '%' || LOWER(#{q}) || '%'
+          OR LOWER(P.PRODUCT_NAME)   LIKE '%' || LOWER(#{q}) || '%'
+        )
+      </if>
+      ORDER BY R.ID DESC
+    ) T
+    WHERE ROWNUM &lt;= #{offset} + #{size} 
+  )
+  WHERE RN &gt; #{offset}
+</select>
+
+  
+  <select id="countAllReviews" resultType="int">
+  SELECT COUNT(*) 
+  FROM REVIEW
+  WHERE IS_DELETED = 0
 </select>
 </mapper>

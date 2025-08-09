@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.myrium.domain.ReviewDTO;
 
@@ -24,4 +25,12 @@ public interface ReviewMapper {
     int countReviewsByProductId(Long productId);
     
     List<ReviewDTO> getPagedReviewsByProductId(Map<String, Object> paramMap);
+    
+    List<ReviewDTO> findReviews(
+            @Param("q") String q,
+            @Param("offset") int offset,
+            @Param("size") int size
+        );
+
+        int countReviews(@Param("q") String q);
 }
