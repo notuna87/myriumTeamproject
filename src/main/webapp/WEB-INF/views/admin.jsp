@@ -18,6 +18,7 @@
 		    display: flex;
 		    align-items: center;
 		    justify-content: center;
+		    margin: 50px 0;
 		}
         .menu-container {
             max-width: 600px;
@@ -43,7 +44,7 @@
     // 메뉴 항목 이름과 이동할 URL 매핑
     List<String[]> adminMenu = Arrays.asList(
         new String[] {"상품 관리", "adminproduct/list"},
-        new String[] {"회원 관리(구현 중)", "adminmember/list"},
+        new String[] {"회원 관리", "adminmember/list"},
         new String[] {"공지사항 관리", "adminnotice/list"},
         new String[] {"FAQ 관리", "adminfaq/list"},
         new String[] {"리뷰 관리(미구현)", "adminreview/list"},

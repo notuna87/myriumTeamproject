@@ -1,15 +1,18 @@
 package com.myrium.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myrium.domain.AttachFileDTO;
+import com.myrium.domain.AuthVO;
 import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.MemberVO;
+import com.myrium.domain.ProductDTO;
 import com.myrium.mapper.AdminMemberMapper;
 
 import lombok.AllArgsConstructor;
@@ -24,13 +27,63 @@ public class AdminMemberServiceImpl implements AdminMemberService{
 	private AdminMemberMapper mapper;
 
 
+
+
 	@Override
-	public MemberVO get(int id) {
-	      log.info("Member get....." + id);
-	      return mapper.read(id);
+	public List<MemberVO> getList() {
+		log.info("Member getList.....");
+		return mapper.getList();
 	}
 
 
+	@Override
+	public void register(MemberVO member) {
+		log.info("Member register....." + member);
+		mapper.insertSelectKey(member);
+	}
+	
+//	@Override
+//	public List<MemberVO> getList(Criteria cri, boolean isAdmin){
+//		log.info("Member getList...(Criteria cri)");
+//		return mapper.getList(cri, isAdmin);
+//		//return mapper.getListWithPaging(cri, isAdmin);
+//	}
+	
+	@Override
+	public int getTotal(Criteria cri, boolean isAdmin) {
+		log.info(mapper.getTotalCount(cri, isAdmin));
+		return mapper.getTotalCount(cri, isAdmin);	}
+	
+	@Override
+	public boolean restore(int id) {
+		log.info("Member restore...." + id);
+		return mapper.restore(id)==1;
+	}
+	
+	
+	// 회줜정보 & 권한 리스트
+	@Override
+	public List<MemberVO> getMemberListWithAuth(Criteria cri, boolean isAdmin) {
+		List<MemberVO> memberList = mapper.getMemberList(cri, isAdmin);
+		List<MemberVO> memberVoList = new ArrayList<>();		
+		for (MemberVO member : memberList) {
+			List<AuthVO> auth = mapper.getAuthList(member.getId());
+			log.info("getAuthList:" + auth);
+			member.setAuthList(auth);
+			memberVoList.add(member);
+		}
+		return memberVoList;
+	}
+	
+	@Override
+	public MemberVO get(int id) {
+	      log.info("Member get....." + id);
+	      MemberVO member = mapper.read(id);
+	      List<AuthVO> auth = mapper.getAuthList(member.getId());
+	      member.setAuthList(auth);
+	      return member;
+	}
+	
 	@Override
 	public boolean modify(MemberVO vo) {
 	     log.info("Member modify.... " + vo);
@@ -49,85 +102,6 @@ public class AdminMemberServiceImpl implements AdminMemberService{
 		return mapper.softdel(id)==1;
 	}
 
-	@Override
-	public List<MemberVO> getList() {
-		log.info("Member getList.....");
-		return mapper.getList();
-	}
-
-
-	@Override
-	public void register(MemberVO member) {
-		log.info("Member register....." + member);
-		mapper.insertSelectKey(member);
-	}
-	
-	@Override
-	public List<MemberVO> getList(Criteria cri, boolean isAdmin){
-		log.info("Member getList...(Criteria cri)");
-		//return mapper.getList();
-		return mapper.getListWithPaging(cri, isAdmin);
-	}
-	
-	@Override
-	public int getTotal(Criteria cri, boolean isAdmin) {
-		log.info(mapper.getTotalCount(cri, isAdmin));
-		return mapper.getTotalCount(cri, isAdmin);	}
-	
-	@Override
-	public boolean restore(int id) {
-		log.info("Member restore...." + id);
-		return mapper.restore(id)==1;
-	}
-	
-	@Override
-	public void insertAttach(AttachFileDTO dto) {
-		log.info("Member Attach...." + dto);
-		mapper.insertAttach(dto);
-	}
-	
-    @Override
-    public List<ImgpathVO> findByMemberId(int id) {
-        return mapper.findByMemberId(id);
-    }
-    
-    @Override
-    public int deleteImgpathByUuid(String uuid) {
-        return mapper.deleteImgpathByUuid(uuid);
-    }
-    
-    @Override    
-    public void incrementReadCnt(int id) {
-        mapper.updateReadCnt(id);
-    }
-
-	@Override
-	public void insertCategory(CategoryVO cat) {
-		mapper.insertCategory(cat);		
-	}
-	
-	@Override
-	public void updateCategory(CategoryVO cat) {
-		mapper.updateCategory(cat);		
-	}	
-	
-	@Override
-	public void insertImgpath(ImgpathVO imgVO) {
-		mapper.insertImgpath(imgVO);		
-	}
-
-
-	@Override
-	public List<ImgpathVO> findImgpathByUuid(String uuid) {
-		return mapper.findImgpathByUuid(uuid);
-	}
-
-
-	@Override
-	public void updateImgpath(int id) {
-		mapper.updateImgpath(id);	
-		
-	}
 
 	
 }

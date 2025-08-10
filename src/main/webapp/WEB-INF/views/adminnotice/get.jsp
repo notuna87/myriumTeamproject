@@ -14,7 +14,7 @@
 	<div class="row">
          <div class="col-lg-12">
             <sec:authorize access="hasAuthority('ADMIN')">
-            	<h1 class="page-header">공지사항 보기(관리자)</h1>
+            	<h1 class="page-header">공지사항 보기<span class="badge">관리자</span></h1>
             </sec:authorize>
             <sec:authorize access="!hasAuthority('ADMIN')">
             	<h1 class="page-header">공지사항 보기</h1>

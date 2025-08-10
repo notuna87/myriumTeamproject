@@ -20,7 +20,6 @@
 			<ul class="loginWrap">
 				<!-- 로그인 안 했을 때 -->
 				<sec:authorize access="!isAuthenticated()">
-					<li><a href="${pageContext.request.contextPath}/admin">관리자</a></li>
 					<li><a href="#" id="mypageLinkNotLoggedIn">마이페이지</a></li>
 					<li><a href="${pageContext.request.contextPath}/login">로그인</a></li>
 					<li><a href="${pageContext.request.contextPath}/join" class="loginWrapLastchild">회원가입</a></li>
@@ -28,7 +27,9 @@
 
 				<!-- 로그인 했을 때 -->
 				<sec:authorize access="isAuthenticated()">
-					<li><a href="${pageContext.request.contextPath}/admin">관리자</a></li>
+					<sec:authorize access="hasAuthority('ADMIN')">
+						<li><a href="${pageContext.request.contextPath}/admin">관리자</a></li>
+					</sec:authorize>
 					<li><a href="${pageContext.request.contextPath}/mypage">마이페이지</a></li>
 					<li><sec:authentication property="principal.member.customerName" var="username" /> <span>${username}님</span></li>
 					<li><a href="#" onclick="document.getElementById('logoutForm').submit(); return false;" class="logoutLi">로그아웃</a>
