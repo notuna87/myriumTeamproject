@@ -220,6 +220,7 @@
 							</div>
 						</div>
 					</div>
+				</div>
 				<div class="form_row">
 					<label>개인정보 제3자 제공</label>
 					<div class="form_input">
@@ -242,6 +243,7 @@
 						</label>
 					</div>
 				</div>
+
 				
 				<div class="form_row">
                     <label>생성일(생성자)</label>

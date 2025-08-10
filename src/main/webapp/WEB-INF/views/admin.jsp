@@ -49,7 +49,7 @@
         new String[] {"FAQ 관리", "adminfaq/list"},
         new String[] {"리뷰 관리(미구현)", "adminreview/list"},
         new String[] {"문의 관리", "adminboard/list"},
-        new String[] {"주문 관리(미구현)", "adminorder/list"}
+        new String[] {"주문 관리(구현 중)", "adminorder/list"}
     );
     request.setAttribute("menuList", adminMenu);
 %>
