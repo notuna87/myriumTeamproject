@@ -47,32 +47,33 @@
         <c:otherwise>
           <div class="photoreviewList">
             <c:forEach var="review" items="${reviewList}">
-              <div class="photoreviewItem">
-                <div class="review-info">
-                  <c:if test="${not empty review.imageUrl}">
-                    <img src="${pageContext.request.contextPath}${review.imageUrl}" class="review-image" alt="리뷰 이미지">
-                  </c:if>
-                  <p class="review-title">${fn:escapeXml(review.reviewTitle)}</p>
-                  <p class="review-content">${fn:escapeXml(review.reviewContent)}</p>
-                </div>
+             <div class="photoreviewItem">
+			  <div class="review-info">
+			    <c:if test="${not empty review.imageUrl}">
+			      <img src="${pageContext.request.contextPath}${review.imageUrl}" class="review-image" alt="리뷰 이미지">
+			    </c:if>
+                    <!-- 텍스트를 별도 래퍼로 묶기 -->
+			    <div class="review-text">
+			      <p class="review-title">${fn:escapeXml(review.reviewTitle)}</p>
+			      <p class="review-content">${fn:escapeXml(review.reviewContent)}</p>
+			    </div>
+			  </div>
                 <div class="review-meta-box">
-                  <p class="review-rating">
-                    <c:forEach var="i" begin="1" end="5">
-                      <span class="star">
-                        <c:choose>
-                          <c:when test="${i <= review.rating}">★</c:when>
-                          <c:otherwise>☆</c:otherwise>
-                        </c:choose>
-                      </span>
-                    </c:forEach>
-                  </p>
-                  <p class="review-writer">${review.maskedId}</p>
-                  <p class="review-date">
-                    <fmt:formatDate value="${review.reviewDate}" pattern="yyyy-MM-dd" />
-                  </p>
-                  <p class="review-views">조회 ${review.viewCount}</p>
-                </div>
-              </div>
+				    <p class="review-rating">
+				      <c:forEach var="i" begin="1" end="5">
+				        <span class="star">
+				          <c:choose>
+				            <c:when test="${i <= review.rating}">★</c:when>
+				            <c:otherwise>☆</c:otherwise>
+				          </c:choose>
+				        </span>
+				      </c:forEach>
+				    </p>
+				    <p class="review-writer">${review.maskedId}</p>
+				    <p class="review-date"><fmt:formatDate value="${review.reviewDate}" pattern="yyyy-MM-dd" /></p>
+				    <p class="review-views">조회 ${review.viewCount}</p>
+				  </div>
+				</div>
               <hr />
             </c:forEach>
           </div>

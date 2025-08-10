@@ -1,3 +1,10 @@
+.page-title{
+  font-size:22px;
+  margin:40px 0 25px;
+  font-weight:bold;
+  text-align:center;
+}
+
 .review-container {
   max-width: 1240px;
   margin: 0 auto;
