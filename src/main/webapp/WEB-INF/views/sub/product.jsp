@@ -13,7 +13,6 @@
 </head>
 
 <body>
-<form action="/cart" method="post">
 	<div class="detailWrap">
 		<!-- 썸네일 Swiper -->
 		<div class="swiper gallery-thumbs">
@@ -81,6 +80,7 @@
 				</tr>
 				<tr>
 					<td>무이자 할부</td>
+
 					<td>카드 자세히 보기</td>
 				</tr>
 			</table>
@@ -91,6 +91,7 @@
 					오늘출발 상품 <span style="font-weight: normal;">(오후 3시 전 주문 시)</span>
 				</p>
 			</div>
+
 			<div class="creaseButtonWrap">
 				<p style="width: 100%;">${product.product_name}</p>
 				<div class="creaseButton">
@@ -105,19 +106,25 @@
 
 			</p>
 
-				<sec:authorize access="!isAuthenticated()">
-					<button type="submit" class="inCart" id="cartLinkNotLoggedInSub">장바구니</button>
-					<div class="purchase" id="purchaseLinkNotLoggedIn">구매하기</div>
-				</sec:authorize>
-				<sec:authorize access="isAuthenticated()">
-						<button type="submit" class="inCart">장바구니</button>
-						<div class="purchase">구매하기</div>
-				</sec:authorize>
+			<sec:authorize access="!isAuthenticated()">
+				<button type="button" class="inCart" id="cartLinkNotLoggedInSub">장바구니</button>
+				<button type="button" class="purchase" id="purchaseLinkNotLogged">구매하기</button>
+			</sec:authorize>
+			<sec:authorize access="isAuthenticated()">
+				<form action="/cart" method="post">
+					<input type="hidden" name="quantityCartHidden" id="quantityCartHidden" value="1" min="1" readonly />
+					<input type="hidden" id="productIdHidden" name="productId" value="${product.id}">
+					<button type="submit" class="inCart">장바구니</button>
+				</form>
+				<form action="/purchasedirect" method="post">
+					<input type="hidden" id="productIdHiddenpruchase" name="productId" value="${product.id}">
+					<input type="hidden" name="quantityPurchaseHidden" id="quantityPurchaseHidden" value="1" min="1" readonly />
+					<button type="submit" class="purchase">구매하기</button>
+				</form>
+			</sec:authorize>
 
-			<input id="productIdHidden" name="productId" type="hidden" value="${product.id}">
 		</div>
 	</div>
-</form>
 
 
 	<!-- Swiper JS -->
@@ -143,18 +150,7 @@
 			},
 		});
 
-		// 장바구니 담기용 증감 버튼
-		function increaseQty() {
-			const qtyInput = document.getElementById("quantity");
-			qtyInput.value = parseInt(qtyInput.value) + 1;
-		}
 
-		function decreaseQty() {
-			const qtyInput = document.getElementById("quantity");
-			if (parseInt(qtyInput.value) > 1) {
-				qtyInput.value = parseInt(qtyInput.value) - 1;
-			}
-		}
 
 		// 서버에서 넘어온 할인 가격을 JS에서 사용
 		const discountPrice = ${product.discount_price};
@@ -174,27 +170,6 @@
 			totalPriceSpan.textContent = total.toLocaleString() + " 원";
 		}
 
-		function increaseQty() {
-			qtyInput.value = parseInt(qtyInput.value) + 1;
-			if (discountPrice == 0) {
-				updateNotSaleTotalPrice();
-			} else {
-				updateTotalPrice();
-			}
-		}
-
-		function decreaseQty() {
-			if (parseInt(qtyInput.value) > 1) {
-				qtyInput.value = parseInt(qtyInput.value) - 1;        
-				
-				if(discountPrice == 0){
-					updateNotSaleTotalPrice();			
-				} else {
-					updateTotalPrice();
-				}
-			}
-		}
-
 		if (discountPrice == 0) {
 			document.addEventListener("DOMContentLoaded",
 					updateNotSaleTotalPrice);
@@ -202,22 +177,62 @@
 			document.addEventListener("DOMContentLoaded", updateTotalPrice);
 		}
 
+		// 장바구니 담기용 증감 버튼
+		function increaseQty() {
+			const qtyInput = document.getElementById("quantity");
+			const qtycartHidden = document.getElementById("quantityCartHidden");
+			const qtypurchaseHidden = document
+					.getElementById("quantityPurchaseHidden");
+			qtyInput.value = parseInt(qtyInput.value) + 1;
+			qtycartHidden.value = qtyInput.value;
+			qtypurchaseHidden.value = qtyInput.value;
+
+			// 총 구매 금액 업데이트
+			if (discountPrice == 0) {
+				updateNotSaleTotalPrice();
+			} else {
+				updateTotalPrice();
+			}
+		}
+		
+		function decreaseQty() {
+			const qtyInput = document.getElementById("quantity");
+			const qtycartHidden = document.getElementById("quantityCartHidden");
+			const qtypurchaseHidden = document.getElementById("quantityPurchaseHidden");
+			if (parseInt(qtyInput.value) > 1) {
+				qtyInput.value = parseInt(qtyInput.value) - 1;
+				qtycartHidden.value = qtyInput.value;
+				qtypurchaseHidden.value = qtyInput.value;
+
+				// 총 구매 금액 업데이트
+				if (discountPrice == 0) {
+					updateNotSaleTotalPrice();
+				} else {
+					updateTotalPrice();
+				}
+			}
+		}
+		
 		// 로그인 확인
 		document.addEventListener("DOMContentLoaded", function() {
 			const cartLink = document.getElementById('cartLinkNotLoggedInSub');
-			const purchaseLink = document.getElementById('purchaseLinkNotLoggedIn');
-			
+			const purchaseLink = document.getElementById('purchaseLinkNotLogged');
+
 			if (cartLink) {
 				cartLink.addEventListener('click', function(e) {
 					e.preventDefault();
+					console.log("카트 로그인");
 					alert("로그인 후 이용해주세요.");
 					location.href = "${pageContext.request.contextPath}/login";
+					
 				});
 			}
 			if (purchaseLink) {
 				purchaseLink.addEventListener('click', function(e) {
 					e.preventDefault();
+					console.log("구매 로그인");
 					alert("로그인 후 이용해주세요.");
+					
 					location.href = "${pageContext.request.contextPath}/login";
 				});
 			}
