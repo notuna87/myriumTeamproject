@@ -935,7 +935,16 @@ padding: 40px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 20px;       
   margin-bottom: 30px;
+}
+
+.review-info {
+  display: flex;    
+  align-items: flex-start; 
+  gap: 16px;
+  flex: 1 1 auto;   
+  min-width: 0; 
 }
 
 .review-left {
@@ -948,14 +957,44 @@ padding: 40px;
 
 .review-image {
   width: 100px;
-  height: auto;
+  height: 100px;
+  object-fit: cover;
   border-radius: 5px;
+  flex: 0 0 auto;
 }
+
+.review-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;      
+}
+
 
 .review-title {
   font-size: 16px;
   font-weight: bold;
+  line-height: 1.3;
+  margin: 0;
+  text-align: left; 
 }
+
+.review-content {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+  white-space: normal;
+  text-align: left; 
+}
+
+.review-meta-box {
+  text-align: right;
+  min-width: 180px; 
+  flex: 0 0 180px;
+}
+
+.star { color:#ff4d00; font-size:16px; margin-right:1px; }
+
 
 .review-writer,
 .review-product,
