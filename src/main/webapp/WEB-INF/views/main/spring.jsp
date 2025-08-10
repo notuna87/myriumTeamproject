@@ -32,7 +32,7 @@
 			<div class="springProductwrap" id="springProductwrap">
 				<c:forEach var="item" items="${springList}">
 					<div class="springProduct" onclick="location.href='sub?id=${item.product.id}'">
-						<img src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" alt="1" style="width: 100%; height: auto; margin-bottom:12px;" />
+						<img src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" alt="1" style="width: 100%; height: 350px; margin-bottom:12px;" />
 						<h4>${item.product.product_name}</h4>
           
 						<p class="mainProductContent">${item.product.product_content}</p>

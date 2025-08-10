@@ -53,7 +53,8 @@
 					<div class="orderInfoContent">
 						<table>
 							<tr>
-								<th>주문자</th>
+								<th>주문자${directPurchaseStatus}</th>
+
 								<td><input type="text" name="customerName" class="bigTextBox" value="${memberInfo.customerName}"></td>
 							</tr>
 							<tr>
@@ -96,30 +97,55 @@
 				<div class="orderProductWrap">
 					<div class="orderProductTitle">주문상품</div>
 					<div class="orderProduct">
-						<c:forEach var="item" items="${cartList}">
+						<!-- 서브페이지에서 바로 구매시 -->
+						<c:if test="${directPurchaseStatus == 1}">
 							<div class="cartContentsWrap">
-								<table style="border-bottom: 1px dashed #E9E9E9; width: 100%;">
-									<tr>
-										<th><img src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" alt="test" class="orderProductThumbnail"></th>
-										<td><input type="hidden" name="productId" value="${item.product.id}">
-											<p style="margin-bottom: 10px;">${item.product.product_name}</p>
-											<p style="color: #888">${item.product.product_content}</p> <input type="hidden" name="quantity" value="${item.inCart.quantity}">
-											<p class="productQty" style="color: #888; margin-bottom: 10px;" data-qty="${item.inCart.quantity}">수량 : ${item.inCart.quantity}개</p>
-											<p style="margin-bottom: 10px;">
-												<c:if test="${item.product.discount_price != 0 }">
-													<span class="productPrice" data-price="${item.product.discount_price}"><fmt:formatNumber value="${item.product.discount_price * item.inCart.quantity}" type="number" groupingUsed="true" />원</span>
-												</c:if>
-												<c:if test="${item.product.discount_price == 0}">
-													<span class="productPrice" data-price="${item.product.product_price}"><fmt:formatNumber value="${item.product.product_price * item.inCart.quantity}" type="number" groupingUsed="true" />원</span>
-												</c:if>
-											</p></td>
-										<td style="width: 77px;">
-											<button type="button" class="deleteButton" onclick="deleteProduct('increase', this)" data-product-id="${item.product.id}">삭제하기</button>
-										</td>
-									</tr>
-								</table>
-							</div>
-						</c:forEach>
+									<table style="border-bottom: 1px dashed #E9E9E9; width: 100%;">
+										<tr>
+											<th><img src="${pageContext.request.contextPath}/upload/${productDirectPurchase.thumbnail.img_path}" alt="test" class="orderProductThumbnail"></th>
+											<td><input type="hidden" name="productId" value="${productDirectPurchase.product.id}">
+												<p style="margin-bottom: 10px;">${productDirectPurchase.product.product_name}</p>
+												<p style="color: #888">${productDirectPurchase.product.product_content}</p> <input type="hidden" name="quantity" value="${quantity}">
+												<p class="productQty" style="color: #888; margin-bottom: 10px;" data-qty="${quantity}">수량 : ${quantity}개</p>
+												<p style="margin-bottom: 10px;">
+													<c:if test="${productDirectPurchase.product.discount_price != 0 }">
+														<span class="productPrice" data-price="${productDirectPurchase.product.discount_price}"><fmt:formatNumber value="${productDirectPurchase.product.discount_price * quantity}" type="number" groupingUsed="true" />원</span>
+													</c:if>
+													<c:if test="${productDirectPurchase.product.discount_price == 0}">
+														<span class="productPrice" data-price="${productDirectPurchase.product.product_price}"><fmt:formatNumber value="${productDirectPurchase.product.product_price * quantity}" type="number" groupingUsed="true" />원</span>
+													</c:if>
+												</p></td>
+										</tr>
+									</table>
+								</div>
+						</c:if>
+						<!-- 장바구니에서 구매 시 -->	
+						<c:if test="${directPurchaseStatus != 1}">
+							<c:forEach var="item" items="${cartList}">
+								<div class="cartContentsWrap">
+									<table style="border-bottom: 1px dashed #E9E9E9; width: 100%;">
+										<tr>
+											<th><img src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" alt="test" class="orderProductThumbnail"></th>
+											<td><input type="hidden" name="productId" value="${item.product.id}">
+												<p style="margin-bottom: 10px;">${item.product.product_name}</p>
+												<p style="color: #888">${item.product.product_content}</p> <input type="hidden" name="quantity" value="${item.inCart.quantity}">
+												<p class="productQty" style="color: #888; margin-bottom: 10px;" data-qty="${item.inCart.quantity}">수량 : ${item.inCart.quantity}개</p>
+												<p style="margin-bottom: 10px;">
+													<c:if test="${item.product.discount_price != 0 }">
+														<span class="productPrice" data-price="${item.product.discount_price}"><fmt:formatNumber value="${item.product.discount_price * item.inCart.quantity}" type="number" groupingUsed="true" />원</span>
+													</c:if>
+													<c:if test="${item.product.discount_price == 0}">
+														<span class="productPrice" data-price="${item.product.product_price}"><fmt:formatNumber value="${item.product.product_price * item.inCart.quantity}" type="number" groupingUsed="true" />원</span>
+													</c:if>
+												</p></td>
+											<td style="width: 77px;">
+												<button type="button" class="deleteButton" onclick="deleteProduct('increase', this)" data-product-id="${item.product.id}">삭제하기</button>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</c:forEach>
+						</c:if>
 						<!-- 배송비 시작 -->
 						<div class="totalPriceDiv"></div>
 					</div>

@@ -48,4 +48,6 @@ public interface ProductService {
 
 	public int searchResultCount(String searchKeyword);
 
+	public ProductDTO productDirectPurchase(int productId);
+
 }

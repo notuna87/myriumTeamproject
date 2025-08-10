@@ -207,4 +207,15 @@ public class ProductServiceImpl implements ProductService {
 		return productmapper.searchResultCount(searchKeyword);
 	}
 
+	@Override
+	public ProductDTO productDirectPurchase(int productId) {
+		ProductVO productDirectPurchase = productmapper.productDirectPurchase(productId);
+		ImgpathVO thumbnail = productmapper.getThumbnail(productDirectPurchase.getId());
+		ProductDTO dto = new ProductDTO();
+		dto.setThumbnail(thumbnail);
+		dto.setProduct(productDirectPurchase);
+
+		return dto;
+	}
+
 }

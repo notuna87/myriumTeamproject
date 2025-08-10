@@ -81,6 +81,8 @@ public interface ProductMapper {
 	
 	// 검색결과 카운트
 	public int searchResultCount(String searchKeyword);
+
+	public ProductVO productDirectPurchase(int productId);
 	
 	
 }

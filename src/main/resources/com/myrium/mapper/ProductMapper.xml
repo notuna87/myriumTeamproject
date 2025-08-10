@@ -179,4 +179,8 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 	<select id="searchResultCount" resultType="int">
 		select count(*) from product where LOWER(product_name) LIKE '%' || #{searchKeyword} || '%'
 	</select>
+	
+	<select id="productDirectPurchase" resultType="com.myrium.domain.ProductVO">
+		SELECT * FROM product WHERE id = #{productId}
+	</select>
 </mapper>

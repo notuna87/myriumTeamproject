@@ -46,7 +46,7 @@
 				<li><a href="#">브랜드 소개</a></li>
 				<li><a href="#">식물키우기</a></li>
 				<li><a href="#">타임세일</a></li>
-				<li><a href="#">리뷰</a></li>
+				<li><a href="${pageContext.request.contextPath}/total_review">리뷰</a></li>
 				<li><a href="#">매거진</a></li>
 				<li class="subCategoryWrap"><a href="#">고객센터</a>
 					<div class="subCategory">

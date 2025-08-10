@@ -57,4 +57,14 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewMapper.getPagedReviewsByProductId(paramMap);
     }
     
+    @Override
+    public int countReviews(String q) {
+        return reviewMapper.countReviews(q);
+    }
+
+    @Override
+    public List<ReviewDTO> findReviews(String q, int offset, int limit) {
+        return reviewMapper.findReviews(q, offset, limit);
+    }
+    
 }

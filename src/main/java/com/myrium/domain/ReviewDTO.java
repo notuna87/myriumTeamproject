@@ -20,6 +20,10 @@ public class ReviewDTO {
     private int isDeleted;
     private Date createdAt;
     private String createdBy;
+    
+    private String productName; 
+    private String summary;  
+    private int commentCount; 
 
     public String getMaskedId() {
         if (customerId == null) return "";

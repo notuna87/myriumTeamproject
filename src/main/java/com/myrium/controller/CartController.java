@@ -62,7 +62,7 @@ public class CartController {
 		String customerId = userDetails.getMember().getCustomerId();
 
 		// jsp에서 수량 받아와 변수 저장
-		String quantityStr = request.getParameter("quantity");
+		String quantityStr = request.getParameter("quantityCartHidden");
 		int quantity = Integer.parseInt(quantityStr);
 
 		// jsp로부터 상품 id값 받아와 저장

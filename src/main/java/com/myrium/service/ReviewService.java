@@ -21,4 +21,7 @@ public interface ReviewService {
     int countReviewsByProductId(Long productId);
     
     List<ReviewDTO> getPagedReviewsByProductId(Map<String, Object> paramMap);
+    
+    int countReviews(String q);
+    List<ReviewDTO> findReviews(String q, int offset, int limit);
 }
