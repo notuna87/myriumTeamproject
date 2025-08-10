@@ -211,28 +211,34 @@
 								<input type="text" class="birth_input" value="${birthDay}" name="birthDay" /> <span>일</span>
 							</div>
 							<div class="calendar_select">
-								<label><input type="radio" name="calendar" value="solar"
-									checked /> 양력</label> <label><input type="radio"
-									name="calendar" value="lunar" /> 음력</label>
+								<label>
+									<input type="radio" name="calendar" value="solar" checked /> 양력
+								</label>
+								<label>
+									<input type="radio" name="calendar" value="lunar" /> 음력
+								</label>
 							</div>
 						</div>
 					</div>
-				<div class="terms_section">
-					<div class="terms_item">
-						<input type="hidden" name="agreeThirdParty" value="0">
-						<label class="checkbox_label">
-							<input type="checkbox" name="agreeThirdParty"
-						       value="${member.agreeThirdParty == 1 ? 1 : 0}"
-						       ${member.agreeThirdParty == 1 ? 'checked' : ''} /> 개인정보 제3자 제공 동의(선택)
+				<div class="form_row">
+					<label>개인정보 제3자 제공</label>
+					<div class="form_input">
+						<label> <input type="radio" name="agreeThirdParty" value="1"
+							<c:if test="${member.agreeThirdParty == 1}">checked</c:if> /> 동의
+						</label> 
+						<label> <input type="radio" name="agreeThirdParty" value="0"
+							<c:if test="${member.agreeThirdParty == 0}">checked</c:if> /> 동의안함
 						</label>
 					</div>
-
-					<div class="terms_item">
-						<input type="hidden" name="agreeDelegate" value="0">
-						<label class="checkbox_label">
-							<input type="checkbox" name="agreeDelegate"
-						       value="${member.agreeDelegate == 1 ? 1 : 0}"
-						       ${member.agreeDelegate == 1 ? 'checked' : ''} /> 개인정보 제3자 제공 동의(선택)
+				</div>
+				<div class="form_row">
+					<label>개인정보 처리 위탁</label>
+					<div class="form_input">
+						<label> <input type="radio" name="agreeDelegate" value="1"
+							<c:if test="${member.agreeDelegate == 1}">checked</c:if> /> 동의
+						</label> 
+						<label> <input type="radio" name="agreeDelegate" value="0"
+							<c:if test="${member.agreeDelegate == 0}">checked</c:if> /> 동의안함
 						</label>
 					</div>
 				</div>

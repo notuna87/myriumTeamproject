@@ -138,8 +138,8 @@
 				                    <td class="text-right">${member.email}</td>
 				                    <td class="text-center">${member.gender == 'M' ? '남자' : '여자'}</td>
 				                    <td class="text-center">${member.agreeSms ==1 ? '<span class="label label-success ml-1">동의</span>' : '비동의'}</td>
-				                    <td class="text-center">${member.agreeTerms ==1 ? '<span class="label label-success ml-1">동의</span>' : '비동의'}</td>
-				                    <td class="text-center">${member.agreePrivacy ==1 ? '<span class="label label-success ml-1">동의</span>' : '비동의'}</td>
+				                    <td class="text-center">${member.agreeThirdParty ==1 ? '<span class="label label-success ml-1">동의</span>' : '비동의'}</td>
+				                    <td class="text-center">${member.agreeDelegate ==1 ? '<span class="label label-success ml-1">동의</span>' : '비동의'}</td>
 				                    <td>
 				                        <button class="btn btn-sm btn-primary" onclick="location.href='/adminmember/modify?id=${member.id}'">수정</button>
 				                        <c:choose>
