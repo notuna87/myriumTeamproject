@@ -98,8 +98,8 @@ public class OrderDTO {
             case 5: return "교환완료";
             case 6: return "환불신청중";
             case 7: return "환불완료";
-            case 8: return "주문취소중";
-            case 9: return "취소완료";
+            //case 8: return "주문취소중";
+            //case 9: return "취소완료";
         }
         return null;
     }
