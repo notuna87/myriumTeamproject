@@ -60,7 +60,6 @@ public class CommonController {
 	// 콘트롤러가 이미지를 브라우져에 전송
 	@GetMapping("/upload/**")
 	public void serveImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		System.out.println("접근된 URL: " + request.getRequestURI());
 	    String uri = request.getRequestURI(); // /resorces/product/img/...jpg
 	    String filePath = "C:" + uri.replace("/", File.separator);
 
