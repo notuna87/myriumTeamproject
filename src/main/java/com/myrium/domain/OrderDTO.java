@@ -95,12 +95,12 @@ public class OrderDTO {
             case 3:  return "배송완료";
             case 4:  return "교환신청";
             case 5:  return "교환완료";
-            case 6:  return "환불신청";
-            case 7:  return "환불완료";
+            case 6:  return "반품신청";
+            case 7:  return "반품완료";
             case 8:  return "취소신청";
             case 9:  return "취소완료";
-            case 10: return "반품거절";
-            case 11: return "반품완료";
+            case 10: return "환불거절";
+            case 11: return "환불완료";
             case 12: return "교환승인";
             case 13: return "교환거절";
             case 14: return "반품승인";
