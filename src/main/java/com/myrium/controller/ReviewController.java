@@ -70,28 +70,41 @@ public class ReviewController {
 	                           HttpSession session,
 	                           Model model) {
 
-	    // 세션에서 로그인 사용자 정보
-		MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+	    // 0) 로그인 체크
+	    MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+	    if (loginUser == null) {
+	        return "redirect:/login";
+	    }
 
 	    Long userId = loginUser.getId();
 	    String customerId = loginUser.getCustomerId();
-	   
-	    // 파일 저장 - 실제 경로 로직은 생략
-	    String fileName = null;
 
-	    // 이미지 파일 저장 처리
-	    if (!file.isEmpty()) {
+	    // 1) DB에 저장할 웹 경로 (없으면 null)
+	    String webPath = null;
+
+	    // 2) 이미지 파일 저장 처리 (자동 폴더 생성)
+	    if (file != null && !file.isEmpty()) {
 	        try {
-	            String originalName = file.getOriginalFilename();
-	            String uuid = UUID.randomUUID().toString();
-	            String savedName = uuid + "_" + originalName;
-	            String uploadPath = "C:/upload/review/";
-	            
-	            File destination = new File(uploadPath + savedName);
-	            file.transferTo(destination);
+	            String uploadRoot = "C:/upload"; 
+	            String datePath   = new java.text.SimpleDateFormat("yyyy/MM/dd").format(new java.util.Date());
 
-	            // 브라우저에서 접근 가능한 경로만 저장
-	            fileName = "/upload/review/" + savedName;
+	            java.nio.file.Path saveDir = java.nio.file.Paths.get(uploadRoot, "review", datePath);
+	            java.nio.file.Files.createDirectories(saveDir);   //폴더 자동 생성 (있으면 통과)
+
+	            // 안전한 파일명 + 확장자 유지
+	            String original = org.springframework.util.StringUtils.cleanPath(file.getOriginalFilename());
+	            String ext = "";
+	            int dot = (original != null) ? original.lastIndexOf('.') : -1;
+	            if (dot != -1) ext = original.substring(dot);
+
+	            String savedName = java.util.UUID.randomUUID().toString() + ext;
+
+	            // 실제 저장
+	            java.nio.file.Path savePath = saveDir.resolve(savedName);
+	            file.transferTo(savePath.toFile());
+
+	            // JSP에서 사용할 "웹 경로" (contextPath는 JSP에서 붙임)
+	            webPath = "/upload/review/" + datePath + "/" + savedName;
 
 	        } catch (IOException e) {
 	            e.printStackTrace();
@@ -100,24 +113,24 @@ public class ReviewController {
 	        }
 	    }
 
-	    // 리뷰 DTO 생성 및 세팅
+	    // 3) 리뷰 DTO 저장
 	    ReviewDTO dto = new ReviewDTO();
 	    dto.setReviewTitle(title);
 	    dto.setReviewContent(content);
 	    dto.setRating(rating);
-	    dto.setImageUrl(fileName);
+	    dto.setImageUrl(webPath);           // 이미지 없으면 null
 	    dto.setUserId(userId);
 	    dto.setCustomerId(customerId);
 	    dto.setProductId(productId);
-	    dto.setCreatedAt(new Date());
+	    dto.setCreatedAt(new java.util.Date());
 	    dto.setCreatedBy(customerId);
-	    dto.setReviewDate(new Date());
+	    dto.setReviewDate(new java.util.Date());
 
-	    // DB 저장 처리
 	    reviewService.insertReview(dto);
 
 	    return "redirect:/mypage/order-history";
 	}
+
 	
 	@GetMapping("/review/view")
 	public String viewReview(@RequestParam("id") Long reviewId, Model model) {
