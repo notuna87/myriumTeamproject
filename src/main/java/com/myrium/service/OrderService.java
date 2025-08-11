@@ -9,7 +9,7 @@ public interface OrderService {
 
 	int insertOrders(OrderDTO orders);
 
-	void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName);
+	void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName, int payment);
 
 	void deletePurchaseCart(Long userId, int productid);
 
@@ -39,6 +39,9 @@ public interface OrderService {
 	
 	//주문상태변경
 	List<OrderDTO> getOrdersToAutoUpdate();
+	
+	//배송완료에서 구매확정 변경
+	int autoConfirmAfter1Day();
 	
 
 }

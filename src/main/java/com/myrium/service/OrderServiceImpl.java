@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.myrium.domain.OrderDTO;
-import com.myrium.domain.ReviewDTO;
 import com.myrium.mapper.OrderMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -32,9 +32,9 @@ public class OrderServiceImpl implements OrderService {
 
 
 	@Override
-	public void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName) {
+	public void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName, int payment) {
 		
-		orderMapper.insertOrdersProduct(productid, orderId, userId, quantity, customerName);
+		orderMapper.insertOrdersProduct(productid, orderId, userId, quantity, customerName, payment);
 	}
 
 
@@ -124,6 +124,12 @@ public class OrderServiceImpl implements OrderService {
 	    return orderMapper.findOrdersForStatusUpdate();
 	}
 	
-
+	 @Override
+	    @Transactional
+	    public int autoConfirmAfter1Day() {
+	        int changed = orderMapper.autoConfirmAfter1Day();
+	        log.info("[OrderService] autoConfirmAfter1Day updated rows = " + changed);
+	        return changed;
+	    }
 	
 }

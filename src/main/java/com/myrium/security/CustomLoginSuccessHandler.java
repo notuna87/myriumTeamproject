@@ -22,9 +22,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 	        throws IOException, ServletException {
-
-	    log.warn("Login Success................");
-
+		
 	    //CustomUser에서 로그인한 사용자 정보 꺼내기
 	    CustomUser customUser = (CustomUser) authentication.getPrincipal();
 	    MemberVO member = customUser.getMember();
@@ -40,11 +38,10 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 	    });
 
 	    log.warn("ROLE NAMES : " + roleNames);
-	 // ✅ 세션에 사용자 정보 저장
+	 //세션에 사용자 정보 저장
 	    request.getSession().setAttribute("loginUser", member);
 
-	    // ✅ 로그 출력
-	    log.warn("로그인한 사용자 정보: " + member);
+	    //로그 출력
 	    log.warn("세션 loginUser 확인: " + request.getSession().getAttribute("loginUser"));
 	    log.warn("세션 ID: " + request.getSession().getId());
 	    

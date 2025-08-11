@@ -46,7 +46,8 @@
 	<select id="productDetailImg"
 		resultType="com.myrium.domain.ImgpathVO">
 		select * from (select * from img_path where
-		product_id=#{id} and is_thumbnail_main = 0 and is_detail = 1) WHERE ROWNUM
+		product_id=#{id} and is_thumbnail_main = 0 and is_detail = 1) WHERE
+		ROWNUM
 		= 1
 	</select>
 
@@ -131,7 +132,8 @@
 		#{increaseSalesCount} where id = #{productid}
 	</update>
 
-	<select id="getSearchProductList" resultType="com.myrium.domain.ProductVO">
+	<select id="getSearchProductList"
+		resultType="com.myrium.domain.ProductVO">
 <![CDATA[
 SELECT *
 FROM (
@@ -145,30 +147,34 @@ FROM (
         FROM product
         WHERE LOWER(product_name) LIKE '%' || #{searchKeyword} || '%'
 ]]>
-<choose>
-    <when test="sort == 'new'">
-        ORDER BY created_at DESC
-    </when>
-    <when test="sort == 'name'">
-        ORDER BY product_name ASC
-    </when>
-    <when test="sort == 'lowPrice'">
-        ORDER BY (product_price - (product_price * COALESCE(total_discountrate, 0) / 100)) ASC
-    </when>
-    <when test="sort == 'highPrice'">
-        ORDER BY (product_price - (product_price * COALESCE(total_discountrate, 0) / 100)) DESC
-    </when>
-    <otherwise>
-        ORDER BY id DESC
-    </otherwise>
-</choose>
+		<choose>
+			<when test="sort == 'new'">
+				ORDER BY created_at DESC
+			</when>
+			<when test="sort == 'name'">
+				ORDER BY product_name ASC
+			</when>
+			<when test="sort == 'lowPrice'">
+				ORDER BY (product_price - (product_price *
+				COALESCE(total_discountrate,
+				0) / 100)) ASC
+			</when>
+			<when test="sort == 'highPrice'">
+				ORDER BY (product_price - (product_price *
+				COALESCE(total_discountrate,
+				0) / 100)) DESC
+			</when>
+			<otherwise>
+				ORDER BY id DESC
+			</otherwise>
+		</choose>
 <![CDATA[
     ) p
     WHERE ROWNUM <= #{searchcri.pageNum} * #{searchcri.amount}
 ) 
 WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 ]]>
-</select>
+	</select>
 
 	<!-- 상품리뷰 -->
 	<select id="findById" parameterType="long"
@@ -177,10 +183,137 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 	</select>
 	<!-- 검색결과 카운트 -->
 	<select id="searchResultCount" resultType="int">
-		select count(*) from product where LOWER(product_name) LIKE '%' || #{searchKeyword} || '%'
+		select count(*) from
+		product where LOWER(product_name) LIKE '%' || #{searchKeyword} || '%'
 	</select>
-	
-	<select id="productDirectPurchase" resultType="com.myrium.domain.ProductVO">
+
+	<select id="productDirectPurchase"
+		resultType="com.myrium.domain.ProductVO">
 		SELECT * FROM product WHERE id = #{productId}
+	</select>
+	<!-- 카테고리 선택에 따른 상품 목록 조회 -->
+	<select id="getCategoryList"
+		resultType="com.myrium.domain.ProductVO">
+		SELECT * FROM product WHERE id IN (
+		select product_id from category
+		where
+		<choose>
+			<when test="category == 'gardening'">
+				gardening
+			</when>
+			<when test="category == 'plantKit'">
+				plantKit
+			</when>
+			<when test="category == 'hurb'">
+				hurb
+			</when>
+			<when test="category == 'vegetable'">
+				vegetable
+			</when>
+			<when test="category == 'flower'">
+				flower
+			</when>
+			<when test="category == 'etc'">
+				etc
+			</when>
+		</choose>
+		= 1)
+		<choose>
+			<when test="sort == 'new'">
+				ORDER BY created_at DESC
+			</when>
+			<when test="sort == 'name'">
+				ORDER BY product_name ASC
+			</when>
+			<when test="sort == 'lowPrice'">
+				ORDER BY (product_price - (product_price *
+				COALESCE(total_discountrate,
+				0) / 100)) ASC
+			</when>
+			<when test="sort == 'highPrice'">
+				ORDER BY (product_price - (product_price *
+				COALESCE(total_discountrate,
+				0) / 100)) DESC
+			</when>
+			<otherwise>
+				ORDER BY id DESC
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 모든 상품 조회 -->
+	<select id="getAllProductList"
+		resultType="com.myrium.domain.ProductVO">
+		SELECT
+		p.ID,
+		p.PRODUCT_NAME,
+		p.PRODUCT_STOCK,
+		p.PRODUCT_PRICE,
+		p.IS_DELETED,
+		p.CREATED_AT,
+		p.CREATED_BY,
+		p.UPDATED_AT,
+		p.UPDATED_BY,
+		p.IS_TIMESALES,
+		p.IS_MAINONE,
+		p.IS_MAINTWO,
+		p.IS_DISCOUNT,
+		p.DISCOUNT_RATE,
+		p.TIMESALEDISCOUNT_RATE,
+		p.TOTAL_DISCOUNTRATE,
+		p.DISCOUNT_PRICE,
+		p.SALES_COUNT
+		<choose>
+			<when test="sort == 'review'">
+				, COUNT(r.PRODUCT_ID) AS REVIEW_COUNT
+			</when>
+			<otherwise>
+				, 0 AS REVIEW_COUNT
+			</otherwise>
+		</choose>
+		FROM product p
+		<if test="sort == 'review'">
+			LEFT JOIN review r ON p.ID = r.PRODUCT_ID AND r.IS_DELETED = 0
+		</if>
+		<choose>
+			<when test="sort == 'review'">
+				GROUP BY
+				p.ID,
+				p.PRODUCT_NAME,
+				p.PRODUCT_STOCK,
+				p.PRODUCT_PRICE,
+				p.IS_DELETED,
+				p.CREATED_AT,
+				p.CREATED_BY,
+				p.UPDATED_AT,
+				p.UPDATED_BY,
+				p.IS_TIMESALES,
+				p.IS_MAINONE,
+				p.IS_MAINTWO,
+				p.IS_DISCOUNT,
+				p.DISCOUNT_RATE,
+				p.TIMESALEDISCOUNT_RATE,
+				p.TOTAL_DISCOUNTRATE,
+				p.DISCOUNT_PRICE,
+				p.SALES_COUNT
+				ORDER BY REVIEW_COUNT DESC
+			</when>
+			<when test="sort == 'new'">
+				ORDER BY p.CREATED_AT DESC
+			</when>
+			<when test="sort == 'name'">
+				ORDER BY p.PRODUCT_NAME ASC
+			</when>
+			<when test="sort == 'lowPrice'">
+				ORDER BY (p.PRODUCT_PRICE - (p.PRODUCT_PRICE *
+				COALESCE(p.TOTAL_DISCOUNTRATE, 0) / 100)) ASC
+			</when>
+			<when test="sort == 'highPrice'">
+				ORDER BY (p.PRODUCT_PRICE - (p.PRODUCT_PRICE *
+				COALESCE(p.TOTAL_DISCOUNTRATE, 0) / 100)) DESC
+			</when>
+			<otherwise>
+				ORDER BY p.ID DESC
+			</otherwise>
+		</choose>
 	</select>
 </mapper>

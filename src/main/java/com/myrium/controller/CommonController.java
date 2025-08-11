@@ -1,11 +1,11 @@
 package com.myrium.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,20 +60,50 @@ public class CommonController {
 	// 콘트롤러가 이미지를 브라우져에 전송
 	@GetMapping("/upload/**")
 	public void serveImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		System.out.println("접근된 URL: " + request.getRequestURI());
-	    String uri = request.getRequestURI(); // /resorces/product/img/...jpg
-	    String filePath = "C:" + uri.replace("/", File.separator);
 
-	    File file = new File(filePath);
-	    if (!file.exists()) {
-	        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	    // 1) 요청/컨텍스트 경로
+	    final String requestUri  = request.getRequestURI();       
+	    final String contextPath = request.getContextPath();   
+
+
+	    // 2) /upload/ 이후의 상대 경로만 추출
+	    final String prefix = contextPath + "/upload/";
+	    final int idx = requestUri.indexOf(prefix);
+	    if (idx < 0) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid upload path");
+	        return;
+	    }
+	    String relative = requestUri.substring(idx + prefix.length());  // 예: 2025/08/11/a.jpg
+
+	    if (relative.isEmpty()) { // /upload 만 들어온 경우
+	        response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	        return;
 	    }
 
-	    response.setContentType(Files.probeContentType(file.toPath()));
-	    response.setContentLengthLong(file.length());
+	    // 3) 물리 루트와 안전 결합 + 경로 이탈 방지
+	    Path base = Paths.get("C:/upload").toAbsolutePath().normalize();
+	    Path file = base.resolve(relative).normalize();
 
-	    try (InputStream in = new FileInputStream(file); OutputStream out = response.getOutputStream()) {
+	    if (!file.startsWith(base)) { // ../ 등 이탈 차단
+	        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+	        return;
+	    }
+
+	    // 4) 존재/파일 여부 검증
+	    if (!Files.exists(file) || !Files.isRegularFile(file)) {
+	        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	        return;
+	    }
+
+	    // 5) Content-Type 설정
+	    String contentType = Files.probeContentType(file);
+	    if (contentType == null) contentType = "application/octet-stream";
+	    response.setContentType(contentType);
+	    response.setContentLengthLong(Files.size(file));
+
+	    // 6) 스트리밍
+	    try (InputStream in = Files.newInputStream(file);
+	         OutputStream out = response.getOutputStream()) {
 	        byte[] buffer = new byte[8192];
 	        int len;
 	        while ((len = in.read(buffer)) != -1) {

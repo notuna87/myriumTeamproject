@@ -35,7 +35,6 @@ public class SearchController {
     }
 	
     @GetMapping("/search/result")
-
     public String searchResult(@RequestParam(value = "sort", required = false) String sort, SearchCriteria searchcri,@RequestParam("searchKeyword") String searchKeyword, Model model) {
        
     	List<ProductDTO> searchProductList = productservice.getSearchProductList(searchKeyword, searchcri, sort);

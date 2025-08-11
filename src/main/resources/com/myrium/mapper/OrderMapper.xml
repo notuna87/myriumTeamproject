@@ -30,7 +30,7 @@
 		LEFT JOIN img_path ip ON ip.product_id = p.id AND ip.is_thumbnail_main = 1
 		WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
 		AND m.customer_id = #{customerId}
-		AND op.order_status NOT IN (4, 5, 6, 7)
+		AND op.order_status NOT IN (4, 5, 6, 7, 8, 9, 11, 12, 14, 16)
 		ORDER BY o.order_date DESC, o.orders_id
 	</select>
 
@@ -81,12 +81,27 @@
 		ID, PRODUCT_ID, ORDERS_ID, USER_ID,
 		CREATED_BY, CREATED_AT,
 		UPDATED_BY, UPDATED_AT,
-		IS_DELETED, QUANTITY, ORDER_STATUS
+		IS_DELETED, QUANTITY,
+		ORDER_STATUS
 		) VALUES (
-		ORDERS_PRODUCT_SEQ.NEXTVAL, #{productId} ,#{orderId}, #{userId},
+		ORDERS_PRODUCT_SEQ.NEXTVAL, #{productId}
+		,#{orderId}, #{userId},
 		#{customerName}, SYSDATE,
 		NULL, NULL,
-		0, #{quantity}, 1
+
+		0, #{quantity},
+		<choose>
+			<when test="payment == 0">
+				0
+			</when>
+			<when test="payment == 2">
+				0
+			</when>
+			<otherwise>
+				1
+			</otherwise>
+		</choose>
+
 		)
 	</insert>
 
@@ -121,7 +136,7 @@
 		LEFT JOIN img_path ip ON ip.product_id = p.id AND ip.is_thumbnail_main = 1
 		WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
 		AND m.customer_id = #{customerId}
-		AND op.order_status IN (4, 5, 6, 7)
+		AND op.order_status IN (4, 5, 6, 7, 8, 9, 11, 12, 14, 16)
 		ORDER BY o.order_date DESC, o.orders_id
 	</select>
 
@@ -202,17 +217,23 @@
 		orders_product op
 		JOIN product p ON op.product_id = p.id
 		WHERE op.orders_id = #{orderId}
-		AND op.order_status NOT IN (4, 5, 6, 7)
+		AND op.order_status NOT IN (4, 5, 6, 7, 8, 9, 11, 12, 14, 16)
 		AND op.is_deleted = 0
 	</select>
 
 	<!-- 환불,교환버튼 처리 -->
 	<update id="updateOrderStatus">
-		UPDATE orders_product
-		SET order_status = #{orderStatus}
-		WHERE orders_id = #{orderId}
-		AND product_id = #{productId}
-	</update>
+	  <![CDATA[
+	  UPDATE orders_product
+	     SET order_status = #{orderStatus},
+	         updated_at   = CASE
+	                          WHEN #{orderStatus} = 3 AND order_status <> 3 THEN SYSDATE
+	                          ELSE updated_at
+	                        END
+	   WHERE orders_id  = #{orderId}
+	     AND product_id = #{productId}
+	  ]]>
+	</update>		
 	<update id="updateOrdersStatus">
 		UPDATE orders
 		SET order_status = #{orderStatus}
@@ -326,5 +347,13 @@
 		WHERE op.order_status IN (1, 2)
 	</select>
 
-
+	<!-- 배송완료 후 구매확정 변경 -->
+	<update id="autoConfirmAfter1Day">
+	  <![CDATA[
+	  UPDATE orders_product
+	     SET order_status = 18
+	   WHERE order_status = 3
+	     AND updated_at <= SYSDATE - 1
+	  ]]>
+	</update>
 </mapper>

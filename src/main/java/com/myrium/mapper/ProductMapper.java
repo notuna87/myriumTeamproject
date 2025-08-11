@@ -83,6 +83,10 @@ public interface ProductMapper {
 	public int searchResultCount(String searchKeyword);
 
 	public ProductVO productDirectPurchase(int productId);
+
+	public List<ProductVO> getCategoryList(@Param("category") String category,@Param("sort") String sort);
+
+	public List<ProductVO> getAllProductList(String sort);
 	
 	
 }

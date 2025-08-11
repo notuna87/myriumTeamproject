@@ -50,4 +50,8 @@ public interface ProductService {
 
 	public ProductDTO productDirectPurchase(int productId);
 
+	public List<ProductDTO> getCategoryList(String category, String sort);
+
+	public List<ProductDTO> getAllProductList(String sort);
+
 }

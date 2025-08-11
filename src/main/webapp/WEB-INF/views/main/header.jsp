@@ -44,7 +44,7 @@
 		<div class="navbarWrap">
 			<ul>
 				<li><a href="#">브랜드 소개</a></li>
-				<li><a href="#">식물키우기</a></li>
+				<li><a href="${pageContext.request.contextPath}/category?category=all">식물키우기</a></li>
 				<li><a href="#">타임세일</a></li>
 				<li><a href="${pageContext.request.contextPath}/total_review">리뷰</a></li>
 				<li><a href="#">매거진</a></li>

@@ -23,7 +23,6 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ProductMapper productmapper;
-	
 
 	// controller에서 지정한 카테고리에 해당하는 목록 불러오기
 	@Override
@@ -111,12 +110,12 @@ public class ProductServiceImpl implements ProductService {
 	// 장바구니에 담기
 	@Override
 	public ProductDTO inCart(int quantity, int productId, Long userId, String customerId) {
-		
+
 		CartVO vo;
-		
+
 		CartVO existingCart = productmapper.findCartItem(productId, userId);
-		
-		// 중복된 제품을 담을 시 +1 
+
+		// 중복된 제품을 담을 시 +1
 		if (existingCart != null) {
 			int newQuantity = existingCart.getQuantity() + quantity;
 			vo = productmapper.addQuantity(productId, userId, newQuantity);
@@ -145,13 +144,12 @@ public class ProductServiceImpl implements ProductService {
 			productDTOs.add(dto);
 		}
 
-
 		return productDTOs;
 	}
 
 	@Override
 	public void updateQuantity(Long productId, Integer newQuantity, Long userId) {
-	    int updated = productmapper.updateQuantity(productId, userId, newQuantity);
+		int updated = productmapper.updateQuantity(productId, userId, newQuantity);
 	}
 
 	@Override
@@ -161,7 +159,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public int getStock(int productid) {
-		
+
 		return productmapper.getStock(productid);
 	}
 
@@ -195,11 +193,11 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return productDTOs;
 	}
-	
-	//상품리뷰
+
+	// 상품리뷰
 	@Override
 	public ProductDTO getProductById(Long id) {
-		return productmapper.findById(id); 
+		return productmapper.findById(id);
 	}
 
 	@Override
@@ -216,6 +214,39 @@ public class ProductServiceImpl implements ProductService {
 		dto.setProduct(productDirectPurchase);
 
 		return dto;
+	}
+
+	@Override
+	public List<ProductDTO> getCategoryList(String category, String sort) {
+		List<ProductVO> products = productmapper.getCategoryList(category, sort);
+
+		List<ProductDTO> productDTOs = new ArrayList<>();
+
+		for (ProductVO product : products) {
+			ImgpathVO thumbnail = productmapper.getThumbnail(product.getId());
+			ProductDTO dto = new ProductDTO();
+			dto.setProduct(product);
+			dto.setThumbnail(thumbnail);
+			productDTOs.add(dto);
+		}
+		return productDTOs;
+
+	}
+
+	@Override
+	public List<ProductDTO> getAllProductList(String sort) {
+		List<ProductVO> products = productmapper.getAllProductList(sort);
+
+		List<ProductDTO> productDTOs = new ArrayList<>();
+
+		for (ProductVO product : products) {
+			ImgpathVO thumbnail = productmapper.getThumbnail(product.getId());
+			ProductDTO dto = new ProductDTO();
+			dto.setProduct(product);
+			dto.setThumbnail(thumbnail);
+			productDTOs.add(dto);
+		}
+		return productDTOs;
 	}
 
 }

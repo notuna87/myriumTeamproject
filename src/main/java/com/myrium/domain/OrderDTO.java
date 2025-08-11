@@ -41,7 +41,6 @@ public class OrderDTO {
 		private int discount_price;
 		private int product_price;
 		private String product_content;
-		private int orders_product_id;
 		
 		private String img_path;
 
@@ -88,20 +87,29 @@ public class OrderDTO {
     public OrderDTO() {
 	}
 
-	public String getOrderStatusText() {
+    public String getOrderStatusText() {
         switch (this.orderStatus) {
-            case 0: return "입금전";
-            case 1: return "배송준비중";
-            case 2: return "배송중";
-            case 3: return "배송완료";
-            case 4: return "교환신청중";
-            case 5: return "교환완료";
-            case 6: return "환불신청중";
-            case 7: return "환불완료";
-            //case 8: return "주문취소중";
-            //case 9: return "취소완료";
+            case 0:  return "입금전";
+            case 1:  return "배송준비중";
+            case 2:  return "배송중";
+            case 3:  return "배송완료";
+            case 4:  return "교환신청";
+            case 5:  return "교환완료";
+            case 6:  return "반품신청";
+            case 7:  return "반품완료";
+            case 8:  return "취소신청";
+            case 9:  return "취소완료";
+            case 10: return "환불거절";
+            case 11: return "환불완료";
+            case 12: return "교환승인";
+            case 13: return "교환거절";
+            case 14: return "반품승인";
+            case 15: return "반품거절";
+            case 16: return "취소승인";
+            case 17: return "취소거절";
+            case 18: return "구매확정";
+            default: return "알 수 없음";
         }
-        return null;
     }
 	
 	public String getPayment() {
@@ -120,11 +128,12 @@ public class OrderDTO {
 	        // 날짜에 시간이 없을 경우 대비해서 00:00:00을 붙여줌
 	        String dateStr = this.orderDate;
 
+	        dateStr = dateStr.trim().replaceAll("\\s+", " ");
+	        
 	        if (dateStr.length() <= 10) {
 	            // yyyy-MM-dd → yyyy-MM-dd 00:00:00 으로 변환
 	            dateStr = dateStr + " 00:00:00";
 	        }
-
 	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	        return sdf.parse(dateStr);
 	    } catch (Exception e) {

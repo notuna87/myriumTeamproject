@@ -38,7 +38,7 @@
 				<span style="font-weight: 500;">${searchResultCount}</span> items
 			</p>
 			<form id="sortForm" action="/search/result" method="get">
-			<input type="text" value="${searchKeyword}" name="searchKeyword">
+			<input type="hidden" value="${searchKeyword}" name="searchKeyword">
 				<select name="sort" class="orderBy" onchange="document.getElementById('sortForm').submit();">
 					<option value="">::: 기준선택 :::</option>
 					<option value="new">신상품</option>
@@ -123,7 +123,6 @@
 		<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'>
 		<input type='hidden' name='amount' value='${pageMaker.cri.amount}'>
 		<input type='hidden' name='sort' value='${sort}'>
-
 	</form>
 	<%@ include file="/WEB-INF/views/main/footer.jsp"%>
 </body>
