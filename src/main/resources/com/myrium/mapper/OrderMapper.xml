@@ -91,9 +91,11 @@
 		ID, PRODUCT_ID, ORDERS_ID, USER_ID,
 		CREATED_BY, CREATED_AT,
 		UPDATED_BY, UPDATED_AT,
-		IS_DELETED, QUANTITY, ORDER_STATUS
+		IS_DELETED, QUANTITY,
+		ORDER_STATUS
 		) VALUES (
-		ORDERS_PRODUCT_SEQ.NEXTVAL, #{productId} ,#{orderId}, #{userId},
+		ORDERS_PRODUCT_SEQ.NEXTVAL, #{productId}
+		,#{orderId}, #{userId},
 		#{customerName}, SYSDATE,
 		NULL, NULL,
 		0, #{quantity},
@@ -101,6 +103,10 @@
 			<when test="payment == 0">
 				0
 			</when>
+			<when test="payment == 2">
+				0
+			</when>
+
 			<otherwise>
 				1
 			</otherwise>
