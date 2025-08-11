@@ -49,9 +49,21 @@
             <c:forEach var="review" items="${reviewList}">
              <div class="photoreviewItem">
 			  <div class="review-info">
-			    <c:if test="${not empty review.imageUrl}">
-			      <img src="${pageContext.request.contextPath}${review.imageUrl}" class="review-image" alt="리뷰 이미지">
-			    </c:if>
+			    <!-- 기본이미지 경로 -->
+				<c:set var="noImg" value="${pageContext.request.contextPath}/resources/img/no-image.png" />
+				
+				<!-- 최종 img src 결정 -->
+				<c:set var="imgSrc" value="${noImg}" />
+				<c:if test="${not empty review.imageUrl}">
+				  <c:set var="imgSrc" value="${pageContext.request.contextPath}${review.imageUrl}" />
+				</c:if>
+				
+				<!-- 항상 <img> 렌더링 + 실패 시 기본이미지 -->
+				<img src="${imgSrc}"
+				     class="review-image"
+				     alt="리뷰 이미지"
+				     loading="lazy"
+				     onerror="this.onerror=null; this.src='${noImg}'" />
                     <!-- 텍스트를 별도 래퍼로 묶기 -->
 			    <div class="review-text">
 			      <p class="review-title">${fn:escapeXml(review.reviewTitle)}</p>
