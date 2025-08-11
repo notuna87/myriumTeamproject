@@ -40,5 +40,8 @@ public interface OrderService {
 	//주문상태변경
 	List<OrderDTO> getOrdersToAutoUpdate();
 	
+	//배송완료에서 구매확정 변경
+	int autoConfirmAfter1Day();
+	
 
 }

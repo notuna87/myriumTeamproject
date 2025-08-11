@@ -22,7 +22,7 @@ public class OrderStatusScheduler {
     @Autowired
     private OrderService orderService;
 
-    @Scheduled(fixedRate = 10000) // 1시간마다 실행
+    @Scheduled(fixedRate = 10000)
     public void updateOrderStatusByTime() {
     	
         List<OrderDTO> orders = orderService.getOrdersToAutoUpdate(); // 배송준비중, 배송중인 주문들
@@ -47,6 +47,12 @@ public class OrderStatusScheduler {
             }
         }
 
+    }
+    
+    @Scheduled(cron = "0 0 2 * * *")
+    public void autoConfirmPurchaseDaily() {
+        int lines  = orderService.autoConfirmAfter1Day();         
+        log.info("[AutoConfirm] lines=" + lines );
     }
     
     @PostConstruct
