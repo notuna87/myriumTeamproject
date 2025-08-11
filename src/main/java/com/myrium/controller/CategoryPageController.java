@@ -21,28 +21,31 @@ import lombok.extern.log4j.Log4j;
 public class CategoryPageController {
 
 	private final ProductService productservice;
-	
+
 	@GetMapping("/category")
-	public String goCategory(Model model, @RequestParam("category") String category){
-		
+	public String goCategory(Model model, @RequestParam("category") String category,
+			@RequestParam(value = "sort", required = false) String sort) {
+
 		log.info(category);
-		
+
 		if (category.equals("all")) {
-			List<ProductDTO> getAllProductList = productservice.getAllProductList();
-			model.addAttribute("product",getAllProductList);
+			List<ProductDTO> getAllProductList = productservice.getAllProductList(sort);
+			model.addAttribute("product", getAllProductList);
 			log.info(getAllProductList);
 			int count = getAllProductList.size();
 			log.info(count);
-			model.addAttribute("count",count);
+			model.addAttribute("count", count);
 		} else {
-			List<ProductDTO> getCategoryList = productservice.getCategoryList(category);
-			model.addAttribute("product",getCategoryList);
+			List<ProductDTO> getCategoryList = productservice.getCategoryList(category,sort);
+			model.addAttribute("product", getCategoryList);
 			log.info(getCategoryList);
 			int count = getCategoryList.size();
 			log.info(count);
-			model.addAttribute("count",count);
+			model.addAttribute("count", count);
 		}
-		
+
+    	model.addAttribute("sort",sort);
+    	model.addAttribute("category",category);
 		return "category";
 	}
 }

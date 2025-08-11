@@ -217,8 +217,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDTO> getCategoryList(String category) {
-		List<ProductVO> products = productmapper.getCategoryList(category);
+	public List<ProductDTO> getCategoryList(String category, String sort) {
+		List<ProductVO> products = productmapper.getCategoryList(category, sort);
 
 		List<ProductDTO> productDTOs = new ArrayList<>();
 
@@ -234,8 +234,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDTO> getAllProductList() {
-		List<ProductVO> products = productmapper.getAllProductList();
+	public List<ProductDTO> getAllProductList(String sort) {
+		List<ProductVO> products = productmapper.getAllProductList(sort);
 
 		List<ProductDTO> productDTOs = new ArrayList<>();
 

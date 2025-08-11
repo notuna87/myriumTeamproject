@@ -218,9 +218,102 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 			</when>
 		</choose>
 		= 1)
+		<choose>
+			<when test="sort == 'new'">
+				ORDER BY created_at DESC
+			</when>
+			<when test="sort == 'name'">
+				ORDER BY product_name ASC
+			</when>
+			<when test="sort == 'lowPrice'">
+				ORDER BY (product_price - (product_price *
+				COALESCE(total_discountrate,
+				0) / 100)) ASC
+			</when>
+			<when test="sort == 'highPrice'">
+				ORDER BY (product_price - (product_price *
+				COALESCE(total_discountrate,
+				0) / 100)) DESC
+			</when>
+			<otherwise>
+				ORDER BY id DESC
+			</otherwise>
+		</choose>
 	</select>
 	<!-- 모든 상품 조회 -->
-	<select id="getAllProductList" resultType="com.myrium.domain.ProductVO">
-		SELECT * FROM product
+	<select id="getAllProductList"
+		resultType="com.myrium.domain.ProductVO">
+		SELECT
+		p.ID,
+		p.PRODUCT_NAME,
+		p.PRODUCT_STOCK,
+		p.PRODUCT_PRICE,
+		p.IS_DELETED,
+		p.CREATED_AT,
+		p.CREATED_BY,
+		p.UPDATED_AT,
+		p.UPDATED_BY,
+		p.IS_TIMESALES,
+		p.IS_MAINONE,
+		p.IS_MAINTWO,
+		p.IS_DISCOUNT,
+		p.DISCOUNT_RATE,
+		p.TIMESALEDISCOUNT_RATE,
+		p.TOTAL_DISCOUNTRATE,
+		p.DISCOUNT_PRICE,
+		p.SALES_COUNT
+		<choose>
+			<when test="sort == 'review'">
+				, COUNT(r.PRODUCT_ID) AS REVIEW_COUNT
+			</when>
+			<otherwise>
+				, 0 AS REVIEW_COUNT
+			</otherwise>
+		</choose>
+		FROM product p
+		<if test="sort == 'review'">
+			LEFT JOIN review r ON p.ID = r.PRODUCT_ID AND r.IS_DELETED = 0
+		</if>
+		<choose>
+			<when test="sort == 'review'">
+				GROUP BY
+				p.ID,
+				p.PRODUCT_NAME,
+				p.PRODUCT_STOCK,
+				p.PRODUCT_PRICE,
+				p.IS_DELETED,
+				p.CREATED_AT,
+				p.CREATED_BY,
+				p.UPDATED_AT,
+				p.UPDATED_BY,
+				p.IS_TIMESALES,
+				p.IS_MAINONE,
+				p.IS_MAINTWO,
+				p.IS_DISCOUNT,
+				p.DISCOUNT_RATE,
+				p.TIMESALEDISCOUNT_RATE,
+				p.TOTAL_DISCOUNTRATE,
+				p.DISCOUNT_PRICE,
+				p.SALES_COUNT
+				ORDER BY REVIEW_COUNT DESC
+			</when>
+			<when test="sort == 'new'">
+				ORDER BY p.CREATED_AT DESC
+			</when>
+			<when test="sort == 'name'">
+				ORDER BY p.PRODUCT_NAME ASC
+			</when>
+			<when test="sort == 'lowPrice'">
+				ORDER BY (p.PRODUCT_PRICE - (p.PRODUCT_PRICE *
+				COALESCE(p.TOTAL_DISCOUNTRATE, 0) / 100)) ASC
+			</when>
+			<when test="sort == 'highPrice'">
+				ORDER BY (p.PRODUCT_PRICE - (p.PRODUCT_PRICE *
+				COALESCE(p.TOTAL_DISCOUNTRATE, 0) / 100)) DESC
+			</when>
+			<otherwise>
+				ORDER BY p.ID DESC
+			</otherwise>
+		</choose>
 	</select>
 </mapper>

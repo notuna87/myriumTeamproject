@@ -20,6 +20,7 @@
 
 		<!-- 카테고리 버튼 시작 -->
 		<form id="categoryForm" action="/category" method="get">
+			<input type="hidden" value="${sort}" name="sort">
 			<div class="categoryButtonWrap">
 				<button class="categoryButton" name="category" value="all">전체</button>
 				<button class="categoryButton" name="category" value="gardening">원예용품</button>
@@ -37,14 +38,18 @@
 			<p class="countItems" style="font-size: 13px;">
 				<span style="font-weight: 500;">${count}</span> items
 			</p>
-			<select class="orderBy">
-				<option>::: 기준선택 :::</option>
-				<option>신상품</option>
-				<option>상품명</option>
-				<option>낮은가격</option>
-				<option>높은가격</option>
-				<option>사용후기</option>
-			</select>
+			<form id="sortForm" action="/category" method="get">
+				<input type="hidden" value="${category}" name="category">
+				<select name="sort" class="orderBy" onchange="document.getElementById('sortForm').submit();">
+					<option value="" <c:if test="${sort == null || sort == ''}">selected</c:if>>::: 기준선택 :::</option>
+					<option value="new" <c:if test="${sort == 'new'}">selected</c:if>>신상품</option>
+					<option value="name" <c:if test="${sort == 'name'}">selected</c:if>>상품명</option>
+					<option value="lowPrice" <c:if test="${sort == 'lowPrice'}">selected</c:if>>낮은가격</option>
+					<option value="highPrice" <c:if test="${sort == 'highPrice'}">selected</c:if>>높은가격</option>
+					<option value="review" <c:if test="${sort == 'review'}">selected</c:if>>사용후기</option>
+
+				</select>
+			</form>
 		</div>
 		<!-- 하단 상품 카운트 및 정렬 끝 -->
 		<!-- 상품 목록 시작 -->
@@ -67,8 +72,7 @@
 						<!-- 할인중일때 원가, 할인율, 할인가 출력 -->
 						<c:if test="${item.product.total_discountrate != 0}">
 							<p class="originalPrice">
-								<s> <fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />원
-								</s>
+								<s> <fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />원</s>
 							</p>
 							<p class="salePrice">
 								<span style="color: #e32e15; margin-right: 5px; font-size: 15px;">${item.product.total_discountrate}%</span>
@@ -97,7 +101,6 @@
 			const products = document.querySelectorAll(".categoryResult");
 			const total = products.length;
 
-			console.log("에러?");
 			for (let i = visibleCount; i < visibleCount + 4 && i < total; i++) {
 				products[i].style.display = "block";
 			}
@@ -132,6 +135,6 @@
 		        }
 		    });
 		});
+		
 	</script>
-
 </html>

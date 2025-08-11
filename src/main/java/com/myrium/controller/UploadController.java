@@ -68,7 +68,7 @@ public class UploadController {
 	@PostMapping(value = "/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(
-	        @RequestParam(required = false) int productId,
+	        @RequestParam(required = false) Integer productId,
 	        @RequestParam(required = false, defaultValue = "File") String type,
 	        @RequestParam("uploadFile") MultipartFile[] uploadFile,
 	        @RequestParam Map<String, String> params
