@@ -36,7 +36,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String customerId) throws UsernameNotFoundException {
-	    log.warn("Load User By Username : " + customerId);
 	    
 	    MemberVO vo = memberMapper.read(customerId);
 
@@ -48,7 +47,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 	    List<AuthVO> authList = memberMapper.getAuthList(vo.getId());
 	    vo.setAuthList(authList);
 
-	    log.warn("queried by member mapper: " + vo);
 	    return new CustomUser(vo);
 	}
 	
