@@ -24,6 +24,7 @@
 
 .categoryButton {
     margin: 20px;
+    border:none;
     padding: 10px 18px;
     font-size: 14px;
     font-weight: 600;

@@ -12,7 +12,7 @@ public interface OrderMapper {
 	int insertOrders(OrderDTO orders);
 
 	void insertOrdersProduct(@Param("productId") int productid, @Param("orderId") Long orderId,
-			@Param("userId") Long userId, @Param("quantity") int quantity, @Param("customerName") String customerName);
+			@Param("userId") Long userId, @Param("quantity") int quantity, @Param("customerName") String customerName,@Param("payment") int payment);
 
 	void deletePurchaseCart(@Param("userId") Long userId, @Param("productid") int productid);
 
