@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JacksonException;
@@ -62,7 +63,7 @@ public class AdminOrderController {
 	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
 	    
 	    List<OrderDTO> list = service.getOrderList(cri, isAdmin);
-	    log.info(list);
+	    log.info("getOrderList: " + list);
 
 	    // 주문번호별 그룹핑
 	    Map<String, List<OrderDTO>> groupedOrders = list.stream()
@@ -88,16 +89,21 @@ public class AdminOrderController {
 	    log.info(authentication);
 	}
 	
+	@ResponseBody
 	@PreAuthorize("hasAuthority('ADMIN')")
-	@PostMapping("/adminorder/updateStatus")
+	@PostMapping("/updateStatus")
 	public Map<String, Object> updateOrderStatus(
 	        @RequestParam("ordersId") String ordersId,
 	        @RequestParam("orders_product_id") int ordersProductId,
 	        @RequestParam("orderStatus") int orderStatus) {
-
+		log.info("ordersId: " + ordersId);
+		log.info("orders_product_id: " + ordersProductId);
+		log.info("orderStatus: " + orderStatus);
 	    Map<String, Object> result = new HashMap<>();
 	    try {
+	    	
 	        service.updateOrderStatus(ordersId, ordersProductId, orderStatus);
+	        
 	        result.put("status", "success");
 	        result.put("message", "상태가 변경되었습니다.");
 	    } catch (Exception e) {

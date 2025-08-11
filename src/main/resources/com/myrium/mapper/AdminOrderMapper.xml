@@ -16,7 +16,7 @@
     <result property="productName" column="product_name" />
     <result property="productPrice" column="product_price" />
     <result property="quantity" column="quantity" />
-    <result property="orderStatus" column="order_status_product" />
+    <result property="orderStatus" column="order_status_main" />
     <result property="zipcode" column="zipcode" />
     <result property="userId" column="user_id" />
     <result property="title" column="title" />
@@ -40,38 +40,84 @@
     <result property="product_content" column="product_content" />
     <result property="img_path" column="img_path_thumb" />
     <result property="orders_product_id" column="orders_product_id" />
+    <result property="order_status_product" column="order_status_product" />
 </resultMap>
 
 
-<select id="getOrderList" parameterType="long"
-		resultMap="orderDTOMap">
-SELECT
-    o.id AS order_id,
-    o.user_id,
-    o.orders_id,
-    TO_CHAR(o.order_date, 'YYYY-MM-DD') AS order_date,
-    o.customer_name,
-    o.order_status AS order_status_main,
-    o.address,
-    o.phone_number,
-    o.delivery_msg,
-    o.payment_method,
-    o.zipcode,
-    op.id AS orders_product_id,
-    op.product_id,
-    op.quantity,
-    op.order_status AS order_status_product,
-    p.product_name,
-    p.product_price,
-    p.product_content,
-    p.discount_price,
-    ip.img_path_thumb AS img_path_thumb
-FROM orders o
-LEFT JOIN orders_product op ON o.id = op.orders_id
-LEFT JOIN product p ON op.product_id = p.id
-LEFT JOIN img_path ip ON ip.product_id = p.id AND ip.is_thumbnail_main = 1
-ORDER BY o.order_date DESC, o.id, op.id
+<sql id="criteria">
+  <trim prefix="(" suffix=") AND" prefixOverrides="OR">
+    <foreach item="type" collection="cri.typeArr">
+      <trim prefix="OR">
+        <choose>
+          <when test="type == 'C'">
+            o.customer_name LIKE '%' || #{cri.keyword} || '%'
+          </when>
+          <when test="type == 'P'">
+            p.product_name LIKE '%' || #{cri.keyword} || '%'
+          </when>
+        </choose>
+      </trim>
+    </foreach>
+  </trim>
+</sql>
+
+<!-- 주문 ID 페이징 쿼리 -->
+<select id="getPagedOrderIds" resultType="int" parameterType="com.myrium.domain.Criteria">
+  SELECT * FROM (
+    SELECT o.id,
+           ROW_NUMBER() OVER (ORDER BY o.order_date DESC, o.id DESC) rn
+    FROM orders o
+    WHERE 1=1
+      <if test="orderStatus != -1">
+        AND o.order_status = #{orderStatus}
+      </if>
+      <if test="keyword != null and keyword != '' and typeArr != null and typeArr.length > 0">
+        <include refid="criteria"/>
+      </if>
+  )
+WHERE rn &gt; (#{pageNum} - 1) * #{amount}
+AND rn &lt;= #{pageNum} * #{amount}
 </select>
+
+<!-- 주문 및 상품 상세 리스트 -->
+<select id="getOrdersWithProducts" resultMap="orderDTOMap" parameterType="java.util.List">
+  SELECT
+      o.id,
+      o.user_id,
+      o.orders_id,
+      TO_CHAR(o.order_date, 'YYYY-MM-DD') AS order_date,
+      o.customer_name AS receiver,
+      o.order_status AS order_status_main,
+      o.address,
+      o.phone_number,
+      o.delivery_msg,
+      o.payment_method,
+      o.zipcode,
+      op.id AS orders_product_id,
+      op.product_id,
+      op.quantity,
+      op.order_status AS order_status_product,
+      p.product_name,
+      p.product_price,
+      p.product_content,
+      p.discount_price,
+      ip.img_path_thumb AS img_path_thumb
+  FROM orders o
+  LEFT JOIN orders_product op 
+    ON o.id = op.orders_id
+  LEFT JOIN product p 
+    ON op.product_id = p.id
+  LEFT JOIN img_path ip 
+    ON ip.product_id = p.id 
+    AND ip.is_thumbnail_main = 1
+  WHERE o.id IN
+  <foreach collection="list" item="orderId" open="(" separator="," close=")">
+    #{orderId}
+  </foreach>
+  ORDER BY o.order_date DESC, o.id DESC, op.id
+</select>
+
+
 
 <update id="updateOrderProductStatus">
     UPDATE orders_product
@@ -82,7 +128,7 @@ ORDER BY o.order_date DESC, o.id, op.id
 <update id="updateOrderStatus">
     UPDATE orders
     SET order_status = #{orderStatus}
-    WHERE ordersId = #{ordersId}
+    WHERE orders_id = #{ordersId}
 </update>
 
 
