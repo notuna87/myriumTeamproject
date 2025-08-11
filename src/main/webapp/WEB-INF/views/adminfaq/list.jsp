@@ -16,7 +16,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<sec:authorize access="hasAuthority('ADMIN')">
-				<h1 class="page-header">자주 묻는 질문 (FAQ)(관리자)</h1>
+				<h1 class="page-header">자주 묻는 질문 (FAQ)<span class="badge">관리자</span></h1>
 			</sec:authorize>
 			<sec:authorize access="!hasAuthority('ADMIN')">
 				<h1 class="page-header">자주 묻는 질문 (FAQ)</h1>

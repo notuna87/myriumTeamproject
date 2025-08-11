@@ -389,9 +389,10 @@ class UploadManager {
         .addClass(file.is_thumbnail === 1 ? "delBtnDetThumbnail" : "delBtnDetail")
         .text("삭제")
         //.hide() // 업로드 후 삭제버튼 숨김
-        .on("click", () => {
-          this.deleteFile(fileCallPath, file.image ? "image" : "file", $(this).closest("li"));
-        });
+		.on("click", (e) => {
+		    const li = $(e.currentTarget).closest("li");
+		    this.deleteFile(fileCallPath, file.image ? "image" : "file", file.uuid, li);
+		});
 
 	  delBtnWrapper.append(delBtn);
       li.append(content).append(delBtnWrapper);
@@ -411,12 +412,16 @@ class UploadManager {
     );
   }
 
-  deleteFile(fileName, type, liElement) {
+  deleteFile(fileName, type, uuid, liElement) {
+    // 업로드 목록에서 제거 
+    this.uploadedFiles = this.uploadedFiles.filter(f => f.uuid !== uuid);
+    attachList = attachList.filter(f => f.uuid !== uuid); 
     $.ajax({
       url: "/deleteFile",
-      data: { fileName: fileName, type: type },
+      data: { uploadPath: fileName, type: type },
       type: "POST",
       success: function (result) {
+ 
         liElement.remove();
       },
     });

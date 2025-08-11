@@ -68,11 +68,15 @@ public class UploadController {
 	@PostMapping(value = "/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(
-	        @RequestParam(required = false) Integer productId,
+	        @RequestParam(required = false, defaultValue = "0") int productId,
 	        @RequestParam(required = false, defaultValue = "File") String type,
 	        @RequestParam("uploadFile") MultipartFile[] uploadFile,
 	        @RequestParam Map<String, String> params
 	) {
+		
+		//log.info("productId:" + productId);
+		
+		
 	    List<AttachFileDTO> list = new ArrayList<>();
 	    String baseFolder = "C:\\upload";
 	    String dateFolder = getFolder(); // 예: 2025/08/02
@@ -120,7 +124,7 @@ public class UploadController {
 	                // 썸네일 생략	            
 	            } else if (type.equalsIgnoreCase("thumbnail") || checkImageType(saveFile)) {
 	                dto.setIsThumbnail(1);
-	                dto.setIsThumbnailMain(parseFlag(params, "isThumbnailMain_" + i));
+	                dto.setIsThumbnailMain(parseFlag(params, "is_thumbnail_main_" + i));
 	                dto.setIsDetail(0);
 
 	                // 썸네일 생성 (100x100) => s_파일명
@@ -205,7 +209,7 @@ public class UploadController {
 
 	@PostMapping("/deleteUploadedFile")
 	@ResponseBody
-	public ResponseEntity<String> deleteFile(String datePath, String fileName,
+	public ResponseEntity<String> deleteUploadedFile(String datePath, String fileName,
 			@RequestParam(required = false) String uuid,
 			@RequestParam(required = false) String type,
 			@RequestParam(required = false) boolean isUpdate,
@@ -248,6 +252,44 @@ public class UploadController {
 
 			return ResponseEntity.ok("deleted");
 
+		} catch (Exception e) {
+			log.error("파일 삭제 중 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+	@PostMapping("/deleteFile")
+	@ResponseBody
+	public ResponseEntity<String> deleteFile(String uploadPath, @RequestParam(required = false) String type) {
+		log.info("uploadPath: " + uploadPath);
+		try {
+	        // 1. 경로 디코딩
+	        String decodedFileName = URLDecoder.decode(uploadPath,"UTF-8");
+
+	        // 2. 파일 객체 생성
+	        File file = new File("C:\\upload\\" + decodedFileName);
+	        
+	        log.info("원본 이미지 경로: " + file);
+
+	        // 3. 원본 이미지 삭제
+	        if (file.exists()) {
+	            boolean result = file.delete();
+	            log.info("원본 이미지 삭제: " + result);
+	        }
+
+	        // 4. 이미지일 경우 썸네일 삭제
+	        if (type.equals("image")) {
+	            // 썸네일 파일명 규칙: "s_" + uuid_filename
+	            String originalFileName = file.getName();
+                File thumbFile = new File(file.getParent(), "s_" + originalFileName);
+                log.info("썸네일 경로: " + thumbFile);
+                if (thumbFile.exists()) {
+                	boolean result = thumbFile.delete();
+                    log.info("썸네일 삭제: " + result);
+	                }
+	            }
+			
+			return ResponseEntity.ok("deleted");
+			
 		} catch (Exception e) {
 			log.error("파일 삭제 중 오류", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

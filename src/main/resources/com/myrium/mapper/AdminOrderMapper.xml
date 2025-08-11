@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myrium.mapper.AdminOrderMapper">
+
+<resultMap id="orderDTOMap" type="com.myrium.domain.OrderDTO">
+    <id property="id" column="id" />
+    <result property="customerId" column="customer_id" />
+    <result property="receiver" column="receiver" />
+    <result property="phoneNumber" column="phone_number" />
+    <result property="address" column="address" />
+    <result property="ordersId" column="orders_id" />
+    <result property="orderDate" column="order_date" />
+    <result property="productName" column="product_name" />
+    <result property="productPrice" column="product_price" />
+    <result property="quantity" column="quantity" />
+    <result property="orderStatus" column="order_status_product" />
+    <result property="zipcode" column="zipcode" />
+    <result property="userId" column="user_id" />
+    <result property="title" column="title" />
+    <result property="content" column="content" />
+    <result property="deliveryMsg" column="delivery_msg" />
+    <result property="paymentMethod" column="payment_method" />
+    <result property="productId" column="product_id" />
+    <result property="orderDisplayId" column="order_display_id" />
+    <result property="ordersIdfull" column="orders_idfull" />
+    
+    <result property="isApprefund" column="is_apprefund" />
+    <result property="isAppexchanged" column="is_appexchanged" />
+    
+    <result property="isRefundable" column="is_refundable" />
+    <result property="isExchanged" column="is_exchanged" />
+
+    <!-- 상품 관련 필드 -->
+    <result property="product_name" column="product_name" />
+    <result property="discount_price" column="discount_price" />
+    <result property="product_price" column="product_price" />
+    <result property="product_content" column="product_content" />
+    <result property="img_path" column="img_path_thumb" />
+    <result property="orders_product_id" column="orders_product_id" />
+</resultMap>
+
+
+<select id="getOrderList" parameterType="long"
+		resultMap="orderDTOMap">
+SELECT
+    o.id AS order_id,
+    o.user_id,
+    o.orders_id,
+    TO_CHAR(o.order_date, 'YYYY-MM-DD') AS order_date,
+    o.customer_name,
+    o.order_status AS order_status_main,
+    o.address,
+    o.phone_number,
+    o.delivery_msg,
+    o.payment_method,
+    o.zipcode,
+    op.id AS orders_product_id,
+    op.product_id,
+    op.quantity,
+    op.order_status AS order_status_product,
+    p.product_name,
+    p.product_price,
+    p.product_content,
+    p.discount_price,
+    ip.img_path_thumb AS img_path_thumb
+FROM orders o
+LEFT JOIN orders_product op ON o.id = op.orders_id
+LEFT JOIN product p ON op.product_id = p.id
+LEFT JOIN img_path ip ON ip.product_id = p.id AND ip.is_thumbnail_main = 1
+ORDER BY o.order_date DESC, o.id, op.id
+</select>
+
+<update id="updateOrderProductStatus">
+    UPDATE orders_product
+    SET order_status = #{orderStatus}
+    WHERE id = #{ordersProductId}
+</update>
+
+<update id="updateOrderStatus">
+    UPDATE orders
+    SET order_status = #{orderStatus}
+    WHERE ordersId = #{ordersId}
+</update>
+
+
+<select id="getTotalCount" resultType="int">
+  SELECT COUNT(*) FROM orders WHERE id > 0
+</select>
+	
+
+
+</mapper>
+

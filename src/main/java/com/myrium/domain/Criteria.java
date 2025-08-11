@@ -19,6 +19,9 @@ public class Criteria {
 	private Integer is_timesales = -1; //필터링 타임세일, Integer : 빈문자열 예외방지, 초기값 -1
 	private Integer is_deleted = -1; //필터링 노출,미노출, Integer : 빈문자열 예외방지, 초기값 -1
 	
+	private String auth;
+	private String gender;
+	
 	public Criteria() {
 		this(1, 10);
 	}

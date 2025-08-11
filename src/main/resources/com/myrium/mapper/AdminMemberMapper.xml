@@ -5,365 +5,327 @@
 
 <mapper namespace="com.myrium.mapper.AdminMemberMapper">
 
-  <resultMap id="productMap" type="com.myrium.domain.ProductVO">
-    <id property="id" column="id" />
-    <result property="product_name" column="product_name"/>
-    <result property="product_content" column="product_content"/>
-    <result property="product_stock" column="product_stock"/>
-    <result property="product_price" column="product_price"/>
-    <result property="is_deleted" column="is_deleted"/>
-    <result property="is_timesales" column="is_timesales"/>
-    <result property="is_mainone" column="is_mainone"/>
-    <result property="is_maintwo" column="is_maintwo"/>
-    <result property="is_discount" column="is_discount"/>
-    <result property="discount_rate" column="discount_rate"/>
-    <result property="timesalediscount_rate" column="timesalediscount_rate"/>
-    <result property="total_discountrate" column="total_discountrate"/>
-    <result property="discount_price" column="discount_price"/>
-    <result property="sales_count" column="sales_count"/>
-    <result property="created_at" column="created_at"/>
-    <result property="created_by" column="created_by"/>
-    <result property="updated_at" column="updated_at"/>
-    <result property="updated_by" column="updated_by"/>
-  </resultMap>
-  
-  <resultMap id="categoryMap" type="com.myrium.domain.CategoryVO">
-    <id property="product_id" column="product_id" />
-    <result property="gardening" column="gardening"/>
-    <result property="plantkit" column="plantkit"/>
-    <result property="hurb" column="hurb"/>
-    <result property="vegetable" column="vegetable"/>
-    <result property="flower" column="flower"/>
-    <result property="etc" column="etc"/>
-  </resultMap>
-  
-  <resultMap id="imgpathMap" type="com.myrium.domain.ImgpathVO">
-    <id property="id" column="id" />
-    <result property="product_id" column="product_id" />
-    <result property="img_path" column="img_path"/>
-    <result property="created_at" column="created_at"/>
-    <result property="created_by" column="created_by"/>
-    <result property="updated_at" column="updated_at"/>
-    <result property="updated_by" column="updated_by"/>
-    <result property="is_deleted" column="is_deleted"/>
-    <result property="is_thumbnail" column="is_thumbnail"/>
-    <result property="is_thumbnail_main" column="is_thumbnail_main"/>
-    <result property="is_detail" column="is_detail"/>
-    <result property="uuid" column="uuid"/>
-    <result property="img_path_thumb" column="img_path_thumb"/>
-  </resultMap>
+    <resultMap id="memberMap" type="com.myrium.domain.MemberVO">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="password" column="password"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="address" column="address"/>
+        <result property="zipcode" column="zipcode"/>
+		<result property="addr1" column="addr1"/>
+		<result property="addr2" column="addr2"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="email" column="email"/>
+        <result property="gender" column="gender"/>
+        <result property="birthdate" column="birthdate"/>
+        <result property="role" column="role"/>
+        <result property="agreeTerms" column="agree_terms"/>
+        <result property="agreePrivacy" column="agree_privacy"/>
+        <result property="agreeThirdParty" column="agree_third_party"/>
+        <result property="agreeDelegate" column="agree_delegate"/>
+        <result property="agreeSms" column="agree_sms"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="updatedBy" column="updated_by"/>
+        <collection property="authList" resultMap="authMap"/>
+    </resultMap>
+    
+   	<resultMap type="com.myrium.domain.AuthVO" id="authMap">
+	  <result property="userId" column="user_id"/>
+	  <result property="auth" column="auth"/>
+	  <result property="customerId" column="customer_id"/>
+	</resultMap>
+	
+<sql id="criterial">
+  <trim prefix="(" suffix=") AND" prefixOverrides="OR">
+    <foreach item='type' collection="cri.typeArr">
+      <trim prefix="OR">
+        <choose>
+          <when test="type == 'C'.toString()">
+            title LIKE '%' || #{cri.keyword} || '%'
+          </when>
+          <when test="type == 'N'.toString()">
+            content LIKE '%' || #{cri.keyword} || '%'
+          </when>
+        </choose>
+      </trim>
+    </foreach>
+  </trim>
+</sql>	
 
-  <resultMap id="attachMap" type="com.myrium.domain.AttachFileDTO">
-    <id property="id" column="id"/>
-    <result property="userId" column="user_id"/>
-    <result property="noticeId" column="notice_id"/>
-    <result property="fileName" column="file_name"/>
-    <result property="uploadPath" column="upload_path"/>
-    <result property="uuid" column="uuid"/>
-    <result property="image" column="image"/>
-    <result property="isThumbnail" column="is_thumbnail"/>
-    <result property="isThumbnailMain" column="is_thumbnail_main"/>
-    <result property="isDetail" column="is_detail"/>
-    <result property="customerId" column="customer_id"/>
-    <result property="uploadDate" column="upload_date"/>
-    <result property="createdAt" column="created_at"/>
-    <result property="createdBy" column="created_by"/>
-    <result property="updatedAt" column="updated_at"/>
-    <result property="updatedBy" column="updated_by"/>
-  </resultMap>
-  
-  <!-- <select id="getList" resultMap="productMap">
-    SELECT * FROM product
-    WHERE id > 0
-    ORDER BY id DESC
-  </select>  -->
-  
-  <!-- <select id="getCategory" resultMap="productMap">
-    SELECT * FROM category
-    WHERE product_id > 0
-    ORDER BY product_id DESC
-  </select>  -->
-    	
-	<!-- <select id="getProductList" resultMap="productMap">
-	    SELECT * FROM product p
-	    WHERE 1 = 1
-	    <if test="cri.category != '' and cri.category != null">
-	        AND EXISTS (
-	            SELECT 1 FROM category c
-	            WHERE c.product_id = p.id
-	            <choose>
-	                <when test="cri.category == '원예용품'">AND c.gardening = 1</when>
-	                <when test="cri.category == '식물키트모음'">AND c.plantkit = 1</when>
-	                <when test="cri.category == '허브키우기'">AND c.hurb = 1</when>
-	                <when test="cri.category == '채소키우기'">AND c.vegetable = 1</when>
-	                <when test="cri.category == '꽃씨키우기'">AND c.flower = 1</when>
-	                <when test="cri.category == '기타키우기키트'">AND c.etc = 1</when>
-	            </choose>
-	        )
-	    </if>
-	    <if test="cri.is_discount != -1">
-		    AND is_discount = #{cri.is_discount}
-		</if>
-		
-		<if test="cri.is_timeSales != -1">
-		    AND is_timesales = #{cri.is_timesales}
-		</if>
-		
-		<if test="cri.is_deleted != -1">
-		    AND is_deleted = #{cri.is_deleted}
-		</if>
-	</select> -->
-	
-	
-<select id="getProductList" resultMap="productMap">
+<select id="getMemberList" resultMap="memberMap">
   SELECT * FROM (
     SELECT ROWNUM rn, inner_query.*
     FROM (
       SELECT *
-      FROM product p
-      WHERE 1 = 1
-      
-      <if test="cri.category != null and cri.category != ''">
+      FROM member m
+      WHERE 1 = 1      
+      <if test="cri.auth != null and cri.auth != ''">
         AND EXISTS (
-          SELECT 1 FROM category c
-          WHERE c.product_id = p.id
+          SELECT 1 FROM member_auth a
+          WHERE a.user_id = m.id
           <choose>
-            <when test="cri.category eq '원예용품'">AND c.gardening = 1</when>
-            <when test="cri.category eq '식물키트모음'">AND c.plantkit = 1</when>
-            <when test="cri.category eq '허브키우기'">AND c.hurb = 1</when>
-            <when test="cri.category eq '채소키우기'">AND c.vegetable = 1</when>
-            <when test="cri.category eq '꽃씨키우기'">AND c.flower = 1</when>
-            <when test="cri.category eq '기타키우기키트'">AND c.etc = 1</when>
+            <when test="cri.auth eq 'MEMBER'">
+			  AND EXISTS (
+			    SELECT 1 FROM member_auth a
+			    WHERE a.user_id = m.id
+			      AND a.role = 'MEMBER'
+			  )
+			  AND NOT EXISTS (
+			    SELECT 1 FROM member_auth a
+			    WHERE a.user_id = m.id
+			      AND a.role = 'ADMIN'
+			  )
+			</when>
+            <when test="cri.auth eq 'ADMIN'">
+			  AND EXISTS (
+			    SELECT 1 FROM member_auth a
+			    WHERE a.user_id = m.id
+			      AND a.role = 'ADMIN'
+			  )
+			</when>
           </choose>
         )
-      </if>
-
-      <if test="cri.is_discount != -1">
-        AND is_discount = #{cri.is_discount}
-      </if>
-      <if test="cri.is_timeSales != -1">
-        AND is_timesales = #{cri.is_timeSales}
       </if>
       <if test="cri.is_deleted != -1">
         AND is_deleted = #{cri.is_deleted}
       </if>
-
+      <if test="cri.gender != null and cri.gender != ''">
+        AND gender = #{cri.gender}
+      </if>
 	  <if test="cri.keyword != null and cri.keyword != '' and cri.type != null">
-		<trim prefix="AND " >
-			LOWER(p.product_name) LIKE '%' || LOWER(#{cri.keyword}) || '%'
-		</trim>
+		<include refid="criterial"/>
 	  </if>
-      ORDER BY p.id DESC
+      ORDER BY m.id DESC
     ) inner_query
     WHERE ROWNUM &lt;= #{cri.pageNum} * #{cri.amount}
   )
   WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
 </select>
 
-	
-  <select id="getCategoryList" resultMap="categoryMap">
-	select * from category where product_id = #{id}
-  </select>
+ <select id="getAuthList" resultMap="authMap">
+	select * from member_auth where user_id = #{id}
+ </select>
   
-  <select id="getImgPathList" resultMap="imgpathMap">
-	select * from img_path where product_id = #{id} and is_thumbnail_main = 1
-  </select>
-
-  <insert id="insert">
-    INSERT INTO product (
-      id, product_name, product_content, product_stock, product_price,
-      is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-      discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-      created_at, created_by
-    ) VALUES (
-      product_seq.NEXTVAL, #{product_name}, #{product_content}, #{product_stock}, #{product_price},
-      #{is_deleted}, #{is_timesales}, #{is_mainone}, #{is_maintwo}, #{is_discount},
-      #{discount_rate}, #{timesalediscount_rate}, #{total_discountrate}, #{discount_price}, #{sales_count},
-      #{created_at}, #{created_by}
-    )
-  </insert>
-
-  <insert id="insertSelectKey">
-    <selectKey keyProperty="id" order="BEFORE" resultType="int">
-      SELECT product_seq.NEXTVAL FROM dual
-    </selectKey>
-    INSERT INTO product (
-      id, product_name, product_content, product_stock, product_price,
-      is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-      discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-      created_at, created_by
-    ) VALUES (
-      #{id}, #{product_name}, #{product_content}, #{product_stock}, #{product_price},
-      #{is_deleted}, #{is_timesales}, #{is_mainone}, #{is_maintwo}, #{is_discount},
-      #{discount_rate}, #{timesalediscount_rate}, #{total_discountrate}, #{discount_price}, #{sales_count},
-      SYSDATE, #{created_by}
-    )
-  </insert>
-
-  <select id="read" resultMap="productMap">
-    SELECT * FROM product
+  <select id="read" resultMap="memberMap">
+    SELECT * FROM member
     WHERE id = #{id}
   </select>
 
   <delete id="harddel">
-    DELETE FROM product WHERE id = #{id}
+    DELETE FROM member WHERE id = #{id}
   </delete>
 
   <update id="softdel">
-    UPDATE product SET is_deleted = 1 WHERE id = #{id}
+    UPDATE member SET is_deleted = 1 WHERE id = #{id}
   </update>
 
   <update id="restore">
-    UPDATE product SET is_deleted = 0 WHERE id = #{id}
+    UPDATE member SET is_deleted = 0 WHERE id = #{id}
   </update>
 
-  <update id="update" parameterType="com.myrium.domain.ProductVO">
-    UPDATE product SET
-      product_name = #{product_name},
-      product_content = #{product_content},
-      product_stock = #{product_stock},
-      product_price = #{product_price},
-      is_deleted = #{is_deleted},
-      is_timesales = #{is_timesales},
-      is_mainone = #{is_mainone},
-      is_maintwo = #{is_maintwo},
-      is_discount = #{is_discount},
-      discount_rate = #{discount_rate},
-      timesalediscount_rate = #{timesalediscount_rate},
-      total_discountrate = #{total_discountrate},
-      discount_price = #{discount_price},
-      sales_count = #{sales_count},
+  <update id="update" parameterType="com.myrium.domain.MemberVO">
+    UPDATE member SET
+      customer_id = #{customerId},
+      password = #{password},
+      customer_name = #{customerName},
+      address = #{address},
+      zipcode = #{zipcode},
+      addr1 = #{addr1},
+      addr2 = #{addr2},
+      phone_number = #{phoneNumber},
+      email = #{email},
+      gender = #{gender},
+      birthdate = #{birthdate},
+      agree_terms = #{agreeTerms},
+      agree_privacy = #{agreePrivacy},
+      agree_third_party = #{agreeThirdParty},
+      agree_delegate = #{agreeDelegate},
+      agree_sms = #{agreeSms},
+      is_deleted = #{isDeleted},
       updated_at = SYSDATE,
-      updated_by = #{updated_by}
+      updated_by = #{updatedBy}
     WHERE id = #{id}
   </update>
   
-  <update id="updateImgpath" parameterType="com.myrium.domain.ImgpathVO">
-    UPDATE img_path SET
-      img_path = #{img_path},
-      is_deleted = #{is_deleted},
-      is_thumbnail = #{is_thumbnail},
-      is_thumbnail_main = #{is_thumbnail_main},
-      is_detail = #{is_detail},
-      uuid = #{uuid},
-      img_path_thumb = #{img_path_thumb},
-      updated_at = SYSDATE,
-      updated_by = #{updated_by}
-    WHERE id = #{id}
-  </update>
+  <delete id="deleteAdminRole" parameterType="long">
+    DELETE FROM member_auth WHERE user_id = #{id} AND role = 'ADMIN'
+  </delete>
+  
+  	<!-- 중복 insert 방지 : count 체크 -->
+	<select id="countAdminRole" resultType="java.lang.Integer">
+	  SELECT COUNT(*) FROM member_auth WHERE user_id = #{id} AND role = 'ADMIN'
+	</select>
 
-  <sql id="criterial">
-    <trim prefix="(" suffix=") AND" prefixOverrides="OR">
-      <foreach item='type' collection="cri.typeArr">
-        <trim prefix="OR">
-          <choose>
-            <when test="type == 'T'.toString()">
-              title LIKE '%' || #{cri.keyword} || '%'
-            </when>
-            <when test="type == 'C'.toString()">
-              content LIKE '%' || #{cri.keyword} || '%'
-            </when>
-            <when test="type == 'W'.toString()">
-              customer_id LIKE '%' || #{cri.keyword} || '%'
-            </when>
-          </choose>
-        </trim>
-      </foreach>
-    </trim>
-  </sql>
-
-  <select id="getListWithPaging" resultMap="productMap">
-    <![CDATA[
-    SELECT * FROM (
-      SELECT /*+INDEX_DESC(product pk_product) */
-        ROWNUM rn, id, product_name, product_content, product_stock, product_price,
-        is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-        discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-        created_at, created_by, updated_at, updated_by
-      FROM product
-      WHERE
-    ]]>
-    <include refid="criterial"/>
-    <![CDATA[
-      ROWNUM <= #{cri.pageNum} * #{cri.amount}
-    ) WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
-    ]]>
-  </select>
-
+	<!-- ADMIN role insert -->
+	<insert id="insertAdminRole" parameterType="long">
+	  INSERT INTO member_auth (user_id, role) VALUES (#{id}, 'ADMIN')
+	</insert>
+  
   <select id="getTotalCount" resultType="int">
-    SELECT COUNT(*) FROM product WHERE id > 0
+    SELECT COUNT(*) FROM member WHERE id > 0
   </select>
-
-  <!--  <update id="updateReadCnt">
-    UPDATE product SET read_cnt = read_cnt + 1 WHERE id = #{id}
-  </update> -->
-
-  <!-- <insert id="insertAttach" parameterType="com.myrium.domain.AttachFileDTO">
-    INSERT INTO img_path (
-      id, product_id, img_path, created_at, created_by, updated_at, updated_by,
-      is_deleted, is_thumbnail, is_thumbnail_main, is_detail, uuid
-    ) VALUES (
-      PRODUCT_FILES_SEQ.NEXTVAL, #{product_id}, #{img_path}, SYSDATE, #{created_by}, #{updated_at}, #{updated_by},
-      #{is_deleted}, #{is_thumbnail}, #{is_thumbnail_main}, #{is_detail}, #{uuid}
-    )
-  </insert> -->
-
-  <insert id="insertCategory" parameterType="com.myrium.domain.CategoryVO">
-    INSERT INTO category (
-      product_id, gardening, plantkit, hurb, vegetable, flower, etc
-    ) VALUES (
-      #{product_id}, #{gardening}, #{plantkit}, #{hurb}, #{vegetable}, #{flower}, #{etc}
-    )
-  </insert>
   
-  <update id="updateCategory" parameterType="com.myrium.domain.CategoryVO">
-    update category set
-    	gardening = #{gardening},
-    	plantkit = #{plantkit},
-    	hurb = #{hurb},
-    	vegetable = #{vegetable},
-    	flower = #{flower},
-    	etc = #{etc}
-    WHERE product_id = #{product_id}
-  </update>
   
-  <insert id="insertImgpath" parameterType="com.myrium.domain.ImgpathVO">
-    INSERT INTO img_path (
-      id, product_id, img_path, created_at, created_by,
-      is_deleted, is_thumbnail, is_thumbnail_main, is_detail, uuid, img_path_thumb
-    ) VALUES (
-      seq_img_id.NEXTVAL, #{product_id}, #{img_path}, SYSDATE, #{created_by},
-      #{is_deleted}, #{is_thumbnail}, #{is_thumbnail_main}, #{is_detail}, #{uuid}, #{img_path_thumb, jdbcType=VARCHAR}
-    )
-  </insert>
+  <select id="findByMemberId" resultMap="memberMap">
+    SELECT * FROM member WHERE id = #{id}
+  </select>  
+  
   
 
-  <select id="findByProductId" resultMap="imgpathMap">
-    SELECT * FROM img_path WHERE product_id = #{product_id}
-  </select>
+    <!-- 회원 등록 ,주소 칼럼 추가-->
+	<insert id="insertMember" parameterType="com.myrium.domain.MemberVO">	
+	    <selectKey keyProperty="id" resultType="long" order="BEFORE">
+	        SELECT member_seq.NEXTVAL FROM dual
+	    </selectKey>
+	
+	    INSERT INTO member (
+	        id, customer_id, password, customer_name, address,
+	        zipcode, addr1, addr2,phone_number, email, gender, birthdate,
+	        agree_terms, agree_privacy, agree_third_party,
+	        agree_delegate, agree_sms, is_deleted,
+	        created_at, created_by
+	    ) VALUES (
+	        #{id}, #{customerId, jdbcType=VARCHAR}, 
+	        #{password, jdbcType=VARCHAR}, 
+	        #{customerName, jdbcType=VARCHAR}, 
+	        #{address, jdbcType=VARCHAR},
+	        #{zipcode, jdbcType=VARCHAR}, 
+	        #{addr1, jdbcType=VARCHAR}, 
+	        #{addr2, jdbcType=VARCHAR},
+	        #{phoneNumber, jdbcType=VARCHAR}, 
+	        #{email, jdbcType=VARCHAR}, 
+	        #{gender, jdbcType=VARCHAR}, 
+	        #{birthdate, jdbcType=DATE},
+	        #{agreeTerms, jdbcType=INTEGER}, 
+	        #{agreePrivacy, jdbcType=INTEGER}, 
+	        #{agreeThirdParty, jdbcType=INTEGER},
+	        #{agreeDelegate, jdbcType=INTEGER}, 
+	        #{agreeSms, jdbcType=INTEGER}, 
+	        #{isDeleted, jdbcType=INTEGER},
+	        SYSDATE, 
+	        #{createdBy, jdbcType=VARCHAR}
+	    )	
+	</insert>
 
-  <!-- <delete id="deleteImgpathByUuid" parameterType="java.lang.String">
-    DELETE FROM img_path WHERE uuid = #{uuid}
-  </delete> -->  
-  	<delete id="deleteImgpathByUuid" parameterType="String">
-		delete from img_path 
-		where uuid = #{uuid}
-	</delete>
   
-  <!-- <update id="updateThumbnailMain" parameterType="com.myrium.domain.ImgpathVO">  
-		UPDATE img_path
-		SET is_thumbnail_main = CASE WHEN uuid = #{uuid} THEN 1 ELSE 0 END
-		WHERE product_id = #{product_id} and is_thumbnail = 1
-  </update> -->
-  <update id="updateThumbnailMain" parameterType="com.myrium.domain.ImgpathVO">  
-		UPDATE img_path
-		SET is_thumbnail_main = #{is_thumbnail_main} 
-		WHERE id = #{id}
-  </update>
-  
-  <select id="findImgpathByUuid" resultMap="imgpathMap">
-    SELECT * FROM img_path WHERE uuid = #{uuid}
-  </select>
+	<!-- 회원 권한 등록 -->
+	<insert id="insertAuth" parameterType="com.myrium.domain.AuthVO">
+	    INSERT INTO member_auth (user_id, role )
+	    VALUES (#{userId}, #{role} )
+
+	</insert>
+
+	<!-- 회원 단건 조회 -->
+	<select id="getMemberById" parameterType="int"
+		resultMap="memberMap">
+		SELECT * FROM member WHERE id = #{id}
+	</select>
+
+<!-- <select id="read" resultMap="memberMap">
+  SELECT 
+    m.id,
+    m.customer_id,
+    m.password,
+    m.customer_name,
+    m.address,
+    m.zipcode,
+    m.addr1,
+    m.addr2,
+    m.phone_number,
+    m.email,
+    m.gender,
+    m.birthdate,
+    m.agree_terms,
+    m.agree_privacy,
+    m.agree_third_party,
+    m.agree_delegate,
+    m.agree_sms,
+    m.is_deleted,
+    m.created_at,
+    m.created_by,
+    m.updated_at,
+    m.updated_by,    
+    a.user_id AS auth_user_id,
+    a.role AS auth_role
+  FROM member m
+  LEFT JOIN member_auth a ON m.id = a.user_id
+  WHERE m.customer_id = #{customerId}
+</select> -->
+
+<!-- 회원 권한 리스트 조회 (회원 PK id로) -->
+<!-- <select id="getAuthList" parameterType="long" resultType="com.myrium.domain.AuthVO">
+    SELECT user_id AS userId, role
+    FROM member_auth
+    WHERE user_id = #{userId}
+</select> -->
+
+
+	<!-- 아이디 중복체크 -->
+	<select id="selectByCustomerId" resultType="com.myrium.domain.MemberVO">
+	  SELECT *
+	  FROM member
+	  WHERE customer_id = #{customerId}
+	</select>
+	
+	<!-- 아이디 찾기 -->
+	<select id="findByNameAndEmail" resultMap="memberMap">
+		SELECT id, customer_id, customer_name, email, created_at
+		FROM member
+		WHERE customer_name = #{customerName}
+		AND email = #{email}
+	</select>
+	
+	<select id="findByNameAndPhone" resultMap="memberMap">
+		SELECT id, customer_id, customer_name, phone_number, created_at
+		FROM member
+		WHERE customer_name = #{customerName}
+		AND phone_number = #{phoneNumber}
+	</select>
+
+	
+	<update id="updateMember" parameterType="com.myrium.domain.MemberVO">
+	  UPDATE member
+	  SET password = #{password},
+	      updated_at = #{updatedAt},
+	      updated_by = #{updatedBy}
+	  WHERE id = #{id}
+	</update>
+	
+	<!-- 비밀번호 변경 -->
+	<update id="updatePassword">
+    UPDATE member
+    SET password = #{password},
+        updated_at = SYSDATE,
+        updated_by = 'change_pw'
+    WHERE customer_id = #{customerId}
+	</update>
+	<select id="readByCustomerId" resultType="com.myrium.domain.MemberVO">
+	  SELECT * FROM member WHERE customer_id = #{customerId}
+	</select>
+	
+	<!-- 회원정보수정 -->
+	<update id="updateMemberInfo" parameterType="com.myrium.domain.MemberVO">
+	  UPDATE member
+	  <set>
+	    phone_number = #{phoneNumber},
+	    email = #{email},
+	    agree_sms = #{agreeSms},
+	    addr1 = #{addr1},
+	    addr2 = #{addr2},
+	    zipcode = #{zipcode},
+	    gender = #{gender},
+	    updated_at = SYSDATE,
+	    updated_by = 'updateMember'
+	  </set>
+	  WHERE id = #{id}
+	</update>
+	
+	<select id="readById" resultMap="memberMap" parameterType="long">
+  		SELECT * FROM member WHERE id = #{id}
+	</select>
 
 </mapper>
 

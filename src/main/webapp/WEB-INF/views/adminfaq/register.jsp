@@ -16,7 +16,7 @@
 <body>
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">FAQ 등록(관리자)</h1>
+			<h1 class="page-header">FAQ 등록<span class="badge">관리자</span></h1>
 		</div>
 	</div>
 

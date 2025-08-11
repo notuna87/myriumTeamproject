@@ -252,7 +252,7 @@
     WHERE id = #{id}
   </update>
 
-  <sql id="criterial">
+<!--  <sql id="criterial">
     <trim prefix="(" suffix=") AND" prefixOverrides="OR">
       <foreach item='type' collection="cri.typeArr">
         <trim prefix="OR">
@@ -288,7 +288,7 @@
       ROWNUM <= #{cri.pageNum} * #{cri.amount}
     ) WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
     ]]>
-  </select>
+  </select> --> 
 
   <select id="getTotalCount" resultType="int">
     SELECT COUNT(*) FROM product WHERE id > 0

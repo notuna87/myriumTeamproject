@@ -1,16 +1,23 @@
 package com.myrium.controller;
 
-import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,12 +29,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myrium.domain.AttachFileDTO;
-import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
-import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.MemberVO;
 import com.myrium.domain.PageDTO;
-import com.myrium.mapper.AdminProductMapper;
+import com.myrium.mapper.AdminMemberMapper;
 import com.myrium.service.AdminMemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -42,7 +47,7 @@ public class AdminMemberController {
 
 	private final AdminMemberService service;
 	
-	private final AdminProductMapper adminmembermapper;
+	private final AdminMemberMapper mapper;
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/list")
@@ -55,7 +60,7 @@ public class AdminMemberController {
 	    boolean isAdmin = authentication.getAuthorities().stream()
 	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));		
 		
-	    List<MemberVO> list = service.getList(cri, isAdmin);
+	    List<MemberVO> list = service.getMemberListWithAuth(cri, isAdmin);
 		
 		log.info(list);
 		model.addAttribute("list", list);
@@ -125,137 +130,141 @@ public class AdminMemberController {
 		MemberVO memberInfo = service.get(id);
 		model.addAttribute("member", memberInfo);
 		System.out.println("member: " + memberInfo); // 디버깅
-		CategoryVO categoryList = adminmembermapper.getCategoryList(id);
-		System.out.println("categoryList: " + categoryList); // 디버깅
-		model.addAttribute("category", categoryList);
+		//CategoryVO categoryList = adminmembermapper.getCategoryList(id);
+		//System.out.println("categoryList: " + categoryList); // 디버깅
+		//model.addAttribute("category", categoryList);
 		//model.addAttribute("attachFiles", service.findByProductId(id));
-		List<ImgpathVO> attachImgs = service.findByMemberId(id);
-		System.out.println("attachImgs: " + attachImgs); // 디버깅
-		System.out.println("attachImgs cnt: " + attachImgs.size()); // 디버깅
+		//List<ImgpathVO> attachImgs = service.findByMemberId(id);
+		//System.out.println("attachImgs: " + attachImgs); // 디버깅
+		//System.out.println("attachImgs cnt: " + attachImgs.size()); // 디버깅
 		//model.addAttribute("attachImgs", attachImgs);
-		model.addAttribute("attachImgsJson", new ObjectMapper().writeValueAsString(attachImgs));
-		System.out.println("attachImgsJson: " + new ObjectMapper().writeValueAsString(attachImgs)); // 디버깅
+		//model.addAttribute("attachImgsJson", new ObjectMapper().writeValueAsString(attachImgs));
+		//System.out.println("attachImgsJson: " + new ObjectMapper().writeValueAsString(attachImgs)); // 디버깅
 		
 	}
+	
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
 	
 	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/modify")
-	public String modify(MemberVO vo,
-				@RequestParam(value = "attachList", required = false) String attachListJson,
-				@RequestParam(value = "deleteuuids", required = false) String deleteUuids,
-				@ModelAttribute("cri") Criteria cri,
-				RedirectAttributes rttr) {
+	public String modify(HttpServletRequest request,
+			MemberVO vo,
+			@RequestParam("role") String role,
+			@ModelAttribute("cri") Criteria cri,
+			Model model,
+			RedirectAttributes rttr) {
 		
-		log.info("(member) modify......." + vo);
+		log.info("(member) modify..." + vo);
 
-		log.info("(member) modify......." + attachListJson);
+		log.info("(member) modify role..." + role);
 		
-	    // 1. JSON 파싱
-		ObjectMapper mapper = new ObjectMapper();
-	    List<AttachFileDTO> attachList = new ArrayList<>(); // null을 방지하기 위해 빈 리스트로 초기화
-	    // json 데이터가 null이거나 비어있는 경우를 대비한 방어 코드를 추가합니다.
-	    if (attachListJson != null && !attachListJson.trim().isEmpty()) {
-	        try {
-	            attachList = mapper.readValue(attachListJson, new TypeReference<List<AttachFileDTO>>(){});
-	        } catch (JsonProcessingException e) {
-	            e.printStackTrace();
-	        }
+		Long id = vo.getId();
+		
+	    // 1. 비밀번호 확인
+	    String passwordConfirm = request.getParameter("passwordConfirm");
+	    if (!vo.getPassword().equals(passwordConfirm)) {
+	    	log.info("(member) modify...비밀번호" + vo);
+	        model.addAttribute("pwMatchError", "비밀번호가 일치하지 않습니다.");
+	        return "redirect:/adminmember/modify?id=" + id;
 	    }
-	    
-	    log.info("attachList:" + attachList);
-	    log.info("deleteUuids:" + deleteUuids);
-	    
-	    // 1. 기존 첨부파일 삭제
-	    // 삭제 대상 처리
-	    if (deleteUuids != null && !deleteUuids.trim().isEmpty()) {
-	        String[] uuids = deleteUuids.split(",");
+		
+	    // 2. 휴대폰 번호 조합
+	    String phone1 = request.getParameter("phone1");
+	    String phone2 = request.getParameter("phone2");
+	    String phone3 = request.getParameter("phone3");
+	    String fullPhone = phone1 + "-" + phone2 + "-" + phone3;
+	    vo.setPhoneNumber(fullPhone);
+	    log.info("(member) modify...휴대폰" + fullPhone);
 
-	        for (String uuid : uuids) {
-	            // DB 삭제
-	            service.deleteImgpathByUuid(uuid);
+	    // 3. 주소 조합 + null 체크
+	    String postcode = request.getParameter("zipcode");
+	    String roadAddress = request.getParameter("addr1");
+	    String detailAddress = request.getParameter("addr2");
 
-	            // 저장소 경로
-	            String uploadFolder = "C:/upload/";
-	            List<ImgpathVO> paths = service.findImgpathByUuid(uuid); // UUID로 기존 경로 찾기
+	    if (postcode == null || roadAddress == null || detailAddress == null ||
+	        postcode.trim().isEmpty() || roadAddress.trim().isEmpty() || detailAddress.trim().isEmpty()) {
+	        model.addAttribute("addressError", "주소를 모두 입력해 주세요.");
+	        return "redirect:/adminmember/modify?id=" + id;
+	    }	    
 
-	            for (ImgpathVO pathVO : paths) {
-	                // 원본 이미지
-	                File file = new File(uploadFolder, pathVO.getImg_path());
-	                if (file.exists()) file.delete();
+	    vo.setZipcode(postcode);
+	    vo.setAddr1(roadAddress);
+	    vo.setAddr2(detailAddress);
 
-	                // 썸네일 이미지
-	                if (pathVO.getImg_path_thumb() != null) {
-	                    File thumbFile = new File(uploadFolder, pathVO.getImg_path_thumb());
-	                    if (thumbFile.exists()) thumbFile.delete();
-	                }
-	            }
-	        }
+	    // 필요하다면 기존 address 필드도 함께 구성
+	    vo.setAddress("(" + postcode + ") " + roadAddress + " " + detailAddress);  // 선택
+	    log.info("(member) modify...주소" + vo.getAddress());
+	    // 4. 생년월일 조합
+	    String birthYear = request.getParameter("birthYear");
+	    String birthMonth = request.getParameter("birthMonth");
+	    String birthDay = request.getParameter("birthDay");
+	    log.info("(member) modify...생일0" + vo);
+	    try {
+	        String birthString = birthYear + "-" + birthMonth + "-" + birthDay;
+	        log.info("(member) modify...생일1" + birthString);
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	        Date birthDate = sdf.parse(birthString);
+	        vo.setBirthdate(birthDate);
+	        log.info("(member) modify...생일2" + vo);
+	    } catch (ParseException e) {
+	        model.addAttribute("birthError", "생년월일 형식이 올바르지 않습니다.");
+	        log.info("(member) modify...생일-error");
+	        return "redirect:/adminmember/modify?id=" + id;
 	    }
 
-	    // 2. 공지사항 업데이트
 	    service.modify(vo);
+	    log.info("(member) modify...ID" + id);
 	    
-	    return "redirect:/adminmember/list";
-	    
+        if ("ADMIN".equals(role)) {
+        	Integer count = mapper.countAdminRole(id);
+        	if (count == null) {
+        	    count = 0;  // 기본값 처리
+        	}
+        	if (count == 0) {
+        	    mapper.insertAdminRole(id);
+        	}
+        } else {        	
+        	Integer count = mapper.countAdminRole(id);
+        	log.info("(member) modify...role" + role + count);
+        	if (count == null) {
+        	    count = 0;  // 기본값 처리
+        	}
+        	if (count > 0) {
+        		log.info("(member) modify...deleteAdminRole" + role + count);
+        		mapper.deleteAdminRole(id);
+        	}
+        }	    
+        
+	    return "redirect:/adminmember/list";	    
 	}
+	
 	
 	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/harddel")
-	public String harddel(@RequestParam("id") int id,
+	public String harddel(@RequestParam("id") int memberId,
 	                      @ModelAttribute("cri") Criteria cri,
 	                      RedirectAttributes rttr
 	                      ) {
 
-	    log.info("member harddelete..." + id);
+	    log.info("member harddelete..." + memberId);
 
-	    try {
-	    	MemberVO member = service.get(id);
-	        if (member == null) {
-	            rttr.addFlashAttribute("error", "존재하지 않는 상품입니다.");
-	            return "redirect:/admin/member/list";
-	        }
-
-	        List<ImgpathVO> imgpathList = service.findByMemberId(id);
-
-	        for (ImgpathVO file : imgpathList) {
-	            String baseDir = "C:/upload/";
-	            String exist_thumb = file.getImg_path_thumb();
-	            String filePath_original = baseDir + file.getImg_path();
-	            String filePath_thumb = baseDir + file.getImg_path_thumb();
-	            
-	            File target_original = new File(filePath_original);
-	            File target_thumb = new File(filePath_thumb);
-
-	            if (target_original.exists() && !target_original.delete()) {
-	                log.warn("원본이미지 파일 삭제 실패: " + filePath_original);
-	            }
-	            if (exist_thumb != null && !exist_thumb.isEmpty() && target_thumb.exists() && !target_thumb.delete()) {
-	                log.warn("썸네일이미지 파일 삭제 실패: " + filePath_thumb);
-	            }
-
-	            // DB img_path 삭제 (fk : product_id) 상품삭제 시 연동 삭제
-	            //service.deleteImgpathByUuid(file.getUuid());
-	        }
-
-	        if (service.harddel(id)) {
-	            rttr.addFlashAttribute("result", "success");
-	        } else {
-	            rttr.addFlashAttribute("error", "상품 삭제 실패");
-	        }
-
-	    } catch (Exception e) {
-	        log.error("하드삭제 중 예외 발생", e);
-	        rttr.addFlashAttribute("error", "서버 오류로 삭제하지 못했습니다.");
-	    }
-
-	    // redirect paging params
-	    rttr.addAttribute("pageNum", cri.getPageNum());
-	    rttr.addAttribute("amount", cri.getAmount());
-	    rttr.addAttribute("type", cri.getType());
-	    rttr.addAttribute("keyword", cri.getKeyword());
-
+		log.info("harddelete..." + memberId);
+		if(service.harddel(memberId)) {
+			rttr.addFlashAttribute("result","success");
+		}
+		
+		rttr.addAttribute("pageNum", cri.getPageNum());
+		rttr.addAttribute("amount", cri.getAmount());
+		rttr.addAttribute("type", cri.getType());
+		rttr.addAttribute("keyword", cri.getKeyword());
+		
 	    return "redirect:/adminmember/list";
 	}
 

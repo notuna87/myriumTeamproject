@@ -239,11 +239,11 @@ toDelete(index, isUploaded) {
 
       formData.append("uploadFile", file);
       formData.append(
-        `isThumbnail_${index}`,
+        `is_thumbnail_${index}`,
         file.isThumbnail === 1 ? "1" : "0"
       );
       formData.append(
-        `isThumbnailMain_${index}`,
+        `is_thumbnail_main_${index}`,
         file.isThumbnailMain === 1 ? "1" : "0"
       );
       formData.append(`isDetail_${index}`, file.isDetail === 1 ? "1" : "0");
@@ -324,23 +324,23 @@ toDelete(index, isUploaded) {
     $(`input.main-radio-${this.type}`).prop("disabled", false);
   }
 
-  cancelEdit(e) {
-    e.preventDefault();
-    console.log(`[CancelEdit] ${this.type} - 편집 취소`);
+//  cancelEdit(e) {
+//    e.preventDefault();
+//    console.log(`[CancelEdit] ${this.type} - 편집 취소`);
 
-    this.selectedFiles = [];
-    this.uploadedFiles.forEach(f => delete f.toDelete);
-    this["uploadCompleted" + this.type] = true;
-    this.updatePreviewList();
-    $(`#${this.buttonId}`).hide();
-    $(`#${this.inputId}`).hide();
-    $(`#${this.cancelBtn}`).hide();
-    $(`#${this.editBtn}`).show();
-    $(`.delBtn${this.type}`).hide();
-    $(`#saveBtn${this.type}`).hide();
-    $(`input.main-radio-${this.type}`).prop("disabled", true);
+//    this.selectedFiles = [];
+//    this.uploadedFiles.forEach(f => delete f.toDelete);
+//    this["uploadCompleted" + this.type] = true;
+//    this.updatePreviewList();
+//    $(`#${this.buttonId}`).hide();
+//    $(`#${this.inputId}`).hide();
+//    $(`#${this.cancelBtn}`).hide();
+//    $(`#${this.editBtn}`).show();
+//   $(`.delBtn${this.type}`).hide();
+//    $(`#saveBtn${this.type}`).hide();
+//    $(`input.main-radio-${this.type}`).prop("disabled", true);
 
-  }
+//  }
   
   cancelEdit(e) {
 	  e.preventDefault();

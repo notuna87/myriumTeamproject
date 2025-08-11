@@ -38,7 +38,7 @@
 <body>
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">신규 상품 등록(관리자)</h1>
+			<h1 class="page-header">신규 상품 등록<span class="badge">관리자</span></h1>
 		</div>
 	</div>
 
@@ -111,7 +111,7 @@
 				
 				        <div class="form-group">
 				            <label class="required">(※)가격(원)</label>
-				            <input type="number" name="product_price" class="form-control" >
+				            <input type="number" name="product_price" class="form-control" min="0" max="2147483647">
 				        </div>
 				
 				        <div class="form-group">
