@@ -117,11 +117,12 @@ public class OrderDTO {
 	        // 날짜에 시간이 없을 경우 대비해서 00:00:00을 붙여줌
 	        String dateStr = this.orderDate;
 
+	        dateStr = dateStr.trim().replaceAll("\\s+", " ");
+	        
 	        if (dateStr.length() <= 10) {
 	            // yyyy-MM-dd → yyyy-MM-dd 00:00:00 으로 변환
 	            dateStr = dateStr + " 00:00:00";
 	        }
-
 	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	        return sdf.parse(dateStr);
 	    } catch (Exception e) {

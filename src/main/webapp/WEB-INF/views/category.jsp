@@ -19,16 +19,17 @@
 		</div>
 
 		<!-- 카테고리 버튼 시작 -->
-		<form></form>
-		<div class="categoryButtonWrap">
-			<button class="categoryButton select">전체</button>
-			<button class="categoryButton">원예용품</button>
-			<button class="categoryButton">식물키트모음</button>
-			<button class="categoryButton">허브키우기</button>
-			<button class="categoryButton">채소키우기</button>
-			<button class="categoryButton">꽃씨키우기</button>
-			<button class="categoryButton">기타키우기</button>
-		</div>
+		<form id="categoryForm" action="/category" method="get">
+			<div class="categoryButtonWrap">
+				<button class="categoryButton" name="category" value="all">전체</button>
+				<button class="categoryButton" name="category" value="gardening">원예용품</button>
+				<button class="categoryButton" name="category" value="plantKit">식물키트모음</button>
+				<button class="categoryButton" name="category" value="hurb">허브키우기</button>
+				<button class="categoryButton" name="category" value="vegetable">채소키우기</button>
+				<button class="categoryButton" name="category" value="flower">꽃씨키우기</button>
+				<button class="categoryButton" name="category" value="etc">기타키우기</button>
+			</div>
+		</form>
 		<!-- 카테고리 버튼 끝 -->
 		<!-- 상단 카테고리 선택 끝 -->
 		<!-- 하단 상품 카운트 및 정렬 시작 -->
@@ -90,12 +91,13 @@
 	<%@ include file="/WEB-INF/views/main/footer.jsp"%>
 </body>
 <script>
-		let visibleCount = 4;
+		let visibleCount = 8;
 
 		function loadMore() {
 			const products = document.querySelectorAll(".categoryResult");
 			const total = products.length;
 
+			console.log("에러?");
 			for (let i = visibleCount; i < visibleCount + 4 && i < total; i++) {
 				products[i].style.display = "block";
 			}
@@ -107,24 +109,29 @@
 			}
 
 		}
-
+		
 		window.onload = function () {
 			const products = document.querySelectorAll(".categoryResult");
 			products.forEach((p, i) => {
 				if (i >= 8) p.style.display = "none";
 			});
 		}
-		
-		  document.querySelectorAll('.categoryButton').forEach(button => {
-			    button.addEventListener('click', function() {
-			      // 모든 버튼에서 select 제거
-			      document.querySelectorAll('.categoryButton').forEach(btn => {
-			        btn.classList.remove('select');
-			      });
-			      // 클릭한 버튼에 select 추가
-			      this.classList.add('select');
-			    });
-			  });
+
+		// 고른 버튼에 따라 select 클래스 추가
+		document.addEventListener("DOMContentLoaded", function () {
+		    const params = new URLSearchParams(window.location.search);
+		    const categoryValue = params.get("categorySelect");
+
+		    const buttons = document.querySelectorAll(".categoryButton");
+
+		    buttons.forEach(btn => btn.classList.remove("select"));
+
+		    buttons.forEach(btn => {
+		        if (btn.value === (categoryValue ?? "all")) {
+		            btn.classList.add("select");
+		        }
+		    });
+		});
 	</script>
 
 </html>

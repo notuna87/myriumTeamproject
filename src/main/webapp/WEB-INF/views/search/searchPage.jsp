@@ -123,7 +123,6 @@
 		<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'>
 		<input type='hidden' name='amount' value='${pageMaker.cri.amount}'>
 		<input type='hidden' name='sort' value='${sort}'>
-
 	</form>
 	<%@ include file="/WEB-INF/views/main/footer.jsp"%>
 </body>
