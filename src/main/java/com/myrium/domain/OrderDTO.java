@@ -41,7 +41,7 @@ public class OrderDTO {
 		private int discount_price;
 		private int product_price;
 		private String product_content;
-		private String orders_product_id;
+		private int orders_product_id;
 		
 		private String img_path;
 

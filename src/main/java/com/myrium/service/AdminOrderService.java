@@ -25,5 +25,7 @@ public interface AdminOrderService {
 	   public boolean restore(int id);
   
 	   public OrderDTO get(int id);
+
+	   public void updateOrderStatus(String ordersId, int ordersProductId, int orderStatus);
 	   
 }

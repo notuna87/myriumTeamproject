@@ -3,6 +3,7 @@ package com.myrium.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -85,6 +86,26 @@ public class AdminOrderController {
 	    log.info("---------------------------------------------------");
 	    log.info(groupedOrders);
 	    log.info(authentication);
+	}
+	
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PostMapping("/adminorder/updateStatus")
+	public Map<String, Object> updateOrderStatus(
+	        @RequestParam("ordersId") String ordersId,
+	        @RequestParam("orders_product_id") int ordersProductId,
+	        @RequestParam("orderStatus") int orderStatus) {
+
+	    Map<String, Object> result = new HashMap<>();
+	    try {
+	        service.updateOrderStatus(ordersId, ordersProductId, orderStatus);
+	        result.put("status", "success");
+	        result.put("message", "상태가 변경되었습니다.");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        result.put("status", "error");
+	        result.put("message", "상태 변경 중 오류가 발생했습니다.");
+	    }
+	    return result;
 	}
 
 	

@@ -111,7 +111,7 @@
 				
 				        <div class="form-group">
 				            <label class="required">(※)가격(원)</label>
-				            <input type="number" name="product_price" class="form-control" >
+				            <input type="number" name="product_price" class="form-control" min="0" max="2147483647">
 				        </div>
 				
 				        <div class="form-group">

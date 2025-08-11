@@ -73,9 +73,22 @@ LEFT JOIN img_path ip ON ip.product_id = p.id AND ip.is_thumbnail_main = 1
 ORDER BY o.order_date DESC, o.id, op.id
 </select>
 
-  <select id="getTotalCount" resultType="int">
-    SELECT COUNT(*) FROM orders WHERE id > 0
-  </select>
+<update id="updateOrderProductStatus">
+    UPDATE orders_product
+    SET order_status = #{orderStatus}
+    WHERE id = #{ordersProductId}
+</update>
+
+<update id="updateOrderStatus">
+    UPDATE orders
+    SET order_status = #{orderStatus}
+    WHERE ordersId = #{ordersId}
+</update>
+
+
+<select id="getTotalCount" resultType="int">
+  SELECT COUNT(*) FROM orders WHERE id > 0
+</select>
 	
 
 

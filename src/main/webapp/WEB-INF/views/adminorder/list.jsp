@@ -27,98 +27,100 @@
 </script>
 
 <body>
-<div class="wrapper">
 
-  <div class="content-wrapper" style="min-height: 600px; padding: 15px;">
-    <section class="content-header">
-      <h1>
-        주문 현황
-        <small>사용자별 주문 관리</small>
-      </h1>
-    </section>
-
-    <section class="content">
-      <sec:authorize access="isAuthenticated()">
-        <sec:authorize access="isAuthenticated()">
-          <input type="hidden" name="updatedBy" value='<sec:authentication property="principal.username"/>' />
-        </sec:authorize>
-
-        <div class="box box-primary">
-          <div class="box-header with-border">
-            <h3 class="box-title">주문 리스트</h3>
-          </div>
-
-          <div class="box-body table-responsive no-padding">
-            <table class="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th>주문번호</th>
-                  <th>주문일</th>
-                  <th>주문상품</th>
-                  <th>상품수</th>
-                  <th>주문상태</th>
-                  <th>고객명</th>
-                  <th>주소</th>
-                  <th>전화번호</th>
-                  <th>자세히보기</th>
-                </tr>
-              </thead>
-              <tbody>
-                <c:forEach var="entry" items="${groupedOrders}">
-                  <c:set var="ordersKey" value="${entry.key}" />
-                  <c:set var="items" value="${entry.value}" />
-                  
-                  <tr>
-                    <td>${items[0].ordersId}</td>
-                    <td>${items[0].orderDate}</td>
-                    <td>
-                      ${items[0].productName}
-                      <c:if test="${fn:length(items) > 1}">
-                        외 ${fn:length(items) - 1}
-                      </c:if>
-                    </td>
-                    <td>${fn:length(items)}</td>
-                    <td>${items[0].orderStatusText}</td>
-                    <td>${items[0].receiver}</td>
-                    <td>${items[0].address}</td>
-                    <td>${items[0].phoneNumber}</td>
-                    <td>
-                      <button class="btn btn-sm btn-primary"
-                              onclick="showOrderModal('${items[0].ordersId}')">
-                        자세히보기
-                      </button>
-                    </td>
-                  </tr>
-                </c:forEach>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </sec:authorize>
-
-      <!-- 주문 상세 모달 -->
-      <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="false">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="닫기">
-                <span aria-hidden="false">&times;</span>
-              </button>
-              <h4 class="modal-title" id="orderModalLabel">주문 상세 내역</h4>
-            </div>
-            <div class="modal-body" id="modalBody">
-              <!-- 주문 상세 내용 동적으로 로드 -->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </section>
-  </div>
-</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">주문관리<span class="badge">관리자</span></h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+			    <section class="content">
+			      <sec:authorize access="isAuthenticated()">
+			        <sec:authorize access="isAuthenticated()">
+			          <input type="hidden" name="updatedBy" value='<sec:authentication property="principal.username"/>' />
+			        </sec:authorize>
+					<div class="panel-heading">
+						<span class="badge">NEW</span> 새로운 주문입니다. 주문확인 후 발송준비 하세요.
+					</div> 
+			
+			        <div class="box box-primary">
+			          <div class="box-body table-responsive no-padding">
+			            <table class="table table-bordered table-hover">
+			              <thead>
+			                <tr>
+			                  <th class="text-center">주문번호</th>
+			                  <th class="text-center">주문일</th>
+			                  <th class="text-center">주문상품</th>
+			                  <th class="text-center">상품수</th>
+			                  <th class="text-center">주문상태</th>
+			                  <th class="text-center">고객명</th>
+			                  <th class="text-center">주소</th>
+			                  <th class="text-center">전화번호</th>
+			                  <th class="text-center">주문정보</th>
+			                </tr>
+			              </thead>
+			              <tbody>
+			                <c:forEach var="entry" items="${groupedOrders}">
+			                  <c:set var="ordersKey" value="${entry.key}" />
+			                  <c:set var="items" value="${entry.value}" />
+			                  
+			                  <tr>
+			                    <td class="text-center">${items[0].ordersId}
+			                    	<!-- NEW 라벨: 발송처리되지 않은 주문 -->
+				                    <c:if test="${product.product.created_at.time + (1000*60*60*24*3) > now.time}">
+				                        <span class="badge badge-danger ml-1">NEW</span>
+				                    </c:if></td>
+			                    <td class="text-center">${items[0].orderDate}</td>
+			                    <td class="text-left">
+			                      ${items[0].productName}
+			                      <c:if test="${fn:length(items) > 1}">
+			                        외 ${fn:length(items) - 1}
+			                      </c:if>
+			                    </td>
+			                    <td class="text-right">${fn:length(items)}</td>
+			                    <td class="text-center">${items[0].orderStatusText}</td>
+			                    <td class="text-center">${items[0].receiver}</td>
+			                    <td class="text-left">${items[0].address}</td>
+			                    <td class="text-center">${items[0].phoneNumber}</td>
+			                    <td class="text-center">
+			                      <button class="btn btn-sm btn-primary"
+			                              onclick="showOrderModal('${items[0].ordersId}')">
+			                        자세히
+			                      </button>
+			                    </td>
+			                  </tr>
+			                </c:forEach>
+			              </tbody>
+			            </table>
+			          </div>
+			        </div>
+			      </sec:authorize>
+			
+			      <!-- 주문 상세 모달 -->
+			      <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="false">
+			        <div class="modal-dialog modal-lg">
+			          <div class="modal-content">
+			            <div class="modal-header">
+			              <button type="button" class="close" data-dismiss="modal" aria-label="닫기">
+			                <span aria-hidden="false">&times;</span>
+			              </button>
+			              <h4 class="modal-title" id="orderModalLabel">주문 상세 내역</h4>
+			            </div>
+			            <div class="modal-body" id="modalBody">
+			              <!-- 주문 상세 내용 동적으로 로드 -->
+			            </div>
+			            <div class="modal-footer">
+			              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+			            </div>
+			          </div>
+			        </div>
+			      </div>			
+			    </section>			
+			</div>
+  		</div>
+	</div>
 
 
 
@@ -150,78 +152,141 @@ $(document).ready(function(){
         }
     });
 
-    window.showOrderModal = function(ordersId) {
+    window.showOrderModal = function (ordersId) {
         console.log("showOrderModal called with ordersId:", ordersId);
 
         var modalBody = $('#modalBody');
 
         // 주문번호(ordersId) 기준 필터링
-        var filteredItems = ordersList.filter(function(item) {
-          return item.ordersId === ordersId;
+        var filteredItems = ordersList.filter(function (item) {
+            return item.ordersId === ordersId;
         });
 
         console.log("Filtered items:", filteredItems);
 
         if (filteredItems.length === 0) {
-          modalBody.html('<p>해당 주문에 대한 상품이 없습니다.</p>');
-          $('#orderModal').modal('show');
-          return;
+            modalBody.html('<p>해당 주문에 대한 상품이 없습니다.</p>');
+            $('#orderModal').modal('show');
+            return;
         }
 
-        // 주문 정보(대표 상품명, 주문일, 고객명 등) 가져오기 (첫 번째 아이템 기준)
+        // 주문 정보 (첫 번째 아이템 기준)
         var orderInfo = filteredItems[0];
 
         var html = '<h5>주문번호: ' + ordersId + '</h5>' +
-          '<p>주문일: ' + orderInfo.orderDate + '</p>' +
-          '<p>고객명: ' + orderInfo.receiver + '</p>' +
-          '<p>주소: ' + orderInfo.address + '</p>' +
-          '<p>전화번호: ' + orderInfo.phoneNumber + '</p>' +
+            '<p>주문일: ' + orderInfo.orderDate + '</p>' +
+            '<p>고객명: ' + orderInfo.receiver + '</p>' +
+            '<p>주소: ' + orderInfo.address + '</p>' +
+            '<p>전화번호: ' + orderInfo.phoneNumber + '</p>' +
 
-          '<table class="table table-bordered">' +
-          '<thead><tr>' +
-          '<th>주문상품번호</th>' +
-          '<th>상품명</th>' +
-          '<th>수량</th>' +
-          '<th>상태</th>' +
-          '<th>승인처리</th>' +
-          '</tr></thead><tbody>';
+            '<table class="table table-bordered">' +
+            '<thead><tr>' +
+            '<th class="text-center">주문상품번호</th>' +
+            '<th class="text-center">상품명</th>' +
+            '<th class="text-center">수량</th>' +
+            '<th class="text-center">상태</th>' +
+            '<th class="text-center">처리</th>' +
+            '</tr></thead><tbody>';
 
-        filteredItems.forEach(function(item) {
-          html += '<tr>' +
-            '<td>' + item.orders_product_id + '</td>' +
-            '<td>' + item.productName + '</td>' +
-            '<td>' + item.quantity + '</td>' +
-            '<td>' + (function(status) {
-              switch(status) {
-	              case 0: return "입금전";
-	              case 1: return "배송준비중";
-	              case 2: return "배송중";
-	              case 3: return "배송완료";
-	              case 4: return "교환신청중";
-	              case 5: return "교환완료";
-	              case 6: return "환불신청중";
-	              case 7: return "환불완료";
-	              //case 8: return "주문취소중";
-	              //case 9: return "취소완료";
-              }
-            })(item.orderStatus) + '</td>' +
-            '<td>';
+        filteredItems.forEach(function (item) {
+            var statusText = '';
+            switch (item.orderStatus) {
+                case 0: statusText = "입금대기"; break;
+                case 1: statusText = "배송준비중"; break;
+                case 2: statusText = "배송중"; break;
+                case 3: statusText = "배송완료"; break;
+                case 4: statusText = "교환신청"; break;
+                case 5: statusText = "교환완료"; break;
+                case 6: statusText = "반품신청"; break;
+                case 7: statusText = "반품완료"; break;
+                case 8: statusText = "취소신청"; break;
+                case 9: statusText = "취소완료"; break;
+                case 10: statusText = "환불거절"; break;
+                case 11: statusText = "환불완료"; break;
+                case 12: statusText = "교환승인"; break;
+                case 13: statusText = "교환거절"; break;
+                case 14: statusText = "반품승인"; break;
+                case 15: statusText = "반품거절"; break;
+                case 16: statusText = "취소승인"; break;
+                case 17: statusText = "취소거절"; break;
+                case 18: statusText = "구매확정"; break;
+            }
 
-          if (item.orderStatus === 4 || item.orderStatus === 6) {
-            html += '<button class="btn btn-sm btn-success">승인</button>' +
-            '<button class="btn btn-sm btn-warning">보류</button>' +
-            '<button class="btn btn-sm btn-danger">거절</button>' +
-            '<button class="btn btn-sm btn-primary">취소</button>';
-          }
+            html += '<tr>' +
+                '<td class="text-center">' + item.orders_product_id + '</td>' +
+                '<td class="text-left">' + item.productName + '</td>' +
+                '<td class="text-right">' + item.quantity + '</td>' +
+                '<td class="text-right">' + item.quantity + '</td>' +
+                '<td class="text-center">';
+                
+           // 상태 텍스트 출력
+           html += statusText;
 
-          html += '</td></tr>';
+           // 교환신청중(4) 또는 환불신청중(6)일 때 버튼 추가
+           if (item.orderStatus === 4 || item.orderStatus === 6 || item.orderStatus === 8) {
+               html += '<div class="mt-1">' +
+                   '<button class="btn btn-sm btn-success">승인</button> ' +
+                   '<button class="btn btn-sm btn-danger">거절</button> ' +
+               '</div>';
+           }
+                
+                
+           html += '</td>' +
+                '<td class="text-center">';
+                
+            switch (item.orderStatus) {
+                case 0: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id + '" data-status="1">배송준비중</button>'; break;
+                case 1: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id + '" data-status="2">배송중</button>'; break;
+                case 2: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id + '" data-status="3">배송완료</button>'; break;
+                case 3: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id + '" data-status="18">구매확정</button>'; break;
+                case 5: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id + '" data-status="2">교환배송중</button>'; break;
+                case 7: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id + '" data-status="11">환불완료</button>'; break;
+                case 8: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id + '" data-status="9">취소완료</button>'; break;
+                case 10: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id + '" data-status="11">환불완료</button>'; break;
+                case 12: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id +'" data-status="2">배송중</button>'; break;
+                case 13: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id +'" data-status="12">교환승인</button>'; break;
+                case 14: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id +'" data-status="11">환불완료</button>'; break;
+                case 15: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id +'" data-status="14">반품승인</button>'; break;
+                case 17: html += '<button class="btn btn-sm btn-success update-status-btn" data-ordersId="' + item.ordersId + '"data-id="' + item.orders_product_id +'" data-status="16">취소승인</button>'; break;
+            }
+
+        	html += '</td></tr>';
         });
-
+        
         html += '</tbody></table>';
 
         modalBody.html(html);
         $('#orderModal').modal('show');
     };
+    
+    $(document).on('click', '.update-status-btn', function () {
+        var ordersProductId = $(this).data('id');
+        var orderStatus = $(this).data('status');
+
+        if (!confirm("상태를 변경하시겠습니까?")) return;
+
+        $.ajax({
+            url: '/adminorder/updateStatus',
+            type: 'POST',
+            data: {
+                ordersId: ordersId,
+                orders_product_id: ordersProductId,
+                orderStatus: orderStatus
+            },
+            success: function (response) {
+                alert("상태가 변경되었습니다.");
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+                alert("상태 변경 중 오류가 발생했습니다.");
+            }
+        });
+    });
+    
+    
+    
+    ///////////////////////////////////
     
 	checkModal(result);
 	//상태 객체, 제목,  URL, 현재 상태를 빈 상태로 대체, 뒤로가기 버튼을 눌렀을 때 이전 페이지로 되돌아가지 않고 현재 페이지에 그대로 만듬

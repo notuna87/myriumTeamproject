@@ -30,6 +30,12 @@ public interface AdminOrderMapper {
 	public void insertAdminRole(Long id);
 	
 	public void deleteAdminRole(Long id);
+	
+	public void updateOrderStatus(@Param("ordersId") String ordersId,
+								@Param("orderStatus") int orderStatus);
+			
+	public void updateOrderProductStatus(@Param("ordersProductId") int ordersProductId,
+								@Param("orderStatus") int orderStatus);
 
 
 

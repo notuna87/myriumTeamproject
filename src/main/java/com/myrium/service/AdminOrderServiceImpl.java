@@ -99,6 +99,13 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 	}
 
 
+	@Override
+	public void updateOrderStatus(String ordersId, int ordersProductId, int orderStatus) {
+		mapper.updateOrderProductStatus(ordersProductId, orderStatus);		
+		mapper.updateOrderStatus(ordersId, orderStatus);		
+	}
+
+
 
 	
 }
