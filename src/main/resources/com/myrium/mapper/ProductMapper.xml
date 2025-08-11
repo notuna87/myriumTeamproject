@@ -191,7 +191,7 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 		resultType="com.myrium.domain.ProductVO">
 		SELECT * FROM product WHERE id = #{productId}
 	</select>
-
+	<!-- 카테고리 선택에 따른 상품 목록 조회 -->
 	<select id="getCategoryList"
 		resultType="com.myrium.domain.ProductVO">
 		SELECT * FROM product WHERE id IN (
@@ -218,5 +218,9 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 			</when>
 		</choose>
 		= 1)
+	</select>
+	<!-- 모든 상품 조회 -->
+	<select id="getAllProductList" resultType="com.myrium.domain.ProductVO">
+		SELECT * FROM product
 	</select>
 </mapper>

@@ -29,10 +29,18 @@ public class CategoryPageController {
 		
 		if (category.equals("all")) {
 			List<ProductDTO> getAllProductList = productservice.getAllProductList();
+			model.addAttribute("product",getAllProductList);
 			log.info(getAllProductList);
+			int count = getAllProductList.size();
+			log.info(count);
+			model.addAttribute("count",count);
 		} else {
 			List<ProductDTO> getCategoryList = productservice.getCategoryList(category);
+			model.addAttribute("product",getCategoryList);
 			log.info(getCategoryList);
+			int count = getCategoryList.size();
+			log.info(count);
+			model.addAttribute("count",count);
 		}
 		
 		return "category";

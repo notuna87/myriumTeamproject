@@ -34,8 +34,8 @@
 		<!-- 상단 카테고리 선택 끝 -->
 		<!-- 하단 상품 카운트 및 정렬 시작 -->
 		<div class="searchResultWrap">
-			<p class="countItems">
-				<span style="font-weight: 500;">8</span> items
+			<p class="countItems" style="font-size: 13px;">
+				<span style="font-weight: 500;">${count}</span> items
 			</p>
 			<select class="orderBy">
 				<option>::: 기준선택 :::</option>
@@ -49,31 +49,31 @@
 		<!-- 하단 상품 카운트 및 정렬 끝 -->
 		<!-- 상품 목록 시작 -->
 		<div class="categoryResultWrap">
-			<c:forEach begin="0" end="12">
+			<c:forEach var="item" items="${product}">
 				<div class="categoryResult">
 					<div class="categoryResultProduct" onclick="location.href='sub?id=${item.product.id}'">
-						<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1IkKprzgGrvEA-K8FzOc0rv70rdR4re_AyPa1nmVFmkWNuq605A92tw5k4vzNbjgvjKU&usqp=CAU" alt="임시" style="margin-bottom: 12px;" />
-						<h4>이름</h4>
-						<p class="mainProductContent">설명</p>
+						<img src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" alt="${item.product.product_name}_img" style="margin-bottom: 12px;" />
+						<h4>${item.product.product_name}</h4>
+						<p class="mainProductContent">${item.product.product_content}</p>
 
 						<!-- 할인중인 가격이 null 값일 때 판매가만 출력 -->
 						<c:if test="${item.product.total_discountrate == 0}">
 							<p class="salePrice" style="margin-top: 8px">
 								<fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />
-								원가 원
+								원
 							</p>
 						</c:if>
 
 						<!-- 할인중일때 원가, 할인율, 할인가 출력 -->
 						<c:if test="${item.product.total_discountrate != 0}">
 							<p class="originalPrice">
-								<s> <fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />할인 원
+								<s> <fmt:formatNumber value="${item.product.product_price}" type="number" groupingUsed="true" />원
 								</s>
 							</p>
 							<p class="salePrice">
-								<span style="color: #e32e15; margin-right: 5px; font-size: 15px;">토탈 할인율 %</span>
+								<span style="color: #e32e15; margin-right: 5px; font-size: 15px;">${item.product.total_discountrate}%</span>
 								<fmt:formatNumber value="${item.product.discount_price}" type="number" groupingUsed="true" />
-								최종 가격 원
+								원
 							</p>
 						</c:if>
 						<!-- 타임세일 중일 경우 하단에 출력 -->
@@ -120,7 +120,7 @@
 		// 고른 버튼에 따라 select 클래스 추가
 		document.addEventListener("DOMContentLoaded", function () {
 		    const params = new URLSearchParams(window.location.search);
-		    const categoryValue = params.get("categorySelect");
+		    const categoryValue = params.get("category");
 
 		    const buttons = document.querySelectorAll(".categoryButton");
 
