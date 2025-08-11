@@ -102,23 +102,29 @@
 	        </c:forEach>
 	
 	        <!-- 주문 상태 및 버튼 -->
-			<div class="order-status">
-			  <p class="status">${orders[0].orderStatusText}</p>
-				<div class="status-buttons">
-				  <c:if test="${orders[0].orderStatus == 3}">
-				    <button onclick="location.href='${pageContext.request.contextPath}/mypage/review?orderId=${orders[0].id}&productId=${orders[0].productId}'">구매후기</button>
-				  </c:if>
-			  <button onclick="submitRequest('exchange', ${orders[0].id}, ${orders[0].productId})">교환신청</button>
-    			<button onclick="submitRequest('refund', ${orders[0].id}, ${orders[0].productId})">환불신청</button>
-			  </div>
-			</div>
-	      </div>
+		<div class="order-status">
+		  <p class="status">${orders[0].orderStatusText}</p>
+		  <div class="status-buttons">
+		    <c:if test="${orders[0].orderStatus == 3}">
+		      <button onclick="location.href='${pageContext.request.contextPath}/mypage/review?orderId=${orders[0].id}&productId=${orders[0].productId}'">구매후기</button>
+		    </c:if>
+		
+		    <!--취소신청: 상태 0,1만 노출 -->
+		    <c:if test="${orders[0].orderStatus == 0 || orders[0].orderStatus == 1}">
+		            <button class="order-btn" onclick="submitRequest('cancel', ${orders[0].id}, ${orders[0].productId}, ${orders[0].orderStatus})">취소신청</button>
+		    </c:if>
+		
+		    <button class="order-btn" onclick="submitRequest('exchange', ${orders[0].id}, ${orders[0].productId})">교환신청</button>
+		    <button class="order-btn" onclick="submitRequest('refund', ${orders[0].id}, ${orders[0].productId})">반품신청</button>
+		  </div>
+		</div>
+		</div>
 	    </c:forEach>
 	  </c:otherwise>
 	</c:choose>
     </div> <!-- /tab-content#order -->
     
-    <!-- 취소/반품/교환 탭 -->
+       <!-- 취소/반품/교환 탭 -->
     <div class="tab-content" id="cancel">
       <div class="order-guide-text">
         <p>- 기본적으로 최근 3개월간의 자료가 조회되며, 기간 검색시 주문처리완료 후 36개월 이내의 주문내역을 조회하실 수 있습니다.</p>
@@ -225,52 +231,43 @@ const paginationHTML = {
 		    document.getElementById('pagination-content').innerHTML = paginationHTML[targetTab];
 		  });
 		});
-		
-		//환불,교환처
+		</script>
+
 	
-function submitRequest(type, orderId, productId) {
-			
-	console.log(type);
-	console.log(orderId);
-	console.log(productId);
+<script>
+  // 컨텍스트 경로 (항상 앞에 / 포함)
+  const CTX = '<c:url value="/" />';     // 예: "/myrium/"
 
-    let status = 0;
+  // 공통 헤더 (CSRF 자동 주입)
+  const BASE_HEADERS = { 'Content-Type': 'application/json' };
+  <c:if test="${not empty _csrf}">
+    BASE_HEADERS['${_csrf.headerName}'] = '${_csrf.token}';
+  </c:if>
 
-    if (type === 'exchange') {
-        status = 4;
-    } else if (type === 'refund') {
-        status = 6;
-    } else {
-        alert("잘못된 요청입니다.");
-        return;
-    }
-    
-    fetch('/mypage/updateOrderStatus', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            orderId: orderId,
-            productId: productId,
-            orderStatus: status
-        })
+  // 전역 함수 (inline onclick에서 호출)
+  window.submitRequest = function(type, orderId, productId, currentStatus){
+    const MAP = {
+      exchange: { status: 4, msg: '교환을 신청하시겠어요?' },
+      refund:   { status: 6, msg: '반품을 신청하시겠어요?' }, // 프로젝트에서 6=반품신청
+      cancel:   { status: 8, msg: '취소를 신청하시겠어요?', allow: [0,1] }
+    };
+    const conf = MAP[type];
+    if (!conf) return alert('잘못된 요청입니다.');
+    if (type === 'cancel' && !conf.allow.includes(Number(currentStatus)))
+      return alert('취소신청은 입금전/배송준비중 상태에서만 가능합니다.');
+    if (!confirm(conf.msg)) return;
+
+    fetch(CTX + 'mypage/updateOrderStatus', {
+      method: 'POST',
+      headers: BASE_HEADERS,
+      body: JSON.stringify({ orderId: Number(orderId), productId: Number(productId), orderStatus: conf.status })
     })
-    .then(response => {
-        if (response.ok) {
-            alert("요청이 처리되었습니다.");
-            location.reload(); // 새로고침으로 상태 갱신
-        } else {
-            alert("처리에 실패했습니다.");
-        }
-    })
-    .catch(error => {
-        console.error("에러 발생:", error);
-        alert("서버 요청 중 오류가 발생했습니다.");
-    });
-
-}
-
+    .then(res => { if (!res.ok) return res.text().then(t => { throw new Error(t || '요청 실패'); }); })
+    .then(() => { alert('요청이 처리되었습니다.'); location.reload(); })
+    .catch(err => { console.error(err); alert('서버 요청 중 오류가 발생했습니다.\n' + err.message); });
+  };
 </script>
+
+
 </body>
 </html>

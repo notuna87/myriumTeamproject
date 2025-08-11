@@ -74,7 +74,7 @@ import lombok.extern.log4j.Log4j;
 	        String statusText = !validOrders.isEmpty() ? validOrders.get(0).getOrderStatusText() : firstOrder.getOrderStatusText();
 	        model.addAttribute("orderStatus", statusText);
 
-	        // ✅ 누락되면 안 되는 최종 반환값
+	        // 누락되면 안 되는 최종 반환값
 	        return "mypage/order_detail";
 	    }
 	}
