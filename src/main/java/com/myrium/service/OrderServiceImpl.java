@@ -32,9 +32,9 @@ public class OrderServiceImpl implements OrderService {
 
 
 	@Override
-	public void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName) {
+	public void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName, int payment) {
 		
-		orderMapper.insertOrdersProduct(productid, orderId, userId, quantity, customerName);
+		orderMapper.insertOrdersProduct(productid, orderId, userId, quantity, customerName, payment);
 	}
 
 

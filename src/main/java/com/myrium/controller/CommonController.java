@@ -60,9 +60,11 @@ public class CommonController {
 	// 콘트롤러가 이미지를 브라우져에 전송
 	@GetMapping("/upload/**")
 	public void serveImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
 	    // 1) 요청/컨텍스트 경로
-	    final String requestUri  = request.getRequestURI();        // 예: /myrium/upload/2025/08/11/a.jpg
-	    final String contextPath = request.getContextPath();       // 예: /myrium (루트면 "")
+	    final String requestUri  = request.getRequestURI();       
+	    final String contextPath = request.getContextPath();   
+
 
 	    // 2) /upload/ 이후의 상대 경로만 추출
 	    final String prefix = contextPath + "/upload/";

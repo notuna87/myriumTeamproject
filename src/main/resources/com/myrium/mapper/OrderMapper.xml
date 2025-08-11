@@ -7,30 +7,40 @@
 	<select id="findOrdersByCustomerId"
 		resultType="com.myrium.domain.OrderDTO" parameterType="String">
 		SELECT
-		o.id AS id,
+		o.id AS
+		id,
 		m.customer_id AS customerId,
 		m.customer_name AS receiver,
 		m.phone_number AS phoneNumber,
-		m.zipcode || ' ' || m.addr1 || ' ' || NVL(m.addr2, '') AS address,
+		m.zipcode || ' ' || m.addr1 || ' ' ||
+		NVL(m.addr2, '') AS address,
 		o.id AS ordersId,
-		op.order_status AS orderStatus,
+		op.order_status AS
+		orderStatus,
 		TO_CHAR(o.order_date, 'YYYY-MM-DD') AS orderDate,
 		p.product_name AS productName,
 		p.product_price AS productPrice,
-		p.id AS productId,
+		p.id AS
+		productId,
 		p.discount_price,
 		op.quantity AS quantity,
-		o.orders_id AS ordersIdfull,
+		o.orders_id AS
+		ordersIdfull,
 		ip.img_path AS img_path
 		FROM
 		orders_product op
-		JOIN orders o ON op.orders_id = o.id
+		JOIN orders o
+		ON op.orders_id = o.id
 		JOIN product p ON op.product_id = p.id
-		JOIN member m ON op.user_id = m.id
-		LEFT JOIN img_path ip ON ip.product_id = p.id AND ip.is_thumbnail_main = 1
-		WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
+		JOIN
+		member m ON op.user_id = m.id
+		LEFT JOIN img_path ip ON ip.product_id =
+		p.id AND ip.is_thumbnail_main = 1
+		WHERE (op.is_deleted IS NULL OR
+		op.is_deleted = 0)
 		AND m.customer_id = #{customerId}
-		AND op.order_status NOT IN (4, 5, 6, 7)
+		AND op.order_status
+		NOT IN (4, 5, 6, 7)
 		ORDER BY o.order_date DESC, o.orders_id
 	</select>
 
@@ -38,7 +48,8 @@
 	<insert id="insertOrders">
 
 		<selectKey keyProperty="id" resultType="long" order="BEFORE">
-			SELECT ORDER_SEQ.NEXTVAL FROM dual
+			SELECT
+			ORDER_SEQ.NEXTVAL FROM dual
 		</selectKey>
 
 		INSERT INTO orders (
@@ -47,7 +58,6 @@
 		orders_id,
 		order_date,
 		customer_name,
-		order_status,
 		address,
 		zipcode,
 		phone_number,
@@ -63,7 +73,6 @@
 		#{ordersId},
 		SYSDATE,
 		#{customerId},
-		0,
 		#{address},
 		#{zipcode},
 		#{phoneNumber},
@@ -77,51 +86,76 @@
 	</insert>
 
 	<insert id="insertOrdersProduct">
+
 		INSERT INTO orders_product (
 		ID, PRODUCT_ID, ORDERS_ID, USER_ID,
 		CREATED_BY, CREATED_AT,
 		UPDATED_BY, UPDATED_AT,
-		IS_DELETED, QUANTITY, ORDER_STATUS
+		IS_DELETED, QUANTITY,
+		ORDER_STATUS
 		) VALUES (
-		ORDERS_PRODUCT_SEQ.NEXTVAL, #{productId} ,#{orderId}, #{userId},
+		ORDERS_PRODUCT_SEQ.NEXTVAL, #{productId}
+		,#{orderId}, #{userId},
 		#{customerName}, SYSDATE,
 		NULL, NULL,
-		0, #{quantity}, 1
+		0, #{quantity},
+		<choose>
+			<when test="payment == 0">
+				0
+			</when>
+			<when test="payment == 2">
+				0
+			</when>
+
+			<otherwise>
+				1
+			</otherwise>
+		</choose>
 		)
 	</insert>
 
 	<delete id="deletePurchaseCart">
-		delete from cart where user_id=#{userId} and product_id = #{productid}
+		delete from cart where user_id=#{userId} and
+		product_id = #{productid}
 	</delete>
 
 	<!-- 취소/반품/교환 완료 주문 조회 -->
 	<select id="selectCanceledOrdersByCustomerId"
 		resultType="com.myrium.domain.OrderDTO" parameterType="String">
 		SELECT
-		o.id AS id,
+		o.id AS
+		id,
 		m.customer_id AS customerId,
 		m.customer_name AS receiver,
 		m.phone_number AS phoneNumber,
-		m.zipcode || ' ' || m.addr1 || ' ' || NVL(m.addr2, '') AS address,
+		m.zipcode || ' ' || m.addr1 || ' ' ||
+		NVL(m.addr2, '') AS address,
 		o.id AS ordersId,
-		TO_CHAR(o.order_date, 'YYYY-MM-DD') AS orderDate,
+		TO_CHAR(o.order_date,
+		'YYYY-MM-DD') AS orderDate,
 		p.product_name AS productName,
 		p.product_price AS productPrice,
 		op.quantity AS quantity,
-		o.orders_id AS ordersIdfull,
+		o.orders_id AS
+		ordersIdfull,
 		p.id AS productId,
 		op.order_status AS orderStatus,
 		p.discount_price,
 		ip.img_path
 		FROM
 		orders_product op
-		JOIN orders o ON op.orders_id = o.id
+		JOIN orders o ON
+		op.orders_id = o.id
 		JOIN product p ON op.product_id = p.id
-		JOIN member m ON op.user_id = m.id
-		LEFT JOIN img_path ip ON ip.product_id = p.id AND ip.is_thumbnail_main = 1
-		WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
+		JOIN member m
+		ON op.user_id = m.id
+		LEFT JOIN img_path ip ON ip.product_id = p.id AND
+		ip.is_thumbnail_main = 1
+		WHERE (op.is_deleted IS NULL OR op.is_deleted
+		= 0)
 		AND m.customer_id = #{customerId}
-		AND op.order_status IN (4, 5, 6, 7)
+		AND op.order_status IN (4, 5, 6,
+		7)
 		ORDER BY o.order_date DESC, o.orders_id
 	</select>
 
@@ -131,15 +165,20 @@
 		parameterType="String">
 		SELECT
 		op.order_status AS ORDER_STATUS,
-		COUNT(*) AS "COUNT"
+		COUNT(*) AS
+		"COUNT"
 		FROM
 		orders_product op
 		JOIN orders o ON op.orders_id = o.id
-		JOIN member m ON o.user_id = m.id
-		WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
+		JOIN
+		member m ON o.user_id = m.id
+		WHERE (op.is_deleted IS NULL OR
+		op.is_deleted = 0)
 		AND m.customer_id = #{customerId}
-		AND TRIM(op.order_status) IN (0, 1, 2, 3)
-		AND o.order_date >= ADD_MONTHS(SYSDATE, -3)
+		AND
+		TRIM(op.order_status) IN (0, 1, 2, 3)
+		AND o.order_date >=
+		ADD_MONTHS(SYSDATE, -3)
 		GROUP BY op.order_status
 	</select>
 
@@ -153,12 +192,16 @@
 		FROM
 		orders_product op
 		JOIN orders o ON op.orders_id = o.id
-		JOIN member m ON o.user_id = m.id
+		JOIN member m
+		ON o.user_id = m.id
 		LEFT JOIN product p ON op.product_id = p.id
-		WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
-		AND m.customer_id = #{customerId}
+		WHERE
+		(op.is_deleted IS NULL OR op.is_deleted = 0)
+		AND m.customer_id =
+		#{customerId}
 		AND op.order_status IN (0, 1, 2, 3)
-		AND o.order_date >= ADD_MONTHS(SYSDATE, -3)
+		AND o.order_date >=
+		ADD_MONTHS(SYSDATE, -3)
 	</select>
 
 
@@ -167,19 +210,25 @@
 		resultType="com.myrium.domain.OrderDTO">
 		SELECT
 		o.id AS id,
-		TO_CHAR(o.order_date, 'yyyy-MM-dd') AS orderDate,
+		TO_CHAR(o.order_date, 'yyyy-MM-dd') AS
+		orderDate,
 		op.orders_id AS ordersId,
 		op.quantity,
-		op.order_status AS orderStatus,
+		op.order_status AS
+		orderStatus,
 		p.product_name AS productName,
-		p.product_price AS productPrice,
+		p.product_price AS
+		productPrice,
 		op.product_id AS productId,
-		o.payment_method AS paymentMethod,
+		o.payment_method AS
+		paymentMethod,
 		o.customer_name AS receiver,
-		o.phone_number AS phoneNumber,
+		o.phone_number AS
+		phoneNumber,
 		o.zipcode AS zipcode,
 		o.address AS address,
-		o.orders_id AS ordersIdfull,
+		o.orders_id AS
+		ordersIdfull,
 		o.delivery_msg AS deliveryMsg,
 		p.discount_price,
 		ip.img_path
@@ -187,8 +236,10 @@
 		orders o
 		JOIN orders_product op ON o.id = op.orders_id
 		LEFT JOIN product p ON op.product_id = p.id
-		LEFT JOIN img_path ip ON ip.product_id = p.id AND ip.is_thumbnail_main = 1
-		WHERE o.id = #{orderId}
+		LEFT JOIN img_path ip ON
+		ip.product_id = p.id AND ip.is_thumbnail_main = 1
+		WHERE o.id =
+		#{orderId}
 	</select>
 
 	<!-- 주문상세내역 금액합산 -->
@@ -196,68 +247,81 @@
 	<select id="getValidOrderTotalAmount" parameterType="long"
 		resultType="int">
 		SELECT
-		NVL(SUM((p.product_price - (p.product_price * COALESCE(total_discountrate, 0) / 100))*
+		NVL(SUM((p.product_price - (p.product_price *
+		COALESCE(total_discountrate, 0) / 100))*
 		op.quantity), 0)
 		FROM
 		orders_product op
 		JOIN product p ON op.product_id = p.id
-		WHERE op.orders_id = #{orderId}
+		WHERE
+		op.orders_id = #{orderId}
 		AND op.order_status NOT IN (4, 5, 6, 7)
-		AND op.is_deleted = 0
+		AND
+		op.is_deleted = 0
 	</select>
 
 	<!-- 환불,교환버튼 처리 -->
 	<update id="updateOrderStatus">
 		UPDATE orders_product
-		SET order_status = #{orderStatus}
+		SET order_status =
+		#{orderStatus}
 		WHERE orders_id = #{orderId}
-		AND product_id = #{productId}
+		AND product_id =
+		#{productId}
 	</update>
 	<update id="updateOrdersStatus">
 		UPDATE orders
 		SET order_status = #{orderStatus}
-		WHERE id = #{orderId}
+		WHERE
+		id = #{orderId}
 	</update>
 
 	<!-- 환불 신청 여부 1로 업데이트 -->
 	<update id="updateRefundFlag">
 		UPDATE orders
 		SET is_apprefund = 1
-		WHERE id = #{orderId}
+		WHERE id =
+		#{orderId}
 	</update>
 
 	<!-- 교환 신청 여부 1로 업데이트 -->
 	<update id="updateExchangeFlag">
 		UPDATE orders
 		SET is_appexchanged = 1
-		WHERE id = #{orderId}
+		WHERE id =
+		#{orderId}
 	</update>
 
 	<!-- 환불 완료 시 두 테이블 상태 변경 -->
 	<update id="completeRefundStatus">
 		UPDATE orders
 		SET order_status = 7
-		WHERE id = #{orderId};
+		WHERE id =
+		#{orderId};
 
 		UPDATE orders_product
 		SET order_status = 7
-		WHERE orders_id = #{orderId};
+		WHERE orders_id =
+		#{orderId};
 	</update>
 
 	<!-- 교환 완료 시 두 테이블 상태 변경 -->
 	<update id="completeExchangeStatus">
 		UPDATE orders
 		SET order_status = 5
-		WHERE id = #{orderId};
+		WHERE id =
+		#{orderId};
 
 		UPDATE orders_product
 		SET order_status = 5
-		WHERE orders_id = #{orderId};
+		WHERE orders_id =
+		#{orderId};
 	</update>
 
 	<select id="countOrdersToday" resultType="int">
 		SELECT COUNT(*)
-		FROM orders
+		FROM
+		orders
 		WHERE SUBSTR(orders_id, 1, 8) = #{today}
 	</select>
 
@@ -266,7 +330,8 @@
 		resultType="com.myrium.domain.OrderDTO">
 		SELECT id, is_refundable, is_exchanged
 		FROM orders
-		WHERE id = #{orderId}
+		WHERE id =
+		#{orderId}
 
 	</select>
 
@@ -280,7 +345,8 @@
 		JOIN
 		orders_product op ON p.id = op.product_id
 		LEFT JOIN
-		img_path ip ON p.id = ip.product_id AND ip.is_thumbnail_main = 1
+		img_path ip ON p.id = ip.product_id AND ip.is_thumbnail_main
+		= 1
 		WHERE
 		op.orders_id = #{orderId}
 	</select>
@@ -290,25 +356,31 @@
 		resultType="com.myrium.domain.OrderDTO">
 		SELECT
 		o.id AS id,
-		TO_CHAR(o.order_date, 'yyyy-MM-dd') AS orderDate,
+		TO_CHAR(o.order_date, 'yyyy-MM-dd') AS
+		orderDate,
 		op.orders_id AS ordersId,
 		op.quantity,
-		op.order_status AS orderStatus,
+		op.order_status AS
+		orderStatus,
 		p.product_name AS productName,
-		p.product_price AS productPrice,
+		p.product_price AS
+		productPrice,
 		p.id AS productId,
 		o.payment_method AS paymentMethod,
 		o.customer_name AS receiver,
 		o.phone_number AS phoneNumber,
-		o.zipcode AS zipcode,
+		o.zipcode AS
+		zipcode,
 		o.address AS address,
 		o.orders_id AS ordersIdfull,
 		o.delivery_msg AS deliveryMsg
 		FROM
 		orders o
-		JOIN orders_product op ON o.id = op.orders_id
+		JOIN orders_product op ON
+		o.id = op.orders_id
 		LEFT JOIN product p ON op.product_id = p.id
-		WHERE o.id = #{orderId}
+		WHERE
+		o.id = #{orderId}
 		AND p.id = #{productId}
 	</select>
 
@@ -319,11 +391,14 @@
 		o.id AS id,
 		op.product_id AS productId,
 		op.order_status AS orderStatus,
-		TO_CHAR(o.order_date, 'YYYY-MM-DD HH24:MI:SS') AS orderDate,
+		TO_CHAR(o.order_date, 'YYYY-MM-DD
+		HH24:MI:SS') AS orderDate,
 		op.orders_id AS ordersId
 		FROM orders o
-		JOIN orders_product op ON o.id = op.orders_id
-		WHERE op.order_status IN (1, 2)
+		JOIN
+		orders_product op ON o.id = op.orders_id
+		WHERE op.order_status IN (1,
+		2)
 	</select>
 
 

@@ -42,6 +42,7 @@
 	<div class="navsearchWrap">
 		<div class="navbarWrap">
 			<ul>
+
 				<li><a href="${pageContext.request.contextPath}/brand_intro">브랜드 소개</a></li>
 				<li><a href="#">식물키우기</a></li>
 				<li><a href="#">타임세일</a></li>

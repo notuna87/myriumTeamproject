@@ -159,7 +159,7 @@ public class PurchaseController {
 				int productid = Integer.parseInt(productIdArray[i]);
 				int quantity = Integer.parseInt(quantityArray[i]);
 
-				orderservice.insertOrdersProduct(productid, OrderId, userId, quantity, customerName);
+				orderservice.insertOrdersProduct(productid, OrderId, userId, quantity, customerName, payment);
 				orderservice.deletePurchaseCart(userId, productid);
 				int getStock = productservice.getStock(productid);
 				int getSalesCount = productservice.getSalesCount(productid);

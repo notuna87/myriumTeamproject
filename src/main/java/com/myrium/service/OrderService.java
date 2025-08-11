@@ -9,7 +9,7 @@ public interface OrderService {
 
 	int insertOrders(OrderDTO orders);
 
-	void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName);
+	void insertOrdersProduct(int productid, Long orderId, Long userId, int quantity, String customerName, int payment);
 
 	void deletePurchaseCart(Long userId, int productid);
 
