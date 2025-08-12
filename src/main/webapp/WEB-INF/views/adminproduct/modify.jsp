@@ -3,7 +3,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 
-<%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp"%>
 
 <!DOCTYPE html>
@@ -36,6 +35,9 @@
 
 </head>
 <body>
+<%@include file="../main/header.jsp"%>
+
+<div style="width:1240px; margin:0 auto;">
 	<div class="row">
 		<div class="col-lg-12">
 			<h1 class="page-header">상품정보 수정<span class="badge">관리자</span></h1>
@@ -267,7 +269,7 @@
 			</div>
 		</div>
 	</div>
-
+</div>
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
 <!-- <script src="/resources/js/RegisterUploadManager.js"></script> -->

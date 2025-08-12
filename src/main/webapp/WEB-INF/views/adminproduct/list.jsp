@@ -25,6 +25,7 @@
 
 <body>
 <%@include file="../main/header.jsp"%>
+<div style="width:1240px; margin:0 auto;">
 	<div class="row">
 		<div class="col-lg-12">
 			<h1 class="page-header">상품관리<span class="badge">관리자</span></h1>
@@ -103,7 +104,7 @@
 				                <th class="text-center">타임세일</th>
 				                <th class="text-center">(타임세일)할인율</th>
 				                <th class="text-center">노출</th>
-				                <th class="text-center">관리</th>
+				                <th class="text-center" style="width:169px;">관리</th>
 				            </tr>
 				        </thead>
 				        <tbody>
@@ -231,7 +232,7 @@
 			</div>
 		</div>
 	</div>
-
+</div>
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">
