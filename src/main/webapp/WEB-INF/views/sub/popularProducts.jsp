@@ -19,7 +19,7 @@
 
 .timesaleSliderIn img {
 	width: 100%;
-	height: auto;
+	height: 228px;
 	border-radius: 10px;
 }
 

@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
-<%@include file="../main/header.jsp"%>
+
 <%@include file="../includes_admin/header.jsp" %>
 
 <!DOCTYPE html>
@@ -13,13 +13,15 @@
 <meta charset="UTF-8">
 <title>문의사항 등록</title>
 </head>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/boardRegister.css" />
+
 <body>
+<%@include file="../main/header.jsp"%>
 	<div class="row">
 		<div class="col-lg-12">
 			<h1 class="page-header">문의사항 등록</h1>
 		</div>
 	</div>
-
 	<!-- /.row -->
 	<div class="row">
 		<div class="col-lg-12">
@@ -27,7 +29,21 @@
 				<div class="panel-heading">작성 후 등록 버튼을 클릭하세요.</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
+				<c:if test="${product != null}">
+				<h5 style="font-weight : bold;">문의하실 상품</h5>
+				<div class="boardProductInfo">
+						<table>
+							<tr>
+								<th><img src="${pageContext.request.contextPath}/upload/${product.thumbnail.img_path}"></th>
+								<td><p class="productName">상풍명 : ${product.product.product_name}</p>
+								<p class="productContent">${product.product.product_content }</p>
+								<p class="productPrice">상품 가격 : <fmt:formatNumber value="${product.product.product_price}" type="number" />원</p></td>
+							</tr>
+						</table>
+					</div>
+				</c:if>
 					<form role="form" action="/adminboard/register" method="post">
+					<input type="hidden" name="productId" value="${productid}">
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
 						
 						<sec:authorize access="isAuthenticated()">

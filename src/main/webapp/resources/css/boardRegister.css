@@ -1,0 +1,22 @@
+.boardProductInfo {
+	width: 100%;
+	height: 120px;
+	margin-bottom : 15px;
+	border : 1px solid #ddd;
+}
+
+.boardProductInfo th {
+	width: 120px;
+    height: 120px;
+    padding: 10px;
+}
+
+.boardProductInfo th img{
+	width: 100px;
+    height: 100px;
+    border : 1px solid #ddd;
+}
+
+.productName {
+	font-weight: bold;
+}

@@ -140,7 +140,7 @@
       </c:choose>
 
       <div class="review-buttons">
-        <div class="allButton">전체 보기</div>
+        <a href="${pageContext.request.contextPath}/total_review"><div class="allButton">전체 보기</div></a>
 		<div class="writeButton"
 		     style="cursor: pointer;"
 		     onclick="location.href='${pageContext.request.contextPath}/mypage'">

@@ -247,7 +247,8 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 		p.ID,
 		p.PRODUCT_NAME,
 		p.PRODUCT_STOCK,
-		p.PRODUCT_CONTENT,
+		TO_CHAR(p.PRODUCT_CONTENT)
+		as product_content,
 		p.PRODUCT_PRICE,
 		p.IS_DELETED,
 		p.CREATED_AT,
@@ -273,7 +274,8 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 		</choose>
 		FROM product p
 		<if test="sort == 'review'">
-			LEFT JOIN review r ON p.ID = r.PRODUCT_ID AND r.IS_DELETED = 0
+			LEFT JOIN review r ON p.ID = r.PRODUCT_ID AND r.IS_DELETED
+			= 0
 		</if>
 		WHERE p.IS_DELETED = 0
 		<choose>
@@ -283,6 +285,7 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 				p.PRODUCT_NAME,
 				p.PRODUCT_STOCK,
 				p.PRODUCT_PRICE,
+				TO_CHAR(p.PRODUCT_CONTENT) as product_content,
 				p.IS_DELETED,
 				p.CREATED_AT,
 				p.CREATED_BY,
@@ -318,4 +321,5 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 			</otherwise>
 		</choose>
 	</select>
+
 </mapper>

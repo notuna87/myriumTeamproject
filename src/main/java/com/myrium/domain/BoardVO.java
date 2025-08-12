@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 public class BoardVO {
     private Long id;             // 게시글 ID (PK)
-    private Long userId;         // 작성자 회원번호 (FK) to member.id
+    private Long userId;		 // 작성자 회원번호 (FK) to member.id
+    private Long productId;
     private String title;        // 제목
     private String content;      // 내용
     private String customerId;   // 작성자 로그인 ID (표시용)

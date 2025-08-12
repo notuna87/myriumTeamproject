@@ -75,4 +75,12 @@ public class AdminBoardServiceImpl implements AdminBoardService{
 		log.info("restore...." + id);
 		return mapper.restore(id)==1;
 	}
+
+
+	@Override
+	public List<BoardVO> getBoardList(Long productId) {
+		
+		
+		return mapper.getBoardList(productId);
+	}
 }

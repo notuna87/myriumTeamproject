@@ -100,10 +100,9 @@
 					<button type="button" onclick="increaseQty()">+</button>
 				</div>
 			</div>
+			
 			<p style="margin-bottom: 20px;">
-
 				총 구매 금액 <span id="totalPrice" style="float: right; font-size: 22px; font-weight: bold; color: #e32e15;"> 원 </span>
-
 			</p>
 
 			<sec:authorize access="!isAuthenticated()">
@@ -184,8 +183,8 @@
 			const qtypurchaseHidden = document
 					.getElementById("quantityPurchaseHidden");
 			qtyInput.value = parseInt(qtyInput.value) + 1;
-			qtycartHidden.value = qtyInput.value;
-			qtypurchaseHidden.value = qtyInput.value;
+		    if (qtycartHidden) qtycartHidden.value = qtyInput.value;
+		    if (qtypurchaseHidden) qtypurchaseHidden.value = qtyInput.value;
 
 			// 총 구매 금액 업데이트
 			if (discountPrice == 0) {
@@ -201,8 +200,8 @@
 			const qtypurchaseHidden = document.getElementById("quantityPurchaseHidden");
 			if (parseInt(qtyInput.value) > 1) {
 				qtyInput.value = parseInt(qtyInput.value) - 1;
-				qtycartHidden.value = qtyInput.value;
-				qtypurchaseHidden.value = qtyInput.value;
+			    if (qtycartHidden) qtycartHidden.value = qtyInput.value;
+			    if (qtypurchaseHidden) qtypurchaseHidden.value = qtyInput.value;
 
 				// 총 구매 금액 업데이트
 				if (discountPrice == 0) {

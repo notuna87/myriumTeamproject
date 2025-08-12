@@ -7,24 +7,25 @@ import com.myrium.domain.Criteria;
 import com.myrium.domain.ReplyPageDTO;
 
 public interface AdminBoardService {
-	
-	   public void register(BoardVO board);
-	   
-	   public BoardVO get(Long id);
-	   
-	   public boolean modify(BoardVO board);
-	   
-	   public boolean harddel(Long id);
-	
-	   public boolean softdel(Long id);
-	   
-	   public List<BoardVO> getList();
-	   
-	   public List<BoardVO> getList(Criteria cri, boolean isAdmin);
-	   
-	   public int getTotal(Criteria cri, boolean isAdmin);
 
-	   public boolean restore(Long id);
-	  
+	public void register(BoardVO board);
+
+	public BoardVO get(Long id);
+
+	public boolean modify(BoardVO board);
+
+	public boolean harddel(Long id);
+
+	public boolean softdel(Long id);
+
+	public List<BoardVO> getList();
+
+	public List<BoardVO> getList(Criteria cri, boolean isAdmin);
+
+	public int getTotal(Criteria cri, boolean isAdmin);
+
+	public boolean restore(Long id);
+
+	public List<BoardVO> getBoardList(Long productId);
 
 }

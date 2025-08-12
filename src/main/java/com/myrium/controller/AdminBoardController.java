@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.myrium.domain.BoardVO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.PageDTO;
+import com.myrium.domain.ProductDTO;
 import com.myrium.service.AdminBoardService;
+import com.myrium.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -29,6 +32,7 @@ import lombok.extern.log4j.Log4j;
 public class AdminBoardController {
 
 	private final AdminBoardService boardservice;
+	private final ProductService productservice;
 	
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
@@ -71,9 +75,19 @@ public class AdminBoardController {
 		return "redirect:/adminboard/list";
 	}
 	
+	
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/register")
-	public void register() {
+	public void register(@RequestParam(required = false) Integer productid, Model model) {
+		
+		if(productid != null) {
+			ProductDTO getProductInfo = productservice.getProductInfoWithThumbnail(productid);
+			log.info(getProductInfo);
+			
+			model.addAttribute("product", getProductInfo);
+			model.addAttribute("productid",productid);
+		}
+
 	}
 	
 	@PreAuthorize("isAuthenticated()")
