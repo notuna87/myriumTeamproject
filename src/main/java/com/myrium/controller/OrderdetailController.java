@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.myrium.domain.MemberVO;
 import com.myrium.domain.OrderDTO;
@@ -76,6 +77,13 @@ import lombok.extern.log4j.Log4j;
 
 	        // 누락되면 안 되는 최종 반환값
 	        return "mypage/order_detail";
+	    }
+	    
+	    @GetMapping("/mypage/test/auto-confirm")
+	    @ResponseBody
+	    public String runAutoConfirmNow() {
+	        int lines = orderService.autoConfirmAfter1Day();
+	        return "[AutoConfirmNow] lines=" + lines;
 	    }
 	}
 	

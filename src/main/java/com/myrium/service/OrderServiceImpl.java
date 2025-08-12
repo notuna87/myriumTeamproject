@@ -71,20 +71,28 @@ public class OrderServiceImpl implements OrderService {
     }
     
     //교환,환불버튼처리
+    @Transactional
     @Override
     public void updateOrderStatus(Long orderId, int productId, int orderStatus) {
-        // 1. 상품 상태 업데이트
-        orderMapper.updateOrderStatus(orderId, productId, orderStatus);
+        // 라인 상태
+        if (productId > 0) {
+            orderMapper.updateOrderStatus(orderId, productId, orderStatus);
+        } else {
+            orderMapper.updateAllOrderLines(orderId, orderStatus);
+        }
 
-        // 2. 주문 상태 업데이트
+        // 헤더 상태
         orderMapper.updateOrdersStatus(orderId, orderStatus);
 
-        // 3. 환불/교환 신청 여부 업데이트
-        if (orderStatus == 4) { // 교환 신청
+        // 플래그
+        if (orderStatus == 4) {           // 교환 신청
             orderMapper.updateExchangeFlag(orderId);
-        } else if (orderStatus == 6) { // 환불 신청
+        } else if (orderStatus == 6) {    // 환불 신청
             orderMapper.updateRefundFlag(orderId);
         }
+
+        log.info(String.format("updateOrderStatus: orderId=%d, productId=%d, status=%d",
+                orderId, productId, orderStatus));
     }
     
     //교환,환불 완료처리 주문상태변경
@@ -125,11 +133,12 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	 @Override
-	    @Transactional
 	    public int autoConfirmAfter1Day() {
-	        int changed = orderMapper.autoConfirmAfter1Day();
-	        log.info("[OrderService] autoConfirmAfter1Day updated rows = " + changed);
-	        return changed;
+	        int a = orderMapper.autoConfirmOrders();
+	        int b = orderMapper.autoConfirmOrderProducts();
+	        return a + b; // 합계 로그 확인용
 	    }
+
+
 	
 }
