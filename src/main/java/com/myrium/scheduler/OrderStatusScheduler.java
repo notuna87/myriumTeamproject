@@ -49,14 +49,15 @@ public class OrderStatusScheduler {
 
     }
     
-    @Scheduled(cron = "0 0 2 * * *")
+    @Scheduled(cron = "0 0 2 * * *", zone = "Asia/Seoul")
     public void autoConfirmPurchaseDaily() {
-        int lines  = orderService.autoConfirmAfter1Day();         
-        log.info("[AutoConfirm] lines=" + lines );
+        int lines = orderService.autoConfirmAfter1Day();
+        log.info("[AutoConfirm] now=" + new Date() + ", lines=" + lines);
     }
     
     @PostConstruct
     public void init() {
         log.info("✅ OrderStatusScheduler Bean 등록됨");
     }
+    
 }

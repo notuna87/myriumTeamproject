@@ -56,5 +56,23 @@ public interface OrderMapper {
 	//주문상태변경
 	List<OrderDTO> findOrdersForStatusUpdate();
 	
-	 int autoConfirmAfter1Day();  
+    int autoConfirmOrders();
+    int autoConfirmOrderProducts();
+
+    // 라인 한 건 변경
+    int updateOrderStatusLine(@Param("orderId") Long orderId,
+                              @Param("productId") int productId,
+                              @Param("orderStatus") int orderStatus);
+
+    // 라인 전체 일괄 변경
+    int updateAllOrderLines(@Param("orderId") Long orderId,
+                            @Param("orderStatus") int orderStatus);
+
+    // 헤더 변경
+    int updateOrderStatusHeader(@Param("orderId") Long orderId,
+                                @Param("orderStatus") int orderStatus);
+
+
+	    
+	    
 }

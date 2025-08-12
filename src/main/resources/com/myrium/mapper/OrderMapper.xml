@@ -240,20 +240,6 @@
 		WHERE id = #{orderId}
 	</update>
 
-	<!-- 환불 신청 여부 1로 업데이트 -->
-	<update id="updateRefundFlag">
-		UPDATE orders
-		SET is_apprefund = 1
-		WHERE id = #{orderId}
-	</update>
-
-	<!-- 교환 신청 여부 1로 업데이트 -->
-	<update id="updateExchangeFlag">
-		UPDATE orders
-		SET is_appexchanged = 1
-		WHERE id = #{orderId}
-	</update>
-
 	<!-- 환불 완료 시 두 테이블 상태 변경 -->
 	<update id="completeRefundStatus">
 		UPDATE orders
@@ -347,13 +333,63 @@
 		WHERE op.order_status IN (1, 2)
 	</select>
 
-	<!-- 배송완료 후 구매확정 변경 -->
-	<update id="autoConfirmAfter1Day">
-	  <![CDATA[
-	  UPDATE orders_product
-	     SET order_status = 18
-	   WHERE order_status = 3
-	     AND updated_at <= SYSDATE - 1
-	  ]]>
-	</update>
+<!-- 배송완료 후 구매확정 (헤더) -->
+<update id="autoConfirmOrders">
+  <![CDATA[
+    UPDATE orders o
+       SET o.order_status = 18
+     WHERE o.order_status = 3
+       AND o.order_date <= TRUNC(SYSDATE) - 2
+  ]]>
+</update>
+
+<!-- 배송완료 후 구매확정 (라인) -->
+<update id="autoConfirmOrderProducts">
+  <![CDATA[
+    UPDATE orders_product op
+       SET op.order_status = 18
+     WHERE op.order_status = 3
+       AND EXISTS (
+             SELECT 1
+               FROM orders o
+              WHERE o.id = op.orders_id
+                AND o.order_date <= TRUNC(SYSDATE) - 2
+          )
+  ]]>
+</update>
+
+<!-- 라인 한 건 변경 -->
+<update id="updateOrderStatusLine" parameterType="map">
+  UPDATE orders_product
+     SET order_status = #{orderStatus}
+   WHERE orders_id = #{orderId}
+     AND product_id = #{productId}
+</update>
+
+<!-- 라인 전체 일괄 변경 -->
+<update id="updateAllOrderLines" parameterType="map">
+  UPDATE orders_product
+     SET order_status = #{orderStatus}
+   WHERE orders_id = #{orderId}
+</update>
+
+<!-- 헤더 변경 -->
+<update id="updateOrderStatusHeader" parameterType="map">
+  UPDATE orders
+     SET order_status = #{orderStatus}
+   WHERE id = #{orderId}
+</update>
+
+<!-- 교환/환불 플래그 -->
+<update id="updateExchangeFlag" parameterType="long">
+  UPDATE orders
+     SET is_exchanged = 1
+   WHERE id = #{orderId}
+</update>
+
+<update id="updateRefundFlag" parameterType="long">
+  UPDATE orders
+     SET is_refundable = 1
+   WHERE id = #{orderId}
+</update>
 </mapper>
