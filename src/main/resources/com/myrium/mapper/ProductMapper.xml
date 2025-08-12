@@ -217,7 +217,7 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 				etc
 			</when>
 		</choose>
-		= 1)
+		= 1 and is_deleted = 0)
 		<choose>
 			<when test="sort == 'new'">
 				ORDER BY created_at DESC
@@ -247,6 +247,7 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 		p.ID,
 		p.PRODUCT_NAME,
 		p.PRODUCT_STOCK,
+		p.PRODUCT_CONTENT,
 		p.PRODUCT_PRICE,
 		p.IS_DELETED,
 		p.CREATED_AT,
@@ -274,6 +275,7 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 		<if test="sort == 'review'">
 			LEFT JOIN review r ON p.ID = r.PRODUCT_ID AND r.IS_DELETED = 0
 		</if>
+		WHERE p.IS_DELETED = 0
 		<choose>
 			<when test="sort == 'review'">
 				GROUP BY
