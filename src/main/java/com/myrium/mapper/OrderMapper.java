@@ -71,8 +71,13 @@ public interface OrderMapper {
     // 헤더 변경
     int updateOrderStatusHeader(@Param("orderId") Long orderId,
                                 @Param("orderStatus") int orderStatus);
+    
+    
+    //상품 부분 취소
+    int countOrderLines(@Param("orderId") Long orderId);
+    int countOrderLinesWithStatus(@Param("orderId") Long orderId,
+                  @Param("orderStatus") int orderStatus);
 
-
-	    
+	
 	    
 }

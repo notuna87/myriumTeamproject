@@ -72,7 +72,7 @@
 					</tr>
 					<tr>
 						<th>주문처리상태</th>
-						<td>${orders[0].orderStatusText}</td>
+						<td>${orderStatus}</td> 
 					</tr>
 				</table>
 			</section>
@@ -102,10 +102,10 @@
 			</section>
 
 			<c:forEach var="order" items="${orders}">
-				<c:if test="${order.orderStatus != '4' 
-				          && order.orderStatus != '5'
-				          && order.orderStatus != '6' 
-				          && order.orderStatus != '7'}">
+			<c:if test="${order.orderStatus != 4 
+			           && order.orderStatus != 5
+			           && order.orderStatus != 6 
+			           && order.orderStatus != 7}">
 					<div class="product-box">
 						<div class="product-img">
 							<img src="${pageContext.request.contextPath}/upload/${order.img_path}" alt="상품 이미지" />
