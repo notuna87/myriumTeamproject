@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.servlet.http.HttpSession;
 
@@ -24,7 +25,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.myrium.domain.MemberVO;
 import com.myrium.domain.OrderDTO;
-import com.myrium.scheduler.OrderStatusScheduler;
 import com.myrium.security.domain.CustomUser;
 import com.myrium.service.OrderService;
 
@@ -173,14 +173,36 @@ public class MypageController {
         model.addAttribute("orderCount", orderList.size());
 
         // 교환/환불 내역 조회
-        List<OrderDTO> cancelList = orderService.getCanceledOrdersByCustomerId(customerId);
-        Map<String, List<OrderDTO>> cancelGroupedOrders = new LinkedHashMap<>();
-        for (OrderDTO order : cancelList) {
-            order.setOrderDisplayId();
-            cancelGroupedOrders.computeIfAbsent(order.getOrdersId(), k -> new ArrayList<>()).add(order);
-        }
-        model.addAttribute("cancelGroupedOrders", cancelGroupedOrders);
-        model.addAttribute("cancelCount", cancelList.size());
+        List<OrderDTO> cancelAll = orderService.getCanceledOrdersByCustomerId(customerId);
+
+     // 상태별로 나누기
+     List<OrderDTO> cancelList   = new ArrayList<>(); 
+     List<OrderDTO> exchangeList = new ArrayList<>(); 
+     List<OrderDTO> refundList   = new ArrayList<>(); 
+
+     for (OrderDTO dto : cancelAll) {
+         int s = dto.getOrderStatus();
+         if (s == 4 || s == 5) {
+             exchangeList.add(dto);
+         } else if (s == 6 || s == 7 || s == 14 || s == 16) {
+             refundList.add(dto);
+         } else if (s == 8 || s == 9 || s == 11 || s == 12) {
+             cancelList.add(dto);
+         }
+     }
+
+     // 탭 카운트(전체)
+     int cancelTabCount = cancelList.size() + exchangeList.size() + refundList.size();
+     model.addAttribute("cancelTabCount", cancelTabCount);
+
+     // 섹션별 리스트 & 카운트
+     model.addAttribute("cancelList",   cancelList);
+     model.addAttribute("exchangeList", exchangeList);
+     model.addAttribute("refundList",   refundList);
+
+     model.addAttribute("cancelCount",   cancelList.size());
+     model.addAttribute("exchangeCount", exchangeList.size());
+     model.addAttribute("refundCount",   refundList.size());
 
         
         return "mypage/order_history";
@@ -188,25 +210,34 @@ public class MypageController {
 
 	
 	//환불신청
-
-    @PostMapping("/mypage/updateOrderStatus")
+    @PostMapping(value = "/mypage/updateOrderStatus", consumes = "application/json")
     @ResponseBody
     public ResponseEntity<String> updateOrderStatus(@RequestBody Map<String, Object> requestData) {
         try {
+            // 필수: orderId, orderStatus
             Long orderId = ((Number) requestData.get("orderId")).longValue();
-            int productId = ((Number) requestData.get("productId")).intValue();
             int orderStatus = ((Number) requestData.get("orderStatus")).intValue();
 
+            // 옵션: productId (없거나 빈문자면 전체 처리용 0으로)
+            int productId = 0;
+            Object pidObj = requestData.get("productId");
+            if (pidObj instanceof Number) {
+                productId = ((Number) pidObj).intValue();
+            } else if (pidObj instanceof String) {
+                String s = ((String) pidObj).trim();
+                if (!s.isEmpty()) productId = Integer.parseInt(s);
+            }
+
+            // 서비스(트랜잭션)에서 productId > 0이면 부분, <=0이면 전체로 처리
             orderService.updateOrderStatus(orderId, productId, orderStatus);
 
             return ResponseEntity.ok("상태 변경 완료");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("updateOrderStatus error", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러 발생");
         }
     }
-
-    }
+}
     
 
 

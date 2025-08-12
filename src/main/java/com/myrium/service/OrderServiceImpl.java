@@ -62,7 +62,8 @@ public class OrderServiceImpl implements OrderService {
     
     @Override
     public List<OrderDTO> getOrderDetail(Long orderId) {
-        return orderMapper.findOrderDetailById(orderId);
+        List<OrderDTO> list = orderMapper.findOrderDetailById(orderId);
+        return (list != null) ? list : java.util.Collections.emptyList();
     }
     
     @Override
@@ -74,17 +75,25 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void updateOrderStatus(Long orderId, int productId, int orderStatus) {
-        // 라인 상태
+        // 1) 라인 변경
         if (productId > 0) {
+            // 부분 취소/환불: 해당 상품 라인만
             orderMapper.updateOrderStatus(orderId, productId, orderStatus);
+
+            // 2) 헤더는 '모든 라인'이 같은 상태일 때만 변경
+            int total = orderMapper.countOrderLines(orderId);
+            int same  = orderMapper.countOrderLinesWithStatus(orderId, orderStatus);
+            if (total > 0 && same == total) {
+                orderMapper.updateOrdersStatus(orderId, orderStatus);
+            }
+
         } else {
+            // 전체 취소/환불: 모든 라인 + 헤더 동시 변경
             orderMapper.updateAllOrderLines(orderId, orderStatus);
+            orderMapper.updateOrdersStatus(orderId, orderStatus);
         }
 
-        // 헤더 상태
-        orderMapper.updateOrdersStatus(orderId, orderStatus);
-
-        // 플래그
+        // 3) 플래그(주문 단위)
         if (orderStatus == 4) {           // 교환 신청
             orderMapper.updateExchangeFlag(orderId);
         } else if (orderStatus == 6) {    // 환불 신청
