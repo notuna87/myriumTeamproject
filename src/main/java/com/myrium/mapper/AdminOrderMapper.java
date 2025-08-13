@@ -31,11 +31,15 @@ public interface AdminOrderMapper {
 	
 	public void deleteAdminRole(Long id);
 	
-	public void updateOrderStatus(@Param("ordersId") String ordersId,
-								@Param("orderStatus") int orderStatus);
-			
-	public void updateOrderProductStatus(@Param("ordersProductId") int ordersProductId,
-								@Param("orderStatus") int orderStatus);
+    int updateOrderProductStatus(@Param("ordersProductId") int ordersProductId,
+            @Param("orderStatus") int orderStatus);
+
+	int updateOrderStatus(@Param("ordersId") String ordersId,
+	      @Param("orderStatus") int orderStatus);
+	
+	public List<Integer> getPagedOrderIds(Criteria cri);
+	
+	public List<OrderDTO> getOrdersWithProducts(List<Integer> orderIds);
 
 
 

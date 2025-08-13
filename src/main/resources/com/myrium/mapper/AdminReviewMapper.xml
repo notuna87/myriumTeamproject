@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myrium.mapper.AdminReviewMapper">
+
+<resultMap id="ReviewsummaryMap" type="com.myrium.domain.ReviewsummaryVO">
+    <id property="productId" column="product_id"/>
+    <result property="productName" column="product_name"/>
+    <result property="reviewCount" column="review_count"/>
+    <result property="avgRating" column="avg_rating"/>
+    <result property="imageUrl" column="image_url"/>
+    <result property="lastReviewDate" column="latest_review_date"/>
+</resultMap>
+
+<resultMap id="reviewDTOMap" type="com.myrium.domain.ReviewDTO">
+    <id property="id" column="id"/>
+    <result property="userId" column="user_id"/>
+    <result property="productId" column="product_id"/>
+    <result property="customerId" column="customer_id"/>
+    <result property="reviewTitle" column="review_title"/>
+    <result property="reviewContent" column="review_content"/>
+    <result property="imageUrl" column="image_url"/>
+    <result property="rating" column="rating"/>
+    <result property="viewCount" column="view_count"/>
+    <result property="reviewDate" column="review_date"/>
+    <result property="isDeleted" column="is_deleted"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="createdBy" column="created_by"/>
+    
+    <!-- join 컬럼 -->
+    <result property="productName" column="product_name"/>
+    <result property="summary" column="summary"/>
+    <result property="commentCount" column="comment_count"/>
+</resultMap>
+
+<sql id="criteria">
+  <trim prefix="(" suffix=") AND" prefixOverrides="OR">
+    <foreach item="type" collection="cri.typeArr">
+      <trim prefix="OR">
+        <choose>
+          <when test="type == 'C'">
+            r.customer_name LIKE '%' || #{cri.keyword} || '%'
+          </when>
+          <when test="type == 'P'">
+            p.product_name LIKE '%' || #{cri.keyword} || '%'
+          </when>
+          <when test="type == 'T'">
+            p.product_name LIKE '%' || #{cri.keyword} || '%'
+          </when>
+        </choose>
+      </trim>
+    </foreach>
+  </trim>
+</sql>
+
+<!-- 상품 ID 페이징 쿼리 -->
+<!-- <select id="getPagedProductIds" resultType="int" parameterType="com.myrium.domain.Criteria">
+  SELECT * FROM (
+    SELECT r.id,
+           ROW_NUMBER() OVER (ORDER BY r.order_date DESC, r.id DESC) rn
+    FROM review e
+    WHERE 1=1
+      <if test="is_deleted != -1">
+        AND r.is_deleted = #{isDeleted}
+      </if>
+      <if test="keyword != null and keyword != '' and typeArr != null and typeArr.length > 0">
+        <include refid="criteria"/>
+      </if>
+  )
+WHERE rn &gt; (#{pageNum} - 1) * #{amount}
+AND rn &lt;= #{pageNum} * #{amount}
+</select> -->
+
+<select id="getPagedProductIds" resultMap="ReviewsummaryMap">
+SELECT * FROM (
+  SELECT
+    p.id AS product_id,
+    p.product_name,
+    MAX(r.image_url) KEEP (DENSE_RANK FIRST ORDER BY r.review_date DESC) AS image_url,
+    COUNT(r.id) AS review_count,
+    AVG(r.rating) AS avg_rating,
+    MAX(r.review_date) AS latest_review_date,
+    ROW_NUMBER() OVER (ORDER BY MAX(r.review_date) DESC) rn
+  FROM product p
+  INNER JOIN review r ON r.product_id = p.id
+  WHERE 1=1
+      <if test="cri.is_deleted != -1">
+        AND r.is_deleted = #{isDeleted}
+      </if>
+      <if test="cri.keyword != null and cri.keyword != '' and cri.typeArr != null and cri.typeArr.length > 0">
+        <include refid="criteria"/>
+      </if>
+    GROUP BY p.id, p.product_name
+  )
+  WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
+    AND rn &lt;= #{cri.pageNum} * #{cri.amount}
+</select>
+
+<select id="getReviewsWithProducts" resultMap="reviewDTOMap">
+  SELECT *
+  FROM (
+    SELECT 
+      r.id,
+      r.user_id,
+      r.product_id,
+      r.customer_id,
+      r.review_title,
+      r.review_content,
+      r.image_url,
+      r.rating,
+      r.view_count,
+      r.review_date,
+      r.is_deleted,
+      r.created_at,
+      r.created_by,
+      p.product_name,
+      SUBSTR(r.review_content, 1, 100) AS summary,
+      ROW_NUMBER() OVER (ORDER BY r.product_id, r.review_date DESC, r.id DESC) rn
+    FROM review r
+    LEFT JOIN product p ON r.product_id = p.id
+    WHERE r.product_id = #{productId}
+  )
+  WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
+    AND rn &lt;= #{cri.pageNum} * #{cri.amount}
+</select>
+
+
+<update id="updateReviewProductStatus">
+    UPDATE orders_product
+    SET order_status = #{orderStatus}
+    WHERE id = #{ordersProductId}
+</update>
+
+<update id="updateReviewStatus">
+    UPDATE orders
+    SET order_status = #{orderStatus}
+    WHERE orders_id = #{ordersId}
+</update>
+
+
+<!-- <select id="getTotalProductCount" resultType="int">
+  SELECT COUNT(*) FROM review WHERE id > 0 AND product_id = #{productId}
+</select> -->
+
+<!-- <select id="getReviewCountGroupByProduct" resultType="map">
+  SELECT product_id, COUNT(*) AS review_count
+  FROM review
+  GROUP BY product_id
+</select> -->
+
+<select id="getDistinctProductCount" resultType="int">
+  SELECT COUNT(DISTINCT product_id) FROM review
+</select>
+
+<select id="getTotalReviewCount" resultType="int">
+  SELECT COUNT(*) FROM review WHERE id > 0 AND product_id = #{productId}
+</select>
+
+<!-- 하드(영구) 삭제 -->
+<delete id="harddel">
+	DELETE FROM review WHERE id = #{id}
+</delete>
+
+<!-- 소프트 삭제 -->
+<update id="softdel">
+	UPDATE review
+	SET is_deleted = 1
+	WHERE id = #{id}
+</update>
+
+<!-- 복구 -->
+<update id="restore">
+	UPDATE review
+	SET is_deleted = 0
+	WHERE id = #{id}
+</update>
+	
+
+
+</mapper>
+

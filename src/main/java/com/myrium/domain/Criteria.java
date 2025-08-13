@@ -22,6 +22,8 @@ public class Criteria {
 	private String auth;
 	private String gender;
 	
+	private Integer orderStatus = -1;
+	
 	public Criteria() {
 		this(1, 10);
 	}

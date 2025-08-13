@@ -1,6 +1,6 @@
 package com.myrium.service;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,18 +58,33 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 	
 	
 	// 회줜정보 & 권한 리스트
-	@Override
+//	@Override
+//	public List<OrderDTO> getOrderList(Criteria cri, boolean isAdmin) {
+//		//List<OrderDTO> orderList = mapper.getOrderList(cri, isAdmin);
+//		//List<OrderDTO> orderDTOList = new ArrayList<>();		
+//		//for (OrderDTO order : orderList) {
+//		//	List<AuthVO> auth = mapper.getAuthList(order.getId());
+//		//	log.info("getAuthList:" + auth);
+//			//order.setAuthList(auth);
+//			//orderDTOList.add(order);
+//		
+//		return mapper.getOrderList(cri, isAdmin);
+//	}
+	
 	public List<OrderDTO> getOrderList(Criteria cri, boolean isAdmin) {
-		//List<OrderDTO> orderList = mapper.getOrderList(cri, isAdmin);
-		//List<OrderDTO> orderDTOList = new ArrayList<>();		
-		//for (OrderDTO order : orderList) {
-		//	List<AuthVO> auth = mapper.getAuthList(order.getId());
-		//	log.info("getAuthList:" + auth);
-			//order.setAuthList(auth);
-			//orderDTOList.add(order);
-		
-		return mapper.getOrderList(cri, isAdmin);
+	    // 1) 주문 ID 리스트 페이징 쿼리 호출
+	    List<Integer> orderIds = mapper.getPagedOrderIds(cri);
+
+	    if (orderIds == null || orderIds.isEmpty()) {
+	        return Collections.emptyList();
+	    }
+
+	    // 2) 주문 ID 리스트로 주문 + 상품 상세 조회
+	    List<OrderDTO> orders = mapper.getOrdersWithProducts(orderIds);
+
+	    return orders;
 	}
+	
 	
 	@Override
 	public OrderDTO get(int id) {
