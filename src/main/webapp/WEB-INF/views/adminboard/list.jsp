@@ -300,7 +300,7 @@ $(document).ready(function(){
 	
 	$(document).on("click", ".softdel-btn", function () {
 	    const id = $(this).data("id");
-	    if (confirm("글이 노출되지 않습니다. 정말 하시겠습니까?")) {
+	    if (confirm("글이 노출되지 않습니다.")) {
 	        $.ajax({
 	            type: "post",
 	            url: "/adminboard/softdel",

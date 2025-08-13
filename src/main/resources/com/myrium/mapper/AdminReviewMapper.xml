@@ -157,6 +157,25 @@ SELECT * FROM (
 <select id="getTotalReviewCount" resultType="int">
   SELECT COUNT(*) FROM review WHERE id > 0 AND product_id = #{productId}
 </select>
+
+<!-- 하드(영구) 삭제 -->
+<delete id="harddel">
+	DELETE FROM review WHERE id = #{id}
+</delete>
+
+<!-- 소프트 삭제 -->
+<update id="softdel">
+	UPDATE review
+	SET is_deleted = 1
+	WHERE id = #{id}
+</update>
+
+<!-- 복구 -->
+<update id="restore">
+	UPDATE review
+	SET is_deleted = 0
+	WHERE id = #{id}
+</update>
 	
 
 

@@ -81,34 +81,33 @@
             <table class="table table-bordered table-hover">
               <thead>
                 <tr>
-                  <th class="text-center">최종리뷰일</th>
-                  <th class="text-center">리뷰이미지</th>
-                  <th class="text-center">상품ID</th>
-                  <th class="text-center">상품명</th>
-                  <th class="text-center">리뷰수</th>
-                  <th class="text-center">평균평점</th>
-                  <th class="text-center">보기</th>                
+                  <th class="text-center" style="vertical-align:middle;">최종리뷰일</th>
+                  <th class="text-center" style="vertical-align:middle;">리뷰이미지</th>
+                  <th class="text-center" style="vertical-align:middle;">상품ID</th>
+                  <th class="text-center" style="vertical-align:middle;">상품명</th>
+                  <th class="text-center" style="vertical-align:middle;">리뷰수</th>
+                  <th class="text-center" style="vertical-align:middle;">평균평점</th>
+                  <th class="text-center" style="vertical-align:middle;">보기</th>                
                 </tr>
               </thead>
               <tbody>
                 <c:forEach var="items" items="${productReviewSummary}">
                   <tr>
-                    <td class="text-center"><fmt:formatDate value="${items.lastReviewDate}" pattern="yyyy-MM-dd" /></td>
-                	<td class="text-center">
+                    <td class="text-center" style="vertical-align:middle;"><fmt:formatDate value="${items.lastReviewDate}" pattern="yyyy-MM-dd" /></td>
+                	<td class="text-center" style="vertical-align:middle;">
 		            	<img src="${pageContext.request.contextPath}/upload/${items.imageUrl}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
 		            </td>
-                    <td class="text-center">${items.productId}</td>
-                    <td class="text-left">
-                      <a href="javascript:void(0);" class="product-link" data-productId="${items.productId}">
+                    <td class="text-center" style="vertical-align:middle;">${items.productId}</td>
+                    <td class="text-left" style="vertical-align:middle;">
+                      <a href="javascript:void(0);" class="product-link" data-productid="${items.productId}">
                         ${items.productName}
                       </a>
                     </td>
-                    <td class="text-center">${items.reviewCount}</td>
-                    <td class="text-center">
-					  <fmt:formatNumber value="${items.avgRating}" type="number" minFractionDigits="1" maxFractionDigits="1"/>
+                    <td class="text-center" style="vertical-align:middle;">${items.reviewCount}</td>
+                    <td class="text-center" style="vertical-align:middle; color:#ffc107;">★ <fmt:formatNumber value="${items.avgRating}" type="number" minFractionDigits="1" maxFractionDigits="1"/>
 					</td>
-                    <td class="text-center">
-                      <button class="btn btn-sm btn-primary review-detail-btn" data-productId="${items.productId}" data-productName="${items.productName}">
+                    <td class="text-center" style="vertical-align:middle;">
+                      <button class="btn btn-sm btn-primary review-detail-btn" data-productid="${items.productId}" data-productname="${items.productName}">
                         보기
                       </button>
                     </td>
@@ -173,27 +172,39 @@
 			      </sec:authorize>
 			
 			      
-			              <!-- 리뷰 모달 (페이징 포함) -->
-			        <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
-			          <div class="modal-dialog modal-lg">
-			            <div class="modal-content">
-			              <div class="modal-header">
-			                <button type="button" class="close" data-dismiss="modal" aria-label="닫기">
-			                  <span aria-hidden="true">&times;</span>
-			                </button>
-			                <h4 class="modal-title" id="reviewModalLabel">상품 리뷰 목록</h4>
-			              </div>
-			              <div class="modal-body" id="reviewList">
-			                <p>상품명: <span id="modalProductName"></span></p>
-        					<p><a href="#" id="modalProductLink" target="_blank">상품페이지 바로가기</a></p>
-			                <!-- 리뷰 리스트 동적으로 로드 -->
-			              </div>
-			              <div class="modal-footer">
-			                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
-			              </div>
-			            </div>
-			          </div>
-			        </div>
+					<!-- 리뷰 모달 (포토리뷰 스타일) -->
+					<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true" data-currentpage="1">
+					  <div class="modal-dialog modal-lg">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal" aria-label="닫기">
+					          <span aria-hidden="false">&times;</span>
+					        </button>
+					        <h4 class="modal-title" id="reviewModalLabel">상품 리뷰 목록</h4>
+					      </div>
+					
+					      <div class="modal-body">
+					        <p>상품명: <span id="modalProductName"></span></p>
+					        <p><a href="#" id="modalProductLink" target="_blank">상품페이지 바로가기</a></p>
+					
+					        <!-- 리뷰 목록 -->
+					        <div id="reviewList" class="row">
+					          <!-- 동적으로 리뷰 카드 삽입 -->
+					        </div>
+					
+					        <!-- 페이지네이션 -->
+					        <div class="text-center">
+					          <ul class="pagination paginationReview"></ul>
+					        </div>
+					      </div>
+					
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+
 			      			
 			    </section>			
 			</div>
@@ -226,6 +237,19 @@ $(document).ready(function(){
 		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
 		actionForm.submit();
 	});
+    
+	var actionFormReview = $("#actionFormReview");
+	$(".paginate_button_review a").on("click", function(e){
+		e.preventDefault();
+		console.log("click");
+		
+		actionFormReview.removeAttr("action"); //뒤로가기 후 기존 파라미터 누적문제 해결
+		actionFormReview.find("input[name='id']").remove(); //뒤로가기 후 기존 파라미터 누적문제 해결
+		
+		// 클릭된 요소의 href 값을 찾아서 input 폼 안의 pageNum 필드에 설정		
+		actionFormReview.find("input[name='pageNum']").val($(this).attr("href"));
+		actionFormReview.submit();
+	});
 	
 	var searchForm = $("#searchForm");
 
@@ -250,11 +274,13 @@ $(document).ready(function(){
 	  // 상품명 클릭 또는 '보기' 버튼 클릭 시 모달 열기 & 리뷰 로드
 	  $('.product-link, .review-detail-btn').on('click', function() {
 	    const productName = $(this).data('productname');
-	    const productId = $(this).data('productid');	    
+	    const productId = $(this).data('productid');
+	    console.log("productName:" + productName);
+	    console.log("productId:" + productId);
 	    // 모달 내부 상품명 표시
 	    $('#modalProductName').text(productName);
 	    
-	    // 상품페이지 링크 URL 만들기 (예)
+	    // 상품페이지 링크 URL
 	    let productPageUrl = '/product/detail/' + productId;
 	    
 	    // 모달 내 링크 href 설정 및 텍스트 지정
@@ -268,73 +294,258 @@ $(document).ready(function(){
 
 	  // 리뷰 목록 및 페이징 AJAX 로드 함수
 	  function loadReviews(productId, pageNum) {
+		  $('#reviewModal').attr('data-currentpage', pageNum);
+		  console.log("productId : " + productId); 
 	    $.ajax({
 	      url: '/adminreview/productreviewlist', // 서버에서 페이징 리뷰 리스트 반환하는 API 주소로 변경
 	      method: 'GET',
 	      dataType: 'json',
 	      data: { productId: productId, pageNum: pageNum },
-	      success: function(data) {
-	    	  
-	    	  
-	        // 서버에서 JSON 형식으로 리뷰 리스트와 페이징 정보 반환 가정
-	        // 예) data = { reviews: [...], pagination: { currentPage, totalPages } }
-
+	      success: function(data) {	    	  
 	        // 리뷰 리스트 렌더링
-	        console.log("랜더링:------>" );
-	        let html = '<table class="table table-bordered">';	        
-	        html += '<thead><tr><th>이미지</th><th>리뷰일</th><th>작성자</th><th>리뷰 내용</th><th>평점</th><th>관리</th></tr></thead><tbody>';
-	        data.list.forEach(function(review) {
-	          html += '<tr>';
-	          html += '<td><img src="${pageContext.request.contextPath}/upload/' + review.imageUrl + ' style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;"></td>';
-	          html += '<td>' + review.reviewDate + '</td>';
-	          html += '<td>' + review.customerId + '</td>';
-	          html += '<td>' + review.reviewContent + '</td>';
-	          html += '<td>' + review.rating + '</td>';
-	          html += '<td>';
-	          html += '<button class="btn btn-xs btn-warning review-edit-btn" data-reviewId="' + review.id + '">내림</button> ';
-	          html += '<button class="btn btn-xs btn-danger review-delete-btn" data-reviewId="' + review.id + '">삭제</button>';
-	          html += '</td>';
-	          html += '</tr>';
-	        });
-	        html += '</tbody></table>';
-	        $('#reviewList').html(html);
+console.log("랜더링:------>");
+var html = '';
+html += '<table class="table table-bordered table-hover" style="border-collapse: separate; border-spacing: 0 10px;">';
+html += '<thead style="background-color: #f8f9fa;">';
+html += '<tr>';
+html += '<th class="text-center" style="width:120px;">이미지</th>';
+html += '<th class="text-center" style="width:150px;">작성일시</th>';
+html += '<th class="text-center" style="width:120px;">작성자</th>';
+html += '<th class="text-center">리뷰 내용</th>';
+html += '<th class="text-center" style="width:80px;">평점</th>';
+html += '<th class="text-center" style="width:80px;">노출 여부</th>';
+html += '<th class="text-center" style="width:150px;">관리</th>';
+html += '</tr>';
+html += '</thead>';
+html += '<tbody>';
 
+data.list.forEach(function(review) {
+  html += '<tr style="background-color:#fff; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">';
+  html += '<td class="text-center">';
+  html += '<img src="/upload/' + review.imageUrl + '" style="width:100px; height:100px; object-fit:cover; border-radius:8px; border:1px solid #ddd;">';
+  html += '</td>';
+  html += '<td class="text-center" style="vertical-align:middle;">' + formatDate(review.reviewDate) + '</td>';
+  html += '<td class="text-center" style="vertical-align:middle;"><strong>' + review.customerId + '</strong></td>';
+  html += '<td class="text-left" style="vertical-align:middle; white-space:pre-line;">' + review.reviewContent + '</td>';
+  html += '<td class="text-center" style="vertical-align:middle; font-size:16px; color:#ffc107;">★ ' + review.rating + '</td>';
+
+	// 노출여부 표시
+	if (review.isDeleted == 1) {
+	  html += '<td class="text-center" style="vertical-align:middle;"><span class="label label-default">숨김</span></td>';
+	} else {
+	  html += '<td class="text-center" style="vertical-align:middle;"><span class="label label-success">노출</span></td>';
+	}
+
+  html += '<td class="text-center" style="vertical-align:middle;">';
+  if (review.isDeleted == 1) {
+    // 복구 버튼
+    html += '<button class="btn btn-success restore-btn" data-reviewid="' + review.id + '">복구</button> ';
+  } else {
+    // 숨김 버튼
+    html += '<button class="btn btn-warning softdel-btn" data-reviewid="' + review.id + '">숨김</button> ';
+  }
+  // 삭제 버튼은 항상 노출
+  html += '<button class="btn btn-danger harddel-btn" data-reviewid="' + review.id + '">삭제</button>';
+  html += '</td>';
+  html += '</tr>';
+});
+
+html += '</tbody></table>';
+
+$('#reviewList').html(html);
+	        
+	        console.log("data.pagination:", data.pagination);
+	        console.log("productId:", productId);
+	        
+	        //renderPagination(data.pagination, productId);
+	        
+	        console.log("pagination-startPage : " + data.pagination.startPage);
+	        console.log("pagination-endPage : " + data.pagination.endPage);
+	        console.log('pagination:', data.pagination);
+	        console.log('cri:', data.pagination.cri);
+	        console.log('pageNum:', data.pagination.cri.pageNum);
 	        // 페이징 렌더링
-	        let paginationHtml = '';
-	        for(let i=1; i<=data.pagination.totalPages; i++) {
-	          paginationHtml += '<li class="page-item ' + (i === data.pagination.currentPage ? 'active' : '') + '">';
-	          paginationHtml += '<a href="javascript:void(0);" class="page-link review-page-link" data-page="' + i + '" data-productid="' + productId + '">' + i + '</a></li>';
-	        }
-	        $('#reviewPagination').html(paginationHtml);
+	        //let paginationHtml = '';
+	        //for(let i=1; i<=data.pagination.end; i++) {
+	        //  paginationHtml += '<li class="page-item ' + (i === data.pagination.currentPage ? 'active' : '') + '">';
+	        //  paginationHtml += '<a href="javascript:void(0);" class="page-link review-page-link" data-page="' + i + '" data-productid="' + productId + '">' + i + '</a></li>';
+	        //}
+	        //$('#reviewPagination').html(paginationHtml);
+		    let htmlPagination = '';
+		    
+		    console.log("pagination-prev : " + data.pagination.prev);
+		    if (data.pagination.prev) {
+		        htmlPagination += '<li class="paginate_button_review">' +
+		            '<a class="page-link review-page-link" ' +
+		            'data-page="' + (data.pagination.startPage - 1) + '" ' +
+		            'data-productid="' + productId + '" ' +
+		            'href="javascript:void(0);">Previous</a>' +
+		            '</li>';
+		    }
+
+		    console.log("pagination-startPage : " + data.pagination.startPage);
+		    console.log("pagination-endPage : " + data.pagination.endPage);
+		    for (var num = data.pagination.startPage; num <= data.pagination.endPage; num++) {
+		        console.log('num:', num, 'productId:', productId);
+		        var activeClass = data.pagination.cri.pageNum === num ? 'active' : '';
+		        htmlPagination += '<li class="paginate_button_review ' + activeClass + '">' +
+		            '<a class="page-link review-page-link" ' +
+		            'data-page="' + num + '" ' +
+		            'data-productid="' + productId + '" ' +
+		            'href="javascript:void(0);">' + num + '</a>' +
+		            '</li>';
+		    }
+
+		    console.log("pagination-next : " + data.pagination.next);
+		    if (data.pagination.next) {
+		        htmlPagination += '<li class="paginate_button_review">' +
+		            '<a class="page-link review-page-link" ' +
+		            'data-page="' + (data.pagination.endPage + 1) + '" ' +
+		            'data-productid="' + productId + '" ' +
+		            'href="javascript:void(0);">Next</a>' +
+		            '</li>';
+		    }
+
+		    $(".paginationReview").html(htmlPagination);
+		    console.log('Generated pagination HTML:', htmlPagination);
 	      },
 	      error: function() {
 	        $('#reviewList').html('<p>리뷰를 불러오는 중 오류가 발생했습니다.</p>');
-	        $('#reviewPagination').html('');
+	        $('#reviewPagination').htmlPagination('');
 	      }
 	    });
 	  }
+	  
+	  function renderPagination(pageMaker, productId) {
+		    console.log('pageMaker:', pageMaker);
+		    console.log('pageMaker.startPage:', pageMaker.startPage, typeof pageMaker.startPage);
+		    console.log('pageMaker.endPage:', pageMaker.endPage, typeof pageMaker.endPage);
+		    console.log('pageMaker.cri.pageNum:', pageMaker.cri.pageNum, typeof pageMaker.cri.pageNum);
+		    console.log('productId:', productId, typeof productId);
+
+		    let html = '';
+		    console.log('num:', num, 'productId:', productId);
+
+		    if (pageMaker.prev) {
+		        html += `<li class="paginate_button_review">
+		                    <a class="page-link review-page-link" 
+		                       data-page="${pageMaker.startPage - 1}" 
+		                       data-productid="${productId}" 
+		                       href="javascript:void(0);">Previous</a>
+		                 </li>`;
+		    }
+
+		    for (let num = pageMaker.startPage; num <= pageMaker.endPage; num++) {
+		        const activeClass = pageMaker.cri.pageNum === num ? 'active' : '';
+		        html += `<li class="paginate_button_review ${activeClass}">
+		                    <a class="page-link review-page-link" 
+		                       data-page="${num}" 
+		                       data-productid="${productId}" 
+		                       href="javascript:void(0);">${num}</a>
+		                 </li>`;
+		    }
+
+		    if (pageMaker.next) {
+		        html += `<li class="paginate_button_review">
+		                    <a class="page-link review-page-link" 
+		                       data-page="${pageMaker.endPage + 1}" 
+		                       data-productid="${productId}" 
+		                       href="javascript:void(0);">Next</a>
+		                 </li>`;
+		    }
+
+		    $(".paginationReview").html(html);
+		    console.log('Generated pagination HTML:', html);
+		}
 
 	  // 페이징 클릭 시 리뷰 다시 로드
-	  $(document).on('click', '.review-page-link', function() {
-	    const page = $(this).data('page');
-	    const productId = $(this).data('productid');
-	    loadReviews(productId, page);
-	  });
+		$(document).on('click', '.review-page-link', function() {
+		    const page = $(this).data('page');
+		    const productId = $(this).data('productid');
+		    loadReviews(productId, page);
+		});
 
-	  // 리뷰 수정, 삭제 버튼 클릭 이벤트 처리 추가 필요
-	  $(document).on('click', '.review-edit-btn', function() {
-	    const reviewId = $(this).data('reviewid');
-	    alert('리뷰 수정 - 리뷰ID: ' + reviewId);
-	    // 실제 수정 모달 혹은 페이지 이동 코드 작성
-	  });
+		$(document).on('click', '.harddel-btn', function() {
+			  var reviewId = $(this).data('reviewid');
+			  var productId = $('#modalProductLink').attr('href').split('/').pop();
+			  var currentPage = parseInt($('#reviewModal').attr('data-currentpage')) || 1;
+			  
+			  if (!confirm('삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?')) return;
 
-	  $(document).on('click', '.review-delete-btn', function() {
-	    const reviewId = $(this).data('reviewid');
-	    if(confirm('리뷰를 삭제하시겠습니까?')) {
-	      // 삭제 AJAX 호출 작성
-	      alert('리뷰 삭제 - 리뷰ID: ' + reviewId);
-	    }
-	  });
+			  $.ajax({
+			    url: '/adminreview/harddel',
+			    method: 'POST',
+			    dataType: 'json',
+			    data: { id: reviewId },
+			    success: function(res) {
+			    	alert(res.message);
+			      if(res.success) {
+			        loadReviews(productId, currentPage);  // 현재 페이지 유지
+			      }
+			    },
+			    error: function() {
+			      alert('서버 오류가 발생했습니다.');
+			    }
+			  });
+			});
+		
+		$(document).on('click', '.softdel-btn', function() {
+			  var reviewId = $(this).data('reviewid');
+			  var productId = $('#modalProductLink').attr('href').split('/').pop();
+			  var currentPage = parseInt($('#reviewModal').attr('data-currentpage')) || 1;
+			  
+			  if (!confirm('리뷰가 노출되지 않습니다.')) return;
+
+			  $.ajax({
+			    url: '/adminreview/softdel',
+			    method: 'POST',
+			    dataType: 'json',
+			    data: { id: reviewId },
+			    success: function(res) {
+			    	alert(res.message);
+			      if(res.success) {
+			        loadReviews(productId, currentPage);
+			      }
+			    },
+			    error: function() {
+			      alert('서버 오류가 발생했습니다.');
+			    }
+			  });
+			});
+		
+		$(document).on('click', '.restore-btn', function() {
+			  var reviewId = $(this).data('reviewid');
+			  var productId = $('#modalProductLink').attr('href').split('/').pop();
+			  var currentPage = parseInt($('#reviewModal').attr('data-currentpage')) || 1;
+			  
+			  if (!confirm('리뷰가 노출됩니다.')) return;
+
+			  $.ajax({
+			    url: '/adminreview/restore',
+			    method: 'POST',
+			    dataType: 'json',
+			    data: { id: reviewId },
+			    success: function(res) {
+			      alert(res.message);
+			      if(res.success) {
+			        loadReviews(productId, currentPage);
+			      }
+			    },
+			    error: function() {
+			      alert('서버 오류가 발생했습니다.');
+			    }
+			  });
+			});
+	  
+	  function formatDate(timestamp) {
+		    var date = new Date(timestamp);
+		    var year = date.getFullYear();
+		    var month = String(date.getMonth() + 1).padStart(2, '0');
+		    var day = String(date.getDate()).padStart(2, '0');
+		    var hours = String(date.getHours()).padStart(2, '0');
+		    var minutes = String(date.getMinutes()).padStart(2, '0');
+		    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
+		}
 
 });
 </script>

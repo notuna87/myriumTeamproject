@@ -139,17 +139,15 @@ public class AdminReviewController {
 	    log.info("reviewlist__________");
 	    log.info(cri);
 
-	    // 모달용: 페이지당 5개씩
-	    //cri.setAmount(5);
-
 	    List<ReviewDTO> list = service.getReviewListByproduct(cri, productId);
 	    int total = service.getTotalOfReviewByProductId(cri, productId);
 
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("list", list);
 	    log.info("list: " + list);
-	    result.put("pagination", new PageDTO(cri, total));
 
+	    result.put("pagination", new PageDTO(cri, total));
+	    log.info("pagination: " + result);
 	    return result;
 	}
 	
@@ -343,61 +341,94 @@ public class AdminReviewController {
 	}
 	
 	
-	@Transactional
+//	@Transactional
+//	@PreAuthorize("hasAuthority('ADMIN')")
+//	@PostMapping("/harddel")
+//	public String harddel(@RequestParam("id") int reviewId,
+//	                      @ModelAttribute("cri") Criteria cri,
+//	                      RedirectAttributes rttr
+//	                      ) {
+//
+//	    log.info("review harddelete..." + reviewId);
+//
+//		log.info("harddelete..." + reviewId);
+//		if(service.harddel(reviewId)) {
+//			rttr.addFlashAttribute("result","success");
+//		}
+//		
+//		rttr.addAttribute("pageNum", cri.getPageNum());
+//		rttr.addAttribute("amount", cri.getAmount());
+//		rttr.addAttribute("type", cri.getType());
+//		rttr.addAttribute("keyword", cri.getKeyword());
+//		
+//	    return "redirect:/adminreview/list";
+//	}	
 	@PreAuthorize("hasAuthority('ADMIN')")
+	@ResponseBody 
 	@PostMapping("/harddel")
-	public String harddel(@RequestParam("id") int reviewId,
-	                      @ModelAttribute("cri") Criteria cri,
-	                      RedirectAttributes rttr
-	                      ) {
-
-	    log.info("review harddelete..." + reviewId);
-
-		log.info("harddelete..." + reviewId);
-		if(service.harddel(reviewId)) {
-			rttr.addFlashAttribute("result","success");
-		}
-		
-		rttr.addAttribute("pageNum", cri.getPageNum());
-		rttr.addAttribute("amount", cri.getAmount());
-		rttr.addAttribute("type", cri.getType());
-		rttr.addAttribute("keyword", cri.getKeyword());
-		
-	    return "redirect:/adminreview/list";
+	public Map<String, Object> harddel(@RequestParam("id") int reviewId) {
+	    Map<String, Object> result = new HashMap<>();
+	    boolean success = service.harddel(reviewId);
+	    log.info("success:" + success);
+	    result.put("success", success);
+	    result.put("message", success ? "리뷰가 삭제되었습니다." : "삭제 실패했습니다.");
+	    return result;
 	}
 
+//	@PreAuthorize("hasAuthority('ADMIN')")
+//	@PostMapping("/softdel")
+//	public String softdel(@RequestParam("id") int reviewId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr
+//			) {
+//		log.info("review softdelete..." + reviewId);
+//		if(service.softdel(reviewId)) {
+//			rttr.addFlashAttribute("result","success");
+//		}
+//		
+//		rttr.addAttribute("pageNum", cri.getPageNum());
+//		rttr.addAttribute("amount", cri.getAmount());
+//		rttr.addAttribute("type", cri.getType());
+//		rttr.addAttribute("keyword", cri.getKeyword());
+//		
+//		return "redirect:/adminreview/list";
+//	}
 	@PreAuthorize("hasAuthority('ADMIN')")
+	@ResponseBody 
 	@PostMapping("/softdel")
-	public String softdel(@RequestParam("id") int reviewId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr
-			) {
-		log.info("review softdelete..." + reviewId);
-		if(service.softdel(reviewId)) {
-			rttr.addFlashAttribute("result","success");
-		}
-		
-		rttr.addAttribute("pageNum", cri.getPageNum());
-		rttr.addAttribute("amount", cri.getAmount());
-		rttr.addAttribute("type", cri.getType());
-		rttr.addAttribute("keyword", cri.getKeyword());
-		
-		return "redirect:/adminreview/list";
+	public Map<String, Object> softdel(@RequestParam("id") int reviewId) {
+	    Map<String, Object> result = new HashMap<>();
+	    boolean success = service.softdel(reviewId);
+	    log.info("success:" + success);
+	    result.put("success", success);
+	    result.put("message", success ? "리뷰가 숨김되었습니다." : "숨김 실패했습니다.");
+	    return result;
 	}
 
+//	@PreAuthorize("hasAuthority('ADMIN')")
+//	@PostMapping("/restore")
+//	public String restore(@RequestParam("id") int reviewId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr
+//			) {
+//		log.info("review restore..." + reviewId);
+//		if(service.restore(reviewId)) {
+//			rttr.addFlashAttribute("result","success");
+//		}
+//		
+//		rttr.addAttribute("pageNum", cri.getPageNum());
+//		rttr.addAttribute("amount", cri.getAmount());
+//		rttr.addAttribute("type", cri.getType());
+//		rttr.addAttribute("keyword", cri.getKeyword());
+//		
+//		return "redirect:/adminreview/list";
+//	}
 	@PreAuthorize("hasAuthority('ADMIN')")
+	@ResponseBody 
 	@PostMapping("/restore")
-	public String restore(@RequestParam("id") int reviewId, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr
-			) {
-		log.info("review restore..." + reviewId);
-		if(service.restore(reviewId)) {
-			rttr.addFlashAttribute("result","success");
-		}
-		
-		rttr.addAttribute("pageNum", cri.getPageNum());
-		rttr.addAttribute("amount", cri.getAmount());
-		rttr.addAttribute("type", cri.getType());
-		rttr.addAttribute("keyword", cri.getKeyword());
-		
-		return "redirect:/adminreview/list";
+	public Map<String, Object> restore(@RequestParam("id") int reviewId) {
+	    Map<String, Object> result = new HashMap<>();
+	    boolean success = service.restore(reviewId);
+	    log.info("success:" + success);
+	    result.put("success", success);
+	    result.put("message", success ? "리뷰가 복구되었습니다." : "복구 실패했습니다.");
+	    return result;
 	}
 	
 //	@PreAuthorize("hasAuthority('ADMIN')")
