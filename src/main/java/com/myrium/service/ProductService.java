@@ -54,4 +54,6 @@ public interface ProductService {
 
 	public List<ProductDTO> getAllProductList(String sort);
 
+	ProductDTO getProductInfoWithThumbnail(int productId);
+
 }

@@ -4,7 +4,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
-<%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp" %>
 
 <!DOCTYPE html>
@@ -14,6 +13,8 @@
 <title>FAQ 등록</title>
 </head>
 <body>
+<%@include file="../main/header.jsp"%>
+<div style="width:1240px; margin:0 auto;">
 	<div class="row">
 		<div class="col-lg-12">
 			<h1 class="page-header">FAQ 등록<span class="badge">관리자</span></h1>
@@ -62,7 +63,7 @@
 
 						<div class="form-group">
 							<label>답변내용</label>
-							<textarea class="form-control" rows="10" name='answer'></textarea>
+							<textarea class="form-control" rows="10" name='answer' style="resize:none;"></textarea>
 						</div>
 
 						<div class="form-group">
@@ -77,7 +78,7 @@
 			</div>
 		</div>
 	</div>
-
+</div>
 </body>
 
 <%@include file="../includes_admin/footer.jsp" %>

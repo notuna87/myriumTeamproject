@@ -8,6 +8,7 @@
 <%@include file="../includes_admin/header.jsp" %> 
 
 <body>
+<div style="width:1240px; margin:0 auto;">
 
 <div class="row">
      <div class="col-lg-12">
@@ -83,9 +84,7 @@
 		</div>
 	</div>
 </div>
-
-
-
+</div>
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">

@@ -249,4 +249,17 @@ public class ProductServiceImpl implements ProductService {
 		return productDTOs;
 	}
 
+	@Override
+	public ProductDTO getProductInfoWithThumbnail(int productId) {
+		
+		ProductVO product = productmapper.getproductInfo(productId);
+		ImgpathVO thumbnail = productmapper.getThumbnail(productId);
+
+		ProductDTO dto = new ProductDTO();
+		dto.setProduct(product);
+		dto.setThumbnail(thumbnail);
+		
+		return dto;
+	}
+
 }

@@ -4,7 +4,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <jsp:useBean id="now" class="java.util.Date" />
 
-<%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp"%>
 
 <!-- 뒤로가기 시 조회수 증가를 위해 새로고침 -->
@@ -18,6 +17,8 @@
 </script>
 
 <body>
+<%@include file="../main/header.jsp"%>
+<div style="width:1240px; margin:0 auto;">
 	<div class="row">
 		<div class="col-lg-12">
 			<sec:authorize access="hasAuthority('ADMIN')">
@@ -217,7 +218,7 @@
 			</div>
 		</div>
 	</div>
-
+</div>
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">

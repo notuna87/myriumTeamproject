@@ -10,6 +10,7 @@
 	    <result property="userId" column="user_id"/>
 	    <result property="title" column="title"/>
 	    <result property="content" column="content"/>
+	    <result property="productId" column="product_id"/>
 	    <result property="customerId" column="customer_id"/>
 	    <result property="writeDate" column="write_date"/>
 	    <result property="isAnswered" column="is_answered"/>
@@ -46,9 +47,9 @@
             SELECT board_seq.NEXTVAL FROM dual
         </selectKey>
         INSERT INTO board (
-            id, title, content, customer_id, user_id, write_date, created_at, created_by, is_answered, is_deleted, reply_cnt
+            id, title, content, customer_id, user_id, write_date, created_at, created_by, is_answered, is_deleted, reply_cnt, product_id
         ) VALUES (
-            #{id}, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0
+            #{id}, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0, #{productId}
         )
     </insert>
 
@@ -152,4 +153,7 @@
         UPDATE board SET reply_cnt = reply_cnt + #{amount} WHERE id = #{id}
     </update>
 
+	<select id="getBoardList" resultMap="boardMap">
+		SELECT * FROM board WHERE product_id = ${productId}
+	</select>
 </mapper>

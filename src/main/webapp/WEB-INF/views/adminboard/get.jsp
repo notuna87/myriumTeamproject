@@ -3,12 +3,14 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
-<%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp"%>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board_chat.css" />
 
 <body>
+<%@include file="../main/header.jsp"%>
+<div style="width:1240px; margin:0 auto;">
+
 	<div class="row">
          <div class="col-lg-12">
             <sec:authorize access="hasAuthority('ADMIN')">
@@ -23,7 +25,7 @@
 				<sec:authorize access="isAuthenticated()">
 					<sec:authentication property="principal.member" var="pminfo" />
 				    <sec:authentication property="principal.authorities" var="roles" />
-				    <div class="form-group"><c:out value="#debug - ${pminfo.customerName} / 권한 ${roles} ==> ADMIN만 (1)답변글 클릭 가능, (2)답변버튼 노출" /></div>
+				<!--     <div class="form-group"><c:out value="#debug - ${pminfo.customerName} / 권한 ${roles} ==> ADMIN만 (1)답변글 클릭 가능, (2)답변버튼 노출" /></div> -->
 				</sec:authorize>
 			</div>
 			
@@ -194,7 +196,7 @@
 			</div>
 		</div>
 	</div>
-
+</div>
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="/resources/js/reply.js"></script>

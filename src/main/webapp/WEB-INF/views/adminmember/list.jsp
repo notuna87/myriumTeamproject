@@ -5,9 +5,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <jsp:useBean id="now" class="java.util.Date" />
 
-<%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp"%>
-
 <style>
   .category-label {
     display: inline-block;
@@ -26,6 +24,8 @@
 </script>
 
 <body>
+<%@include file="../main/header.jsp"%>
+<div style="width:1240px; margin:0 auto;">
 	<div class="row">
 		<div class="col-lg-12">
 			<h1 class="page-header">회원관리<span class="badge">관리자</span></h1>
@@ -100,7 +100,7 @@
 				                <th class="text-center">sms수신</th>				                
 				                <th class="text-center">정보3자제공</th>				                
 				                <th class="text-center">정보처리위탁</th>
-				                <th class="text-center">관리</th>
+				                <th class="text-center" style="width: 169px;">관리</th>
 				            </tr>
 				        </thead>
 
@@ -238,7 +238,7 @@
 			</div>
 		</div>
 	</div>
-
+</div>
 
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>

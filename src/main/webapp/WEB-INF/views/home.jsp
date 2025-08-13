@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false"%>
 <html>
 <head>
-<title>Home</title>
+<title>마이리움 : 반려식물 키우기</title>
 
 <!-- reset css  -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css">

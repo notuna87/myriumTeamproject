@@ -4,11 +4,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp" %> 
 
 <body>
 
+<%@include file="../main/header.jsp"%>
+<div style="width:1240px; margin:0 auto;">
 <div class="row">
      <div class="col-lg-12">
         <h1 class="page-header">FAQ 수정<span class="badge">관리자</span></h1>
@@ -83,7 +84,7 @@
 		</div>
 	</div>
 </div>
-
+</div>
 
 
 <!-- jQuery -->

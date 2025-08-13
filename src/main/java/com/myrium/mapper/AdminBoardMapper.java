@@ -25,5 +25,7 @@ public interface AdminBoardMapper {
 	public List<BoardVO> searchTest(Map<String, Map<String, String>> map);
 	
 	public void updateReplyCnt(@Param("id") Long id, @Param("amount") int amount);
+	
+	public List<BoardVO> getBoardList(Long productId);
 
 }
