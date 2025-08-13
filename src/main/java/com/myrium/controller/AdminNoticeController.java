@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -128,13 +127,17 @@ public class AdminNoticeController {
 	
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping({"/get", "/modify"})
-	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) {
+	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) throws JacksonException {
 		noticeservice.incrementReadCnt(id);  // 조회수 증가 로직 (추가)
 		model.addAttribute("notice", noticeservice.get(id));
 		//model.addAttribute("attachFiles", noticeservice.findByNoticeId(id));
 		List<AttachFileDTO> attachFiles = noticeservice.findByNoticeId(id);
 		System.out.println("첨부파일 수: " + attachFiles.size()); // 디버깅
 		model.addAttribute("attachFiles", attachFiles);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String attachFilesJson = mapper.writeValueAsString(attachFiles); // attachFiles는 List<AttachFileDTO>
+		model.addAttribute("attachFilesJson", attachFilesJson);
 
 	}
 	

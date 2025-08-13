@@ -129,7 +129,9 @@
   <update id="update" parameterType="com.myrium.domain.MemberVO">
     UPDATE member SET
       customer_id = #{customerId},
-      password = #{password},
+      <if test="password != null and password != ''">
+          password = #{password,jdbcType=VARCHAR},
+      </if>
       customer_name = #{customerName},
       address = #{address},
       zipcode = #{zipcode},

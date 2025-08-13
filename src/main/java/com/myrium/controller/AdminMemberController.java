@@ -167,12 +167,12 @@ public class AdminMemberController {
 		Long id = vo.getId();
 		
 	    // 1. 비밀번호 확인
-	    String passwordConfirm = request.getParameter("passwordConfirm");
-	    if (!vo.getPassword().equals(passwordConfirm)) {
-	    	log.info("(member) modify...비밀번호" + vo);
-	        model.addAttribute("pwMatchError", "비밀번호가 일치하지 않습니다.");
-	        return "redirect:/adminmember/modify?id=" + id;
-	    }
+	    //String passwordConfirm = request.getParameter("passwordConfirm");
+	    //if (!vo.getPassword().equals(passwordConfirm)) {
+	    //	log.info("(member) modify...비밀번호" + vo);
+	    //    model.addAttribute("pwMatchError", "비밀번호가 일치하지 않습니다.");
+	    //    return "redirect:/adminmember/modify?id=" + id;
+	    //}
 		
 	    // 2. 휴대폰 번호 조합
 	    String phone1 = request.getParameter("phone1");

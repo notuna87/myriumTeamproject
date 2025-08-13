@@ -10,10 +10,13 @@
 <%@include file="../includes_admin/header.jsp"%>
 
 <style>
-  .category-label {
-    display: inline-block;
-    margin: 1px;
-  }
+   table.table td, table.table th {
+      vertical-align: middle !important;
+      text-align: center;
+   }
+   table.table {
+      font-size: 13px;
+   }
 </style>
 
 <!-- 뒤로가기 시 조회수 증가를 위해 새로고침 -->
@@ -48,12 +51,6 @@
 			        <div class="panel-body">			          
   					    <!-- 필터링 섹션 -->
 					    <form action="/adminorder/list" method="get" class="form-inline" style="margin-bottom:10px;">
-					        <!-- <select name="category" class="form-control">
-					            <option value="">카테고리</option>
-					            <c:forEach var="cat" items="${categories}">
-					                <option value="${cat}" <c:if test="${param.category == cat}">selected</c:if>>${cat}</option>
-					            </c:forEach>
-					        </select> -->
 					        <select name="orderStatus" class="form-control">
 					            <option value= -1 <c:if test="${param.orderStatus == -1}">selected</c:if>>주문상태</option>
 					            <option value= 0 <c:if test="${param.orderStatus == 0}">selected</c:if>>입금전</option>
@@ -223,23 +220,6 @@ $(document).ready(function(){
     //var ordersList = JSON.parse('${fn:escapeXml(ordersJson)}');
     console.log("ordersList:", ordersList); // 정상 출력 확인용
     
-    
-    $(document).on('click', '.btn-box-tool', function() {
-        var box = $(this).closest('.box');
-        var icon = $(this).find('i');
-        var body = box.find('.box-body');
-
-        if (box.hasClass('collapsed-box')) {
-            body.slideDown();
-            box.removeClass('collapsed-box');
-            icon.removeClass('fa-plus').addClass('fa-minus');
-        } else {
-            body.slideUp();
-            box.addClass('collapsed-box');
-            icon.removeClass('fa-minus').addClass('fa-plus');
-        }
-    });
-
     window.showOrderModal = function (ordersId) {
         console.log("showOrderModal called with ordersId:", ordersId);
 
@@ -276,29 +256,29 @@ $(document).ready(function(){
             '<th class="text-center">처리</th>' +
             '</tr></thead><tbody>';
 
-        filteredItems.forEach(function (item) {
-            var statusText = '';
-            switch (item.order_status_product) {
-                case 0: statusText = "입금전"; break;
-                case 1: statusText = "배송준비중"; break;
-                case 2: statusText = "배송중"; break;
-                case 3: statusText = "배송완료"; break;
-                case 4: statusText = "교환신청"; break;
-                case 5: statusText = "교환완료"; break;
-                case 6: statusText = "반품신청"; break;
-                case 7: statusText = "반품완료"; break;
-                case 8: statusText = "취소신청"; break;
-                case 9: statusText = "취소완료"; break;
-                case 10: statusText = "환불거절"; break;
-                case 11: statusText = "환불완료"; break;
-                case 12: statusText = "교환승인"; break;
-                case 13: statusText = "교환거절"; break;
-                case 14: statusText = "반품승인"; break;
-                case 15: statusText = "반품거절"; break;
-                case 16: statusText = "취소승인"; break;
-                case 17: statusText = "취소거절"; break;
-                case 18: statusText = "구매확정"; break;
-            }
+            filteredItems.forEach(function (item) {
+                var statusText = '';
+                switch (item.order_status_product) {
+                    case 0: statusText = "<span class='label label-default'>입금전</span>"; break;
+                    case 1: statusText = "<span class='label label-primary'>배송준비중</span>"; break;
+                    case 2: statusText = "<span class='label label-secondary'>배송중</span>"; break;
+                    case 3: statusText = "<span class='label label-success'>배송완료</span>"; break;
+                    case 4: statusText = "<span class='label label-warning'>교환신청</span>"; break;
+                    case 5: statusText = "<span class='label label-success'>교환완료</span>"; break;
+                    case 6: statusText = "<span class='label label-warning'>반품신청</span>"; break;
+                    case 7: statusText = "<span class='label label-success'>반품완료</span>"; break;
+                    case 8: statusText = "<span class='label label-warning'>취소신청</span>"; break;
+                    case 9: statusText = "<span class='label label-success'>취소완료</span>"; break;
+                    case 10: statusText = "<span class='label label-danger'>환불거절</span>"; break;
+                    case 11: statusText = "<span class='label label-success'>환불완료</span>"; break;
+                    case 12: statusText = "<span class='label label-success'>교환승인</span>"; break;
+                    case 13: statusText = "<span class='label label-danger'>교환거절</span>"; break;
+                    case 14: statusText = "<span class='label label-success'>반품승인</span>"; break;
+                    case 15: statusText = "<span class='label label-danger'>반품거절</span>"; break;
+                    case 16: statusText = "<span class='label label-success'>취소승인</span>"; break;
+                    case 17: statusText = "<span class='label label-danger'>취소거절</span>"; break;
+                    case 18: statusText = "<span class='label label-info'>구매확정</span>"; break;
+                }
 
             html += '<tr>' +
                 '<td class="text-center">' + item.orders_product_id + '</td>' +
@@ -315,8 +295,8 @@ $(document).ready(function(){
                 case 4: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="12">교환승인</button>' +
                 				'<button class="btn btn-sm btn-danger update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="13">교환거절</button>'; break;
                 case 5: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="2">배송중</button>'; break;
-                case 6: html += '<button class="btn btn-sm btn-danger update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="14">반품승인</button>' +
-                				'<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="15">반품거절</button>'; break;
+                case 6: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="14">반품승인</button>' +
+                				'<button class="btn btn-sm btn-danger update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="15">반품거절</button>'; break;
                 case 7: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="11">환불완료</button>'; break;
                 case 8: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="16">취소승인</button>' +
                 				'<button class="btn btn-sm btn-danger update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="17">취소거절</button>'; break;
@@ -501,130 +481,6 @@ $(document).ready(function(){
 		searchForm.submit();
 		
 	});	
-    
-    
-    
-    ///////////////////////////////////
-    
-	checkModal(result);
-	//상태 객체, 제목,  URL, 현재 상태를 빈 상태로 대체, 뒤로가기 버튼을 눌렀을 때 이전 페이지로 되돌아가지 않고 현재 페이지에 그대로 만듬
-	history.replaceState({}, null,null);   // 뒤로가기 모달창을 보여준 뒤에는 더 이상 모달창이 필요하지 않음
-	//페이지 이동(뒤로가기)하므로 세션 기록(history)을 조작하는history.replaceState({}, null, null); 메서드 사용
-           //마지막 값이 null로 설정되면 현재 URL이 유지
-	
-	function checkModal(result){
-		if(result === '' || history.state){  //빈문자열이거나 history.state true일 때 모달이 보이지 않음
-			return ;
-		}else{
-			if(parseInt(result)>0){
-				$(".modal-body").html("상품 " + parseInt(result) + "번이 등록되었습니다.");
-			}
-			$("#myModal").modal("show");
-		}
-	}
-	
-	$("#regBtn").on("click",function(){
-		self.location = "/adminmember/register";
-	})
-	
-	var actionForm = $("#actionForm");
-	$(".paginate_button a").on("click", function(e){
-		e.preventDefault();
-		console.log("click");
-		
-		actionForm.removeAttr("action"); //뒤로가기 후 기존 파라미터 누적문제 해결
-		actionForm.find("input[name='id']").remove(); //뒤로가기 후 기존 파라미터 누적문제 해결
-		
-		// 클릭된 요소의 href 값을 찾아서 input 폼 안의 pageNum 필드에 설정		
-		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
-		actionForm.submit();
-	});
-	
-	$(".move").on("click", function(e) {
-		e.preventDefault();
-		
-		actionForm.find("input[name='id']").remove(); //뒤로가기 후 기존 파라미터 누적문제 해결
-		
-		actionForm.append("<input type='hidden' name='id' value='" + $(this).attr("href") + "'>");
-		actionForm.attr("action","/adminmember/modify");
-		actionForm.submit();
-	});
-	
-	var searchForm = $("#searchForm");
-
-	$("#searchForm button").on("click", function(e){
-		//if(!searchForm.find("option:selected").val()){
-		//	alert("검색종류를 선택하세요");
-		//	return false;
-		//}
-
-		//if(!searchForm.find("input[name='keyword']").val()){
-		//	alert("키워드를 입력하세요");
-		//	return false;
-		//}
-		searchForm.find("input[name='pageNum']").val("1");
-		e.preventDefault();
-		
-		searchForm.submit();
-		
-	});
-    
-	// 관리자용 버튼 이벤트
-	$(document).on("click", ".edit-btn", function () {
-	    const id = $(this).data("id");
-	    window.location.href = "/adminmember/modify?id=" + id;
-	});
-
-	$(document).on("click", ".harddel-btn", function () {
-	    const id = $(this).data("id");
-	    if (confirm("삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
-	        $.ajax({
-	            type: "post",
-	            url: "/adminmember/harddel",
-	            data: { id: id },
-	            success: function () {
-	                location.reload();
-	            },
-	            error: function () {
-	                alert("계정 삭제 실패");
-	            }
-	        });
-	    }
-	});
-	
-	$(document).on("click", ".softdel-btn", function () {
-	    const id = $(this).data("id");
-	    if (confirm("계정이 비활성됩니다.")) {
-	        $.ajax({
-	            type: "post",
-	            url: "/adminmember/softdel",
-	            data: { id: id },
-	            success: function () {
-	                location.reload();
-	            },
-	            error: function () {
-	                alert("계정 비활성 실패");
-	            }
-	        });
-	    }
-	});
-
-	$(document).on("click", ".restore-btn", function () {
-	    const id = $(this).data("id");
-	    if (confirm("계정이 활성됩니다.")) {
-	        $.ajax({
-	            type: "post",
-	            url: "/adminmember/restore",
-	            data: { id: id },
-	            success: function () {
-	                location.reload();
-	            },
-	            error: function () {
-	                alert("계정 활성 실패");
-	            }
-	        });
-	    }
-	});
     
 });
 </script>
