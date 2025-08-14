@@ -1,15 +1,11 @@
 package com.myrium.mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.myrium.domain.AttachFileDTO;
 import com.myrium.domain.AuthVO;
-import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
-import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.MemberVO;
 
 public interface AdminMemberMapper {

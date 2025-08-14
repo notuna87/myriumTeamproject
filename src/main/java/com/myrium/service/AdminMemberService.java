@@ -1,15 +1,9 @@
 package com.myrium.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.myrium.domain.AttachFileDTO;
-import com.myrium.domain.CategoryVO;
 import com.myrium.domain.Criteria;
-import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.MemberVO;
-import com.myrium.domain.ProductDTO;
-import com.myrium.domain.ProductVO;
 
 public interface AdminMemberService {
 	

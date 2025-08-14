@@ -2,7 +2,6 @@ package com.myrium.service;
 
 import java.util.List;
 
-import com.myrium.domain.Criteria;
 import com.myrium.domain.FaqVO;
 
 public interface AdminFaqService {

@@ -99,14 +99,10 @@
 						<!-- 검색조건 -->
 						<div class='row'>
 							<div class="col-lg-12">
-								<form id='searchForm' action="/adminorder/list" method='get'>
+								<form id='searchFormReview' action="/adminreview/list" method='get'>
 									<select name='type' >
-										<option value="T" <c:out value="${pageMaker.cri.type eq 'C'?'selected':''}"/>>제목</option>
+										<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : ''}" /> >선택하세요</option>
 										<option value="P" <c:out value="${pageMaker.cri.type eq 'P'?'selected':''}"/>>상품명</option>
-										<option value="C" <c:out value="${pageMaker.cri.type eq 'CP'?'selected':''}"/>>고객ID</option>
-										<option value="TP" <c:out value="${pageMaker.cri.type eq 'TC'?'selected':''}"/>>제목 or 상품명</option>
-										<option value="TC" <c:out value="${pageMaker.cri.type eq 'TW'?'selected':''}"/>>제목	or 고객ID</option>
-										<option value="TPC" <c:out value="${pageMaker.cri.type eq 'TWC'?'selected':''}"/>>제목 or 상품명 or 고객ID</option>
 									</select>
 									<input type='text' name='keyword' value='<c:out value="${pageMaker.cri.keyword}"/>' /> 
 									<input type='hidden' name='pageNum' value='<c:out value="${pageMaker.cri.pageNum}"/>' /> 
@@ -114,7 +110,7 @@
 	
 									
 									<button type="submit" class="btn btn-sm btn-primary">
-										<i class="fa fa-search"></i> 주문검색
+										<i class="fa fa-search"></i> 검색
 									</button>
 								</form>
 							</div>
@@ -143,10 +139,10 @@
 						<!-- end 페이지 처리 -->
 	
 						<form id='actionForm' action="/adminreview/list" method='get'>
-							<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'> <input
-								type='hidden' name='amount' value='${pageMaker.cri.amount}'> <input type='hidden'
-								name='type' value='${pageMaker.cri.type}'> <input type='hidden' name='keyword'
-								value='${pageMaker.cri.keyword}'>
+							<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'>
+							<input type='hidden' name='amount' value='${pageMaker.cri.amount}'>
+							<input type='hidden' name='type' value='${pageMaker.cri.type}'>
+							<input type='hidden' name='keyword'	value='${pageMaker.cri.keyword}'>
 						</form>
 			        </div>
 			      </sec:authorize>
@@ -165,7 +161,7 @@
 					
 					      <div class="modal-body">
 					        <p>상품명: <span id="modalProductName"></span></p>
-					        <p><a href="#" id="modalProductLink" target="_blank">상품페이지 바로가기</a></p>
+					        <p><a href="" id="modalProductLink" target="_blank">상품페이지 바로가기</a></p>
 					
 					        <!-- 리뷰 목록 -->
 					        <div id="reviewList" class="row">
@@ -183,9 +179,7 @@
 					      </div>
 					    </div>
 					  </div>
-					</div>
-
-			      			
+					</div>		      			
 			    </section>			
 			</div>
   		</div>
@@ -212,12 +206,21 @@ $(document).ready(function(){
 		actionForm.submit();
 	});    
 
-	var searchForm = $("#searchForm");
-	$("#searchForm button").on("click", function(e){
-		searchForm.find("input[name='pageNum']").val("1");
+	var searchFormReview = $("#searchFormReview");
+	$("#searchFormReview button").on("click", function(e){
+		if(!searchFormReviewOrder.find("option:selected").val()){
+			alert("검색종류를 선택하세요");
+			return false;
+		}
+
+		if(!searchFormReviewOrder.find("input[name='keyword']").val()){
+			alert("키워드를 입력하세요");
+			return false;
+		}
+		searchFormReview.find("input[name='pageNum']").val("1");
 		e.preventDefault();
 		
-		searchForm.submit();
+		searchFormReview.submit();
 		
 	});	
     
@@ -232,7 +235,7 @@ $(document).ready(function(){
 	    $('#modalProductName').text(productName);
 	    
 	    // 상품페이지 링크 URL
-	    let productPageUrl = '/product/detail/' + productId;
+	    let productPageUrl = '/sub?id=' + productId;
 	    
 	    // 모달 내 링크 href 설정 및 텍스트 지정
 	    $('#modalProductLink')

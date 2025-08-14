@@ -1,11 +1,7 @@
 package com.myrium.mapper;
 
 import java.util.List;
-import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
-import com.myrium.domain.Criteria;
 import com.myrium.domain.FaqVO;
 
 public interface AdminFaqMapper {

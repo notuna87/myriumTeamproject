@@ -78,7 +78,7 @@
                     </form>
 
                     <!-- 회원 테이블 -->
-                    <table class="table table-bordered table-hover">
+                    <table style="width:100%;" class="table table-striped table-bordered table-hover" id="dataTables-example">
                         <thead>
                             <tr>
                                 <th class="text-center">번호</th>
@@ -154,8 +154,9 @@
                     <!-- 검색조건 -->
                     <div class="row">
                         <div class="col-lg-12">
-                            <form id="searchForm" action="/adminmember/list" method="get">
+                            <form id="searchFormMember" action="/adminmember/list" method="get">
                                 <select name="type">
+                                	<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : ''}" /> >선택하세요</option>
                                     <option value="C" <c:out value="${pageMaker.cri.type eq 'C'?'selected':''}"/> >아이디</option>
                                     <option value="N" <c:out value="${pageMaker.cri.type eq 'N'?'selected':''}"/> >이름</option>
                                     <option value="CN" <c:out value="${pageMaker.cri.type eq 'CN'?'selected':''}"/> >아이디 or 이름</option>
@@ -164,7 +165,7 @@
                                 <input type="hidden" name="pageNum" value="<c:out value='${pageMaker.cri.pageNum}'/>" />
                                 <input type="hidden" name="amount" value="<c:out value='${pageMaker.cri.amount}'/>" />
                                 <button type="submit" class="btn btn-sm btn-primary">
-                                    <i class="fa fa-search"></i> 회원검색
+                                    <i class="fa fa-search"></i> 검색
                                 </button>
                             </form>
                         </div>
@@ -227,7 +228,7 @@ $(document).ready(function(){
     history.replaceState({}, null, null);
 
     var actionForm = $("#actionForm");
-    var searchForm = $("#searchForm");
+    var searchFormMember = $("#searchFormMember");
 
     // 페이지네이션
     $(".paginate_button a").on("click", function(e){
@@ -239,9 +240,26 @@ $(document).ready(function(){
     });
 
     // 검색
-    searchForm.on("submit", function(e){
-        console.log("[검색] 키워드:", $(this).find("input[name='keyword']").val());
-    });
+    //searchFormMember.on("submit", function(e){
+    //    console.log("[검색] 키워드:", $(this).find("input[name='keyword']").val());
+    //});
+    
+	$("#searchFormMember button").on("click", function(e){
+		if(!searchFormMember.find("option:selected").val()){
+			alert("검색종류를 선택하세요");
+			return false;
+		}
+
+		if(!searchFormMember.find("input[name='keyword']").val()){
+			alert("키워드를 입력하세요");
+			return false;
+		}
+		searchFormMember.find("input[name='pageNum']").val("1");
+		e.preventDefault();
+		
+		searchFormMember.submit();
+		
+	});	
 
     // 관리자 버튼 이벤트
     $(document).on("click", ".edit-btn", function() {

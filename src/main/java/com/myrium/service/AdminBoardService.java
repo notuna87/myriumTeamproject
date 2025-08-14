@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.myrium.domain.BoardVO;
 import com.myrium.domain.Criteria;
-import com.myrium.domain.ReplyPageDTO;
 
 public interface AdminBoardService {
 

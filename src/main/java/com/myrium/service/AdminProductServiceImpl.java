@@ -3,7 +3,6 @@ package com.myrium.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myrium.domain.AttachFileDTO;
@@ -14,7 +13,6 @@ import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 import com.myrium.mapper.AdminProductMapper;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 

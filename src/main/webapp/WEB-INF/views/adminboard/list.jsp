@@ -53,7 +53,7 @@
 				</sec:authorize>
 
 				<div class="panel-body">
-					<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+					<table style="width:100%;" class="table table-striped table-bordered table-hover" id="dataTables-example">
 						<thead>
 							<tr>
 								<th class="text-center">No.</th>

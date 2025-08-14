@@ -99,7 +99,7 @@
 				    </form>
 				
 				    <!-- 상품 테이블 -->
-				    <table class="table table-bordered table-hover">
+				    <table style="width:100%;" class="table table-striped table-bordered table-hover" id="dataTables-example">
 				        <thead>
 				            <tr>
 				                <th class="text-center">상품번호</th>
@@ -169,10 +169,10 @@
 					<div class='row'>
 						<div class="col-lg-12">
 							<form id='searchFormProduct' action="/adminproduct/list" method='get'>
-								<!-- <select name='type' >
+								<select name='type' >
+									<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : ''}" /> >선택하세요</option>
 									<option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':''}"/>>상품명</option>
-								</select> --> 
-								<input type='hidden' name='type' value="T" />
+								</select> 
 								<input type='text' name='keyword' value='<c:out value="${pageMaker.cri.keyword}"/>' /> 
 								<input type='hidden' name='pageNum' value='<c:out value="${pageMaker.cri.pageNum}"/>' /> 
 								<input type='hidden' name='amount' value='<c:out value="${pageMaker.cri.amount}"/>' />
@@ -296,6 +296,15 @@ $(document).ready(function(){
 	var searchFormProduct = $("#searchFormProduct");
 
 	$("#searchFormProduct button").on("click", function(e){
+		if(!searchFormOrder.find("option:selected").val()){
+			alert("검색종류를 선택하세요");
+			return false;
+		}
+
+		if(!searchFormOrder.find("input[name='keyword']").val()){
+			alert("키워드를 입력하세요");
+			return false;
+		}
 		searchFormProduct.find("input[name='pageNum']").val("1");
 		e.preventDefault();
 		

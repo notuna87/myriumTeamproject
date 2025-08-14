@@ -79,7 +79,7 @@
 	
 					    </form>
 				    
-			            <table class="table table-bordered table-hover">
+			            <table style="width:100%;" class="table table-striped table-bordered table-hover" id="dataTables-example">			            
 			              <thead>
 			                <tr>
 			                  <th class="text-center">주문일</th>
@@ -135,6 +135,7 @@
 							<div class="col-lg-12">
 								<form id='searchFormOrder' action="/adminorder/list" method='get'>
 									<select name='type' >
+										<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : ''}" /> >선택하세요</option>
 										<option value="C" <c:out value="${pageMaker.cri.type eq 'C' ? 'selected':''}"/>>고객명</option>
 									</select>
 									<input type='text' name='keyword' value='<c:out value="${pageMaker.cri.keyword}"/>' /> 
@@ -463,15 +464,15 @@ $(document).ready(function(){
 	var searchFormOrder = $("#searchFormOrder");
 
 	$("#searchFormOrder button").on("click", function(e){
-		//if(!searchFormOrder.find("option:selected").val()){
-		//	alert("검색종류를 선택하세요");
-		//	return false;
-		//}
+		if(!searchFormOrder.find("option:selected").val()){
+			alert("검색종류를 선택하세요");
+			return false;
+		}
 
-		//if(!searchFormOrder.find("input[name='keyword']").val()){
-		//	alert("키워드를 입력하세요");
-		//	return false;
-		//}
+		if(!searchFormOrder.find("input[name='keyword']").val()){
+			alert("키워드를 입력하세요");
+			return false;
+		}
 		searchFormOrder.find("input[name='pageNum']").val("1");
 		e.preventDefault();
 		
