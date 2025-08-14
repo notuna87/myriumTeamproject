@@ -48,7 +48,7 @@
         <span class="required_note"><span class="required">*</span> 필수입력사항</span>
     </div>
     
-    <form action="${pageContext.request.contextPath}/join" method="post">
+    <form id="joinForm" action="${pageContext.request.contextPath}/join" method="post">
     
 	  <div class="form_section">
 	  <label for="userid">아이디 <span class="required">*</span></label>
@@ -167,7 +167,11 @@
 
  <%@ include file="/WEB-INF/views/main/footer.jsp" %>
 
-
+<script>	
+document.getElementById('joinForm').addEventListener('submit', function(e){
+    alert("submit fired");
+});
+</script>
 <script> const ctx = "${pageContext.request.contextPath}"; </script>
 <script src="${pageContext.request.contextPath}/resources/js/join_terms.js"></script>
 
