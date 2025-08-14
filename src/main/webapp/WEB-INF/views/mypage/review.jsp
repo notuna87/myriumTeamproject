@@ -16,7 +16,7 @@
   <h1 class="page-title">상품 리뷰</h1>
 <div class="review-container">
   <div class="product-info-box">
-    <img src="${pageContext.request.contextPath}/resources/img/sample/plant.png" alt="상품 이미지" class="product-img">
+    <img src="${pageContext.request.contextPath}/upload/${product.img_path}" alt="상품 이미지" class="product-img">
     <div class="product-detail">
       <p class="product-name">${product.productName}</p>
       <p class="product-price"><fmt:formatNumber value="${product.productPrice}" pattern="#,###" />원</p>

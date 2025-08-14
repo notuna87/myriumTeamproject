@@ -120,4 +120,17 @@ public class CartController {
 	        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 }
+	
+	@PostMapping(value = "/cart/updateChecked", produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<Map<String, String>> updateChecked(@RequestBody Map<String, Object> payload) {
+	    Long productId = Long.valueOf(payload.get("productId").toString());
+	    int checked = Integer.valueOf(payload.get("checked").toString());
+
+	    productservice.updateChecked(productId, checked);
+
+	    Map<String, String> response = new HashMap<>();
+	    response.put("status", "success");
+	    return ResponseEntity.ok(response);
+	}
 }

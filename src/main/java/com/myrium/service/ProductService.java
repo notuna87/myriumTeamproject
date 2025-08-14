@@ -30,6 +30,9 @@ public interface ProductService {
 	
 	// 장바구니 리스트 불러오기
 	public List<ProductDTO> CartList(Long userId);
+	
+	// 체크된 장바구니 리스트 불러오기
+	public List<ProductDTO> CartListChecked(Long userId);
 
 	void updateQuantity(Long productId, Integer newQuantity, Long userId);
 
@@ -55,5 +58,7 @@ public interface ProductService {
 	public List<ProductDTO> getAllProductList(String sort);
 
 	ProductDTO getProductInfoWithThumbnail(int productId);
+
+	public void updateChecked(Long productId, int checked);
 
 }

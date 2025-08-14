@@ -354,5 +354,10 @@ document.addEventListener("click", function (e) {
   } else {
     document.querySelector("form").submit();
   }
+  
+    if (errors.length === 0) {
+    console.log("form submit!"); // submit 직전
+    document.getElementById("joinForm").submit();
+  }
 
 });

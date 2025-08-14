@@ -100,27 +100,33 @@
 						<!-- 서브페이지에서 바로 구매시 -->
 						<c:if test="${directPurchaseStatus == 1}">
 							<div class="cartContentsWrap">
-									<table style="border-bottom: 1px dashed #E9E9E9; width: 100%;">
-										<tr>
-											<th><img src="${pageContext.request.contextPath}/upload/${productDirectPurchase.thumbnail.img_path}" alt="test" class="orderProductThumbnail"></th>
-											<td><input type="hidden" name="productId" value="${productDirectPurchase.product.id}">
-												<p style="margin-bottom: 10px;">${productDirectPurchase.product.product_name}</p>
-												<p style="color: #888">${productDirectPurchase.product.product_content}</p> <input type="hidden" name="quantity" value="${quantity}">
-												<p class="productQty" style="color: #888; margin-bottom: 10px;" data-qty="${quantity}">수량 : ${quantity}개</p>
-												<p style="margin-bottom: 10px;">
-													<c:if test="${productDirectPurchase.product.discount_price != 0 }">
-														<span class="productPrice" data-price="${productDirectPurchase.product.discount_price}"><fmt:formatNumber value="${productDirectPurchase.product.discount_price * quantity}" type="number" groupingUsed="true" />원</span>
-													</c:if>
-													<c:if test="${productDirectPurchase.product.discount_price == 0}">
-														<span class="productPrice" data-price="${productDirectPurchase.product.product_price}"><fmt:formatNumber value="${productDirectPurchase.product.product_price * quantity}" type="number" groupingUsed="true" />원</span>
-													</c:if>
-												</p></td>
-										</tr>
-									</table>
-								</div>
+								<table style="border-bottom: 1px dashed #E9E9E9; width: 100%;">
+									<tr>
+										<th><img src="${pageContext.request.contextPath}/upload/${productDirectPurchase.thumbnail.img_path}" alt="test" class="orderProductThumbnail"></th>
+										<td><input type="hidden" name="productId" value="${productDirectPurchase.product.id}">
+											<p style="margin-bottom: 10px;">${productDirectPurchase.product.product_name}</p>
+											<p style="color: #888">${productDirectPurchase.product.product_content}</p> <input type="hidden" name="quantity" value="${quantity}">
+											<p class="productQty" style="color: #888; margin-bottom: 10px;" data-qty="${quantity}">수량 : ${quantity}개</p>
+											<p style="margin-bottom: 10px;">
+												<c:if test="${productDirectPurchase.product.discount_price != 0 }">
+													<span class="productPrice" data-price="${productDirectPurchase.product.discount_price}"><fmt:formatNumber value="${productDirectPurchase.product.discount_price * quantity}" type="number" groupingUsed="true" />원</span>
+												</c:if>
+												<c:if test="${productDirectPurchase.product.discount_price == 0}">
+													<span class="productPrice" data-price="${productDirectPurchase.product.product_price}"><fmt:formatNumber value="${productDirectPurchase.product.product_price * quantity}" type="number" groupingUsed="true" />원</span>
+												</c:if>
+											</p></td>
+									</tr>
+								</table>
+							</div>
 						</c:if>
-						<!-- 장바구니에서 구매 시 -->	
+						<!-- 장바구니에서 구매 시 -->
 						<c:if test="${directPurchaseStatus != 1}">
+							<c:if test="${cartList == null || cartList.isEmpty()}">
+								<script>
+       								 alert('장바구니가 비어있습니다. 홈으로 이동합니다.');
+    							     window.location.href = '${pageContext.request.contextPath}/';
+   								 </script>
+							</c:if>
 							<c:forEach var="item" items="${cartList}">
 								<div class="cartContentsWrap">
 									<table style="border-bottom: 1px dashed #E9E9E9; width: 100%;">
@@ -137,6 +143,7 @@
 													<c:if test="${item.product.discount_price == 0}">
 														<span class="productPrice" data-price="${item.product.product_price}"><fmt:formatNumber value="${item.product.product_price * item.inCart.quantity}" type="number" groupingUsed="true" />원</span>
 													</c:if>
+
 												</p></td>
 											<td style="width: 77px;">
 												<button type="button" class="deleteButton" onclick="deleteProduct('increase', this)" data-product-id="${item.product.id}">삭제하기</button>
@@ -235,8 +242,8 @@
 		</div>
 	</form>
 </body>
-<script src="${pageContext.request.contextPath}/resources/js/deleteProduct.js"></script>
 <script>
+
 	// 배송 메시지 선택 직접입력 보이기, 숨기기 스크립트
 	document.addEventListener("DOMContentLoaded", function() {
 		const selectBox = document.getElementById("messageSelect");
@@ -316,5 +323,50 @@
 		    }).open();
 		}
 
+	  // 삭제시
+	  function deleteProduct(action, button) {
+		  
+		 	const isConfirmed = confirm("장바구니에서도 삭제됩니다. 정말 삭제하시겠습니까?");
+		    if (!isConfirmed) return; // 취소 누르면 함수 종료
+
+		  	const productContainer = button.closest('.cartContentsWrap');
+		    const container = button.closest('.cartDelete');
+		    const productId = button.getAttribute('data-product-id');
+			const meta = document.querySelector('meta[name="_csrf"]');
+			const csrfToken = meta ? meta.getAttribute('content') : '';
+			
+		    // AJAX 요청 보내기 (서버에 수량 업데이트)
+		    fetch('/cart/delete', {
+		      method: 'POST',
+		      headers: {
+	  			'Content-Type': 'application/json',
+	  			'X-CSRF-TOKEN': csrfToken
+		      },
+		      body: JSON.stringify({
+		        productId: productId
+		      })
+		    })
+		    .then(response => {
+		      if (!response.ok) {
+		        throw new Error('서버 오류 발생');
+		      }
+		      return response.json();
+		    })
+		    .then(data => {
+		      console.log('삭제완료', data);
+		      productContainer.remove();
+		      
+		      const remainingItems = document.querySelectorAll('.cartContentsWrap');
+		        if (remainingItems.length === 0) {
+		            alert('주문상품이 비었습니다. 홈으로 이동합니다.');
+		            window.location.href = '/'; // 홈 페이지 URL로 이동
+		        }
+		      updateTotalPrice();
+		    })
+		    .catch(error => {
+		      console.error('삭제 실패:', error);
+		      alert('삭제에 실패했습니다.');
+		    });
+		  }
 </script>
 </html>

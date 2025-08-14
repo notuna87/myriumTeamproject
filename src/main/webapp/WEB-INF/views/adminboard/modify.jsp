@@ -47,8 +47,8 @@
 						</div>
 
 						<div class="form-group">
-							<label>내용</label>
-							<textarea class="form-control" rows="3" name='content'>${board.content}</textarea>
+			                  <label>내용</label>
+						      <textarea class="form-control" rows="3" name='content' style="resize:none; height:300px;">${board.content}</textarea>
 						</div>
 
 						<div class="form-group">
@@ -60,7 +60,6 @@
 							<button type="submit" data-oper='modify' class="btn btn-default">등록</button>
 							<button type="submit" data-oper='remove' class="btn btn-danger">삭제</button>
 						</sec:authorize>
-
 						<button type="submit" data-oper='list' class="btn btn-info">목록</button>
 					</form>
 				</div>

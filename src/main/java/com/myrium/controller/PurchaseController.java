@@ -47,7 +47,7 @@ public class PurchaseController {
 		MemberVO memberInfo = memberservice.readById(userId);
 
 		// 카트 정보 불러오기
-		List<ProductDTO> cartList = productservice.CartList(userId);
+		List<ProductDTO> cartList = productservice.CartListChecked(userId);
 
 		log.info(cartList);
 
@@ -122,6 +122,11 @@ public class PurchaseController {
 		String paymentStr = request.getParameter("payment");
 		int payment = Integer.parseInt(paymentStr);
 
+		// hidden으로부터 가격을 받아와 저장
+		String totalPrice = request.getParameter("totalprice");
+		String formattedTotal = request.getParameter("formattedTotal"); // 배송비 미포함 가격
+		int totalPriceInt = Integer.parseInt(formattedTotal); // 배송비 미포함 가격 int 변경
+
 		// dto에 정보 집어 넣기
 		OrderDTO orders = new OrderDTO();
 		orders.setUserId(userId);
@@ -131,7 +136,8 @@ public class PurchaseController {
 		orders.setDeliveryMsg(messageSelect);
 		orders.setPhoneNumber(phone);
 		orders.setPaymentMethod(payment);
-
+		orders.setTotal_price(totalPriceInt); // 배송비 미포함 가격 insert
+		
 		String paymentStatusText = orders.getPayment(); // getPayment() 호출해서 문자 받아오기
 
 		log.info(paymentStatusText);
@@ -174,9 +180,6 @@ public class PurchaseController {
 			log.warn("상품 없음");
 		}
 
-		// hidden으로부터 가격을 받아와 저장
-		String totalPrice = request.getParameter("totalprice");
-		String formattedTotal = request.getParameter("formattedTotal");
 
 		// 프론트로 정보 보내주기
 		model.addAttribute("orders", orders);

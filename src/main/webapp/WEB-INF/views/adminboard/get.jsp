@@ -49,20 +49,22 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<!-- 문의 상태 표시 -->
-					<td>이 문의는 현재 </td> 
-					<td>
-				        <b>
-				          <c:choose>
-				            <c:when test="${board.isAnswered == 1}">
-				              <span class="label label-success">답변완료</span>
-				            </c:when>
-				            <c:otherwise>
-				              <span class="label label-default ">미답변</span>
-				            </c:otherwise>
-				          </c:choose>
-				        </b>
-				    </td>	
-				    <td>상태입니다.</td>			
+					<div>
+						<span>이 문의는 현재</span>>
+						<span>
+					        <b>
+					          <c:choose>
+					            <c:when test="${board.isAnswered == 1}">
+					              <span class="label label-success">답변완료</span>
+					            </c:when>
+					            <c:otherwise>
+					              <span class="label label-default ">미답변</span>
+					            </c:otherwise>
+					          </c:choose>
+					        </b>
+					    </span>	
+					    <span>상태입니다.</span>	
+					</div>		
 				</div>
 				<div class="panel-body">
 					<div class="form-group">
@@ -75,7 +77,7 @@
 					</div>
 					<div class="form-group">
 						<label>내용</label>
-						<textarea class="form-control" rows="10" name='content' readonly="readonly">${board.content}</textarea>
+						<textarea class="form-control" rows="10" name='content' readonly="readonly" style="resize:none;">${board.content}</textarea>
 					</div>
 					<div class="form-group">
 						<label>작성자</label>
@@ -162,7 +164,7 @@
 				<div class="modal-body">
 					<div class="form-group">
 						<label>내용을 작성하세요</label>
-						<textarea class="form-control" rows="3" name='reply'></textarea>
+						<textarea class="form-control" rows="3" name='reply' style="resize:none;"></textarea>
 					</div>
 					<div class="form-group">
 						<label>작성자</label>

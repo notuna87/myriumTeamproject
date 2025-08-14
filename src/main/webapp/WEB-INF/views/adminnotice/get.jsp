@@ -10,94 +10,96 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board_chat.css" />
 
 <body>
-<%@include file="../main/header.jsp"%>
+	<%@include file="../main/header.jsp"%>
 
-<div style="width:1240px; margin:0 auto;">
-    <div class="row">
-        <div class="col-lg-12">
-            <sec:authorize access="hasAuthority('ADMIN')">
-                <h1 class="page-header">공지사항 보기<span class="badge">관리자</span></h1>
-            </sec:authorize>
-            <sec:authorize access="!hasAuthority('ADMIN')">
-                <h1 class="page-header">공지사항 보기</h1>
-            </sec:authorize>
-        </div>
-    </div>
+	<div style="width: 1240px; margin: 0 auto;">
+		<div class="row">
+			<div class="col-lg-12">
+				<sec:authorize access="hasAuthority('ADMIN')">
+					<h1 class="page-header">
+						공지사항 보기<span class="badge">관리자</span>
+					</h1>
+				</sec:authorize>
+				<sec:authorize access="!hasAuthority('ADMIN')">
+					<h1 class="page-header">공지사항 보기</h1>
+				</sec:authorize>
+			</div>
+		</div>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <c:if test="${notice.createdAt.time + (1000*60*60*24*3) > now.time}">
-                        <div>
-                            <span class="badge badge-danger ml-1">NEW</span>
-                            <span> 새로운 공지사항 입니다.</span>                            
-                        </div>
-                    </c:if>
-                </div>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<c:if test="${notice.createdAt.time + (1000*60*60*24*3) > now.time}">
+							<div>
+								<span class="badge badge-danger ml-1">NEW</span> <span> 새로운 공지사항 입니다.</span>
+							</div>
+						</c:if>
+					</div>
 
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label>No.</label> 
-                        <input class="form-control" name='id' value="${notice.id}" readonly/>
-                    </div>
-                    <div class="form-group">
-                        <label>제목</label>
-                        <input class="form-control" name='title' value="${notice.title}" readonly/>
-                    </div>
-                    <div class="form-group">
-                        <label>내용</label>
-                        <textarea class="form-control" rows="10" name='content' readonly>${notice.content}</textarea>
-                    </div>
+					<!-- /.panel-heading -->
+					<div class="panel-body">
+						<div class="form-group">
+							<label>No.</label> <input class="form-control" name='id' value="${notice.id}"
+								readonly="readonly" />
+						</div>
+						<div class="form-group">
+							<label>제목</label> <input class="form-control" name='title' value="${notice.title}"
+								readonly="readonly" />
+						</div>
+						<div class="form-group">
+							<label>내용</label>
+							<textarea class="form-control" rows="10" name='content' readonly="readonly"
+								style="resize: none;">${notice.content}</textarea>
+						</div>
 
-                    <c:if test="${not empty attachFiles}">
-                        <div class="form-group">
-                            <label>첨부파일 다운로드</label>
-                            <ul class="list-group">
-                                <c:forEach items="${attachFiles}" var="file">
-                                    <li class="list-group-item">
-                                        <a href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
-                                            ${file.fileName}
-                                        </a>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </div>
-                    </c:if>
+						<c:if test="${not empty attachFiles}">
+							<div class="form-group">
+								<label>첨부파일 다운로드</label>
+								<ul class="list-group">
+									<c:forEach items="${attachFiles}" var="file">
+										<li class="list-group-item"><a
+											href="/download?uuid=${file.uuid}&path=${fn:replace(file.uploadPath, '\\', '/')}&filename=${file.fileName}">
+												${file.fileName} </a></li>
+									</c:forEach>
+								</ul>
+							</div>
+						</c:if>
 
-                    <div class="form-group">
-                        <label>작성자</label>
-                        <input class="form-control" name='customerId' value="${notice.customerId}" readonly/>
-                    </div>
+						<div class="form-group">
+							<label>작성자</label> <input class="form-control" name='customerId'
+								value="${notice.customerId}" readonly="readonly" />
+						</div>
 
-                    <sec:authentication property="principal" var="pinfo" />
-                    <sec:authorize access="isAuthenticated()">
-                        <c:if test="${pinfo.username eq notice.customerId}">
-                            <button type="button" class="btn btn-warning softdel-btn" data-id="${notice.id}" data-customer-id="${notice.customerId}">글내림</button>
-                        </c:if>
-                    </sec:authorize>
+							<sec:authentication property="principal" var="pinfo" />
+							<sec:authorize access="isAuthenticated()">
+								<c:if test="${pinfo.username eq notice.customerId}">
+									<button type="button" class="btn btn-warning softdel-btn" data-id="${notice.id}"
+										data-customer-id="${notice.customerId}">글내림</button>
+								</c:if>
+							</sec:authorize>
 
-                    <sec:authorize access="hasAuthority('ADMIN')">
-                        <button data-oper='modify' class="btn btn-default">수정</button>
-                    </sec:authorize>
+							<sec:authorize access="hasAuthority('ADMIN')">
+								<button data-oper='modify' class="btn btn-default">수정</button>
+							</sec:authorize>
 
-                    <button data-oper='list' class="btn btn-default btn-info" onclick="location.href='/adminnotice/list'">목록</button>
+							<button data-oper='list' class="btn btn-default btn-info"
+								onclick="location.href='/adminnotice/list'">목록</button>
 
-                    <form id='operForm' action="/adminnotice/modify" method='get'>
-                        <input type='hidden' id="id" name='id' value='${notice.id}'>
-                        <input type='hidden' name='pageNum' value='${cri.pageNum}'>
-                        <input type='hidden' name='amount' value='${cri.amount}'>
-                        <input type='hidden' name='type' value='${cri.type}'>
-                        <input type='hidden' name='keyword' value='${cri.keyword}'>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+							<form id='operForm' action="/adminnotice/modify" method='get'>
+								<input type='hidden' id="id" name='id' value='${notice.id}'> <input type='hidden'
+									name='pageNum' value='${cri.pageNum}'> <input type='hidden' name='amount'
+									value='${cri.amount}'> <input type='hidden' name='type' value='${cri.type}'>
+								<input type='hidden' name='keyword' value='${cri.keyword}'>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-<script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
-<script type="text/javascript">
+		<script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
+		<script type="text/javascript">
 $(document).ready(function() {
     var operForm = $("#operForm");
 

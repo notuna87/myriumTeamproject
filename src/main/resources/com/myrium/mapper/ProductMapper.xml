@@ -69,8 +69,15 @@
 	<!-- 장바구니 리스트 불러오기 -->
 	<select id="CartList" resultType="com.myrium.domain.ProductVO">
 		SELECT * FROM product WHERE id
-		IN(select product_id from cart where user_id = #{userId} AND
+		IN (select product_id from cart where user_id = #{userId} AND
 		is_deleted = 0)
+	</select>
+
+	<!-- 체크된 장바구니 리스트 불러오기 -->
+	<select id="CartListChecked" resultType="com.myrium.domain.ProductVO">
+		SELECT * FROM product WHERE id
+		IN (select product_id from cart where user_id = #{userId} AND
+		is_deleted = 0 and is_selected = 1)
 	</select>
 
 	<!-- 카트에 담긴 물건 수량 불러오기 -->

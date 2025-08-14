@@ -11,6 +11,7 @@ import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 import com.myrium.domain.SearchCriteria;
+import com.myrium.mapper.OrderMapper;
 import com.myrium.mapper.ProductMapper;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private ProductMapper productmapper;
 
+	@Autowired
+	private OrderMapper ordermapper;
+	
 	// controller에서 지정한 카테고리에 해당하는 목록 불러오기
 	@Override
 	public List<ProductDTO> getProductWithThumbnailList(String category) {
@@ -146,6 +150,26 @@ public class ProductServiceImpl implements ProductService {
 
 		return productDTOs;
 	}
+	
+	@Override
+	public List<ProductDTO> CartListChecked(Long userId) {
+		List<ProductVO> products = productmapper.CartListChecked(userId);
+		List<ProductDTO> productDTOs = new ArrayList<>();
+
+		for (ProductVO product : products) {
+			// 썸네일 가져오기
+			ImgpathVO thumbnail = productmapper.getThumbnail(product.getId());
+			CartVO quantity = productmapper.getCartInfo(product.getId(), userId);
+			ProductDTO dto = new ProductDTO();
+			dto.setProduct(product);
+			dto.setThumbnail(thumbnail);
+			dto.setInCart(quantity);
+			productDTOs.add(dto);
+		}
+
+		return productDTOs;
+	}
+	
 
 	@Override
 	public void updateQuantity(Long productId, Integer newQuantity, Long userId) {
@@ -260,6 +284,11 @@ public class ProductServiceImpl implements ProductService {
 		dto.setThumbnail(thumbnail);
 		
 		return dto;
+	}
+
+	@Override
+	public void updateChecked(Long productId, int checked) {
+        ordermapper.updateChecked(productId, checked);
 	}
 
 }

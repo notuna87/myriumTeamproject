@@ -55,7 +55,7 @@
 				<!-- 최종 img src 결정 -->
 				<c:set var="imgSrc" value="${noImg}" />
 				<c:if test="${not empty review.imageUrl}">
-				  <c:set var="imgSrc" value="${pageContext.request.contextPath}${review.imageUrl}" />
+				  <c:set var="imgSrc" value="${pageContext.request.contextPath}/${review.imageUrl}" />
 				</c:if>
 				
 				<!-- 항상 <img> 렌더링 + 실패 시 기본이미지 -->

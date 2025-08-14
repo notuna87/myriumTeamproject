@@ -48,8 +48,8 @@
 						</div>
 
 						<div class="form-group">
-							<label>내용</label>
-							<textarea class="form-control" rows="3" name="answer">${faq.answer}</textarea>
+			                  <label>내용</label>
+						      <textarea class="form-control" rows="3" name='answer' style="resize:none; height:300px;">${faq.answer}</textarea>
 						</div>
 
 						<div class="form-group">

@@ -47,7 +47,8 @@ public interface ProductMapper {
 
 	// 장바구니 리스트 가져오기
 	public List<ProductVO> CartList(Long userId);
-
+	// 체크된 장바구니 리스트 가져오기
+	public List<ProductVO> CartListChecked(Long userId);
 	// 카트 수량 불러오기
 	public CartVO getCartInfo(@Param("productId") int productId, @Param("userId") Long userId);
 
