@@ -87,8 +87,6 @@
 						    </div>
 						</div>
 						
-						<!-- <input type="hidden" name="category" id="selectedCategory"> -->
-						
 						<div class="form-group">
 						    <label class="required">전시영역</label>
 						    <div>
@@ -198,20 +196,7 @@
 						        <option value="2">품절</option>
 						    </select>
 						</div>	
-			     			        
-				        <!--  <div class="form-group">
-				            <label class="required">상품 이미지 (최대 10장)</label>
-				            <input type="file" name="thumbnailImages" multiple accept="image/*">
-				            <small>썸네일로 사용할 이미지는 체크하세요.</small><br>
-				            <input type="checkbox" name="thumbnailCheck"> 썸네일 여부
-				        </div>
-				
-				        <div class="form-group">
-				            <label>상품설명 이미지 (최대 5장)</label>
-				            <input type="file" name="detailImages" multiple accept="image/*">
-				        </div> -->
-				        
-				        
+        
 						<!-- 업로드 영역 -->
 						<div class="form-group">
 							<label class="form-label"><strong>상품 이미지 (최대 10장)</strong></label>
@@ -277,8 +262,7 @@ $(document).ready(function () {
       const box = document.getElementById("timesales_fields");
       const selected = this.value;
       box.style.display = (selected === "1") ? "block" : "none";
-  });
-  
+  });  
   
   const priceInput = document.querySelector('input[name="product_price"]');
   const discountSelect = document.getElementById('is_discount');
@@ -303,7 +287,7 @@ $(document).ready(function () {
       const finalPrice = Math.floor(discountedPrice / 10) * 10; // 10원 단위 절삭
 
       totalRateInput.value = totalRate;
-      //finalPriceInput.value = finalPrice.toLocaleString();
+
       finalPriceInput.value = finalPrice;
   }
   
@@ -338,23 +322,10 @@ $(document).ready(function () {
 	  toggleFields();
 	  calculateDiscount();
   
-
-  // 선택된 파일 리스트를 전역에서 관리
-  //let selectedImgsThumbnail = [];
-  //let selectedImgsDetail = [];
-  //let uploadedThumbnailList = []; // 썸네일 업로드 완료된 파일 정보
-  //let uploadedDetailList = []; // 상품상세정보 업로드 완료된 파일 정보
-  //let uploadCompletedThumbnail = false; // 썸네일 업로드 완료 여부 flag
-  //let uploadCompletedDetail = false; // 상품상세정보 업로드 완료 여부 flag
-
   // 업로드 버튼 처음에 숨김
   $("#uploadBtnThumbnail").hide(); 
   $("#uploadBtnDetail").hide(); 
-  
 
-
-
-  
   $("button[type='reset']").on("click", function() {
     if (attachList.length > 0) {
     	attachList.forEach(function (file) {
@@ -398,18 +369,13 @@ $(document).ready(function () {
   $("form").on("submit", function (e) {
 	e.preventDefault();
 	isSubmitting = true;  
-	//const checkedCategories = $("input.category:checked");
-	//const checkedCategories = $("input[type='checkbox'][name='gardening'],input[name='plantkit'],input[name='hurb'],input[name='vegetable'],input[name='flower'],input[name='etc']").filter(":checked");
     const product_name = $("input[name='product_name']").val().trim();
     const product_price = $("input[name='product_price']").val().trim();
     const delivery_fee = $("input[name='delivery_fee']").val().trim();
     const delivery_days = $("input[name='delivery_days']").val().trim();
-    const product_stock = $("input[name='product_stock']").val().trim();
-
-    
-    
+    const product_stock = $("input[name='product_stock']").val().trim();    
     const checkedCount = $("input[type='checkbox']:checked").length;
-    console.log("checkedCategories:" + checkedCount);
+    
     if (checkedCount === 0) {
       alert("카테고리를 하나 이상 선택해주세요.");
       e.preventDefault();
@@ -485,25 +451,24 @@ $(document).ready(function () {
 	    }
 	});
   
-	  const uploadThumbnailManager = new UploadManager({
-		    inputId: "uploadInputThumbnail",
-		    buttonId: "uploadBtnThumbnail",
-		    maxCount: 10,
-		    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
-		    maxSize: 5242880,
-		    type: "Thumbnail"
-		    //productId: $("input[name='product_id']").val()
-		  });
-
-	  const uploadDetailManager = new UploadManager({
-	    inputId: "uploadInputDetail",
-	    buttonId: "uploadBtnDetail",
-	    maxCount: 5,
+  // 매니져 클래스 생성
+	 const uploadThumbnailManager = new UploadManager({
+	    inputId: "uploadInputThumbnail",
+	    buttonId: "uploadBtnThumbnail",
+	    maxCount: 10,
 	    regex: /(.*?)\.(exe|sh|zip|alz)$/i,
 	    maxSize: 5242880,
-	    type: "Detail"
-	    //productId: $("input[name='product_id']").val()
+	    type: "Thumbnail"
 	  });
+	
+	 const uploadDetailManager = new UploadManager({
+	   inputId: "uploadInputDetail",
+	   buttonId: "uploadBtnDetail",
+	   maxCount: 5,
+	   regex: /(.*?)\.(exe|sh|zip|alz)$/i,
+	   maxSize: 5242880,
+	   type: "Detail"
+	 });
 
 });
 </script>

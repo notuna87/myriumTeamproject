@@ -72,298 +72,224 @@
     <result property="updatedBy" column="updated_by"/>
   </resultMap>
   
-  <!-- <select id="getList" resultMap="productMap">
-    SELECT * FROM product
-    WHERE id > 0
-    ORDER BY id DESC
-  </select>  -->
-  
-  <!-- <select id="getCategory" resultMap="productMap">
-    SELECT * FROM category
-    WHERE product_id > 0
-    ORDER BY product_id DESC
-  </select>  -->
-    	
-	<!-- <select id="getProductList" resultMap="productMap">
-	    SELECT * FROM product p
-	    WHERE 1 = 1
-	    <if test="cri.category != '' and cri.category != null">
+	<select id="getProductList" resultMap="productMap">
+	  SELECT * FROM (
+	    SELECT ROWNUM rn, inner_query.*
+	    FROM (
+	      SELECT *
+	      FROM product p
+	      WHERE 1 = 1
+	      
+	      <if test="cri.category != null and cri.category != ''">
 	        AND EXISTS (
-	            SELECT 1 FROM category c
-	            WHERE c.product_id = p.id
-	            <choose>
-	                <when test="cri.category == '원예용품'">AND c.gardening = 1</when>
-	                <when test="cri.category == '식물키트모음'">AND c.plantkit = 1</when>
-	                <when test="cri.category == '허브키우기'">AND c.hurb = 1</when>
-	                <when test="cri.category == '채소키우기'">AND c.vegetable = 1</when>
-	                <when test="cri.category == '꽃씨키우기'">AND c.flower = 1</when>
-	                <when test="cri.category == '기타키우기키트'">AND c.etc = 1</when>
-	            </choose>
+	          SELECT 1 FROM category c
+	          WHERE c.product_id = p.id
+	          <choose>
+	            <when test="cri.category eq '원예용품'">AND c.gardening = 1</when>
+	            <when test="cri.category eq '식물키트모음'">AND c.plantkit = 1</when>
+	            <when test="cri.category eq '허브키우기'">AND c.hurb = 1</when>
+	            <when test="cri.category eq '채소키우기'">AND c.vegetable = 1</when>
+	            <when test="cri.category eq '꽃씨키우기'">AND c.flower = 1</when>
+	            <when test="cri.category eq '기타키우기키트'">AND c.etc = 1</when>
+	          </choose>
 	        )
-	    </if>
-	    <if test="cri.is_discount != -1">
-		    AND is_discount = #{cri.is_discount}
-		</if>
-		
-		<if test="cri.is_timeSales != -1">
-		    AND is_timesales = #{cri.is_timesales}
-		</if>
-		
-		<if test="cri.is_deleted != -1">
-		    AND is_deleted = #{cri.is_deleted}
-		</if>
-	</select> -->
+	      </if>
 	
+	      <if test="cri.is_discount != -1">
+	        AND is_discount = #{cri.is_discount}
+	      </if>
+	      <if test="cri.is_timeSales != -1">
+	        AND is_timesales = #{cri.is_timeSales}
+	      </if>
+	      <if test="cri.is_deleted != -1">
+	        AND is_deleted = #{cri.is_deleted}
+	      </if>
 	
-<select id="getProductList" resultMap="productMap">
-  SELECT * FROM (
-    SELECT ROWNUM rn, inner_query.*
-    FROM (
-      SELECT *
-      FROM product p
-      WHERE 1 = 1
-      
-      <if test="cri.category != null and cri.category != ''">
-        AND EXISTS (
-          SELECT 1 FROM category c
-          WHERE c.product_id = p.id
-          <choose>
-            <when test="cri.category eq '원예용품'">AND c.gardening = 1</when>
-            <when test="cri.category eq '식물키트모음'">AND c.plantkit = 1</when>
-            <when test="cri.category eq '허브키우기'">AND c.hurb = 1</when>
-            <when test="cri.category eq '채소키우기'">AND c.vegetable = 1</when>
-            <when test="cri.category eq '꽃씨키우기'">AND c.flower = 1</when>
-            <when test="cri.category eq '기타키우기키트'">AND c.etc = 1</when>
-          </choose>
-        )
-      </if>
+		  <if test="cri.keyword != null and cri.keyword != '' and cri.type != null">
+			<trim prefix="AND " >
+				LOWER(p.product_name) LIKE '%' || LOWER(#{cri.keyword}) || '%'
+			</trim>
+		  </if>
+	      ORDER BY p.id DESC
+	    ) inner_query
+	    WHERE ROWNUM &lt;= #{cri.pageNum} * #{cri.amount}
+	  )
+	  WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
+	</select>
 
-      <if test="cri.is_discount != -1">
-        AND is_discount = #{cri.is_discount}
-      </if>
-      <if test="cri.is_timeSales != -1">
-        AND is_timesales = #{cri.is_timeSales}
-      </if>
-      <if test="cri.is_deleted != -1">
-        AND is_deleted = #{cri.is_deleted}
-      </if>
-
-	  <if test="cri.keyword != null and cri.keyword != '' and cri.type != null">
-		<trim prefix="AND " >
-			LOWER(p.product_name) LIKE '%' || LOWER(#{cri.keyword}) || '%'
-		</trim>
+	<select id="getTotalCount" resultType="int">
+	  SELECT COUNT(*)
+	  FROM product p
+	  WHERE 1 = 1
+	  <if test="cri.category != null and cri.category != ''">
+	    AND EXISTS (
+	      SELECT 1 FROM category c
+	      WHERE c.product_id = p.id
+	      <choose>
+	        <when test="cri.category eq '원예용품'">AND c.gardening = 1</when>
+	        <when test="cri.category eq '식물키트모음'">AND c.plantkit = 1</when>
+	        <when test="cri.category eq '허브키우기'">AND c.hurb = 1</when>
+	        <when test="cri.category eq '채소키우기'">AND c.vegetable = 1</when>
+	        <when test="cri.category eq '꽃씨키우기'">AND c.flower = 1</when>
+	        <when test="cri.category eq '기타키우기키트'">AND c.etc = 1</when>
+	      </choose>
+	    )
 	  </if>
-      ORDER BY p.id DESC
-    ) inner_query
-    WHERE ROWNUM &lt;= #{cri.pageNum} * #{cri.amount}
-  )
-  WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
-</select>
-
+	  <if test="cri.is_discount != -1">
+	    AND is_discount = #{cri.is_discount}
+	  </if>
+	  <if test="cri.is_timeSales != -1">
+	    AND is_timesales = #{cri.is_timeSales}
+	  </if>
+	  <if test="cri.is_deleted != -1">
+	    AND is_deleted = #{cri.is_deleted}
+	  </if>
+	  <if test="cri.keyword != null and cri.keyword != '' and cri.type != null">
+	    <trim prefix="AND " >
+	      LOWER(p.product_name) LIKE '%' || LOWER(#{cri.keyword}) || '%'
+	    </trim>
+	  </if>
+	</select>
 	
-  <select id="getCategoryList" resultMap="categoryMap">
-	select * from category where product_id = #{id}
-  </select>
-  
-  <select id="getImgPathList" resultMap="imgpathMap">
-	select * from img_path where product_id = #{id} and is_thumbnail_main = 1
-  </select>
-
-  <insert id="insert">
-    INSERT INTO product (
-      id, product_name, product_content, product_stock, product_price,
-      is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-      discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-      created_at, created_by
-    ) VALUES (
-      product_seq.NEXTVAL, #{product_name}, #{product_content}, #{product_stock}, #{product_price},
-      #{is_deleted}, #{is_timesales}, #{is_mainone}, #{is_maintwo}, #{is_discount},
-      #{discount_rate}, #{timesalediscount_rate}, #{total_discountrate}, #{discount_price}, #{sales_count},
-      #{created_at}, #{created_by}
-    )
-  </insert>
-
-  <insert id="insertSelectKey">
-    <selectKey keyProperty="id" order="BEFORE" resultType="int">
-      SELECT product_seq.NEXTVAL FROM dual
-    </selectKey>
-    INSERT INTO product (
-      id, product_name, product_content, product_stock, product_price,
-      is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-      discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-      created_at, created_by
-    ) VALUES (
-      #{id}, #{product_name}, #{product_content}, #{product_stock}, #{product_price},
-      #{is_deleted}, #{is_timesales}, #{is_mainone}, #{is_maintwo}, #{is_discount},
-      #{discount_rate}, #{timesalediscount_rate}, #{total_discountrate}, #{discount_price}, #{sales_count},
-      SYSDATE, #{created_by}
-    )
-  </insert>
-
-  <select id="read" resultMap="productMap">
-    SELECT * FROM product
-    WHERE id = #{id}
-  </select>
-
-  <delete id="harddel">
-    DELETE FROM product WHERE id = #{id}
-  </delete>
-
-  <update id="softdel">
-    UPDATE product SET is_deleted = 1 WHERE id = #{id}
-  </update>
-
-  <update id="restore">
-    UPDATE product SET is_deleted = 0 WHERE id = #{id}
-  </update>
-
-  <update id="update" parameterType="com.myrium.domain.ProductVO">
-    UPDATE product SET
-      product_name = #{product_name},
-      product_content = #{product_content},
-      product_stock = #{product_stock},
-      product_price = #{product_price},
-      is_deleted = #{is_deleted},
-      is_timesales = #{is_timesales},
-      is_mainone = #{is_mainone},
-      is_maintwo = #{is_maintwo},
-      is_discount = #{is_discount},
-      discount_rate = #{discount_rate},
-      timesalediscount_rate = #{timesalediscount_rate},
-      total_discountrate = #{total_discountrate},
-      discount_price = #{discount_price},
-      sales_count = #{sales_count},
-      updated_at = SYSDATE,
-      updated_by = #{updated_by}
-    WHERE id = #{id}
-  </update>
-  
-  <update id="updateImgpath" parameterType="com.myrium.domain.ImgpathVO">
-    UPDATE img_path SET
-      img_path = #{img_path},
-      is_deleted = #{is_deleted},
-      is_thumbnail = #{is_thumbnail},
-      is_thumbnail_main = #{is_thumbnail_main},
-      is_detail = #{is_detail},
-      uuid = #{uuid},
-      img_path_thumb = #{img_path_thumb},
-      updated_at = SYSDATE,
-      updated_by = #{updated_by}
-    WHERE id = #{id}
-  </update>
-
-<!--  <sql id="criterial">
-    <trim prefix="(" suffix=") AND" prefixOverrides="OR">
-      <foreach item='type' collection="cri.typeArr">
-        <trim prefix="OR">
-          <choose>
-            <when test="type == 'T'.toString()">
-              title LIKE '%' || #{cri.keyword} || '%'
-            </when>
-            <when test="type == 'C'.toString()">
-              content LIKE '%' || #{cri.keyword} || '%'
-            </when>
-            <when test="type == 'W'.toString()">
-              customer_id LIKE '%' || #{cri.keyword} || '%'
-            </when>
-          </choose>
-        </trim>
-      </foreach>
-    </trim>
-  </sql>
-
-  <select id="getListWithPaging" resultMap="productMap">
-    <![CDATA[
-    SELECT * FROM (
-      SELECT /*+INDEX_DESC(product pk_product) */
-        ROWNUM rn, id, product_name, product_content, product_stock, product_price,
-        is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
-        discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
-        created_at, created_by, updated_at, updated_by
-      FROM product
-      WHERE
-    ]]>
-    <include refid="criterial"/>
-    <![CDATA[
-      ROWNUM <= #{cri.pageNum} * #{cri.amount}
-    ) WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
-    ]]>
-  </select> --> 
-
-  <select id="getTotalCount" resultType="int">
-    SELECT COUNT(*) FROM product WHERE id > 0
-  </select>
-
-  <!--  <update id="updateReadCnt">
-    UPDATE product SET read_cnt = read_cnt + 1 WHERE id = #{id}
-  </update> -->
-
-  <!-- <insert id="insertAttach" parameterType="com.myrium.domain.AttachFileDTO">
-    INSERT INTO img_path (
-      id, product_id, img_path, created_at, created_by, updated_at, updated_by,
-      is_deleted, is_thumbnail, is_thumbnail_main, is_detail, uuid
-    ) VALUES (
-      PRODUCT_FILES_SEQ.NEXTVAL, #{product_id}, #{img_path}, SYSDATE, #{created_by}, #{updated_at}, #{updated_by},
-      #{is_deleted}, #{is_thumbnail}, #{is_thumbnail_main}, #{is_detail}, #{uuid}
-    )
-  </insert> -->
-
-  <insert id="insertCategory" parameterType="com.myrium.domain.CategoryVO">
-    INSERT INTO category (
-      product_id, gardening, plantkit, hurb, vegetable, flower, etc
-    ) VALUES (
-      #{product_id}, #{gardening}, #{plantkit}, #{hurb}, #{vegetable}, #{flower}, #{etc}
-    )
-  </insert>
-  
-  <update id="updateCategory" parameterType="com.myrium.domain.CategoryVO">
-    update category set
-    	gardening = #{gardening},
-    	plantkit = #{plantkit},
-    	hurb = #{hurb},
-    	vegetable = #{vegetable},
-    	flower = #{flower},
-    	etc = #{etc}
-    WHERE product_id = #{product_id}
-  </update>
-  
-  <insert id="insertImgpath" parameterType="com.myrium.domain.ImgpathVO">
-    INSERT INTO img_path (
-      id, product_id, img_path, created_at, created_by,
-      is_deleted, is_thumbnail, is_thumbnail_main, is_detail, uuid, img_path_thumb
-    ) VALUES (
-      seq_img_id.NEXTVAL, #{product_id}, #{img_path}, SYSDATE, #{created_by},
-      #{is_deleted}, #{is_thumbnail}, #{is_thumbnail_main}, #{is_detail}, #{uuid}, #{img_path_thumb, jdbcType=VARCHAR}
-    )
-  </insert>
-  
-
-  <select id="findByProductId" resultMap="imgpathMap">
-    SELECT * FROM img_path WHERE product_id = #{product_id}
-  </select>
-
-  <!-- <delete id="deleteImgpathByUuid" parameterType="java.lang.String">
-    DELETE FROM img_path WHERE uuid = #{uuid}
-  </delete> -->  
-  	<delete id="deleteImgpathByUuid" parameterType="String">
-		delete from img_path 
-		where uuid = #{uuid}
-	</delete>
-  
-  <!-- <update id="updateThumbnailMain" parameterType="com.myrium.domain.ImgpathVO">  
-		UPDATE img_path
-		SET is_thumbnail_main = CASE WHEN uuid = #{uuid} THEN 1 ELSE 0 END
-		WHERE product_id = #{product_id} and is_thumbnail = 1
-  </update> -->
-  <update id="updateThumbnailMain" parameterType="com.myrium.domain.ImgpathVO">  
-		UPDATE img_path
-		SET is_thumbnail_main = #{is_thumbnail_main} 
-		WHERE id = #{id}
-  </update>
-  
-  <select id="findImgpathByUuid" resultMap="imgpathMap">
-    SELECT * FROM img_path WHERE uuid = #{uuid}
-  </select>
+		
+	  <select id="getCategoryList" resultMap="categoryMap">
+		select * from category where product_id = #{id}
+	  </select>
+	  
+	  <select id="getImgPathList" resultMap="imgpathMap">
+		select * from img_path where product_id = #{id} and is_thumbnail_main = 1
+	  </select>
+	
+	  <insert id="insert">
+	    INSERT INTO product (
+	      id, product_name, product_content, product_stock, product_price,
+	      is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
+	      discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
+	      created_at, created_by
+	    ) VALUES (
+	      product_seq.NEXTVAL, #{product_name}, #{product_content}, #{product_stock}, #{product_price},
+	      #{is_deleted}, #{is_timesales}, #{is_mainone}, #{is_maintwo}, #{is_discount},
+	      #{discount_rate}, #{timesalediscount_rate}, #{total_discountrate}, #{discount_price}, #{sales_count},
+	      #{created_at}, #{created_by}
+	    )
+	  </insert>
+	
+	  <insert id="insertSelectKey">
+	    <selectKey keyProperty="id" order="BEFORE" resultType="int">
+	      SELECT product_seq.NEXTVAL FROM dual
+	    </selectKey>
+	    INSERT INTO product (
+	      id, product_name, product_content, product_stock, product_price,
+	      is_deleted, is_timesales, is_mainone, is_maintwo, is_discount,
+	      discount_rate, timesalediscount_rate, total_discountrate, discount_price, sales_count,
+	      created_at, created_by
+	    ) VALUES (
+	      #{id}, #{product_name}, #{product_content}, #{product_stock}, #{product_price},
+	      #{is_deleted}, #{is_timesales}, #{is_mainone}, #{is_maintwo}, #{is_discount},
+	      #{discount_rate}, #{timesalediscount_rate}, #{total_discountrate}, #{discount_price}, #{sales_count},
+	      SYSDATE, #{created_by}
+	    )
+	  </insert>
+	
+	  <select id="get" resultMap="productMap">
+	    SELECT * FROM product
+	    WHERE id = #{id}
+	  </select>
+	
+	  <delete id="harddel">
+	    DELETE FROM product WHERE id = #{id}
+	  </delete>
+	
+	  <update id="softdel">
+	    UPDATE product SET is_deleted = 1 WHERE id = #{id}
+	  </update>
+	
+	  <update id="restore">
+	    UPDATE product SET is_deleted = 0 WHERE id = #{id}
+	  </update>
+	
+	  <update id="update" parameterType="com.myrium.domain.ProductVO">
+	    UPDATE product SET
+	      product_name = #{product_name},
+	      product_content = #{product_content},
+	      product_stock = #{product_stock},
+	      product_price = #{product_price},
+	      is_deleted = #{is_deleted},
+	      is_timesales = #{is_timesales},
+	      is_mainone = #{is_mainone},
+	      is_maintwo = #{is_maintwo},
+	      is_discount = #{is_discount},
+	      discount_rate = #{discount_rate},
+	      timesalediscount_rate = #{timesalediscount_rate},
+	      total_discountrate = #{total_discountrate},
+	      discount_price = #{discount_price},
+	      sales_count = #{sales_count},
+	      updated_at = SYSDATE,
+	      updated_by = #{updated_by}
+	    WHERE id = #{id}
+	  </update>
+	  
+	  <update id="updateImgpath" parameterType="com.myrium.domain.ImgpathVO">
+	    UPDATE img_path SET
+	      img_path = #{img_path},
+	      is_deleted = #{is_deleted},
+	      is_thumbnail = #{is_thumbnail},
+	      is_thumbnail_main = #{is_thumbnail_main},
+	      is_detail = #{is_detail},
+	      uuid = #{uuid},
+	      img_path_thumb = #{img_path_thumb},
+	      updated_at = SYSDATE,
+	      updated_by = #{updated_by}
+	    WHERE id = #{id}
+	  </update>
+	  
+	  <insert id="insertCategory" parameterType="com.myrium.domain.CategoryVO">
+	    INSERT INTO category (
+	      product_id, gardening, plantkit, hurb, vegetable, flower, etc
+	    ) VALUES (
+	      #{product_id}, #{gardening}, #{plantkit}, #{hurb}, #{vegetable}, #{flower}, #{etc}
+	    )
+	  </insert>
+	  
+	  <update id="updateCategory" parameterType="com.myrium.domain.CategoryVO">
+	    update category set
+	    	gardening = #{gardening},
+	    	plantkit = #{plantkit},
+	    	hurb = #{hurb},
+	    	vegetable = #{vegetable},
+	    	flower = #{flower},
+	    	etc = #{etc}
+	    WHERE product_id = #{product_id}
+	  </update>
+	  
+	  <insert id="insertImgpath" parameterType="com.myrium.domain.ImgpathVO">
+	    INSERT INTO img_path (
+	      id, product_id, img_path, created_at, created_by,
+	      is_deleted, is_thumbnail, is_thumbnail_main, is_detail, uuid, img_path_thumb
+	    ) VALUES (
+	      seq_img_id.NEXTVAL, #{product_id}, #{img_path}, SYSDATE, #{created_by},
+	      #{is_deleted}, #{is_thumbnail}, #{is_thumbnail_main}, #{is_detail}, #{uuid}, #{img_path_thumb, jdbcType=VARCHAR}
+	    )
+	  </insert>
+	  
+	  <select id="findByProductId" resultMap="imgpathMap">
+	    SELECT * FROM img_path WHERE product_id = #{product_id}
+	  </select>
+	
+	  	<delete id="deleteImgpathByUuid" parameterType="String">
+			delete from img_path 
+			where uuid = #{uuid}
+		</delete>
+	  
+	  <update id="updateThumbnailMain" parameterType="com.myrium.domain.ImgpathVO">  
+			UPDATE img_path
+			SET is_thumbnail_main = #{is_thumbnail_main} 
+			WHERE id = #{id}
+	  </update>
+	  
+	  <select id="findImgpathByUuid" resultMap="imgpathMap">
+	    SELECT * FROM img_path WHERE uuid = #{uuid}
+	  </select>
 
 </mapper>
 

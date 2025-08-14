@@ -247,23 +247,21 @@
 				
 				<div class="form_row">
                     <label>생성일(생성자)</label>
-                    <label><fmt:formatDate value="${member.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" />
-                    	<c:if test="${member.createdBy != null}">(${member.createdBy})</c:if>
-                    </label>
+                    <label><fmt:formatDate value="${member.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" /> (${member.createdBy})</label>
                 </div>
                 <div class="form_row">    
                     <label>최종 수정일(수정자)</label>
-                    <label><fmt:formatDate value="${member.updatedAt}" pattern="yyyy-MM-dd HH:mm:ss" />
-                    	<c:if test="${member.updatedBy != null}">(${member.updatedBy})</c:if>
-                    </label>
+                    <label><fmt:formatDate value="${member.updatedAt}" pattern="yyyy-MM-dd HH:mm:ss" /> (${member.updatedBy})</label>
 				</div>
 
 				<div class="form_buttons">
 					<!-- <button type="button" class="btn_delete_account">회원삭제</button> -->
 
 					<div class="btn_right_group">
-						<button type="button" class="btn_cancel" onclick="location.href='${pageContext.request.contextPath}/adminmember/list'">취소</button>
-						<button type="button" class="btn_submit" onclick="checkBeforeSubmit()">회원정보수정</button>
+						<button type="button" class="btn_cancel"
+  onclick="location.href='${pageContext.request.contextPath}/adminmember/list'">취소</button>
+						<button type="button" class="btn_submit"
+							onclick="checkBeforeSubmit()">회원정보수정</button>
 					</div>
 				</div>
 			</form>		

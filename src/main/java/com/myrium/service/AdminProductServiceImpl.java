@@ -3,7 +3,6 @@ package com.myrium.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myrium.domain.AttachFileDTO;
@@ -14,77 +13,65 @@ import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 import com.myrium.mapper.AdminProductMapper;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AdminProductServiceImpl implements AdminProductService{
 	
-	@Autowired
-	private AdminProductMapper mapper;
+
+	private final AdminProductMapper mapper;
 
 
 	@Override
 	public ProductVO get(int id) {
-	      log.info("product get....." + id);
-	      return mapper.read(id);
+	      return mapper.get(id);
 	}
-
 
 	@Override
 	public boolean modify(ProductVO vo) {
-	     log.info("product modify.... " + vo);
 	     return mapper.update(vo)==1;
 	}
 
 	@Override
 	public boolean harddel(int id) {
-	     log.info("product harddel...." + id);
 	     return mapper.harddel(id)==1;
 	}
 
 	@Override
 	public boolean softdel(int id) {
-		log.info("product softdel...." + id);
 		return mapper.softdel(id)==1;
 	}
 
 	@Override
 	public List<ProductVO> getList() {
-		log.info("product getList.....");
 		return mapper.getList();
 	}
 
-
 	@Override
 	public void register(ProductVO product) {
-		log.info("product register....." + product);
 		mapper.insertSelectKey(product);
 	}
 	
 	@Override
-	public List<ProductVO> getList(Criteria cri, boolean isAdmin){
-		log.info("product getList...(Criteria cri)");
-		//return mapper.getList();
-		return mapper.getListWithPaging(cri, isAdmin);
+	public List<ProductVO> getList(Criteria cri){
+		return mapper.getListWithPaging(cri);
 	}
 	
 	@Override
-	public int getTotal(Criteria cri, boolean isAdmin) {
-		log.info(mapper.getTotalCount(cri, isAdmin));
-		return mapper.getTotalCount(cri, isAdmin);	}
+	public int getTotal(Criteria cri) {
+		return mapper.getTotalCount(cri);
+	}
 	
 	@Override
 	public boolean restore(int id) {
-		log.info("product restore...." + id);
 		return mapper.restore(id)==1;
 	}
 	
 	@Override
 	public void insertAttach(AttachFileDTO dto) {
-		log.info("product Attach...." + dto);
 		mapper.insertAttach(dto);
 	}
 	
@@ -105,13 +92,12 @@ public class AdminProductServiceImpl implements AdminProductService{
 
 	// 카테고리 및 상품 리스트
 	@Override
-	public List<ProductDTO> getProductListWithCategory(Criteria cri, boolean isAdmin) {
-		List<ProductVO> productList = mapper.getProductList(cri, isAdmin);
+	public List<ProductDTO> getProductListWithCategory(Criteria cri) {
+		List<ProductVO> productList = mapper.getProductList(cri);
 		List<ProductDTO> productDTO = new ArrayList<>();		
 		for (ProductVO product : productList) {
 			CategoryVO category = mapper.getCategoryList(product.getId());
 			ImgpathVO imgpath = mapper.getImgPathList(product.getId());
-			log.info("getImgPathList:" + imgpath);
 			ProductDTO dto = new ProductDTO();
 			dto.setProduct(product);
 			dto.setThumbnail(imgpath);
@@ -136,12 +122,10 @@ public class AdminProductServiceImpl implements AdminProductService{
 		mapper.insertImgpath(imgVO);		
 	}
 
-
 	@Override
 	public List<ImgpathVO> findImgpathByUuid(String uuid) {
 		return mapper.findImgpathByUuid(uuid);
 	}
-
 
 	@Override
 	public void updateImgpath(int id) {

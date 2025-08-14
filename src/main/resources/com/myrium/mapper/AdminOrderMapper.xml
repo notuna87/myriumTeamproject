@@ -26,6 +26,7 @@
     <result property="productId" column="product_id" />
     <result property="orderDisplayId" column="order_display_id" />
     <result property="ordersIdfull" column="orders_idfull" />
+    <result property="totalPrice" column="total_price" />
     
     <result property="isApprefund" column="is_apprefund" />
     <result property="isAppexchanged" column="is_appexchanged" />
@@ -44,39 +45,22 @@
 </resultMap>
 
 
-<sql id="criteria">
-  <trim prefix="(" suffix=") AND" prefixOverrides="OR">
-    <foreach item="type" collection="cri.typeArr">
-      <trim prefix="OR">
-        <choose>
-          <when test="type == 'C'">
-            o.customer_name LIKE '%' || #{cri.keyword} || '%'
-          </when>
-          <when test="type == 'P'">
-            p.product_name LIKE '%' || #{cri.keyword} || '%'
-          </when>
-        </choose>
-      </trim>
-    </foreach>
-  </trim>
-</sql>
-
-<!-- 주문 ID 페이징 쿼리 -->
 <select id="getPagedOrderIds" resultType="int" parameterType="com.myrium.domain.Criteria">
-  SELECT * FROM (
+  SELECT *
+  FROM (
     SELECT o.id,
            ROW_NUMBER() OVER (ORDER BY o.order_date DESC, o.id DESC) rn
     FROM orders o
     WHERE 1=1
-      <if test="orderStatus != -1">
-        AND o.order_status = #{orderStatus}
+      <if test="cri.orderStatus != -1">
+        AND o.order_status = #{cri.orderStatus}
       </if>
-      <if test="keyword != null and keyword != '' and typeArr != null and typeArr.length > 0">
-        <include refid="criteria"/>
+      <if test="cri.keyword != null and cri.keyword != ''">
+        AND o.customer_name LIKE '%' || #{cri.keyword} || '%'
       </if>
-  )
-WHERE rn &gt; (#{pageNum} - 1) * #{amount}
-AND rn &lt;= #{pageNum} * #{amount}
+  ) t
+  WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
+    AND rn &lt;= #{cri.pageNum} * #{cri.amount}
 </select>
 
 <!-- 주문 및 상품 상세 리스트 -->
@@ -93,6 +77,7 @@ AND rn &lt;= #{pageNum} * #{amount}
       o.delivery_msg,
       o.payment_method,
       o.zipcode,
+      o.total_price,
       op.id AS orders_product_id,
       op.product_id,
       op.quantity,
@@ -103,12 +88,9 @@ AND rn &lt;= #{pageNum} * #{amount}
       p.discount_price,
       ip.img_path_thumb AS img_path_thumb
   FROM orders o
-  LEFT JOIN orders_product op 
-    ON o.id = op.orders_id
-  LEFT JOIN product p 
-    ON op.product_id = p.id
-  LEFT JOIN img_path ip 
-    ON ip.product_id = p.id 
+  LEFT JOIN orders_product op ON o.id = op.orders_id
+  LEFT JOIN product p ON op.product_id = p.id
+  LEFT JOIN img_path ip ON ip.product_id = p.id 
     AND ip.is_thumbnail_main = 1
   WHERE o.id IN
   <foreach collection="list" item="orderId" open="(" separator="," close=")">
@@ -116,8 +98,6 @@ AND rn &lt;= #{pageNum} * #{amount}
   </foreach>
   ORDER BY o.order_date DESC, o.id DESC, op.id
 </select>
-
-
 
 <update id="updateOrderProductStatus">
     UPDATE orders_product
@@ -131,12 +111,21 @@ AND rn &lt;= #{pageNum} * #{amount}
     WHERE orders_id = #{ordersId}
 </update>
 
+<select id="getStatusByOrdersId" resultType="int">
+  SELECT order_status FROM orders_product WHERE orders_id = #{ordersId}
+</select>
 
 <select id="getTotalCount" resultType="int">
-  SELECT COUNT(*) FROM orders WHERE id > 0
+  SELECT COUNT(*) 
+  FROM orders
+  WHERE 1=1
+  <if test="cri.orderStatus != -1">
+    AND order_status = #{cri.orderStatus}
+  </if>
+  <if test="cri.keyword != null and cri.keyword != ''">
+    AND customer_name LIKE '%' || #{cri.keyword} || '%'
+  </if>
 </select>
-	
-
 
 </mapper>
 

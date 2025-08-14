@@ -36,17 +36,11 @@
 </resultMap>
 
 <sql id="criteria">
-  <trim prefix="(" suffix=") AND" prefixOverrides="OR">
+  <trim prefix="AND (" suffix=")" prefixOverrides="OR">
     <foreach item="type" collection="cri.typeArr">
       <trim prefix="OR">
         <choose>
-          <when test="type == 'C'">
-            r.customer_name LIKE '%' || #{cri.keyword} || '%'
-          </when>
-          <when test="type == 'P'">
-            p.product_name LIKE '%' || #{cri.keyword} || '%'
-          </when>
-          <when test="type == 'T'">
+          <when test="type == 'P'.toString()">
             p.product_name LIKE '%' || #{cri.keyword} || '%'
           </when>
         </choose>
@@ -54,24 +48,6 @@
     </foreach>
   </trim>
 </sql>
-
-<!-- 상품 ID 페이징 쿼리 -->
-<!-- <select id="getPagedProductIds" resultType="int" parameterType="com.myrium.domain.Criteria">
-  SELECT * FROM (
-    SELECT r.id,
-           ROW_NUMBER() OVER (ORDER BY r.order_date DESC, r.id DESC) rn
-    FROM review e
-    WHERE 1=1
-      <if test="is_deleted != -1">
-        AND r.is_deleted = #{isDeleted}
-      </if>
-      <if test="keyword != null and keyword != '' and typeArr != null and typeArr.length > 0">
-        <include refid="criteria"/>
-      </if>
-  )
-WHERE rn &gt; (#{pageNum} - 1) * #{amount}
-AND rn &lt;= #{pageNum} * #{amount}
-</select> -->
 
 <select id="getPagedProductIds" resultMap="ReviewsummaryMap">
 SELECT * FROM (
@@ -86,9 +62,6 @@ SELECT * FROM (
   FROM product p
   INNER JOIN review r ON r.product_id = p.id
   WHERE 1=1
-      <if test="cri.is_deleted != -1">
-        AND r.is_deleted = #{isDeleted}
-      </if>
       <if test="cri.keyword != null and cri.keyword != '' and cri.typeArr != null and cri.typeArr.length > 0">
         <include refid="criteria"/>
       </if>
@@ -126,36 +99,18 @@ SELECT * FROM (
     AND rn &lt;= #{cri.pageNum} * #{cri.amount}
 </select>
 
-
-<update id="updateReviewProductStatus">
-    UPDATE orders_product
-    SET order_status = #{orderStatus}
-    WHERE id = #{ordersProductId}
-</update>
-
-<update id="updateReviewStatus">
-    UPDATE orders
-    SET order_status = #{orderStatus}
-    WHERE orders_id = #{ordersId}
-</update>
-
-
-<!-- <select id="getTotalProductCount" resultType="int">
-  SELECT COUNT(*) FROM review WHERE id > 0 AND product_id = #{productId}
-</select> -->
-
-<!-- <select id="getReviewCountGroupByProduct" resultType="map">
-  SELECT product_id, COUNT(*) AS review_count
-  FROM review
-  GROUP BY product_id
-</select> -->
-
 <select id="getDistinctProductCount" resultType="int">
-  SELECT COUNT(DISTINCT product_id) FROM review
+  SELECT COUNT(DISTINCT r.product_id)
+  FROM review r
+  JOIN product p ON p.id = r.product_id
+  WHERE 1=1
+    <if test="cri.keyword != null and cri.keyword != '' and cri.typeArr != null and cri.typeArr.length > 0">
+      AND p.product_name LIKE '%' || #{cri.keyword} || '%'
+    </if>
 </select>
 
 <select id="getTotalReviewCount" resultType="int">
-  SELECT COUNT(*) FROM review WHERE id > 0 AND product_id = #{productId}
+  SELECT COUNT(*) FROM review WHERE product_id = #{productId}
 </select>
 
 <!-- 하드(영구) 삭제 -->
@@ -176,8 +131,6 @@ SELECT * FROM (
 	SET is_deleted = 0
 	WHERE id = #{id}
 </update>
-	
-
 
 </mapper>
 

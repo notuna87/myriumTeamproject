@@ -26,7 +26,6 @@ import lombok.extern.log4j.Log4j;
 
 @Controller
 @Log4j
-//@AllArgsConstructor
 @RequestMapping("/adminboard/*")
 @RequiredArgsConstructor
 public class AdminBoardController {
@@ -36,41 +35,25 @@ public class AdminBoardController {
 	
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
-		log.info("list__________");
-		log.info(cri);
-		
+		log.info("cri:" + cri);
 	    // 현재 로그인 사용자 권한 조회
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    boolean isAdmin = authentication.getAuthorities().stream()
 	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));		
 		
 		List<BoardVO> list = boardservice.getList(cri, isAdmin);
-		
-		list.forEach(board -> log.info(board));
 		model.addAttribute("list", list);
 
+		// 일반회원과 관리자의 숨김 목록 접근권한 구분을 위해 isAdmin 사용
 		int total = boardservice.getTotal(cri, isAdmin);
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
-
-		// Debug log
-		log.info("---------------------------------------------------");
-
-		log.info(authentication);
-
-		System.out.println("Authentication Details:");		
-		System.out.println("Principal: " + authentication.getPrincipal());
-		System.out.println("Authorities: " + authentication.getAuthorities());
-
-		log.info("---------------------------------------------------");
 	}
 	
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/register")
 	public String register(BoardVO vo, RedirectAttributes rttr) {
-		log.info("register......." + vo);
 
 		boardservice.register(vo);
-
 		rttr.addFlashAttribute("result", vo.getId());
 		return "redirect:/adminboard/list";
 	}
@@ -82,12 +65,9 @@ public class AdminBoardController {
 		
 		if(productid != null) {
 			ProductDTO getProductInfo = productservice.getProductInfoWithThumbnail(productid);
-			log.info(getProductInfo);
-			
 			model.addAttribute("product", getProductInfo);
 			model.addAttribute("productid",productid);
 		}
-
 	}
 	
 	@PreAuthorize("isAuthenticated()")
@@ -99,7 +79,7 @@ public class AdminBoardController {
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
 	@PostMapping("/modify")
 	public String modify(BoardVO board, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
-		log.info("modify:" + board);
+
 		if(boardservice.modify(board)) {
 			rttr.addFlashAttribute("result","success");
 		}
@@ -114,11 +94,10 @@ public class AdminBoardController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/harddel")
 	public String harddel(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
-		log.info("harddelete..." + id);
+
 		if(boardservice.harddel(id)) {
 			rttr.addFlashAttribute("result","success");
-		}
-		
+		}		
 		rttr.addAttribute("pageNum", cri.getPageNum());
 		rttr.addAttribute("amount", cri.getAmount());
 		rttr.addAttribute("type", cri.getType());
@@ -130,11 +109,10 @@ public class AdminBoardController {
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
 	@PostMapping("/softdel")
 	public String softdel(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
-		log.info("softdelete..." + id);
+		
 		if(boardservice.softdel(id)) {
 			rttr.addFlashAttribute("result","success");
-		}
-		
+		}		
 		rttr.addAttribute("pageNum", cri.getPageNum());
 		rttr.addAttribute("amount", cri.getAmount());
 		rttr.addAttribute("type", cri.getType());
@@ -146,11 +124,10 @@ public class AdminBoardController {
 	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
 	@PostMapping("/restore")
 	public String restore(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String customerId) {
-		log.info("board restore..." + id);
+		
 		if(boardservice.restore(id)) {
 			rttr.addFlashAttribute("result","success");
-		}
-		
+		}		
 		rttr.addAttribute("pageNum", cri.getPageNum());
 		rttr.addAttribute("amount", cri.getAmount());
 		rttr.addAttribute("type", cri.getType());

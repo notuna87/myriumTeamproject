@@ -3,121 +3,64 @@ package com.myrium.service;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.myrium.domain.AuthVO;
 import com.myrium.domain.Criteria;
 import com.myrium.domain.OrderDTO;
 import com.myrium.mapper.AdminOrderMapper;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AdminOrderServiceImpl implements AdminOrderService{
 	
-	@Autowired
-	private AdminOrderMapper mapper;
-
-
-
+	private final AdminOrderMapper mapper;
 
 	@Override
-	public List<OrderDTO> getList() {
-		log.info("Order getList.....");
-		return mapper.getList();
-	}
+	public int getTotal(Criteria cri) {
+		return mapper.getTotalCount(cri);
+		}
 
-
-	@Override
-	public void register(OrderDTO order) {
-		log.info("order register....." + order);
-		mapper.insertSelectKey(order);
-	}
-	
-//	@Override
-//	public List<OrderDTO> getList(Criteria cri, boolean isAdmin){
-//		log.info("order getList...(Criteria cri)");
-//		return mapper.getList(cri, isAdmin);
-//		//return mapper.getListWithPaging(cri, isAdmin);
-//	}
-	
-	@Override
-	public int getTotal(Criteria cri, boolean isAdmin) {
-		log.info(mapper.getTotalCount(cri, isAdmin));
-		return mapper.getTotalCount(cri, isAdmin);	}
-	
-	@Override
-	public boolean restore(int id) {
-		log.info("order restore...." + id);
-		return mapper.restore(id)==1;
-	}
-	
-	
-	// 회줜정보 & 권한 리스트
-//	@Override
-//	public List<OrderDTO> getOrderList(Criteria cri, boolean isAdmin) {
-//		//List<OrderDTO> orderList = mapper.getOrderList(cri, isAdmin);
-//		//List<OrderDTO> orderDTOList = new ArrayList<>();		
-//		//for (OrderDTO order : orderList) {
-//		//	List<AuthVO> auth = mapper.getAuthList(order.getId());
-//		//	log.info("getAuthList:" + auth);
-//			//order.setAuthList(auth);
-//			//orderDTOList.add(order);
-//		
-//		return mapper.getOrderList(cri, isAdmin);
-//	}
-	
-	public List<OrderDTO> getOrderList(Criteria cri, boolean isAdmin) {
-	    // 1) 주문 ID 리스트 페이징 쿼리 호출
+	public List<OrderDTO> getOrderList(Criteria cri) {
+	    // 주문 ID 리스트 페이징 쿼리 호출
 	    List<Integer> orderIds = mapper.getPagedOrderIds(cri);
 
 	    if (orderIds == null || orderIds.isEmpty()) {
 	        return Collections.emptyList();
 	    }
 
-	    // 2) 주문 ID 리스트로 주문 + 상품 상세 조회
+	    // 주문 ID 리스트로 주문 + 상품 상세 조회
 	    List<OrderDTO> orders = mapper.getOrdersWithProducts(orderIds);
 
 	    return orders;
 	}
 	
-	
-	@Override
-	public OrderDTO get(int id) {
-	      log.info("order get....." + id);
-	      OrderDTO order = mapper.read(id);
-	      List<AuthVO> auth = mapper.getAuthList(order.getId());
-	      //order.setAuthList(auth);
-	      return order;
-	}
-	
-	@Override
-	public boolean modify(OrderDTO vo) {
-	     log.info("Member modify.... " + vo);
-	     return mapper.update(vo)==1;
-	}
-
-	@Override
-	public boolean harddel(int id) {
-	     log.info("order harddel...." + id);
-	     return mapper.harddel(id)==1;
-	}
-
-	@Override
-	public boolean softdel(int id) {
-		log.info("Member softdel...." + id);
-		return mapper.softdel(id)==1;
-	}
-
-
 	@Override
 	public void updateOrderStatus(String ordersId, int ordersProductId, int orderStatus) {
-		mapper.updateOrderProductStatus(ordersProductId, orderStatus);		
-		mapper.updateOrderStatus(ordersId, orderStatus);		
+		
+	    // 1. 개별 상품 상태 업데이트
+	    mapper.updateOrderProductStatus(ordersProductId, orderStatus);
+	    
+	    // 2. 주문에 속한 모든 상품 상태 조회
+	    List<Integer> statuses = mapper.getStatusByOrdersId(ordersId);
+	    
+	    // 3. 주문 상품이 2개 이상인지 확인
+	    if (statuses.size() > 1) {
+	        // 4. [4, 6, 8] 상태가 있는지 확인
+	        boolean hasSpecialStatus = statuses.stream().anyMatch(s -> s == 4 || s == 6 || s == 8);
+	        
+	        if (hasSpecialStatus) {
+	            // 5. 주문 상태를 99로 변경
+	            mapper.updateOrderStatus(ordersId, 99);
+	            return;
+	        }
+	    }
+	    
+	    // 6. 조건에 맞지 않으면 원래 주문 상태 업데이트
+	    mapper.updateOrderStatus(ordersId, orderStatus);   	
 	}
 
 

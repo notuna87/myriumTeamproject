@@ -38,294 +38,137 @@
 	  <result property="customerId" column="customer_id"/>
 	</resultMap>
 	
-<sql id="criterial">
-  <trim prefix="(" suffix=") AND" prefixOverrides="OR">
-    <foreach item='type' collection="cri.typeArr">
-      <trim prefix="OR">
-        <choose>
-          <when test="type == 'C'.toString()">
-            title LIKE '%' || #{cri.keyword} || '%'
-          </when>
-          <when test="type == 'N'.toString()">
-            content LIKE '%' || #{cri.keyword} || '%'
-          </when>
-        </choose>
-      </trim>
-    </foreach>
-  </trim>
-</sql>	
-
-<select id="getMemberList" resultMap="memberMap">
-  SELECT * FROM (
-    SELECT ROWNUM rn, inner_query.*
-    FROM (
-      SELECT *
-      FROM member m
-      WHERE 1 = 1      
-      <if test="cri.auth != null and cri.auth != ''">
-        AND EXISTS (
-          SELECT 1 FROM member_auth a
-          WHERE a.user_id = m.id
-          <choose>
-            <when test="cri.auth eq 'MEMBER'">
-			  AND EXISTS (
-			    SELECT 1 FROM member_auth a
-			    WHERE a.user_id = m.id
-			      AND a.role = 'MEMBER'
-			  )
-			  AND NOT EXISTS (
-			    SELECT 1 FROM member_auth a
-			    WHERE a.user_id = m.id
-			      AND a.role = 'ADMIN'
-			  )
-			</when>
-            <when test="cri.auth eq 'ADMIN'">
-			  AND EXISTS (
-			    SELECT 1 FROM member_auth a
-			    WHERE a.user_id = m.id
-			      AND a.role = 'ADMIN'
-			  )
-			</when>
-          </choose>
-        )
-      </if>
-      <if test="cri.is_deleted != -1">
-        AND is_deleted = #{cri.is_deleted}
-      </if>
-      <if test="cri.gender != null and cri.gender != ''">
-        AND gender = #{cri.gender}
-      </if>
-	  <if test="cri.keyword != null and cri.keyword != '' and cri.type != null">
-		<include refid="criterial"/>
-	  </if>
-      ORDER BY m.id DESC
-    ) inner_query
-    WHERE ROWNUM &lt;= #{cri.pageNum} * #{cri.amount}
-  )
-  WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
-</select>
-
- <select id="getAuthList" resultMap="authMap">
-	select * from member_auth where user_id = #{id}
- </select>
-  
-  <select id="read" resultMap="memberMap">
-    SELECT * FROM member
-    WHERE id = #{id}
-  </select>
-
-  <delete id="harddel">
-    DELETE FROM member WHERE id = #{id}
-  </delete>
-
-  <update id="softdel">
-    UPDATE member SET is_deleted = 1 WHERE id = #{id}
-  </update>
-
-  <update id="restore">
-    UPDATE member SET is_deleted = 0 WHERE id = #{id}
-  </update>
-
-  <update id="update" parameterType="com.myrium.domain.MemberVO">
-    UPDATE member SET
-      customer_id = #{customerId},
-      password = #{password},
-      customer_name = #{customerName},
-      address = #{address},
-      zipcode = #{zipcode},
-      addr1 = #{addr1},
-      addr2 = #{addr2},
-      phone_number = #{phoneNumber},
-      email = #{email},
-      gender = #{gender},
-      birthdate = #{birthdate},
-      agree_terms = #{agreeTerms},
-      agree_privacy = #{agreePrivacy},
-      agree_third_party = #{agreeThirdParty},
-      agree_delegate = #{agreeDelegate},
-      agree_sms = #{agreeSms},
-      is_deleted = #{isDeleted},
-      updated_at = SYSDATE,
-      updated_by = #{updatedBy}
-    WHERE id = #{id}
-  </update>
-  
-  <delete id="deleteAdminRole" parameterType="long">
-    DELETE FROM member_auth WHERE user_id = #{id} AND role = 'ADMIN'
-  </delete>
-  
-  	<!-- 중복 insert 방지 : count 체크 -->
+	<sql id="criterial">
+	  <trim prefix="(" suffix=")" prefixOverrides="OR">
+	    <foreach item='type' collection="cri.typeArr">
+	      <trim prefix="OR">
+	        <choose>
+	          <when test="type == 'C'.toString()">
+	            customer_id LIKE '%' || #{cri.keyword} || '%'
+	          </when>
+	          <when test="type == 'N'.toString()">
+	            customer_name LIKE '%' || #{cri.keyword} || '%'
+	          </when>
+	        </choose>
+	      </trim>
+	    </foreach>
+	  </trim>
+	</sql>
+	
+	<select id="getMemberList" resultMap="memberMap">
+	  SELECT * FROM (
+	    SELECT ROWNUM rn, inner_query.*
+	    FROM (
+	      SELECT *
+	      FROM member m
+	      WHERE 1 = 1      
+	      <if test="cri.auth != null and cri.auth != ''">
+	        AND EXISTS (
+	          SELECT 1 FROM member_auth a
+	          WHERE a.user_id = m.id
+	          <choose>
+	            <when test="cri.auth eq 'MEMBER'">
+				  AND EXISTS (
+				    SELECT 1 FROM member_auth a
+				    WHERE a.user_id = m.id
+				      AND a.role = 'MEMBER'
+				  )
+				  AND NOT EXISTS (
+				    SELECT 1 FROM member_auth a
+				    WHERE a.user_id = m.id
+				      AND a.role = 'ADMIN'
+				  )
+				</when>
+	            <when test="cri.auth eq 'ADMIN'">
+				  AND EXISTS (
+				    SELECT 1 FROM member_auth a
+				    WHERE a.user_id = m.id
+				      AND a.role = 'ADMIN'
+				  )
+				</when>
+	          </choose>
+	        )
+	      </if>
+	      <if test="cri.is_deleted != -1">
+	        AND is_deleted = #{cri.is_deleted}
+	      </if>
+	      <if test="cri.gender != null and cri.gender != ''">
+	        AND gender = #{cri.gender}
+	      </if>
+		  <if test="cri.keyword != null and cri.keyword != '' and cri.type != null">
+		    AND <include refid="criterial"/>
+		  </if>
+	      ORDER BY m.id DESC
+	    ) inner_query
+	    WHERE ROWNUM &lt;= #{cri.pageNum} * #{cri.amount}
+	  )
+	  WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
+	</select>
+	
+	 <select id="getAuthList" resultMap="authMap">
+		select * from member_auth where user_id = #{id}
+	 </select>
+	  
+	  <select id="get" resultMap="memberMap">
+	    SELECT * FROM member
+	    WHERE id = #{id}
+	  </select>
+	
+	  <delete id="harddel">
+	    DELETE FROM member WHERE id = #{id}
+	  </delete>
+	
+	  <update id="softdel">
+	    UPDATE member SET is_deleted = 1 WHERE id = #{id}
+	  </update>
+	
+	  <update id="restore">
+	    UPDATE member SET is_deleted = 0 WHERE id = #{id}
+	  </update>
+	
+	  <update id="update" parameterType="com.myrium.domain.MemberVO">
+	    UPDATE member SET
+	      customer_id = #{customerId},
+	      <if test="password != null and password != ''">
+	          password = #{password,jdbcType=VARCHAR},
+	      </if>
+	      customer_name = #{customerName},
+	      address = #{address},
+	      zipcode = #{zipcode},
+	      addr1 = #{addr1},
+	      addr2 = #{addr2},
+	      phone_number = #{phoneNumber},
+	      email = #{email},
+	      gender = #{gender},
+	      birthdate = #{birthdate},
+	      agree_terms = #{agreeTerms},
+	      agree_privacy = #{agreePrivacy},
+	      agree_third_party = #{agreeThirdParty},
+	      agree_delegate = #{agreeDelegate},
+	      agree_sms = #{agreeSms},
+	      is_deleted = #{isDeleted},
+	      updated_at = SYSDATE,
+	      updated_by = #{updatedBy}
+	    WHERE id = #{id}
+	  </update>
+	  
+	  <delete id="deleteAdminRole" parameterType="long">
+	    DELETE FROM member_auth WHERE user_id = #{id} AND role = 'ADMIN'
+	  </delete>
+	  
+	  	<!-- 중복 insert 방지 : count 체크 -->
 	<select id="countAdminRole" resultType="java.lang.Integer">
 	  SELECT COUNT(*) FROM member_auth WHERE user_id = #{id} AND role = 'ADMIN'
 	</select>
-
+	
 	<!-- ADMIN role insert -->
 	<insert id="insertAdminRole" parameterType="long">
 	  INSERT INTO member_auth (user_id, role) VALUES (#{id}, 'ADMIN')
 	</insert>
-  
-  <select id="getTotalCount" resultType="int">
-    SELECT COUNT(*) FROM member WHERE id > 0
-  </select>
-  
-  
-  <select id="findByMemberId" resultMap="memberMap">
-    SELECT * FROM member WHERE id = #{id}
-  </select>  
-  
-  
-
-    <!-- 회원 등록 ,주소 칼럼 추가-->
-	<insert id="insertMember" parameterType="com.myrium.domain.MemberVO">	
-	    <selectKey keyProperty="id" resultType="long" order="BEFORE">
-	        SELECT member_seq.NEXTVAL FROM dual
-	    </selectKey>
-	
-	    INSERT INTO member (
-	        id, customer_id, password, customer_name, address,
-	        zipcode, addr1, addr2,phone_number, email, gender, birthdate,
-	        agree_terms, agree_privacy, agree_third_party,
-	        agree_delegate, agree_sms, is_deleted,
-	        created_at, created_by
-	    ) VALUES (
-	        #{id}, #{customerId, jdbcType=VARCHAR}, 
-	        #{password, jdbcType=VARCHAR}, 
-	        #{customerName, jdbcType=VARCHAR}, 
-	        #{address, jdbcType=VARCHAR},
-	        #{zipcode, jdbcType=VARCHAR}, 
-	        #{addr1, jdbcType=VARCHAR}, 
-	        #{addr2, jdbcType=VARCHAR},
-	        #{phoneNumber, jdbcType=VARCHAR}, 
-	        #{email, jdbcType=VARCHAR}, 
-	        #{gender, jdbcType=VARCHAR}, 
-	        #{birthdate, jdbcType=DATE},
-	        #{agreeTerms, jdbcType=INTEGER}, 
-	        #{agreePrivacy, jdbcType=INTEGER}, 
-	        #{agreeThirdParty, jdbcType=INTEGER},
-	        #{agreeDelegate, jdbcType=INTEGER}, 
-	        #{agreeSms, jdbcType=INTEGER}, 
-	        #{isDeleted, jdbcType=INTEGER},
-	        SYSDATE, 
-	        #{createdBy, jdbcType=VARCHAR}
-	    )	
-	</insert>
-
-  
-	<!-- 회원 권한 등록 -->
-	<insert id="insertAuth" parameterType="com.myrium.domain.AuthVO">
-	    INSERT INTO member_auth (user_id, role )
-	    VALUES (#{userId}, #{role} )
-
-	</insert>
-
-	<!-- 회원 단건 조회 -->
-	<select id="getMemberById" parameterType="int"
-		resultMap="memberMap">
-		SELECT * FROM member WHERE id = #{id}
-	</select>
-
-<!-- <select id="read" resultMap="memberMap">
-  SELECT 
-    m.id,
-    m.customer_id,
-    m.password,
-    m.customer_name,
-    m.address,
-    m.zipcode,
-    m.addr1,
-    m.addr2,
-    m.phone_number,
-    m.email,
-    m.gender,
-    m.birthdate,
-    m.agree_terms,
-    m.agree_privacy,
-    m.agree_third_party,
-    m.agree_delegate,
-    m.agree_sms,
-    m.is_deleted,
-    m.created_at,
-    m.created_by,
-    m.updated_at,
-    m.updated_by,    
-    a.user_id AS auth_user_id,
-    a.role AS auth_role
-  FROM member m
-  LEFT JOIN member_auth a ON m.id = a.user_id
-  WHERE m.customer_id = #{customerId}
-</select> -->
-
-<!-- 회원 권한 리스트 조회 (회원 PK id로) -->
-<!-- <select id="getAuthList" parameterType="long" resultType="com.myrium.domain.AuthVO">
-    SELECT user_id AS userId, role
-    FROM member_auth
-    WHERE user_id = #{userId}
-</select> -->
-
-
-	<!-- 아이디 중복체크 -->
-	<select id="selectByCustomerId" resultType="com.myrium.domain.MemberVO">
-	  SELECT *
-	  FROM member
-	  WHERE customer_id = #{customerId}
-	</select>
-	
-	<!-- 아이디 찾기 -->
-	<select id="findByNameAndEmail" resultMap="memberMap">
-		SELECT id, customer_id, customer_name, email, created_at
-		FROM member
-		WHERE customer_name = #{customerName}
-		AND email = #{email}
-	</select>
-	
-	<select id="findByNameAndPhone" resultMap="memberMap">
-		SELECT id, customer_id, customer_name, phone_number, created_at
-		FROM member
-		WHERE customer_name = #{customerName}
-		AND phone_number = #{phoneNumber}
-	</select>
-
-	
-	<update id="updateMember" parameterType="com.myrium.domain.MemberVO">
-	  UPDATE member
-	  SET password = #{password},
-	      updated_at = #{updatedAt},
-	      updated_by = #{updatedBy}
-	  WHERE id = #{id}
-	</update>
-	
-	<!-- 비밀번호 변경 -->
-	<update id="updatePassword">
-    UPDATE member
-    SET password = #{password},
-        updated_at = SYSDATE,
-        updated_by = 'change_pw'
-    WHERE customer_id = #{customerId}
-	</update>
-	<select id="readByCustomerId" resultType="com.myrium.domain.MemberVO">
-	  SELECT * FROM member WHERE customer_id = #{customerId}
-	</select>
-	
-	<!-- 회원정보수정 -->
-	<update id="updateMemberInfo" parameterType="com.myrium.domain.MemberVO">
-	  UPDATE member
-	  <set>
-	    phone_number = #{phoneNumber},
-	    email = #{email},
-	    agree_sms = #{agreeSms},
-	    addr1 = #{addr1},
-	    addr2 = #{addr2},
-	    zipcode = #{zipcode},
-	    gender = #{gender},
-	    updated_at = SYSDATE,
-	    updated_by = 'updateMember'
-	  </set>
-	  WHERE id = #{id}
-	</update>
-	
-	<select id="readById" resultMap="memberMap" parameterType="long">
-  		SELECT * FROM member WHERE id = #{id}
-	</select>
-
+	 
+	 <select id="getTotalCount" resultType="int">
+	   SELECT COUNT(*) FROM member WHERE id > 0
+	 </select>
+	 
 </mapper>
 

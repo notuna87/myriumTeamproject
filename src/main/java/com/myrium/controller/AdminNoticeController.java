@@ -4,13 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,8 +40,6 @@ public class AdminNoticeController {
 	
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
-		log.info("list__________");
-		log.info(cri);
 		
 	    // 현재 로그인 사용자 권한 조회
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -51,42 +47,19 @@ public class AdminNoticeController {
 	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));		
 		
 		List<NoticeVO> list = noticeservice.getList(cri, isAdmin);
-		
-		list.forEach(notice -> log.info(notice));
 		model.addAttribute("list", list);
 
 		int total = noticeservice.getTotal(cri, isAdmin);
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
 
-		// Debug log
-		log.info("---------------------------------------------------");
-
-		log.info(authentication);
-
-		System.out.println("Authentication Details:");		
-		System.out.println("Principal: " + authentication.getPrincipal());
-		System.out.println("Authorities: " + authentication.getAuthorities());
-
-		log.info("---------------------------------------------------");
 	}
 	
-//	@PreAuthorize("hasAuthority('ADMIN')")
-//	@PostMapping("/register")
-//	public String register(NoticeVO vo, RedirectAttributes rttr) {
-//		log.info("register......." + vo);
-//
-//		noticeservice.register(vo);
-//
-//		rttr.addFlashAttribute("result", vo.getId());
-//		return "redirect:/adminnotice/list";
-//	}
-	@Transactional
+
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/register")
 	public String register(NoticeVO vo,
 	                       @RequestParam("attachList") String attachListJson,
 	                       RedirectAttributes rttr) {
-		log.info("(notice_file) register......." + vo);
 
 	    // 1. JSON 파싱
 	    ObjectMapper mapper = new ObjectMapper();
@@ -112,8 +85,6 @@ public class AdminNoticeController {
 	            dto.setUpdatedAt(vo.getUpdatedAt());
 	            dto.setUpdatedBy(vo.getUpdatedBy());
 	            
-	            log.info("(notice_file) AttachFileDTO......." + dto);
-
 	            noticeservice.insertAttach(dto);
 	        }
 	    }
@@ -128,17 +99,17 @@ public class AdminNoticeController {
 	
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping({"/get", "/modify"})
-	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) {
-		noticeservice.incrementReadCnt(id);  // 조회수 증가 로직 (추가)
+	public void get(@RequestParam("id") Long id, @ModelAttribute("cri") Criteria cri, Model model) throws JacksonException {
+		noticeservice.incrementReadCnt(id);  // 조회수 증가
 		model.addAttribute("notice", noticeservice.get(id));
-		//model.addAttribute("attachFiles", noticeservice.findByNoticeId(id));
 		List<AttachFileDTO> attachFiles = noticeservice.findByNoticeId(id);
-		System.out.println("첨부파일 수: " + attachFiles.size()); // 디버깅
 		model.addAttribute("attachFiles", attachFiles);
-
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String attachFilesJson = mapper.writeValueAsString(attachFiles);
+		model.addAttribute("attachFilesJson", attachFilesJson);
 	}
 	
-	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/modify")
 	public String modify(NoticeVO vo,
@@ -146,12 +117,10 @@ public class AdminNoticeController {
 			@RequestParam(value = "deleteUuids", required = false) String deleteUuids,
 			@ModelAttribute("cri") Criteria cri,
 			RedirectAttributes rttr) {
-		log.info("modify:" + vo);
 		
 	    // 1. JSON 파싱
 		ObjectMapper mapper = new ObjectMapper();
-	    List<AttachFileDTO> attachList = new ArrayList<>(); // null을 방지하기 위해 빈 리스트로 초기화
-	    // json 데이터가 null이거나 비어있는 경우를 대비한 방어 코드를 추가합니다.
+	    List<AttachFileDTO> attachList = new ArrayList<>();
 	    if (attachListJson != null && !attachListJson.trim().isEmpty()) {
 	        try {
 	            attachList = mapper.readValue(attachListJson, new TypeReference<List<AttachFileDTO>>(){});
@@ -176,15 +145,13 @@ public class AdminNoticeController {
 	    // 3. 첨부파일 목록 저장
 	    if (attachList != null && !attachList.isEmpty()) {
 	        for (AttachFileDTO dto : attachList) {
-	            dto.setUserId(vo.getUserId()); // NotiveVO 에서 가져옴
+	            dto.setUserId(vo.getUserId());
 	            dto.setNoticeId(vo.getId());
 	            dto.setCustomerId(vo.getCustomerId());
 	            dto.setCreatedBy(vo.getCustomerId());
 	            dto.setUpdatedAt(vo.getUpdatedAt());
 	            dto.setUpdatedBy(vo.getUpdatedBy());
 	            
-	            log.info("(notice_file) AttachFileDTO......." + dto);
-
 	            noticeservice.insertAttach(dto);
 	        }
 	    }
@@ -199,15 +166,12 @@ public class AdminNoticeController {
 		return "redirect:/adminnotice/list";
 	}
 	
-	@Transactional
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/harddel")
 	public String harddel(@RequestParam("id") Long id,
 	                      @ModelAttribute("cri") Criteria cri,
 	                      RedirectAttributes rttr,
 	                      String customerId) {
-
-	    log.info("notice harddelete..." + id);
 
 	    try {
 	        NoticeVO notice = noticeservice.get(id);

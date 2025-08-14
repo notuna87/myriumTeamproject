@@ -1,26 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <jsp:useBean id="now" class="java.util.Date" />
 
 <%@include file="../includes_admin/header.jsp"%>
-
 <style>
   .category-label {
     display: inline-block;
     margin: 1px;
-  }  
-  
-  table.table td, table.table th {
-      vertical-align: middle !important;
-      text-align: center;
   }
-  
-    table.table {
-      font-size: 13px;
-  }
-  
 </style>
 
 <!-- 뒤로가기 시 조회수 증가를 위해 새로고침 -->
@@ -38,7 +28,7 @@
 <div style="width:1240px; margin:0 auto;">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">상품관리<span class="badge">관리자</span></h1>
+			<h1 class="page-header">회원관리<span class="badge">관리자</span></h1>
 		</div>
 	</div>
 	<!-- /.row -->
@@ -50,136 +40,142 @@
 						value='<sec:authentication property="principal.member.id"/>' />
 				</sec:authorize>
 				<sec:authorize access="hasAuthority('ADMIN')">
-					<div class="panel-heading">
-						새상품은 상품등록을 클릭하고 등록하세요.
+					<!-- <div class="panel-heading">
+						새회원 등록은 작성을 클릭하세요.
 						<button id='regBtn' type="button" class="btn btn-info">작성</button>
-					</div>
+					</div> -->
 					<div class="panel-heading">
-						<span class="badge">NEW</span> 최근 3일 이내에 등록된 새로운 상품 입니다.
+						<span class="badge badge-danger ml-1">NEW</span> 최근 3일 이내에 등록된 신규 회원입니다.
 					</div> 
 				</sec:authorize>
 
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					    <!-- 필터링 섹션 -->
-				    <form action="/adminproduct/list" method="get" class="form-inline" style="margin-bottom:10px;">
+				    <form action="/adminmember/list" method="get" class="form-inline" style="margin-bottom:10px;">
 				        <!-- <select name="category" class="form-control">
 				            <option value="">카테고리</option>
 				            <c:forEach var="cat" items="${categories}">
 				                <option value="${cat}" <c:if test="${param.category == cat}">selected</c:if>>${cat}</option>
 				            </c:forEach>
 				        </select> -->
-				        <select name="category" class="form-control">
-						    <option value= "">카테고리</option>
-						    <option value="원예용품" <c:if test="${param.category == '원예용품'}">selected</c:if>>원예용품</option>
-						    <option value="식물키트모음" <c:if test="${param.category == '식물키트모음'}">selected</c:if>>식물키트모음</option>
-						    <option value="허브키우기" <c:if test="${param.category == '허브키우기'}">selected</c:if>>허브키우기</option>
-						    <option value="채소키우기" <c:if test="${param.category == '채소키우기'}">selected</c:if>>채소키우기</option>
-						    <option value="꽃씨키우기" <c:if test="${param.category == '꽃씨키우기'}">selected</c:if>>꽃씨키우기</option>
-						    <option value="기타키우기키트" <c:if test="${param.category == '기타키우기키트'}">selected</c:if>>기타키우기키트</option>
+				        <select name="auth" class="form-control">
+						    <option value= "">회원구분[일반/관리자)</option>
+						    <option value="MEMBER" <c:if test="${param.auth == 'MEMBER'}">selected</c:if>>일반</option>
+						    <option value="ADMIN" <c:if test="${param.auth == 'ADMIN'}">selected</c:if>>관리자</option>
 						</select>
-				        <select name="is_discount" class="form-control">
-				            <option value= -1>일반할인여부</option>
-				            <option value= 1 <c:if test="${param.is_discount == 1}">selected</c:if>>할인중</option>
-				            <option value= 0 <c:if test="${param.is_discount == 0}">selected</c:if>>없음</option>
-				        </select>
-				        <select name="is_timesales" class="form-control">
-				            <option value= -1>타임세일여부</option>
-				            <option value= 1 <c:if test="${param.is_timesales == 1}">selected</c:if>>할인중</option>
-				            <option value= 0 <c:if test="${param.is_timesales == 0}">selected</c:if>>없음</option>
-				        </select>
 				        <select name="is_deleted" class="form-control">
+				            <option value= -1>계정상태[활성/비활성]</option>
+				            <option value= 0 <c:if test="${param.is_deleted == 0}">selected</c:if>>활성</option>
+				            <option value= 1 <c:if test="${param.is_deleted == 1}">selected</c:if>>비활성</option>				            
+				        </select>
+				        <select name="gender" class="form-control">
+				            <option value= "">성별[남자/여자]</option>
+				            <option value= 'M' <c:if test="${param.gender == 'M'}">selected</c:if>>남자</option>
+				            <option value= 'F' <c:if test="${param.gender == 'F'}">selected</c:if>>여자</option>
+				        </select>
+				        <!-- <select name="is_deleted" class="form-control">
 				            <option value= -1>노출여부</option>
 				            <option value= 0 <c:if test="${param.is_deleted == 0}">selected</c:if>>노출</option>
 				            <option value= 1 <c:if test="${param.is_deleted == 1}">selected</c:if>>비노출</option>
-				        </select>
+				        </select> -->
 				        <button type="submit" class="btn btn-primary">필터</button>
-				        <button type="button" class="btn btn-info" onclick="location.href='/adminproduct/list'">필터 초기화</button>
+				        <button type="button" class="btn btn-info" onclick="location.href='/adminmember/list'">필터 초기화</button>
 
 				    </form>
 				
-				    <!-- 상품 테이블 -->
-				    <table style="width:100%;" class="table table-striped table-bordered table-hover" id="dataTables-example">
+				    <!-- 회원 테이블 -->
+				    <table class="table table-bordered table-hover">
 				        <thead>
 				            <tr>
-				                <th class="text-center">상품번호</th>
-				                <th class="text-center">카테고리</th>
-				                <th class="text-center">이미지</th>
-				                <th class="text-center">상품명</th>
-				                <th class="text-center">재고량</th>
-				                <th class="text-center">가격</th>
-				                <th class="text-center">할인가격</th>
-				                <th class="text-center">일반할인</th>
-				                <th class="text-center">(일반)할인율</th>
-				                <th class="text-center">타임세일</th>
-				                <th class="text-center">(타임세일)할인율</th>
-				                <th class="text-center">노출</th>
-				                <th class="text-center" style="width:169px;">관리</th>
+				                <th class="text-center">번호</th>
+				                <th class="text-center">권한</th>
+				                <th class="text-center">상태</th>				                
+				                <th class="text-center">아이디</th>
+				                <th class="text-center">이름</th>
+				                <th class="text-center">주소</th>
+				                <th class="text-center">휴대전화</th>
+				                <th class="text-center">이메일</th>
+				                <th class="text-center">성별</th>
+				                <th class="text-center">sms수신</th>				                
+				                <th class="text-center">정보3자제공</th>				                
+				                <th class="text-center">정보처리위탁</th>
+				                <th class="text-center" style="width: 169px;">관리</th>
 				            </tr>
 				        </thead>
+
 				        <tbody>
-				            <c:forEach items="${list}" var="product">
+				            <c:forEach items="${list}" var="member">
 				                <tr>
-				                    <td class="text-center">${product.product.id}</td>
-									<td class="text-center">
-									    <div class="d-flex flex-wrap justify-content-center">
-									        <c:forEach var="tag" items="${product.category.categoryTags}">
-									            <span class="label label-default category-label">${tag}</span>
-									        </c:forEach>
-									    </div>
-									</td>
-					            	<!-- 썸네일 -->
-						            <td class="text-center">
-						            	<img src="${pageContext.request.contextPath}/upload/${product.thumbnail.img_path_thumb}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
-						            </td>
+				                    <td class="text-center">${member.id}</td>
+									<c:set var="isAdmin" value="false" />
+									<c:forEach var="auth" items="${member.authList}">
+									    <c:if test="${auth.role eq 'ADMIN'}">
+									        <c:set var="isAdmin" value="true" />
+									    </c:if>
+									</c:forEach>
 									
-				                    <td class="text-left"><a class="move" href="${product.product.id}">${product.product.product_name}</a>
+									<td class="text-center">
+									    <c:choose>
+									        <c:when test="${isAdmin}">
+									            <span class="label label-success ml-1">관리자</span>
+									        </c:when>
+									        <c:otherwise>
+									            일반
+									        </c:otherwise>
+									    </c:choose>
+									</td>
+									<td class="text-center">${member.isDeleted == 0 ? '<span class="label label-success ml-1">활성</span>' : '비활성'}</td>
+									<td class="text-right">${member.customerId}</td>
+				                    <td class="text-left">${member.customerName}
    					                    <!-- NEW 라벨: 3일 이내 등록 -->
-					                    <c:if test="${product.product.created_at.time + (1000*60*60*24*3) > now.time}">
-					                        <span class="badge badge-danger ml-1">NEW</span>
+					                    <c:if test="${member.createdAt.time + (1000*60*60*24*3) > now.time}">
+					                        <span class="badge">NEW</span>
 					                    </c:if>
 					                </td>
-				                    <td class="text-right">${product.product.product_stock}</td>
-				                    <td class="text-right"><fmt:formatNumber value="${product.product.product_price}" pattern="#.##"/></td>
-				                    <td class="text-right"><fmt:formatNumber value="${product.product.discount_price}" pattern="#.##"/></td>
-				                    <td class="text-center">${product.product.is_discount ==1 ? '<span class="label label-success ml-1">할인중</span>' : '<span class="label label-default">없음</span>'}</td>
-				                    <td class="text-right">${product.product.discount_rate}%</td>
-				                    <td class="text-center">${product.product.is_timesales == 1 ? '<span class="label label-success ml-1">할인중</span>' : '<span class="label label-default">없음</span>'}</td>
-				                    <td class="text-right">${product.product.timesalediscount_rate}%</td>
-				                    <td class="text-center">${product.product.is_deleted == 0 ? '<span class="label label-success ml-1">전시중</span>' : '<span class="label label-default">비노출</span>'}</td>
+				                    <td class="text-right">${member.address}</td>
+				                    <td class="text-right">${member.phoneNumber}</td>
+				                    <td class="text-right">${member.email}</td>
+				                    <td class="text-center">${member.gender == 'M' ? '남자' : '여자'}</td>
+				                    <td class="text-center">${member.agreeSms ==1 ? '<span class="label label-success ml-1">동의</span>' : '비동의'}</td>
+				                    <td class="text-center">${member.agreeThirdParty ==1 ? '<span class="label label-success ml-1">동의</span>' : '비동의'}</td>
+				                    <td class="text-center">${member.agreeDelegate ==1 ? '<span class="label label-success ml-1">동의</span>' : '비동의'}</td>
 				                    <td>
-				                        <button class="btn btn-sm btn-primary" onclick="location.href='/adminproduct/modify?id=${product.product.id}'">수정</button>
+				                        <button class="btn btn-sm btn-primary" onclick="location.href='/adminmember/modify?id=${member.id}'">수정</button>
 				                        <c:choose>
-				                            <c:when test="${product.product.is_deleted == 0}">
-				                                <button class="btn btn-sm btn-warning softdel-btn" data-id="${product.product.id}" data-display="false">비노출</button>
+				                            <c:when test="${member.isDeleted == 0}">
+				                                <button class="btn btn-sm btn-warning softdel-btn" data-id="${member.id}" data-display="false">비활성</button>
 				                            </c:when>
 				                            <c:otherwise>
-				                                <button class="btn btn-sm btn-success restore-btn" data-id="${product.product.id}" data-display="true">전시복구</button>
+				                                <button class="btn btn-sm btn-success restore-btn" data-id="${member.id}" data-display="true">활성</button>
 				                            </c:otherwise>
 				                        </c:choose>
-				                        <button class="btn btn-sm btn-danger harddel-btn" data-id="${product.product.id}">삭제</button>
+				                        <button class="btn btn-sm btn-danger harddel-btn" data-id="${member.id}">삭제</button>
 				                    </td>
 				                </tr>
 				            </c:forEach>
 				        </tbody>
-				    </table>
+				     </table>
 
 
 					<!-- 검색조건 -->
 					<div class='row'>
 						<div class="col-lg-12">
-							<form id='searchFormProduct' action="/adminproduct/list" method='get'>
+							<form id='searchForm' action="/adminmember/list" method='get'>
 								<select name='type' >
-									<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : ''}" /> >선택하세요</option>
-									<option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':''}"/>>상품명</option>
-								</select> 
+									<option value="C" <c:out value="${pageMaker.cri.type eq 'C'?'selected':''}"/>>아이디</option>
+									<option value="N" <c:out value="${pageMaker.cri.type eq 'N'?'selected':''}"/>>이름</option>
+									<option value="CN" <c:out value="${pageMaker.cri.type eq 'CN'?'selected':''}"/>>아이디 or 이름</option>
+								</select>
+								<input type='hidden' name='type' value="C" />
+								<input type='hidden' name='type' value="N" />
 								<input type='text' name='keyword' value='<c:out value="${pageMaker.cri.keyword}"/>' /> 
 								<input type='hidden' name='pageNum' value='<c:out value="${pageMaker.cri.pageNum}"/>' /> 
 								<input type='hidden' name='amount' value='<c:out value="${pageMaker.cri.amount}"/>' />
 
 								
 								<button type="submit" class="btn btn-sm btn-primary">
-									<i class="fa fa-search"></i> 상품검색
+									<i class="fa fa-search"></i> 회원검색
 								</button>
 							</form>
 						</div>
@@ -207,7 +203,7 @@
 					</div>
 					<!-- end 페이지 처리 -->
 
-					<form id='actionForm' action="/adminproduct/list" method='get'>
+					<form id='actionForm' action="/adminmember/list" method='get'>
 						<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'> <input
 							type='hidden' name='amount' value='${pageMaker.cri.amount}'> <input type='hidden'
 							name='type' value='${pageMaker.cri.type}'> <input type='hidden' name='keyword'
@@ -243,6 +239,7 @@
 		</div>
 	</div>
 </div>
+
 <!-- jQuery -->
 <script src="/resources/bsAdmin2/resources/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">
@@ -267,7 +264,7 @@ $(document).ready(function(){
 	}
 	
 	$("#regBtn").on("click",function(){
-		self.location = "/adminproduct/register";
+		self.location = "/adminmember/register";
 	})
 	
 	var actionForm = $("#actionForm");
@@ -289,33 +286,33 @@ $(document).ready(function(){
 		actionForm.find("input[name='id']").remove(); //뒤로가기 후 기존 파라미터 누적문제 해결
 		
 		actionForm.append("<input type='hidden' name='id' value='" + $(this).attr("href") + "'>");
-		actionForm.attr("action","/adminproduct/modify");
+		actionForm.attr("action","/adminmember/modify");
 		actionForm.submit();
 	});
 	
-	var searchFormProduct = $("#searchFormProduct");
+	var searchForm = $("#searchForm");
 
-	$("#searchFormProduct button").on("click", function(e){
-		if(!searchFormOrder.find("option:selected").val()){
-			alert("검색종류를 선택하세요");
-			return false;
-		}
+	$("#searchForm button").on("click", function(e){
+		//if(!searchForm.find("option:selected").val()){
+		//	alert("검색종류를 선택하세요");
+		//	return false;
+		//}
 
-		if(!searchFormOrder.find("input[name='keyword']").val()){
-			alert("키워드를 입력하세요");
-			return false;
-		}
-		searchFormProduct.find("input[name='pageNum']").val("1");
+		//if(!searchForm.find("input[name='keyword']").val()){
+		//	alert("키워드를 입력하세요");
+		//	return false;
+		//}
+		searchForm.find("input[name='pageNum']").val("1");
 		e.preventDefault();
 		
-		searchFormProduct.submit();
+		searchForm.submit();
 		
 	});
     
 	// 관리자용 버튼 이벤트
 	$(document).on("click", ".edit-btn", function () {
 	    const id = $(this).data("id");
-	    window.location.href = "/adminproduct/modify?id=" + id;
+	    window.location.href = "/adminmember/modify?id=" + id;
 	});
 
 	$(document).on("click", ".harddel-btn", function () {
@@ -323,13 +320,13 @@ $(document).ready(function(){
 	    if (confirm("삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
 	        $.ajax({
 	            type: "post",
-	            url: "/adminproduct/harddel",
+	            url: "/adminmember/harddel",
 	            data: { id: id },
 	            success: function () {
 	                location.reload();
 	            },
 	            error: function () {
-	                alert("삭제 실패");
+	                alert("계정 삭제 실패");
 	            }
 	        });
 	    }
@@ -337,16 +334,16 @@ $(document).ready(function(){
 	
 	$(document).on("click", ".softdel-btn", function () {
 	    const id = $(this).data("id");
-	    if (confirm("상품이 노출되지 않습니다.")) {
+	    if (confirm("계정이 비활성됩니다.")) {
 	        $.ajax({
 	            type: "post",
-	            url: "/adminproduct/softdel",
+	            url: "/adminmember/softdel",
 	            data: { id: id },
 	            success: function () {
 	                location.reload();
 	            },
 	            error: function () {
-	                alert("상품 비노출 실패");
+	                alert("계정 비활성 실패");
 	            }
 	        });
 	    }
@@ -354,16 +351,16 @@ $(document).ready(function(){
 
 	$(document).on("click", ".restore-btn", function () {
 	    const id = $(this).data("id");
-	    if (confirm("상품이 노출됩니다.")) {
+	    if (confirm("계정이 활성됩니다.")) {
 	        $.ajax({
 	            type: "post",
-	            url: "/adminproduct/restore",
+	            url: "/adminmember/restore",
 	            data: { id: id },
 	            success: function () {
 	                location.reload();
 	            },
 	            error: function () {
-	                alert("복구 실패");
+	                alert("계정 활성 실패");
 	            }
 	        });
 	    }

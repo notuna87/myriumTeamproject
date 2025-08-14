@@ -21,9 +21,9 @@ public interface AdminProductService {
 	   
 	   public List<ProductVO> getList();
 	   
-	   public List<ProductVO> getList(Criteria cri, boolean isAdmin);
+	   public List<ProductVO> getList(Criteria cri);
 	   
-	   public int getTotal(Criteria cri, boolean isAdmin);
+	   public int getTotal(Criteria cri);
 
 	   public boolean restore(int id);
 
@@ -35,7 +35,7 @@ public interface AdminProductService {
 
 	   public void incrementReadCnt(int id);
 
-	   public List<ProductDTO> getProductListWithCategory(Criteria cri, boolean isAdmin);
+	   public List<ProductDTO> getProductListWithCategory(Criteria cri);
 	   
 	   public ProductVO get(int id);
 
