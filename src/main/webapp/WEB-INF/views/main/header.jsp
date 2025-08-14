@@ -45,20 +45,10 @@
 			<ul>
 				<li><a href="${pageContext.request.contextPath}/brand_intro">브랜드 소개</a></li>
 				<li><a href="${pageContext.request.contextPath}/category?category=all">식물키우기</a></li>
-				<li><a href="#">타임세일</a></li>
 				<li><a href="${pageContext.request.contextPath}/total_review">리뷰</a></li>
-				<li><a href="#">매거진</a></li>
-				<li class="subCategoryWrap"><a href="#">고객센터</a>
-					<div class="subCategory">
-						<ul>
-							<li><a href="#">식물백서</a></li>
-							<li><a href="${pageContext.request.contextPath}/adminnotice/list">공지사항</a></li>
-							<li><a href="${pageContext.request.contextPath}/adminboard/list">문의하기</a></li>
-							<li><a href="#">상품 리뷰</a></li>
-							<li><a href="${pageContext.request.contextPath}/adminfaq/list">FAQ</a></li>
-						</ul>
-					</div></li>
-			</ul>
+				<li><a href="${pageContext.request.contextPath}/adminnotice/list">공지사항</a></li>
+				<li><a href="${pageContext.request.contextPath}/adminboard/list">문의하기</a></li>
+				<li><a href="${pageContext.request.contextPath}/adminfaq/list">FAQ</a></li>
 		</div>
 
 		<div class="searchBoxWrap">
@@ -92,25 +82,22 @@
 			<li>브랜드소개</li>
 			<li>식물키우기
 				<ul>
-					<li class="categorymenuSmall">원예용품</li>
-					<li class="categorymenuSmall">식물키트모음</li>
-					<li class="categorymenuSmall">허브 키우기</li>
-					<li class="categorymenuSmall">채소키우기</li>
-					<li class="categorymenuSmall">꽃시키우기</li>
-					<li class="categorymenuSmall">기타 키우기키트</li>
+					<li class="categorymenuSmall"><a href="${pageContext.request.contextPath}/category?sort=&category=gardening">원예용품</a></li>
+					<li class="categorymenuSmall"><a href="${pageContext.request.contextPath}/category?&category=plantKit">식물키트모음</a></li>
+					<li class="categorymenuSmall"><a href="${pageContext.request.contextPath}/category?sort=&category=hurb">허브 키우기</a></li>
+					<li class="categorymenuSmall"><a href="${pageContext.request.contextPath}/category?sort=&category=vegetable">채소키우기</a></li>
+					<li class="categorymenuSmall"><a href="${pageContext.request.contextPath}/category?sort=&category=flower">꽃시키우기</a></li>
+					<li class="categorymenuSmall"><a href="${pageContext.request.contextPath}/category?sort=&category=etc">기타 키우기키트</a></li>
 				</ul>
 			</li>
-			<li>타임세일</li>
-			<li>리뷰</li>
-			<li>매거진</li>
+			<li><a href="${pageContext.request.contextPath}/total_review">리뷰</a></li>
 			<li>고객센터
 				<ul>
-					<li class="categorymenuSmall">마이페이지</li>
-					<li class="categorymenuSmall">주문/배송조회</li>
-					<li class="categorymenuSmall">관심상품</li>
-					<li class="categorymenuSmall">FAQ</li>
-					<li><a class="categorymenuSmall" href="${pageContext.request.contextPath}/board/list">문의하기</a></li>
-					<li class="categorymenuSmall">공지사항</li>
+					<li class="categorymenuSmall"><a href="${pageContext.request.contextPath}/mypage">마이페이지</a></li>
+					<li class="categorymenuSmall"><a href="${pageContext.request.contextPath}/mypage/order-history">주문/배송조회</a></li>
+					<li class="categorymenuSmall"><a href="${pageContext.request.contextPath}/adminfaq/list">FAQ</a></li>
+					<li class="categorymenuSmall"><a href="${pageContext.request.contextPath}/adminboard/list">문의하기</a></li>
+					<li class="categorymenuSmall"><a href="${pageContext.request.contextPath}/adminnotice/list">공지사항</a></li>
 				</ul>
 			</li>
 		</ul>

@@ -6,7 +6,6 @@
 
 <jsp:useBean id="now" class="java.util.Date" />
 
-<%@include file="../main/header.jsp"%>
 <%@include file="../includes_admin/header.jsp"%>
 
 <style>
@@ -27,7 +26,8 @@
 </script>
 
 <body>
-
+<div style="width:1240px; margin:0 auto;">
+<%@include file="../main/header.jsp"%>
 	<div class="row">
 		<div class="col-lg-12">
 			<h1 class="page-header">주문관리<span class="badge">관리자</span></h1>
@@ -209,7 +209,7 @@
 			</div>
   		</div>
 	</div>
-
+</div>
 
 
 <!-- jQuery -->
