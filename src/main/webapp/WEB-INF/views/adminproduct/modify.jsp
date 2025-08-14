@@ -401,7 +401,8 @@ $(document).ready(function () {
       const timesaleRate = timesaleSelect.value === "1" ? (parseFloat(timesaleRateInput.value) || 0) : 0;
 
       const totalRate = discountRate + timesaleRate;
-      const finalPrice = Math.round(price * (1 - totalRate / 100));
+      const discountedPrice = Math.floor(price * (1 - totalRate / 100));
+      const finalPrice = Math.floor(discountedPrice / 10) * 10; // 10원 단위 절삭
 
       totalRateInput.value = totalRate;
       //finalPriceInput.value = finalPrice.toLocaleString();

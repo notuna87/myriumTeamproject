@@ -108,6 +108,11 @@ window.onload = function() {
 
 	//삭제 함수
 	function deleteProduct(action, button) {
+		
+	 	const isConfirmed = confirm("정말 삭제하시겠습니까?");
+	    if (!isConfirmed) return; // 취소 누르면 함수 종료
+
+		
 	  	const productContainer = button.closest('.cartContentsWrap');
 	    const container = button.closest('.cartDelete');
 	    const productId = button.getAttribute('data-product-id');
