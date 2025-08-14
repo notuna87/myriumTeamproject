@@ -42,9 +42,10 @@ public class OrderDTO {
 		private int product_price;
 		private String product_content;
 		private int orders_product_id;
-		private int order_status_product;
+		private int order_status_product;	
 		
 		private String img_path;
+		private int total_price;
 
 
     public void setOrderDate(String orderDate) {
