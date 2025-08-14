@@ -47,7 +47,7 @@ public class PurchaseController {
 		MemberVO memberInfo = memberservice.readById(userId);
 
 		// 카트 정보 불러오기
-		List<ProductDTO> cartList = productservice.CartList(userId);
+		List<ProductDTO> cartList = productservice.CartListChecked(userId);
 
 		log.info(cartList);
 

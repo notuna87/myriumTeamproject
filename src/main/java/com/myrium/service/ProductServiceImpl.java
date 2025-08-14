@@ -150,6 +150,26 @@ public class ProductServiceImpl implements ProductService {
 
 		return productDTOs;
 	}
+	
+	@Override
+	public List<ProductDTO> CartListChecked(Long userId) {
+		List<ProductVO> products = productmapper.CartListChecked(userId);
+		List<ProductDTO> productDTOs = new ArrayList<>();
+
+		for (ProductVO product : products) {
+			// 썸네일 가져오기
+			ImgpathVO thumbnail = productmapper.getThumbnail(product.getId());
+			CartVO quantity = productmapper.getCartInfo(product.getId(), userId);
+			ProductDTO dto = new ProductDTO();
+			dto.setProduct(product);
+			dto.setThumbnail(thumbnail);
+			dto.setInCart(quantity);
+			productDTOs.add(dto);
+		}
+
+		return productDTOs;
+	}
+	
 
 	@Override
 	public void updateQuantity(Long productId, Integer newQuantity, Long userId) {

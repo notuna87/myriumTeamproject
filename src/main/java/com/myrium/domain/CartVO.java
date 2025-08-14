@@ -11,11 +11,10 @@ public class CartVO {
 	    private Long productId;     
 	    private Long userId;          
 	    private int quantity;        
-	    private int isSelected;      
+	    private int is_selected;      
 	    private String createdBy;     
 	    private Date createdAt;       
 	    private String updatedBy;     
 	    private Date updatedAt;        
 	    private int isDeleted;
-	    
 }
