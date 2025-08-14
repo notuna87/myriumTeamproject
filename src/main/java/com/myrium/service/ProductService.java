@@ -56,4 +56,6 @@ public interface ProductService {
 
 	ProductDTO getProductInfoWithThumbnail(int productId);
 
+	public void updateChecked(Long productId, int checked);
+
 }

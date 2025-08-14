@@ -333,6 +333,19 @@
 		WHERE op.order_status IN (1, 2)
 	</select>
 
+	<!-- 배송완료 후 구매확정 변경 -->
+	<update id="autoConfirmAfter1Day">
+	  <![CDATA[
+	  UPDATE orders_product
+	     SET order_status = 18
+	   WHERE order_status = 3
+	     AND updated_at <= SYSDATE - 1
+	  ]]>
+	</update>
+	
+	<update id="updateChecked">
+	UPDATE cart SET IS_SELECTED = #{checked} WHERE product_id = #{productId}
+	</update>
 <!-- 배송완료 후 구매확정 (헤더) -->
 <update id="autoConfirmOrders">
   <![CDATA[

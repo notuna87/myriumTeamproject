@@ -39,8 +39,8 @@
 		<!-- 장바구니 목록 -->
 		<c:forEach var="item" items="${cartList}">
 			<c:set var="disprice" value="1" />
-
 			<div class="cartContentsWrap">
+			<input type="checkbox" class="cartCheckbox">
 				<!-- 상품 이미지 -->
 				<div class="cartImgWrap">
 					<a href="sub?id=${item.product.id}"> <img class="cartImg" src="${pageContext.request.contextPath}/upload/${item.thumbnail.img_path}" />
@@ -179,6 +179,51 @@
 
   }
   document.addEventListener("DOMContentLoaded", updateTotalPrice);
+  
+  document.querySelectorAll('.cartCheckbox').forEach(checkbox => {
+	    checkbox.addEventListener('change', function() {
+	        const container = this.closest('.cartContentsWrap');
+	        const productId = container.querySelector('.buttonMinus').getAttribute('data-product-id');
+	        const isCheckedStr = this.checked; // true / false
+	        let isChecked;
+			console.log(isCheckedStr);
+	        
+	        if(isCheckedStr == true){
+	        	console.log("야호");
+	        	isChecked = 1;
+	        	console.log(isChecked);
+	        } else{
+	        	console.log("안야호");
+	        	isChecked = 0;
+	        	console.log(isChecked);
+	        }
+	        
+	        fetch('/cart/updateChecked', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]')?.getAttribute('content') || ''
+	            },
+	            body: JSON.stringify({
+	                productId: productId,
+	                checked: isChecked
+	            })
+	        })
+	        .then(response => {
+	            if (!response.ok) {
+	                throw new Error('체크 상태 업데이트 실패');
+	            }
+	            return response.json();
+	        })
+	        .then(data => {
+	            console.log('체크 상태 업데이트 성공:', data);
+	        })
+	        .catch(error => {
+	            console.error('체크 상태 업데이트 실패:', error);
+	        });
+	    });
+	});
+  
 </script>
 
 </html>

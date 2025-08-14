@@ -64,7 +64,7 @@
 					</div>
 					<div class="form-group">
 						<label>내용</label>
-						<textarea class="form-control" rows="10" name='content' readonly="readonly">${board.content}</textarea>
+						<textarea class="form-control" rows="10" name='content' readonly="readonly" style="resize:none;">${board.content}</textarea>
 					</div>
 					<div class="form-group">
 						<label>작성자</label>
@@ -174,7 +174,7 @@
 					<div class="form-group">
 						<label>내용을 작성하세요</label>
 						<!-- <input class="form-control" name='reply' value='새 답변!!!!'/> -->
-						<textarea class="form-control" rows="3" name='reply'></textarea>
+						<textarea class="form-control" rows="3" name='reply' style="resize:none;"></textarea>
 					</div>
 					<div class="form-group">
 						<label>작성자</label>

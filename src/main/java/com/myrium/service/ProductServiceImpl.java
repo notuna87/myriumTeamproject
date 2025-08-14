@@ -11,6 +11,7 @@ import com.myrium.domain.ImgpathVO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ProductVO;
 import com.myrium.domain.SearchCriteria;
+import com.myrium.mapper.OrderMapper;
 import com.myrium.mapper.ProductMapper;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private ProductMapper productmapper;
 
+	@Autowired
+	private OrderMapper ordermapper;
+	
 	// controller에서 지정한 카테고리에 해당하는 목록 불러오기
 	@Override
 	public List<ProductDTO> getProductWithThumbnailList(String category) {
@@ -260,6 +264,11 @@ public class ProductServiceImpl implements ProductService {
 		dto.setThumbnail(thumbnail);
 		
 		return dto;
+	}
+
+	@Override
+	public void updateChecked(Long productId, int checked) {
+        ordermapper.updateChecked(productId, checked);
 	}
 
 }

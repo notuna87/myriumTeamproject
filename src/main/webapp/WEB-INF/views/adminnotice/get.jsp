@@ -48,7 +48,7 @@
 					</div>
 					<div class="form-group">
 						<label>내용</label>
-						<textarea class="form-control" rows="10" name='content' readonly="readonly">${notice.content}</textarea>
+						<textarea class="form-control" rows="10" name='content' readonly="readonly" style="resize:none;">${notice.content}</textarea>
 					</div>
 					
 					<c:if test="${not empty attachFiles}">

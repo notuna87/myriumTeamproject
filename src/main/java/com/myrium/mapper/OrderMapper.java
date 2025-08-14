@@ -12,7 +12,8 @@ public interface OrderMapper {
 	int insertOrders(OrderDTO orders);
 
 	void insertOrdersProduct(@Param("productId") int productid, @Param("orderId") Long orderId,
-			@Param("userId") Long userId, @Param("quantity") int quantity, @Param("customerName") String customerName,@Param("payment") int payment);
+			@Param("userId") Long userId, @Param("quantity") int quantity, @Param("customerName") String customerName,
+			@Param("payment") int payment);
 
 	void deletePurchaseCart(@Param("userId") Long userId, @Param("productid") int productid);
 
@@ -49,29 +50,31 @@ public interface OrderMapper {
 	int countOrdersToday(String today);
 
 	List<OrderDTO> productList(Long orderId);
-	
-	//상품리뷰
+
+	// 상품리뷰
 	OrderDTO findProductInOrder(@Param("orderId") Long orderId, @Param("productId") int productId);
 
-	//주문상태변경
+	// 주문상태변경
 	List<OrderDTO> findOrdersForStatusUpdate();
-	
-    int autoConfirmOrders();
-    int autoConfirmOrderProducts();
 
-    // 라인 한 건 변경
-    int updateOrderStatusLine(@Param("orderId") Long orderId,
-                              @Param("productId") int productId,
-                              @Param("orderStatus") int orderStatus);
+	int autoConfirmAfter1Day();
 
-    // 라인 전체 일괄 변경
-    int updateAllOrderLines(@Param("orderId") Long orderId,
-                            @Param("orderStatus") int orderStatus);
+	void updateChecked(@Param("productId") Long productId, @Param("checked") int checked);
+
+	int autoConfirmOrders();
+
+	int autoConfirmOrderProducts();
+
+	// 라인 한 건 변경
+	int updateOrderStatusLine(@Param("orderId") Long orderId, @Param("productId") int productId,
+			@Param("orderStatus") int orderStatus);
+
+	// 라인 전체 일괄 변경
+	int updateAllOrderLines(@Param("orderId") Long orderId, @Param("orderStatus") int orderStatus);
 
     // 헤더 변경
     int updateOrderStatusHeader(@Param("orderId") Long orderId,
                                 @Param("orderStatus") int orderStatus);
-    
     
     //상품 부분 취소
     int countOrderLines(@Param("orderId") Long orderId);

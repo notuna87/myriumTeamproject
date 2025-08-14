@@ -52,7 +52,7 @@
 
 					<div class="form-group">
 		                  <label>내용</label>
-					      <textarea class="form-control" rows="3" name='content'>${notice.content}</textarea>
+					      <textarea class="form-control" rows="3" name='content' style="resize:none; height:300px;">${notice.content}</textarea>
 					</div>
 
 					<div class="form-group">
