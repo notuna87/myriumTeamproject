@@ -86,62 +86,55 @@
     </update>
 
     <!-- 페이징용 검색 필터 -->
-    <sql id="criterial">
-        <trim prefix="(" suffix=") AND" prefixOverrides="OR">
-            <foreach item='type' collection="cri.typeArr">
-                <trim prefix="OR">
-                    <choose>
-                        <when test="type == 'T'.toString()">
-                            title LIKE '%' || #{cri.keyword} || '%'
-                        </when>
-                        <when test="type == 'C'.toString()">
-                            content LIKE '%' || #{cri.keyword} || '%'
-                        </when>
-                        <when test="type == 'W'.toString()">
-                            customer_id LIKE '%' || #{cri.keyword} || '%'
-                        </when>
-                    </choose>
-                </trim>
-            </foreach>
-        </trim>
-    </sql>
+	<sql id="criterial">
+	    <trim prefix="(" suffix=")" suffixOverrides="OR">
+	        <foreach item='type' collection="cri.typeArr" separator="OR">
+	            <choose>
+	                <when test="type == 'T'.toString()">
+	                    title LIKE '%' || #{cri.keyword} || '%'
+	                </when>
+	                <when test="type == 'C'.toString()">
+	                    content LIKE '%' || #{cri.keyword} || '%'
+	                </when>
+	                <when test="type == 'W'.toString()">
+	                    customer_id LIKE '%' || #{cri.keyword} || '%'
+	                </when>
+	            </choose>
+	        </foreach>
+	    </trim>
+	</sql>
 
-	<select id="getListWithPaging" resultMap="boardMap" >
-	  <![CDATA[
-	  SELECT id, user_id, title, content, customer_id, write_date,
-	         is_answered, is_deleted, created_at, created_by,
-	         updated_at, updated_by, reply_cnt
-	  FROM (
-	      SELECT /*+INDEX_DESC(board pk_board) */ 
-	             ROWNUM rn, id, user_id, title, content, customer_id, write_date,
-	             is_answered, is_deleted, created_at, created_by,
-	             updated_at, updated_by, reply_cnt
-	      FROM board
-	      WHERE
-	  ]]>
-	  
-	  <include refid="criterial"/>
-	
-	  <![CDATA[
-	      ROWNUM <= #{cri.pageNum} * #{cri.amount}
-	  ) WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
-	  ]]>
-	  
-	  <!-- isAdmin 파라미터가 false일 때만 is_deleted 필터 적용 -->
-	  <if test="!isAdmin">
-	    <![CDATA[
-	    AND is_deleted = 0
-	    ]]>
-	  </if>
+	<select id="getListWithPaging" resultMap="boardMap">
+	    SELECT *
+	    FROM (
+	        SELECT /*+INDEX_DESC(board pk_board) */
+	               ROWNUM rn, b.*
+	        FROM (
+	            SELECT id, user_id, title, content, customer_id, write_date,
+	                   is_answered, is_deleted, created_at, created_by,
+	                   updated_at, updated_by, reply_cnt
+	            FROM board b
+	            <where>
+	                <include refid="criterial"/>
+	                <if test="!isAdmin">
+	                    AND is_deleted = 0
+	                </if>
+	            </where>
+	        ) b
+	        WHERE ROWNUM &lt;= #{cri.pageNum} * #{cri.amount}
+	    )
+	    WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
 	</select>
 
-	<select id="getTotalCount" resultType="int" >
-	    SELECT COUNT(*)
-	    FROM board
-	    WHERE id > 0
+	<select id="getTotalCount" resultType="int">
+	  SELECT COUNT(*)
+	  FROM board
+	  <where>
+	    <include refid="criterial"/>
 	    <if test="!isAdmin">
-	        AND is_deleted = 0
+	      AND is_deleted = 0
 	    </if>
+	  </where>
 	</select>
 
     <update id="updateReplyCnt">

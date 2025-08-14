@@ -26,6 +26,7 @@
     <result property="productId" column="product_id" />
     <result property="orderDisplayId" column="order_display_id" />
     <result property="ordersIdfull" column="orders_idfull" />
+    <result property="totalPrice" column="total_price" />
     
     <result property="isApprefund" column="is_apprefund" />
     <result property="isAppexchanged" column="is_appexchanged" />
@@ -76,6 +77,7 @@
       o.delivery_msg,
       o.payment_method,
       o.zipcode,
+      o.total_price,
       op.id AS orders_product_id,
       op.product_id,
       op.quantity,
@@ -86,12 +88,9 @@
       p.discount_price,
       ip.img_path_thumb AS img_path_thumb
   FROM orders o
-  LEFT JOIN orders_product op 
-    ON o.id = op.orders_id
-  LEFT JOIN product p 
-    ON op.product_id = p.id
-  LEFT JOIN img_path ip 
-    ON ip.product_id = p.id 
+  LEFT JOIN orders_product op ON o.id = op.orders_id
+  LEFT JOIN product p ON op.product_id = p.id
+  LEFT JOIN img_path ip ON ip.product_id = p.id 
     AND ip.is_thumbnail_main = 1
   WHERE o.id IN
   <foreach collection="list" item="orderId" open="(" separator="," close=")">
@@ -112,8 +111,20 @@
     WHERE orders_id = #{ordersId}
 </update>
 
+<select id="getStatusByOrdersId" resultType="int">
+  SELECT order_status FROM orders_product WHERE orders_id = #{ordersId}
+</select>
+
 <select id="getTotalCount" resultType="int">
-  SELECT COUNT(*) FROM orders WHERE id > 0
+  SELECT COUNT(*) 
+  FROM orders
+  WHERE 1=1
+  <if test="cri.orderStatus != -1">
+    AND order_status = #{cri.orderStatus}
+  </if>
+  <if test="cri.keyword != null and cri.keyword != ''">
+    AND customer_name LIKE '%' || #{cri.keyword} || '%'
+  </if>
 </select>
 
 </mapper>

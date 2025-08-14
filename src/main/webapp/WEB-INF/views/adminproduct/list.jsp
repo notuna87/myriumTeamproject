@@ -168,7 +168,7 @@
 					<!-- 검색조건 -->
 					<div class='row'>
 						<div class="col-lg-12">
-							<form id='searchForm' action="/adminproduct/list" method='get'>
+							<form id='searchFormProduct' action="/adminproduct/list" method='get'>
 								<!-- <select name='type' >
 									<option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':''}"/>>상품명</option>
 								</select> --> 
@@ -293,13 +293,13 @@ $(document).ready(function(){
 		actionForm.submit();
 	});
 	
-	var searchForm = $("#searchForm");
+	var searchFormProduct = $("#searchFormProduct");
 
-	$("#searchForm button").on("click", function(e){
-		searchForm.find("input[name='pageNum']").val("1");
+	$("#searchFormProduct button").on("click", function(e){
+		searchFormProduct.find("input[name='pageNum']").val("1");
 		e.preventDefault();
 		
-		searchForm.submit();
+		searchFormProduct.submit();
 		
 	});
     
@@ -337,7 +337,7 @@ $(document).ready(function(){
 	                location.reload();
 	            },
 	            error: function () {
-	                alert("글내림 실패");
+	                alert("상품 비노출 실패");
 	            }
 	        });
 	    }

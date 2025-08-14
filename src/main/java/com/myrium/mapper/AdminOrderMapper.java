@@ -21,5 +21,7 @@ public interface AdminOrderMapper {
 	public List<Integer> getPagedOrderIds(@Param("cri") Criteria cri);
 	
 	public List<OrderDTO> getOrdersWithProducts(List<Integer> orderIds);
+
+	public List<Integer> getStatusByOrdersId(String ordersId);
 	
 }

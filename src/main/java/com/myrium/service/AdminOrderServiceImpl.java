@@ -27,14 +27,14 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 		}
 
 	public List<OrderDTO> getOrderList(Criteria cri) {
-	    // 1) 주문 ID 리스트 페이징 쿼리 호출
+	    // 주문 ID 리스트 페이징 쿼리 호출
 	    List<Integer> orderIds = mapper.getPagedOrderIds(cri);
 
 	    if (orderIds == null || orderIds.isEmpty()) {
 	        return Collections.emptyList();
 	    }
 
-	    // 2) 주문 ID 리스트로 주문 + 상품 상세 조회
+	    // 주문 ID 리스트로 주문 + 상품 상세 조회
 	    List<OrderDTO> orders = mapper.getOrdersWithProducts(orderIds);
 
 	    return orders;
@@ -43,9 +43,26 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 	@Override
 	public void updateOrderStatus(String ordersId, int ordersProductId, int orderStatus) {
 		
-		mapper.updateOrderProductStatus(ordersProductId, orderStatus);
-		
-		mapper.updateOrderStatus(ordersId, orderStatus);		
+	    // 1. 개별 상품 상태 업데이트
+	    mapper.updateOrderProductStatus(ordersProductId, orderStatus);
+	    
+	    // 2. 주문에 속한 모든 상품 상태 조회
+	    List<Integer> statuses = mapper.getStatusByOrdersId(ordersId);
+	    
+	    // 3. 주문 상품이 2개 이상인지 확인
+	    if (statuses.size() > 1) {
+	        // 4. [4, 6, 8] 상태가 있는지 확인
+	        boolean hasSpecialStatus = statuses.stream().anyMatch(s -> s == 4 || s == 6 || s == 8);
+	        
+	        if (hasSpecialStatus) {
+	            // 5. 주문 상태를 99로 변경
+	            mapper.updateOrderStatus(ordersId, 99);
+	            return;
+	        }
+	    }
+	    
+	    // 6. 조건에 맞지 않으면 원래 주문 상태 업데이트
+	    mapper.updateOrderStatus(ordersId, orderStatus);   	
 	}
 
 

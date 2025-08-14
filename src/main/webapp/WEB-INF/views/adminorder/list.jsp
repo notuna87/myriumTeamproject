@@ -86,6 +86,7 @@
 			                  <th class="text-center">주문번호</th>			                  
 			                  <th class="text-center">주문상품</th>
 			                  <th class="text-center">상품수</th>
+			                  <th class="text-center">총결제금액</th>
 			                  <th class="text-center">주문상태</th>
 			                  <th class="text-center">고객명</th>
 			                  <th class="text-center">주소</th>
@@ -104,8 +105,7 @@
 			                    	<!-- NEW 라벨: 발송처리되지 않은 주문 -->
 			                    	
 				                    <c:if test="${items[0].orderStatus == 1}">
-				                    <c:out value="${items[0].orderStatus}"></c:out>
-				                        <span class="badge badge-danger ml-1">NEW</span>
+				                        <br><span class="badge">NEW</span>
 				                    </c:if></td>			                    
 			                    <td class="text-left">
 			                      ${items[0].productName}
@@ -114,7 +114,8 @@
 			                      </c:if>
 			                    </td>
 			                    <td class="text-right">${fn:length(items)}</td>
-			                    <td class="text-center">${items[0].orderStatusText}</td>
+			                    <td class="text-right">${items[0].totalPrice}</td>
+			                    <td class="text-right">${items[0].orderStatusText}</td>
 			                    <td class="text-center">${items[0].receiver}</td>
 			                    <td class="text-left">${items[0].address}</td>
 			                    <td class="text-center">${items[0].phoneNumber}</td>
@@ -272,6 +273,7 @@ $(document).ready(function(){
                     case 16: statusText = "<span class='label label-success'>취소승인</span>"; break;
                     case 17: statusText = "<span class='label label-danger'>취소거절</span>"; break;
                     case 18: statusText = "<span class='label label-info'>구매확정</span>"; break;
+                    case 99: statusText = "<span class='label label-info'>부분 취소/교환/반품</span>"; break;
                 }
 
             html += '<tr>' +
@@ -376,6 +378,7 @@ $(document).ready(function(){
             case 16: return "취소승인";
             case 17: return "취소거절";
             case 18: return "구매확정";
+            case 99: return "부분 취소/교환/반품";
             default: return "알 수 없음";
         }
     }
