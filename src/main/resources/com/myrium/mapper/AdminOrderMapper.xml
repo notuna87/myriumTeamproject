@@ -44,39 +44,22 @@
 </resultMap>
 
 
-<sql id="criteria">
-  <trim prefix="(" suffix=") AND" prefixOverrides="OR">
-    <foreach item="type" collection="cri.typeArr">
-      <trim prefix="OR">
-        <choose>
-          <when test="type == 'C'">
-            o.customer_name LIKE '%' || #{cri.keyword} || '%'
-          </when>
-          <when test="type == 'P'">
-            p.product_name LIKE '%' || #{cri.keyword} || '%'
-          </when>
-        </choose>
-      </trim>
-    </foreach>
-  </trim>
-</sql>
-
-<!-- 주문 ID 페이징 쿼리 -->
 <select id="getPagedOrderIds" resultType="int" parameterType="com.myrium.domain.Criteria">
-  SELECT * FROM (
+  SELECT *
+  FROM (
     SELECT o.id,
            ROW_NUMBER() OVER (ORDER BY o.order_date DESC, o.id DESC) rn
     FROM orders o
     WHERE 1=1
-      <if test="orderStatus != -1">
-        AND o.order_status = #{orderStatus}
+      <if test="cri.orderStatus != -1">
+        AND o.order_status = #{cri.orderStatus}
       </if>
-      <if test="keyword != null and keyword != '' and typeArr != null and typeArr.length > 0">
-        <include refid="criteria"/>
+      <if test="cri.keyword != null and cri.keyword != ''">
+        AND o.customer_name LIKE '%' || #{cri.keyword} || '%'
       </if>
-  )
-WHERE rn &gt; (#{pageNum} - 1) * #{amount}
-AND rn &lt;= #{pageNum} * #{amount}
+  ) t
+  WHERE rn &gt; (#{cri.pageNum} - 1) * #{cri.amount}
+    AND rn &lt;= #{cri.pageNum} * #{cri.amount}
 </select>
 
 <!-- 주문 및 상품 상세 리스트 -->
@@ -117,8 +100,6 @@ AND rn &lt;= #{pageNum} * #{amount}
   ORDER BY o.order_date DESC, o.id DESC, op.id
 </select>
 
-
-
 <update id="updateOrderProductStatus">
     UPDATE orders_product
     SET order_status = #{orderStatus}
@@ -131,12 +112,9 @@ AND rn &lt;= #{pageNum} * #{amount}
     WHERE orders_id = #{ordersId}
 </update>
 
-
 <select id="getTotalCount" resultType="int">
   SELECT COUNT(*) FROM orders WHERE id > 0
 </select>
-	
-
 
 </mapper>
 

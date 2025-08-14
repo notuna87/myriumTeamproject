@@ -18,8 +18,6 @@ public interface AdminNoticeService {
 	
 	   public boolean softdel(Long id);
 	   
-	   public List<NoticeVO> getList();
-	   
 	   public List<NoticeVO> getList(Criteria cri, boolean isAdmin);
 	   
 	   public int getTotal(Criteria cri, boolean isAdmin);

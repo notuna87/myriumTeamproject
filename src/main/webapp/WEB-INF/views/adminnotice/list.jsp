@@ -133,7 +133,7 @@
                     <!-- 검색폼 -->
                     <div class='row'>
                         <div class="col-lg-12">
-                            <form id='searchForm' action="/adminnotice/list" method='get'>
+                            <form id='searchFormNotice' action="/adminnotice/list" method='get'>
                                 <select name='type'>
                                     <option value="" <c:out value="${pageMaker.cri.type == null?'selected':''}"/> >선택하세요</option>
                                     <option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':''}"/> >제목</option>
@@ -192,7 +192,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div> <!-- panel-body -->
             </div>
         </div>
@@ -239,19 +238,19 @@ $(document).ready(function(){
         actionForm.submit();
     });
 
-    $("#searchForm button").on("click", function(e){
-        if(!$("#searchForm select[name='type']").val()){
+    $("#searchFormNotice button").on("click", function(e){
+        if(!$("#searchFormNotice select[name='type']").val()){
             alert("검색종류를 선택하세요");
             return false;
         }
-        if(!$("#searchForm input[name='keyword']").val()){
+        if(!$("#searchFormNotice input[name='keyword']").val()){
             alert("키워드를 입력하세요");
             return false;
         }
-        $("#searchForm input[name='pageNum']").val("1");
-        console.log("[검색] 타입:", $("#searchForm select[name='type']").val(), "키워드:", $("#searchForm input[name='keyword']").val());
+        $("#searchFormNotice input[name='pageNum']").val("1");
+        console.log("[검색] 타입:", $("#searchFormNotice select[name='type']").val(), "키워드:", $("#searchFormNotice input[name='keyword']").val());
         e.preventDefault();
-        $("#searchForm").submit();
+        $("#searchFormNotice").submit();
     });
 
     // 관리자 버튼 이벤트

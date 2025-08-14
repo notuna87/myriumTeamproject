@@ -19,18 +19,8 @@
 	    <result property="updatedAt" column="updated_at"/>
 	    <result property="updatedBy" column="updated_by"/>
 	</resultMap>
-
-	<select id="getList" resultMap="faqMap" >
-	    SELECT id, user_id, section, question, answer, customer_id, write_date,
-	           is_deleted, created_at, created_by, updated_at, updated_by
-	    FROM faq
-	    WHERE id > 0
-	    <if test="!isAdmin">
-	        AND is_deleted = 0 
-	    </if>
-	    ORDER BY id DESC
-	</select>
-
+		
+	
     <insert id="insert">
         INSERT INTO faq (
             id, user_id, section, question, answer, customer_id, write_date, is_deleted, created_at, created_by
@@ -49,13 +39,32 @@
             #{id}, #{userId}, #{section}, #{question}, #{answer}, #{customerId}, SYSDATE, 0, SYSDATE, #{createdBy}
         )
     </insert>
-
-	<select id="read" resultMap="faqMap">
+	<select id="get" resultMap="faqMap">
 	    SELECT id, user_id, section, question, answer, customer_id, write_date, is_deleted, created_at, created_by, updated_at, updated_by
 	    FROM faq
 	    WHERE id = #{id}
 	</select>
 
+	<select id="getList" resultMap="faqMap" >
+	    SELECT id, user_id, section, question, answer, customer_id, write_date,
+	           is_deleted, created_at, created_by, updated_at, updated_by
+	    FROM faq
+	    WHERE id > 0
+	    <if test="!isAdmin">
+	        AND is_deleted = 0 
+	    </if>
+	    ORDER BY id DESC
+	</select>
+
+    <update id="update">
+        UPDATE faq
+        SET section = #{section},
+            question = #{question},
+            answer = #{answer},
+            updated_at = SYSDATE,
+            updated_by = #{customerId}
+        WHERE id = #{id}
+    </update>
 
 	<!-- 하드(영구) 삭제 -->
     <delete id="harddel">
@@ -75,72 +84,5 @@
 	    SET is_deleted = 0
 	    WHERE id = #{id}
 	</update>
-
-    <update id="update">
-        UPDATE faq
-        SET section = #{section},
-            question = #{question},
-            answer = #{answer},
-            updated_at = SYSDATE,
-            updated_by = #{customerId}
-        WHERE id = #{id}
-    </update>
-
-    <!-- 페이징용 검색 필터 -->
-    <sql id="criterial">
-        <trim prefix="(" suffix=") AND" prefixOverrides="OR">
-            <foreach item='type' collection="cri.typeArr">
-                <trim prefix="OR">
-                    <choose>
-                        <when test="type == 'T'.toString()">
-                            title LIKE '%' || #{cri.keyword} || '%'
-                        </when>
-                        <when test="type == 'C'.toString()">
-                            content LIKE '%' || #{cri.keyword} || '%'
-                        </when>
-                        <when test="type == 'W'.toString()">
-                            customer_id LIKE '%' || #{cri.keyword} || '%'
-                        </when>
-                    </choose>
-                </trim>
-            </foreach>
-        </trim>
-    </sql>
-
-	<select id="getListWithPaging" resultMap="faqMap" >
-	  <![CDATA[
-	  SELECT id, user_id, section, question, answer, customer_id, write_date, is_deleted, created_at, created_by, updated_at, updated_by
-	  FROM (
-	      SELECT /*+INDEX_DESC(faq pk_faq) */ 
-	             ROWNUM rn, id, user_id, section, question, answer,
-	              customer_id, write_date, is_deleted, created_at, 
-	              created_by, updated_at, updated_by
-	      FROM faq
-	      WHERE
-	  ]]>
-	  
-	  <include refid="criterial"/>
-	
-	  <![CDATA[
-	      ROWNUM <= #{cri.pageNum} * #{cri.amount}
-	  ) WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
-	  ]]>
-	  
-	  <!-- isAdmin 파라미터가 false일 때만 is_deleted 필터 적용 -->
-	  <if test="!isAdmin">
-	    <![CDATA[
-	    AND is_deleted = 0
-	    ]]>
-	  </if>
-	</select>
-
-	<select id="getTotalCount" resultType="int" >
-	    SELECT COUNT(*)
-	    FROM faq
-	    WHERE id > 0
-	    <if test="!isAdmin">
-	        AND is_deleted = 0
-	    </if>
-	</select>
 
 </mapper>

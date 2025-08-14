@@ -132,7 +132,7 @@
 					<!-- 검색조건 폼 -->
 					<div class='row'>
 						<div class="col-lg-12">
-							<form id='searchForm' action="/adminboard/list" method='get'>
+							<form id='searchFormBoard' action="/adminboard/list" method='get'>
 								<select name='type'>
 									<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : ''}" /> >선택하세요</option>
 									<option value="T" <c:out value="${pageMaker.cri.type eq 'T' ? 'selected' : ''}" /> >제목</option>
@@ -141,12 +141,10 @@
 									<option value="TC" <c:out value="${pageMaker.cri.type eq 'TC' ? 'selected' : ''}" /> >제목 or 내용</option>
 									<option value="TW" <c:out value="${pageMaker.cri.type eq 'TW' ? 'selected' : ''}" /> >제목 or 작성자</option>
 									<option value="TWC" <c:out value="${pageMaker.cri.type eq 'TWC' ? 'selected' : ''}" /> >제목 or 내용 or 작성자</option>
-								</select> 
-
+								</select>
 								<input type='text' name='keyword' value='<c:out value="${pageMaker.cri.keyword}" />' /> 
 								<input type='hidden' name='pageNum' value='<c:out value="${pageMaker.cri.pageNum}" />' /> 
 								<input type='hidden' name='amount' value='<c:out value="${pageMaker.cri.amount}" />' />
-
 								<button type="submit" class="btn btn-sm btn-primary">
 									<i class="fa fa-search"></i> 검색
 								</button>
@@ -273,9 +271,9 @@ $(document).ready(function(){
 	});
 
 	// 검색 폼 검증 및 제출
-	$("#searchForm button").on("click", function(e){
-		var selectedType = $("#searchForm select[name='type']").val();
-		var keyword = $("#searchForm input[name='keyword']").val();
+	$("#searchFormBoard button").on("click", function(e){
+		var selectedType = $("#searchFormBoard select[name='type']").val();
+		var keyword = $("#searchFormBoard input[name='keyword']").val();
 
 		if(!selectedType){
 			alert("검색종류를 선택하세요");
@@ -287,11 +285,11 @@ $(document).ready(function(){
 		}
 
 		// 검색 시 항상 첫 페이지부터
-		$("#searchForm input[name='pageNum']").val("1");
+		$("#searchFormBoard input[name='pageNum']").val("1");
 		e.preventDefault();
 
 		console.log("검색 요청, type:", selectedType, ", keyword:", keyword);
-		$("#searchForm").submit();
+		$("#searchFormBoard").submit();
 	});
 
 	// 관리자 버튼 이벤트 처리

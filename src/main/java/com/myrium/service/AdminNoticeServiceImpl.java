@@ -25,9 +25,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService{
 	@Override
 	public NoticeVO get(Long id) {
 	      log.info("notice get....." + id);
-	      return mapper.read(id);
+	      return mapper.get(id);
 	}
-
 
 	@Override
 	public boolean modify(NoticeVO notice) {
@@ -46,13 +45,6 @@ public class AdminNoticeServiceImpl implements AdminNoticeService{
 		log.info("notice softdel...." + id);
 		return mapper.softdel(id)==1;
 	}
-
-	@Override
-	public List<NoticeVO> getList() {
-		log.info("notice getList.....");
-		return mapper.getList();
-	}
-
 
 	@Override
 	public void register(NoticeVO notice) {

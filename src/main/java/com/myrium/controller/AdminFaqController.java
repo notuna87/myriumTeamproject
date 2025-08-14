@@ -24,7 +24,6 @@ import lombok.extern.log4j.Log4j;
 
 @Controller
 @Log4j
-//@AllArgsConstructor
 @RequestMapping("/adminfaq/*")
 @RequiredArgsConstructor
 public class AdminFaqController {
@@ -33,7 +32,6 @@ public class AdminFaqController {
 	
 	@GetMapping("/list")
 	public void list(Model model) {
-		log.info("FAQ list__________");
 		
 	    // 현재 로그인 사용자 권한 조회
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -41,31 +39,7 @@ public class AdminFaqController {
 	        .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));		
 		
 		List<FaqVO> list = faqservice.getList(isAdmin);
-		
-		list.forEach(faq -> log.info(faq));
 		model.addAttribute("list", list);
-
-		// Debug log
-		log.info("---------------------------------------------------");
-
-		log.info(authentication);
-
-		System.out.println("Authentication Details:");		
-		System.out.println("Principal: " + authentication.getPrincipal());
-		System.out.println("Authorities: " + authentication.getAuthorities());
-
-		log.info("---------------------------------------------------");
-	}
-	
-	@PreAuthorize("isAuthenticated()")
-	@PostMapping("/register")
-	public String register(FaqVO vo, RedirectAttributes rttr) {
-		log.info("FAQ register......." + vo);
-
-		faqservice.register(vo);
-
-		rttr.addFlashAttribute("result", vo.getId());
-		return "redirect:/adminfaq/list";
 	}
 	
 	@PreAuthorize("isAuthenticated()")
@@ -74,15 +48,22 @@ public class AdminFaqController {
 	}
 	
 	@PreAuthorize("isAuthenticated()")
-	@GetMapping({"/get", "/modify"})
+	@PostMapping("/register")
+	public String register(FaqVO vo, RedirectAttributes rttr) {
+		faqservice.register(vo);
+		rttr.addFlashAttribute("result", vo.getId());
+		return "redirect:/adminfaq/list";
+	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/modify")
 	public void get(@RequestParam("id") Long id, Model model) {
 		model.addAttribute("faq", faqservice.get(id));
 	}
 	
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/modify")
 	public String modify(FaqVO faq, RedirectAttributes rttr) {
-		log.info("FAQ modify:" + faq);
 		if(faqservice.modify(faq)) {
 			rttr.addFlashAttribute("result","success");
 		}
@@ -92,32 +73,28 @@ public class AdminFaqController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/harddel")
 	public String harddel(@RequestParam("id") Long id, RedirectAttributes rttr, String customerId) {
-		log.info("FAQ harddelete..." + id);
 		if(faqservice.harddel(id)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		return "redirect:/adminfaq/list";
 	}
 
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/softdel")
 	public String softdel(@RequestParam("id") Long id, RedirectAttributes rttr, String customerId) {
-		log.info("FAQ softdelete..." + id);
 		if(faqservice.softdel(id)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		return "redirect:/adminfaq/list";
 	}
 
-	@PreAuthorize("hasAuthority('ADMIN') or principal.username == #customerId")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/restore")
 	public String restore(@RequestParam("id") Long id, RedirectAttributes rttr, String customerId) {
-		log.info("FAQ restore..." + id);
 		if(faqservice.restore(id)) {
 			rttr.addFlashAttribute("result","success");
 		}
 		return "redirect:/adminfaq/list";
 	}
-	
 	
 }

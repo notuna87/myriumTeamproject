@@ -27,11 +27,7 @@
 	           is_answered, is_deleted, created_at, created_by,
 	           updated_at, updated_by, reply_cnt
 	    FROM board
-	    WHERE id > 0
-	    <!-- <if test="!isAdmin">
-	        AND is_deleted = 0
-	    </if> -->
-	    ORDER BY id DESC
+	    WHERE id > 0 ORDER BY id DESC
 	</select>
 
     <insert id="insert">
@@ -60,7 +56,6 @@
 	    FROM board
 	    WHERE id = #{id}
 	</select>
-
 
 	<!-- 하드(영구) 삭제 -->
     <delete id="harddel">

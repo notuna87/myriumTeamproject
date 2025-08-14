@@ -110,13 +110,15 @@
                                     <td class="text-center">
                                         <c:choose>
                                             <c:when test="${isAdmin}">
-                                                <span class="label label-success ml-1">관리자</span>
+                                                <span class="label label-primary">관리자</span>
                                             </c:when>
-                                            <c:otherwise>일반</c:otherwise>
+                                            <c:otherwise>
+                                            	<span class="label label-info">일반</span>
+                                            </c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td class="text-center">
-                                        ${member.isDeleted == 0 ? '<span class="label label-success ml-1">활성</span>' : '비활성'}
+                                        ${member.isDeleted == 0 ? '<span class="label label-success">활성</span>' : '<span class="label label-default">비활성</span>'}
                                     </td>
                                     <td class="text-right">${member.customerId}</td>
                                     <td class="text-left">
@@ -128,7 +130,7 @@
                                     <td class="text-right">${member.address}</td>
                                     <td class="text-right">${member.phoneNumber}</td>
                                     <td class="text-right">${member.email}</td>
-                                    <td class="text-center">${member.gender == 'M' ? '남자' : '여자'}</td>
+                                    <td class="text-center">${member.gender == 'M' ? '남' : '여'}</td>
                                     <td class="text-center">${member.agreeSms ==1 ? '<span class="label label-success">동의</span>' : '<span class="label label-default">비동의</span>'}</td>
                                     <td class="text-center">${member.agreeThirdParty ==1 ? '<span class="label label-success">동의</span>' : '<span class="label label-default">비동의</span>'}</td>
                                     <td class="text-center">${member.agreeDelegate ==1 ? '<span class="label label-success">동의</span>' : '<span class="label label-default">비동의</span>'}</td>

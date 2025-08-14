@@ -73,7 +73,7 @@
 		)
 	</insert>
 
-	<select id="read" resultMap="noticeMap">
+	<select id="get" resultMap="noticeMap">
 		SELECT id, user_id, title, content, customer_id, write_date,
 		is_deleted, created_at, created_by,
 		updated_at, updated_by, has_files, read_cnt

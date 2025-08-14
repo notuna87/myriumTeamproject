@@ -10,26 +10,7 @@ import com.myrium.domain.OrderDTO;
 
 public interface AdminOrderMapper {
 	
-	public List<OrderDTO> getList();	
-	public void insert(OrderDTO order);
-	public void insertSelectKey(OrderDTO order);
-	public OrderDTO read(int id);
-	public int harddel(int id); //하드(영구) 삭제
-	public int softdel(int id); //소프트 삭제
-	public int restore(int id); //복구
-	public int update(OrderDTO order);	
-	public List<OrderDTO> getListWithPaging(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);	
-	public int getTotalCount(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);	
-	
-	public List<OrderDTO> getOrderList(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);
-	
-	public List<AuthVO> getAuthList(Long id);
-	
-	public Integer countAdminRole(Long id);
-	
-	public void insertAdminRole(Long id);
-	
-	public void deleteAdminRole(Long id);
+	public int getTotalCount(@Param("cri") Criteria cri);	
 	
     int updateOrderProductStatus(@Param("ordersProductId") int ordersProductId,
             @Param("orderStatus") int orderStatus);
@@ -37,10 +18,8 @@ public interface AdminOrderMapper {
 	int updateOrderStatus(@Param("ordersId") String ordersId,
 	      @Param("orderStatus") int orderStatus);
 	
-	public List<Integer> getPagedOrderIds(Criteria cri);
+	public List<Integer> getPagedOrderIds(@Param("cri") Criteria cri);
 	
 	public List<OrderDTO> getOrdersWithProducts(List<Integer> orderIds);
-
-
-
+	
 }

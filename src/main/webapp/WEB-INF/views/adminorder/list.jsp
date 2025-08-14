@@ -132,19 +132,13 @@
 						<!-- 검색조건 -->
 						<div class='row'>
 							<div class="col-lg-12">
-								<form id='searchForm' action="/adminorder/list" method='get'>
+								<form id='searchFormOrder' action="/adminorder/list" method='get'>
 									<select name='type' >
-										<option value="C" <c:out value="${pageMaker.cri.type eq 'C'?'selected':''}"/>>고객명</option>
-										<option value="P" <c:out value="${pageMaker.cri.type eq 'P'?'selected':''}"/>>상품</option>
-										<option value="CP" <c:out value="${pageMaker.cri.type eq 'CP'?'selected':''}"/>>고객명 or 상품</option>
+										<option value="C" <c:out value="${pageMaker.cri.type eq 'C' ? 'selected':''}"/>>고객명</option>
 									</select>
-									<input type='hidden' name='type' value="C" />
-									<input type='hidden' name='type' value="P" />
 									<input type='text' name='keyword' value='<c:out value="${pageMaker.cri.keyword}"/>' /> 
 									<input type='hidden' name='pageNum' value='<c:out value="${pageMaker.cri.pageNum}"/>' /> 
 									<input type='hidden' name='amount' value='<c:out value="${pageMaker.cri.amount}"/>' />
-	
-									
 									<button type="submit" class="btn btn-sm btn-primary">
 										<i class="fa fa-search"></i> 주문검색
 									</button>
@@ -463,22 +457,22 @@ $(document).ready(function(){
 		actionForm.submit();
 	});
 	
-	var searchForm = $("#searchForm");
+	var searchFormOrder = $("#searchFormOrder");
 
-	$("#searchForm button").on("click", function(e){
-		//if(!searchForm.find("option:selected").val()){
+	$("#searchFormOrder button").on("click", function(e){
+		//if(!searchFormOrder.find("option:selected").val()){
 		//	alert("검색종류를 선택하세요");
 		//	return false;
 		//}
 
-		//if(!searchForm.find("input[name='keyword']").val()){
+		//if(!searchFormOrder.find("input[name='keyword']").val()){
 		//	alert("키워드를 입력하세요");
 		//	return false;
 		//}
-		searchForm.find("input[name='pageNum']").val("1");
+		searchFormOrder.find("input[name='pageNum']").val("1");
 		e.preventDefault();
 		
-		searchForm.submit();
+		searchFormOrder.submit();
 		
 	});	
     

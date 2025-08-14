@@ -11,13 +11,18 @@ import com.myrium.domain.NoticeVO;
 
 public interface AdminNoticeMapper {
 	
-	public List<NoticeVO> getList();	
 	public void insert(NoticeVO notice);
+	
 	public void insertSelectKey(NoticeVO notice);
-	public NoticeVO read(Long id);
+	
+	public NoticeVO get(Long id);
+	
 	public int harddel(Long id); //하드(영구) 삭제
+	
 	public int softdel(Long id); //소프트 삭제
+	
 	public int restore(Long id); //복구
+	
 	public int update(NoticeVO notice);
 	
 	public List<NoticeVO> getListWithPaging(@Param("cri") Criteria cri, @Param("isAdmin") boolean isAdmin);

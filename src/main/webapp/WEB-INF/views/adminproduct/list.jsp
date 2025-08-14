@@ -10,8 +10,7 @@
   .category-label {
     display: inline-block;
     margin: 1px;
-  }
-  
+  }  
   
   table.table td, table.table th {
       vertical-align: middle !important;
@@ -143,11 +142,11 @@
 				                    <td class="text-right">${product.product.product_stock}</td>
 				                    <td class="text-right"><fmt:formatNumber value="${product.product.product_price}" pattern="#.##"/></td>
 				                    <td class="text-right"><fmt:formatNumber value="${product.product.discount_price}" pattern="#.##"/></td>
-				                    <td class="text-center">${product.product.is_discount ==1 ? '<span class="label label-success ml-1">할인중</span>' : '없음'}</td>
+				                    <td class="text-center">${product.product.is_discount ==1 ? '<span class="label label-success ml-1">할인중</span>' : '<span class="label label-default">없음</span>'}</td>
 				                    <td class="text-right">${product.product.discount_rate}%</td>
-				                    <td class="text-center">${product.product.is_timesales == 1 ? '<span class="label label-success ml-1">할인중</span>' : '없음'}</td>
+				                    <td class="text-center">${product.product.is_timesales == 1 ? '<span class="label label-success ml-1">할인중</span>' : '<span class="label label-default">없음</span>'}</td>
 				                    <td class="text-right">${product.product.timesalediscount_rate}%</td>
-				                    <td class="text-center">${product.product.is_deleted == 0 ? '<span class="label label-success ml-1">전시중</span>' : '비노출'}</td>
+				                    <td class="text-center">${product.product.is_deleted == 0 ? '<span class="label label-success ml-1">전시중</span>' : '<span class="label label-default">비노출</span>'}</td>
 				                    <td>
 				                        <button class="btn btn-sm btn-primary" onclick="location.href='/adminproduct/modify?id=${product.product.id}'">수정</button>
 				                        <c:choose>
@@ -297,15 +296,6 @@ $(document).ready(function(){
 	var searchForm = $("#searchForm");
 
 	$("#searchForm button").on("click", function(e){
-		//if(!searchForm.find("option:selected").val()){
-		//	alert("검색종류를 선택하세요");
-		//	return false;
-		//}
-
-		//if(!searchForm.find("input[name='keyword']").val()){
-		//	alert("키워드를 입력하세요");
-		//	return false;
-		//}
 		searchForm.find("input[name='pageNum']").val("1");
 		e.preventDefault();
 		

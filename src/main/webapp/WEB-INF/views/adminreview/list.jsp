@@ -254,103 +254,99 @@ $(document).ready(function(){
 	      data: { productId: productId, pageNum: pageNum },
 	      success: function(data) {	    	  
 	        // 리뷰 리스트 렌더링
-console.log("랜더링:------>");
-var html = '';
-html += '<table class="table table-bordered table-hover" style="border-collapse: separate; border-spacing: 0 10px;">';
-html += '<thead style="background-color: #f8f9fa;">';
-html += '<tr>';
-html += '<th class="text-center" style="width:120px;">이미지</th>';
-html += '<th class="text-center" style="width:150px;">작성일시</th>';
-html += '<th class="text-center" style="width:120px;">작성자</th>';
-html += '<th class="text-center"> 리뷰 내용</th>';
-html += '<th class="text-center" style="width:80px;"> 조회수</th>';
-html += '<th class="text-center" style="width:80px;">평점</th>';
-html += '<th class="text-center" style="width:80px;">노출</th>';
-html += '<th class="text-center" style="width:150px;">관리</th>';
-html += '</tr>';
-html += '</thead>';
-html += '<tbody>';
-
-data.list.forEach(function(review) {
-  html += '<tr style="background-color:#fff; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">';
-  html += '<td class="text-center">';
-  html += '<img src="/upload/' + review.imageUrl + '" style="width:100px; height:100px; object-fit:cover; border-radius:8px; border:1px solid #ddd;">';
-  html += '</td>';
-  html += '<td class="text-center" style="vertical-align:middle;">' + formatDate(review.reviewDate) + '</td>';
-  html += '<td class="text-center" style="vertical-align:middle;"><strong>' + review.customerId + '</strong></td>';
-  html += '<td class="text-left" style="vertical-align:middle; white-space:pre-line;">' + review.reviewContent + '</td>';
-  html += '<td class="text-center" style="vertical-align:middle;">' + review.viewCount + '</td>';
-  html += '<td class="text-center" style="vertical-align:middle; font-size:16px; color:#ffc107;">★ ' + review.rating + '</td>';
-
-	// 노출여부 표시
-	if (review.isDeleted == 1) {
-	  html += '<td class="text-center" style="vertical-align:middle;"><span class="label label-default">숨김</span></td>';
-	} else {
-	  html += '<td class="text-center" style="vertical-align:middle;"><span class="label label-success">노출</span></td>';
-	}
-
-  html += '<td class="text-center" style="vertical-align:middle;">';
-  if (review.isDeleted == 1) {
-    // 복구 버튼
-    html += '<button class="btn btn-success restore-btn" data-reviewid="' + review.id + '">복구</button> ';
-  } else {
-    // 숨김 버튼
-    html += '<button class="btn btn-warning softdel-btn" data-reviewid="' + review.id + '">숨김</button> ';
-  }
-  // 삭제 버튼은 항상 노출
-  html += '<button class="btn btn-danger harddel-btn" data-reviewid="' + review.id + '">삭제</button>';
-  html += '</td>';
-  html += '</tr>';
-});
-
-html += '</tbody></table>';
-
-$('#reviewList').html(html);
-
-		    let htmlPagination = '';
-		    
-		    console.log("pagination-prev : " + data.pagination.prev);
-		    if (data.pagination.prev) {
-		        htmlPagination += '<li class="paginate_button_review">' +
-		            '<a class="page-link review-page-link" ' +
-		            'data-page="' + (data.pagination.startPage - 1) + '" ' +
-		            'data-productid="' + productId + '" ' +
-		            'href="javascript:void(0);">Previous</a>' +
-		            '</li>';
-		    }
-
-		    console.log("pagination-startPage : " + data.pagination.startPage);
-		    console.log("pagination-endPage : " + data.pagination.endPage);
-		    for (var num = data.pagination.startPage; num <= data.pagination.endPage; num++) {
-		        console.log('num:', num, 'productId:', productId);
-		        var activeClass = data.pagination.cri.pageNum === num ? 'active' : '';
-		        htmlPagination += '<li class="paginate_button_review ' + activeClass + '">' +
-		            '<a class="page-link review-page-link" ' +
-		            'data-page="' + num + '" ' +
-		            'data-productid="' + productId + '" ' +
-		            'href="javascript:void(0);">' + num + '</a>' +
-		            '</li>';
-		    }
-
-		    console.log("pagination-next : " + data.pagination.next);
-		    if (data.pagination.next) {
-		        htmlPagination += '<li class="paginate_button_review">' +
-		            '<a class="page-link review-page-link" ' +
-		            'data-page="' + (data.pagination.endPage + 1) + '" ' +
-		            'data-productid="' + productId + '" ' +
-		            'href="javascript:void(0);">Next</a>' +
-		            '</li>';
-		    }
-
-		    $(".paginationReview").html(htmlPagination);
-		    console.log('Generated pagination HTML:', htmlPagination);
-	      },
-	      error: function() {
-	        $('#reviewList').html('<p>리뷰를 불러오는 중 오류가 발생했습니다.</p>');
-	        $('#reviewPagination').htmlPagination('');
-	      }
-	    });
-	  }
+			console.log("랜더링:------>");
+			var html = '';
+				html += '<table class="table table-bordered table-hover" style="border-collapse: separate; border-spacing: 0 10px;">';
+				html += '<thead style="background-color: #f8f9fa;">';
+				html += '<tr>';
+				html += '<th class="text-center" style="width:120px;">이미지</th>';
+				html += '<th class="text-center" style="width:150px;">작성일시</th>';
+				html += '<th class="text-center" style="width:120px;">작성자</th>';
+				html += '<th class="text-center"> 리뷰 내용</th>';
+				html += '<th class="text-center" style="width:80px;"> 조회수</th>';
+				html += '<th class="text-center" style="width:80px;">평점</th>';
+				html += '<th class="text-center" style="width:80px;">노출</th>';
+				html += '<th class="text-center" style="width:150px;">관리</th>';
+				html += '</tr>';
+				html += '</thead>';
+				html += '<tbody>';
+			
+			data.list.forEach(function(review) {
+				html += '<tr style="background-color:#fff; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">';
+				html += '<td class="text-center">';
+				html += '<img src="/upload/' + review.imageUrl + '" style="width:100px; height:100px; object-fit:cover; border-radius:8px; border:1px solid #ddd;">';
+				html += '</td>';
+				html += '<td class="text-center" style="vertical-align:middle;">' + formatDate(review.reviewDate) + '</td>';
+				html += '<td class="text-center" style="vertical-align:middle;"><strong>' + review.customerId + '</strong></td>';
+				html += '<td class="text-left" style="vertical-align:middle; white-space:pre-line;">' + review.reviewContent + '</td>';
+				html += '<td class="text-center" style="vertical-align:middle;">' + review.viewCount + '</td>';
+				html += '<td class="text-center" style="vertical-align:middle; font-size:16px; color:#ffc107;">★ ' + review.rating + '</td>';
+			
+				// 노출여부 표시
+				if (review.isDeleted == 1) {
+				  html += '<td class="text-center" style="vertical-align:middle;"><span class="label label-default">숨김</span></td>';
+				} else {
+				  html += '<td class="text-center" style="vertical-align:middle;"><span class="label label-success">노출</span></td>';
+				}
+			
+				  html += '<td class="text-center" style="vertical-align:middle;">';
+				  if (review.isDeleted == 1) {
+				    // 복구 버튼
+				    html += '<button class="btn btn-success restore-btn" data-reviewid="' + review.id + '">복구</button> ';
+				  } else {
+				    // 숨김 버튼
+				    html += '<button class="btn btn-warning softdel-btn" data-reviewid="' + review.id + '">숨김</button> ';
+				  }
+				  // 삭제 버튼은 항상 노출
+				  html += '<button class="btn btn-danger harddel-btn" data-reviewid="' + review.id + '">삭제</button>';
+				  html += '</td>';
+				  html += '</tr>';
+				});
+			
+				html += '</tbody></table>';
+				
+				$('#reviewList').html(html);
+				
+				   let htmlPagination = '';
+				   
+				   if (data.pagination.prev) {
+				       htmlPagination += '<li class="paginate_button_review">' +
+				           '<a class="page-link review-page-link" ' +
+				           'data-page="' + (data.pagination.startPage - 1) + '" ' +
+				           'data-productid="' + productId + '" ' +
+				           'href="javascript:void(0);">Previous</a>' +
+				           '</li>';
+				   }
+				
+				   for (var num = data.pagination.startPage; num <= data.pagination.endPage; num++) {
+				       console.log('num:', num, 'productId:', productId);
+				       var activeClass = data.pagination.cri.pageNum === num ? 'active' : '';
+				       htmlPagination += '<li class="paginate_button_review ' + activeClass + '">' +
+				           '<a class="page-link review-page-link" ' +
+				           'data-page="' + num + '" ' +
+				           'data-productid="' + productId + '" ' +
+				           'href="javascript:void(0);">' + num + '</a>' +
+				           '</li>';
+				   }
+				
+				   if (data.pagination.next) {
+				       htmlPagination += '<li class="paginate_button_review">' +
+				           '<a class="page-link review-page-link" ' +
+				           'data-page="' + (data.pagination.endPage + 1) + '" ' +
+				           'data-productid="' + productId + '" ' +
+				           'href="javascript:void(0);">Next</a>' +
+				           '</li>';
+				   }
+				
+				   $(".paginationReview").html(htmlPagination);
+				   console.log('Generated pagination HTML:', htmlPagination);
+			    },
+			    error: function() {
+			      $('#reviewList').html('<p>리뷰를 불러오는 중 오류가 발생했습니다.</p>');
+			      $('#reviewPagination').html('');
+			    }
+			  });
+			}
 	  
 	  // 페이징 클릭 시 리뷰 다시 로드
 		$(document).on('click', '.review-page-link', function() {

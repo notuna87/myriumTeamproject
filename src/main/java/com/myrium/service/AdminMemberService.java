@@ -13,19 +13,15 @@ import com.myrium.domain.ProductVO;
 
 public interface AdminMemberService {
 	
-	   public void register(MemberVO vo);	   
-	   
 	   public boolean modify(MemberVO vo);
 	   
 	   public boolean harddel(int id);
 	
 	   public boolean softdel(int id);
+	     
+	   public List<MemberVO> getMemberListWithAuth(Criteria cri);
 	   
-	   public List<MemberVO> getList();
-	   
-	   public List<MemberVO> getMemberListWithAuth(Criteria cri, boolean isAdmin);
-	   
-	   public int getTotal(Criteria cri, boolean isAdmin);
+	   public int getTotal(Criteria cri);
 
 	   public boolean restore(int id);
   
