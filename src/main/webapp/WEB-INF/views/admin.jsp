@@ -62,7 +62,7 @@
     List<String[]> adminMenu = Arrays.asList(
         new String[] {"상품 관리", "adminproduct/list"},
         new String[] {"회원 관리", "adminmember/list"},
-        new String[] {"공지사항 관리", "adminnotice/list"},
+        new String[] {"공지 관리", "adminnotice/list"},
         new String[] {"FAQ 관리", "adminfaq/list"},
         new String[] {"리뷰 관리", "adminreview/list"},
         new String[] {"문의 관리", "adminboard/list"},
