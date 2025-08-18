@@ -52,7 +52,7 @@
 				<sec:authorize access="hasAuthority('ADMIN')">
 					<div class="panel-heading">
 						새상품은 상품등록을 클릭하고 등록하세요.
-						<button id='regBtn' type="button" class="btn btn-info">작성</button>
+						<button id='regBtn' type="button" class="btn btn-info">상품등록</button>
 					</div>
 					<div class="panel-heading">
 						<span class="badge">NEW</span> 최근 3일 이내에 등록된 새로운 상품 입니다.
@@ -89,8 +89,8 @@
 				            <option value= 0 <c:if test="${param.is_timesales == 0}">selected</c:if>>없음</option>
 				        </select>
 				        <select name="is_deleted" class="form-control">
-				            <option value= -1>노출여부</option>
-				            <option value= 0 <c:if test="${param.is_deleted == 0}">selected</c:if>>노출</option>
+				            <option value= -1>전시여부</option>
+				            <option value= 0 <c:if test="${param.is_deleted == 0}">selected</c:if>>전시중</option>
 				            <option value= 1 <c:if test="${param.is_deleted == 1}">selected</c:if>>비노출</option>
 				        </select>
 				        <button type="submit" class="btn btn-primary">필터</button>

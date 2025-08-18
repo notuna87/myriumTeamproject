@@ -176,7 +176,7 @@
 							</div>
 						</div>
 						
-				        <div class="form-group">
+				        <!-- <div class="form-group">
 				            <label>(※)배송비(원)</label>
 				            <input type="number" name="delivery_fee" value="3500" class="form-control">
 				        </div>
@@ -184,26 +184,26 @@
 				        <div class="form-group">
 				            <label>(※)발송기한(일)</label>
 				            <input type="number" name="delivery_days" value="3" class="form-control">
-				        </div>
+				        </div> -->
 				
 						<div class="form-group">
 						    <label>(※)기초재고수량(개)</label>
 						    <input type="number" name="product_stock" id="product_stock" value="${product.product_stock}" class="form-control" min="0">
 						</div>
 						
-						<div class="form-group">
+						<!-- <div class="form-group">
 						    <label>상품상태</label>
 						    <select name="product_status" id="product_status" class="form-control">
 						        <option value="1">정상</option>
 						        <option value="2">품절</option>
 						        <option value="0">판매중지</option>
 						    </select>
-						</div>	
+						</div>	 -->
 			     			        
         				<!-- 업로드 영역 -->
 						<div class="form-group">
 							<button type='button' id="editBtnThumbnail" class="btn btn-success ml-2">수정</button>
-							<label class="form-label"><h4><strong>상품 이미지 (최대 10장)</strong></h4></label>
+							<h4><label class="form-label"><strong>상품 이미지 (최대 10장)</strong></label></h4>
 							<!-- 설명 문구 -->
 							<p class="text-muted small mb-2">
 								※ 상품 이미지는 <strong>10개</strong> 까지 업로드할 수 있습니다.<br>
@@ -223,7 +223,7 @@
 						</div>
 						<div class="form-group">
 							<button type='button' id="editBtnDetail" class="btn btn-success ml-2">수정</button>
-							<label class="form-label"><h4><strong>상품상세정보 이미지 (최대 5장)</strong></h4></label>
+							<h4><label class="form-label"><strong>상품상세정보 이미지 (최대 5장)</strong></label></h4>
 							<!-- 설명 문구 -->
 							<p class="text-muted small mb-2">
 								※ 상품상세정보 이미지는 <strong>5개</strong> 까지 업로드할 수 있습니다.<br>
@@ -246,7 +246,8 @@
 						
 						<div class="text-right mt-3">
 							<button type="submit" class="btn btn-success">등록</button>
-							<button type="reset" class="btn btn-warning" id="resetBtn">이미지 초기화</button>
+							<button type="button" class="btn btn-info" id="listBtn">목록</button>
+     						<button type="reset" class="btn btn-warning" id="resetBtn">이미지 초기화</button>
 						</div>
 					</form>
 				</div>
@@ -368,6 +369,9 @@ $(document).ready(function () {
       box.style.display = (selected === "1") ? "block" : "none";
   });
   
+  document.getElementById("listBtn").addEventListener("click", function() {
+      window.history.back();
+  });    
   
   function toggleFields() {
       document.getElementById('discount_fields').style.display = discountSelect.value === "1" ? 'block' : 'none';
@@ -404,16 +408,16 @@ $(document).ready(function () {
 	  });
 	
 	  // 재고수량 입력값 감지 후 상품상태 자동 변경
-	  document.getElementById('product_stock').addEventListener('input', function() {
-	    const stockValue = parseInt(this.value) || 0;
-	    const statusSelect = document.getElementById('product_status');
+	  //document.getElementById('product_stock').addEventListener('input', function() {
+	  //  const stockValue = parseInt(this.value) || 0;
+	  //  const statusSelect = document.getElementById('product_status');
 
-	    if (stockValue > 0) {
-	      statusSelect.value = "1";  // 정상
-	    } else if (stockValue === 0) {
-	      statusSelect.value = "2" ;  // 품절
-	    } 
-	  });
+	  //  if (stockValue > 0) {
+	  //    statusSelect.value = "1";  // 정상
+	  //  } else if (stockValue === 0) {
+	  //    statusSelect.value = "2" ;  // 품절
+	  //  } 
+	  //});
 	  
 	  // 페이지 로딩 후 초기화
 	  toggleFields();
@@ -491,8 +495,8 @@ $("button[type='reset']").on("click", function (e) {
 	isSubmitting = true;  
     const product_name = $("input[name='product_name']").val().trim();
     const product_price = $("input[name='product_price']").val().trim();
-    const delivery_fee = $("input[name='delivery_fee']").val().trim();
-    const delivery_days = $("input[name='delivery_days']").val().trim();
+    //const delivery_fee = $("input[name='delivery_fee']").val().trim();
+    //const delivery_days = $("input[name='delivery_days']").val().trim();
     const product_stock = $("input[name='product_stock']").val().trim();
     const checkedCount = $("input[type='checkbox']:checked").length;
 
@@ -516,19 +520,19 @@ $("button[type='reset']").on("click", function (e) {
       return;
     }
     
-    if (!delivery_fee) {
-      alert("배송비를 입력해주세요.");
-      $("input[name='delivery_fee']").focus();
-      e.preventDefault();
-      return;
-    }
+    //if (!delivery_fee) {
+    //  alert("배송비를 입력해주세요.");
+    //  $("input[name='delivery_fee']").focus();
+    //  e.preventDefault();
+    //  return;
+    //}
     
-    if (!delivery_days) {
-      alert("배송기한를 입력해주세요.");
-      $("input[name='delivery_days']").focus();
-      e.preventDefault();
-      return;
-    }
+    //if (!delivery_days) {
+    //  alert("배송기한를 입력해주세요.");
+    //  $("input[name='delivery_days']").focus();
+    //  e.preventDefault();
+    //  return;
+    //}
     
     if (!product_stock) {
       alert("기초재고수량를 입력해주세요.");

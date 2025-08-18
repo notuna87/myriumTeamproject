@@ -97,7 +97,7 @@
 		            	<button data-oper='modify' class="btn btn-default">수정</button>
 		            </sec:authorize>
 
-					<button data-oper='list' class="btn btn-default btn-info" onclick="location.href='/adminboard/list'">목록</button>
+					<button data-oper='list' class="btn btn-default btn-info">목록</button>
 
 					<!-- 수정 폼 -->
 					<form id='operForm' action="/adminboard/modify" method='get'>
