@@ -133,8 +133,10 @@ public class AdminProductController {
 				CategoryVO cat,
 				@RequestParam(value = "attachList", required = false) String attachListJson,
 				@RequestParam(value = "deleteuuids", required = false) String deleteUuids,
-				@ModelAttribute("cri") Criteria cri,
+				@ModelAttribute("category") Criteria cri,
 				RedirectAttributes rttr) {
+		
+		log.info("category:" + cri);
 		
 	    // 1. JSON 파싱
 		ObjectMapper mapper = new ObjectMapper();
