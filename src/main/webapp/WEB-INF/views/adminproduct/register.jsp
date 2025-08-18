@@ -216,10 +216,10 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="form-label"><strong>상품상세정보 이미지 (최대 5장)</strong></label>
+							<label class="form-label"><strong>상품상세정보 이미지 (최대 2장)</strong></label>
 							<!-- 설명 문구 -->
 							<p class="text-muted small mb-2">
-								※ 상품상세정보 이미지는 <strong>5개</strong> 까지 업로드할 수 있습니다.<br>
+								※ 상품상세정보 이미지는 <strong>2개</strong> 까지 업로드할 수 있습니다.<br>
 								※ 여러 파일을 선택하려면 <strong>Ctrl 키</strong>를 누른 상태에서 클릭하세요.<br>
 								※ <strong>등록 전에 반드시 업로드</strong>해야 합니다.
 							</p>
@@ -464,7 +464,7 @@ $(document).ready(function () {
 	 const uploadDetailManager = new UploadManager({
 	   inputId: "uploadInputDetail",
 	   buttonId: "uploadBtnDetail",
-	   maxCount: 5,
+	   maxCount: 2,
 	   regex: /(.*?)\.(exe|sh|zip|alz)$/i,
 	   maxSize: 5242880,
 	   type: "Detail"

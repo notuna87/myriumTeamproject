@@ -289,7 +289,7 @@ $(document).ready(function(){
 		actionForm.find("input[name='id']").remove(); //뒤로가기 후 기존 파라미터 누적문제 해결
 		
 		actionForm.append("<input type='hidden' name='id' value='" + $(this).attr("href") + "'>");
-		actionForm.attr("action","/adminproduct/modify");
+		actionForm.attr("action","/sub");
 		actionForm.submit();
 	});
 	
