@@ -7,7 +7,7 @@
 	<!-- 메인페이지 전시 여부 확인 후 리스트 가져오기 -->
 	<select id="getproductList"
 		resultType="com.myrium.domain.ProductVO">
-		select * from product where ${isMain} = 1
+		select * from product where ${isMain} = 1 and is_deleted = 0
 	</select>
 
 	<!-- 썸네일 여부 확인 후 가져오기 -->
@@ -20,7 +20,7 @@
 	<!-- 타임세일 여부에 따른 리스트 조회 -->
 	<select id="gettimesaleList"
 		resultType="com.myrium.domain.ProductVO">
-		select * from product where is_timesales = 1
+		select * from product where is_timesales = 1 and is_deleted = 0
 	</select>
 
 	<!-- 상품 디테일 페이지 상품 받아오기 -->
