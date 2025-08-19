@@ -59,7 +59,8 @@
 						</div>
 
 						<button type="submit" class="btn btn-success">등록</button>
-						<button type="reset" class="btn btn-info">다시작성</button>
+						<button type="button" class="btn btn-info" id="listBtn">목록</button>
+						<button type="reset" class="btn btn-warning">다시작성</button>
 					</form>
 				</div>
 			</div>
@@ -86,6 +87,10 @@ document.addEventListener("DOMContentLoaded", function(){
 			console.log("[FAQ 등록 진행]");
 		}
 	});
+	
+	  document.getElementById("listBtn").addEventListener("click", function() {
+	      window.history.back();
+	  }); 
 });
 </script>
 

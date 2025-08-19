@@ -83,13 +83,13 @@
 								<button data-oper='modify' class="btn btn-default">수정</button>
 							</sec:authorize>
 
-							<button data-oper='list' class="btn btn-default btn-info"
-								onclick="location.href='/adminnotice/list'">목록</button>
+							<button data-oper='list' class="btn btn-default btn-info" onclick="location.href='/adminnotice/list'">목록</button>
 
 							<form id='operForm' action="/adminnotice/modify" method='get'>
-								<input type='hidden' id="id" name='id' value='${notice.id}'> <input type='hidden'
-									name='pageNum' value='${cri.pageNum}'> <input type='hidden' name='amount'
-									value='${cri.amount}'> <input type='hidden' name='type' value='${cri.type}'>
+								<input type='hidden' id="id" name='id' value='${notice.id}'>
+								<input type='hidden' name='pageNum' value='${cri.pageNum}'>
+								<input type='hidden' name='amount' value='${cri.amount}'>
+								<input type='hidden' name='type' value='${cri.type}'>
 								<input type='hidden' name='keyword' value='${cri.keyword}'>
 							</form>
 						</div>
@@ -122,7 +122,7 @@ $(document).ready(function() {
         const customerId = $(this).data("customer-id");
         console.log("[글내림 시도] id:", id, "작성자:", customerId);
 
-        if (confirm("글이 노출되지 않습니다.)) {
+        if (confirm("글이 노출되지 않습니다.")) {
             $.ajax({
                 type: "post",
                 url: "/adminnotice/softdel",

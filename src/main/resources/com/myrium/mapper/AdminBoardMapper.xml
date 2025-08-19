@@ -120,6 +120,7 @@
 	                    AND is_deleted = 0
 	                </if>
 	            </where>
+	            order by id desc
 	        ) b
 	        WHERE ROWNUM &lt;= #{cri.pageNum} * #{cri.amount}
 	    )

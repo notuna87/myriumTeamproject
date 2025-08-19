@@ -46,8 +46,8 @@
             <div class="panel panel-default">
                 <sec:authorize access="hasAuthority('ADMIN')">
                     <div class="panel-heading">
-                        공지사항을 작성하려면 작성 버튼을 클릭하세요.
-                        <button id='regBtn' type="button" class="btn btn-info">작성</button>
+                        공지사항을 작성하려면 등록 버튼을 클릭하세요.
+                        <button id='regBtn' type="button" class="btn btn-info">등록</button>
                     </div>
                     <div class="panel-heading">
                         <span class="badge badge-danger ml-1">NEW</span> 최근 3일 이내의 새로운 공지사항
