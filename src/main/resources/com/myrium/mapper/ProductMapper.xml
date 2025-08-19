@@ -153,7 +153,7 @@ FROM (
                timesalediscount_rate, total_discountrate, discount_price, sales_count
         FROM product
         WHERE LOWER(product_name) LIKE '%' || #{searchKeyword} || '%'
-]]>
+]]>and is_deleted = 0
 		<choose>
 			<when test="sort == 'new'">
 				ORDER BY created_at DESC

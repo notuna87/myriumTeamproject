@@ -75,7 +75,7 @@
                   <tr>
                     <td class="text-center" style="vertical-align:middle;"><fmt:formatDate value="${items.lastReviewDate}" pattern="yyyy-MM-dd" /></td>
                 	<td class="text-center" style="vertical-align:middle;">
-		            	<img src="${pageContext.request.contextPath}/upload/${items.imageUrl}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+		            	<img src="${pageContext.request.contextPath}${items.imageUrl}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
 		            </td>
                     <td class="text-center" style="vertical-align:middle;">${items.productId}</td>
                     <td class="text-left" style="vertical-align:middle;">
@@ -277,7 +277,7 @@ $(document).ready(function(){
 			data.list.forEach(function(review) {
 				html += '<tr style="background-color:#fff; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">';
 				html += '<td class="text-center">';
-				html += '<img src="/upload/' + review.imageUrl + '" style="width:100px; height:100px; object-fit:cover; border-radius:8px; border:1px solid #ddd;">';
+				html += '<img src="' + review.imageUrl + '" style="width:100px; height:100px; object-fit:cover; border-radius:8px; border:1px solid #ddd;">';
 				html += '</td>';
 				html += '<td class="text-center" style="vertical-align:middle;">' + formatDate(review.reviewDate) + '</td>';
 				html += '<td class="text-center" style="vertical-align:middle;"><strong>' + review.customerId + '</strong></td>';

@@ -75,7 +75,7 @@
                   <tr>
                     <td class="text-center" style="vertical-align:middle;"><fmt:formatDate value="${items.lastReviewDate}" pattern="yyyy-MM-dd" /></td>
                 	<td class="text-center" style="vertical-align:middle;">
-		            	<img src="${pageContext.request.contextPath}/upload/${items.imageUrl}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+		            	<img src="${pageContext.request.contextPath}${items.imageUrl}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
 		            </td>
                     <td class="text-center" style="vertical-align:middle;">${items.productId}</td>
                     <td class="text-left" style="vertical-align:middle;">

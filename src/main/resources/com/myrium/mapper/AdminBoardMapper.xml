@@ -32,9 +32,9 @@
 
     <insert id="insert">
         INSERT INTO board (
-            id, title, content, customer_id, user_id, write_date, created_at, created_by, is_answered, is_deleted, reply_cnt
+            id, title, content, customer_id, user_id, write_date, created_at, created_by, is_answered, is_deleted, reply_cnt, product_id
         ) VALUES (
-            board_seq.NEXTVAL, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0
+            board_seq.NEXTVAL, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0, #{productId}
         )
     </insert>
 
@@ -45,7 +45,7 @@
         INSERT INTO board (
             id, title, content, customer_id, user_id, write_date, created_at, created_by, is_answered, is_deleted, reply_cnt, product_id
         ) VALUES (
-            #{id}, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0, #{productId}
+            #{id}, #{title}, #{content}, #{customerId}, #{userId}, SYSDATE, SYSDATE, #{createdBy}, 0, 0, 0, #{productId, jdbcType=NUMERIC}
         )
     </insert>
 
