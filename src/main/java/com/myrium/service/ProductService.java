@@ -26,7 +26,7 @@ public interface ProductService {
 	public List<ProductDTO> getPopularProduct();
 	
 	// 장바구니 담기
-	public ProductDTO inCart(int quantity, int productId, Long userId, String customerId);
+	public ProductDTO inCart(int quantity, int productId, Long userId, String customerId, int productStock);
 	
 	// 장바구니 리스트 불러오기
 	public List<ProductDTO> CartList(Long userId);

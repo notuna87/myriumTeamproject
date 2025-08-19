@@ -64,12 +64,16 @@ public class CartController {
 		// jsp에서 수량 받아와 변수 저장
 		String quantityStr = request.getParameter("quantityCartHidden");
 		int quantity = Integer.parseInt(quantityStr);
-
+		
+		// jsp에서 상품 재고 받아와 변수 저장
+		String productStockStr = request.getParameter("productStock");
+		int productStock = Integer.parseInt(productStockStr);
+		
 		// jsp로부터 상품 id값 받아와 저장
 		String productIdStr = request.getParameter("productId");
 		int productId = Integer.parseInt(productIdStr);
 
-		ProductDTO inCart = productservice.inCart(quantity, productId, userId, customerId);
+		ProductDTO inCart = productservice.inCart(quantity, productId, userId, customerId, productStock);
 
 		return "redirect:/cart";
 	}

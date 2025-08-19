@@ -39,6 +39,7 @@
 		<c:forEach var="item" items="${cartList}">
 			<c:set var="disprice" value="1" />
 			<div class="cartContentsWrap">
+			<input type="hidden" value="${item.product.product_stock}" class="product_stock"></input>
 				<c:if test="${item.inCart.is_selected == 1 }">
 					<input type="checkbox" class="cartCheckbox" checked>
 				</c:if>
@@ -152,14 +153,21 @@ window.onload = function() {
 
   // 수량 변경 함수
   function changeQuantity(action, button) {
-    const container = button.closest('.cartCount');
+    const container = button.closest('.cartContentsWrap');
     const qtyInput = container.querySelector('input[name="quantity"]');
     const productId = button.getAttribute('data-product-id');
-
+	const productStockInput = container.querySelector(".product_stock");
+	
     let currentQty = parseInt(qtyInput.value);
+	let productStock = parseInt(productStockInput.value);
 
     if (action === 'increase') {
-      currentQty += 1;
+      	if(productStock > currentQty) {
+      		currentQty += 1;
+    	} else {
+    		alert("재고가 부족합니다.");
+    	}
+
     } else if (action === 'decrease' && currentQty > 1) {
       currentQty -= 1;
     } else {

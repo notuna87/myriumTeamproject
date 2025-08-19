@@ -113,15 +113,20 @@ public class ProductServiceImpl implements ProductService {
 
 	// 장바구니에 담기
 	@Override
-	public ProductDTO inCart(int quantity, int productId, Long userId, String customerId) {
+	public ProductDTO inCart(int quantity, int productId, Long userId, String customerId, int productStock) {
 
 		CartVO vo;
 
 		CartVO existingCart = productmapper.findCartItem(productId, userId);
 
+		
+		
 		// 중복된 제품을 담을 시 +1
 		if (existingCart != null) {
 			int newQuantity = existingCart.getQuantity() + quantity;
+			if (newQuantity >= productStock) {
+				newQuantity = productStock;
+			}
 			vo = productmapper.addQuantity(productId, userId, newQuantity);
 		} else {
 			vo = productmapper.inCart(quantity, productId, userId, customerId);
