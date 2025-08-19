@@ -129,9 +129,12 @@
 								<!-- 주문 상품들 -->
 								<c:forEach var="order" items="${orders}">
 									<div class="order-content">
-										<img src="${pageContext.request.contextPath}/upload/${order.img_path}" alt="${order.productName}_img" class="product-img">
+										<a href="${pageContext.request.contextPath}/sub?id=${order.productId}"> <img src="${pageContext.request.contextPath}/upload/${order.img_path}" alt="${order.productName}_img" class="product-img">
+										</a>
 										<div class="product-info">
-											<p class="product-title">${order.productName}</p>
+											<p class="product-title">
+												<a href="${pageContext.request.contextPath}/sub?id=${order.productId}">${order.productName}</a>
+											</p>
 											<p class="product-price">
 												<fmt:formatNumber value="${order.discount_price}" pattern="#,###" />
 												원 (${order.quantity}개)

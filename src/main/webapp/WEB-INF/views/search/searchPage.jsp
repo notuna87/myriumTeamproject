@@ -45,7 +45,6 @@
 					<option value="name">상품명</option>
 					<option value="lowPrice">낮은가격</option>
 					<option value="highPrice">높은가격</option>
-					<option value="review">사용후기</option>
 				</select>
 			</form>
 		</div>

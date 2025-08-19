@@ -292,7 +292,7 @@ WHERE rn > (#{searchcri.pageNum} - 1) * #{searchcri.amount}
 				p.PRODUCT_NAME,
 				p.PRODUCT_STOCK,
 				p.PRODUCT_PRICE,
-				TO_CHAR(p.PRODUCT_CONTENT) as product_content,
+				TO_CHAR(p.PRODUCT_CONTENT),
 				p.IS_DELETED,
 				p.CREATED_AT,
 				p.CREATED_BY,

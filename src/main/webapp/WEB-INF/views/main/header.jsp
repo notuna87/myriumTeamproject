@@ -59,7 +59,7 @@
 					</a>
 				</form>
 			</fieldset>
-			<a href="#" class="cartIcon"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_user.svg" alt="user_icon">
+			<a href="${pageContext.request.contextPath}/mypage" class="cartIcon"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_user.svg" alt="user_icon">
 			</a>
 			<sec:authorize access="!isAuthenticated()">
 				<a href="#" class="cartIcon" id="cartLinkNotLoggedIn"> <img src="${pageContext.request.contextPath}/resources/img/logo/icon_cart.svg" alt="cart_icon"></a>
