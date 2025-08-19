@@ -65,8 +65,7 @@
 			<div class="tab-menu">
 				<button class="tab active" data-tab="order">주문내역조회
 					(${orderCount})</button>
-				<button class="tab" data-tab="cancel">취소/반품/교환 내역
-					(${cancelCount})</button>
+				<button class="tab" data-tab="cancel">취소/반품/교환 내역 (${cancelTabCount})</button>
 			</div>
 
 			<!-- 주문내역 탭 -->
