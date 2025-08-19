@@ -102,7 +102,7 @@
                                                 <td class="text-center">
                                                     <c:choose>
                                                         <c:when test="${notice.isDeleted == 1}">
-                                                            <span class="label label-default">미노출</span>
+                                                            <span class="label label-default">비노출</span>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span class="label label-success">게시중</span>
@@ -113,12 +113,12 @@
                                                     <button type="button" class="btn btn-sm btn-primary edit-btn" data-id="${notice.id}">수정</button>
                                                     <c:choose>
                                                         <c:when test="${notice.isDeleted == 0}">
-                                                            <button type="button" class="btn btn-sm btn-warning softdel-btn" data-id="${notice.id}">글내림</button>
-                                                            <button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${notice.id}">영구삭제</button>
+                                                            <button type="button" class="btn btn-sm btn-warning softdel-btn" data-id="${notice.id}">비노출</button>
+                                                            <button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${notice.id}">삭제</button>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <button type="button" class="btn btn-sm btn-success restore-btn" data-id="${notice.id}">복구</button>
-                                                            <button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${notice.id}">영구삭제</button>
+                                                            <button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${notice.id}">삭제</button>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </td>
