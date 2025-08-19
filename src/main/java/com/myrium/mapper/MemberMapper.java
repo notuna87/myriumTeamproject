@@ -28,6 +28,8 @@ public interface MemberMapper {
     
     int checkIdDuplicate(String customer_id);  // 아이디 중복 체크
 
+    public MemberVO selectByEmail(@Param("email") String email);
+    
     public MemberVO selectByCustomerId(@Param("customerId") String customerId);
     
     //아이디 이메일,휴대폰 번호로 찾기
@@ -44,6 +46,8 @@ public interface MemberMapper {
     //회원정보수정
     void updateMemberInfo(MemberVO member);
     public MemberVO readById(Long id);
+
+	
 
 }
 
