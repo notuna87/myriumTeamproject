@@ -170,7 +170,7 @@ public class MypageController {
             groupedOrders.computeIfAbsent(order.getOrdersId(), k -> new ArrayList<>()).add(order);
         }
         model.addAttribute("groupedOrders", groupedOrders);
-        model.addAttribute("orderCount", orderList.size());
+        model.addAttribute("orderCount", groupedOrders.size());
 
         // 교환/환불 내역 조회
         List<OrderDTO> cancelAll = orderService.getCanceledOrdersByCustomerId(customerId);
