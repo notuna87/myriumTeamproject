@@ -21,6 +21,9 @@ public interface MemberService {
     
     boolean isCustomerIdDuplicate(String customerId); // 아이디 중복체크
     
+    boolean isCustomerEmailDuplicate(String email); // 아이디 중복체크
+
+    
     String findPasswordByEmail(String customerId, String customerName, String email);
 
     String findPasswordByPhone(String customerId, String customerName, String phoneNumber);

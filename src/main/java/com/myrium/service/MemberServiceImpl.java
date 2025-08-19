@@ -80,6 +80,13 @@ public class MemberServiceImpl implements MemberService {
         return vo != null;
     }
     
+	@Override
+	public boolean isCustomerEmailDuplicate(String email) {
+        MemberVO vo = memberMapper.selectByEmail(email);
+        System.out.println("중복 확인 결과: " + (vo != null ? "중복됨" : "사용 가능"));
+        return vo != null;
+	}
+    
     //패스워드 찾기, 임시 패스워드 생성 
     @Override
     @Transactional
@@ -152,5 +159,8 @@ public class MemberServiceImpl implements MemberService {
     public MemberVO readById(long id) {
         return memberMapper.readById(id);
     }
+
+
+
 
 }

@@ -135,6 +135,12 @@
 	  WHERE customer_id = #{customerId}
 	</select>
 	
+		<select id="selectByEmail" resultType="com.myrium.domain.MemberVO">
+	  SELECT *
+	  FROM member
+	  WHERE email = #{email}
+	</select>
+	
 	<!-- 아이디 찾기 -->
 	<select id="findByNameAndEmail" resultMap="memberMap">
 		SELECT id, customer_id, customer_name, email, created_at

@@ -59,7 +59,12 @@ document.getElementById('userid').addEventListener('input', function () {
 	    errorEl.className = 'error_msg';
 	    isIdAvailable = false;
 	  });
+	  
+
+	  
 });
+
+
 
 
 //비밀번호 유효성 검사
@@ -187,6 +192,25 @@ emailInput.addEventListener('input', () => {
     emailErrorEl.textContent = '사용 가능한 이메일입니다.';
     emailErrorEl.className = 'success_msg';
   }
+  
+  	  	fetch(`/member/check-email?email=${email}`)
+	  .then(response => response.text())
+	  .then(text => {
+	    if (text === "unavailable") {
+	      emailErrorEl.textContent = '이미 사용 중인 이메일입니다.';
+	      emailErrorEl.className = 'error_msg';
+	      isIdAvailable = false;
+	    } else {
+	      emailErrorEl.textContent = '사용 가능한 이메일입니다.';
+	      emailErrorEl.className = 'success_msg';
+	      isIdAvailable = true;
+	    }
+	  })
+	  .catch(() => {
+	    emailErrorEl.textContent = '서버 오류로 확인할 수 없습니다.';
+	    emailErrorEl.className = 'error_msg';
+	    isIdAvailable = false;
+});
 });
 
 
