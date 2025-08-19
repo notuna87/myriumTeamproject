@@ -167,27 +167,19 @@
 
 
 	<!-- 마이페이지 주문 처리 현황 -->
-	<select id="countOrdersByStatus" resultType="map"
-		parameterType="String">
-		SELECT
-		op.order_status AS ORDER_STATUS,
-		COUNT(*) AS
-		"COUNT"
-		FROM
-		orders_product op
-		JOIN orders o ON op.orders_id = o.id
-		JOIN
-		member m ON o.user_id = m.id
-		WHERE (op.is_deleted IS NULL OR
-		op.is_deleted = 0)
-		AND m.customer_id = #{customerId}
-		AND
-		TRIM(op.order_status) IN (0, 1, 2, 3)
-		AND o.order_date >=
-		ADD_MONTHS(SYSDATE, -3)
-		GROUP BY op.order_status
+	<select id="countOrdersByStatus" resultType="map" parameterType="String">
+	  SELECT
+	    op.order_status AS ORDER_STATUS,
+	    COUNT(DISTINCT op.orders_id) AS "COUNT"
+	  FROM orders_product op
+	  JOIN orders  o ON op.orders_id = o.id
+	  JOIN member  m ON o.user_id   = m.id
+	  WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
+	    AND m.customer_id = #{customerId}
+	    AND op.order_status IN (0, 1, 2, 3)
+	    AND o.order_date >= ADD_MONTHS(SYSDATE, -3)
+	  GROUP BY op.order_status
 	</select>
-
 
 
 	<!-- 마이페이지 총주문 금액합산 -->
@@ -207,7 +199,7 @@
 	  LEFT JOIN product p ON op.product_id = p.id
 	  WHERE (op.is_deleted IS NULL OR op.is_deleted = 0)
 	    AND m.customer_id = #{customerId}
-	    AND op.order_status IN (0, 1, 2, 3, 18)   <!-- 18 추가 -->
+	    AND op.order_status IN (0, 1, 2, 3, 18) 
 	    AND o.order_date >= ADD_MONTHS(SYSDATE, -3)
 	</select>
 
