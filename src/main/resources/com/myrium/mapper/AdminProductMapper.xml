@@ -78,8 +78,7 @@
 	    FROM (
 	      SELECT *
 	      FROM product p
-	      WHERE 1 = 1
-	      
+	      WHERE 1 = 1	      
 	      <if test="cri.category != null and cri.category != ''">
 	        AND EXISTS (
 	          SELECT 1 FROM category c
@@ -93,18 +92,16 @@
 	            <when test="cri.category eq '기타키우기키트'">AND c.etc = 1</when>
 	          </choose>
 	        )
-	      </if>
-	
+	      </if>	
 	      <if test="cri.is_discount != -1">
 	        AND is_discount = #{cri.is_discount}
 	      </if>
-	      <if test="cri.is_timeSales != -1">
-	        AND is_timesales = #{cri.is_timeSales}
+	      <if test="cri.is_timesales != -1">
+	        AND is_timesales = #{cri.is_timesales}
 	      </if>
 	      <if test="cri.is_deleted != -1">
 	        AND is_deleted = #{cri.is_deleted}
-	      </if>
-	
+	      </if>	
 		  <if test="cri.keyword != null and cri.keyword != '' and cri.type != null">
 			<trim prefix="AND " >
 				LOWER(p.product_name) LIKE '%' || LOWER(#{cri.keyword}) || '%'

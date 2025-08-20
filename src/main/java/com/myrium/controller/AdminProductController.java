@@ -45,7 +45,7 @@ public class AdminProductController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
-		
+		log.info("cri:" + cri);
 		List<ProductDTO> list = service.getProductListWithCategory(cri);
 		model.addAttribute("list", list);
 

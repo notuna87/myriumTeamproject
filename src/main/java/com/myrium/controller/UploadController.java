@@ -41,7 +41,7 @@ import net.coobird.thumbnailator.Thumbnailator;
 public class UploadController {
 
 	@Autowired
-	private AdminNoticeService noticeService;
+	private AdminNoticeService adminnoticeService;
 
 	@Autowired
 	private AdminProductService adminProductService;
@@ -243,7 +243,7 @@ public class UploadController {
 			        int deletedCount = adminProductService.deleteImgpathByUuid(uuid);
 			        log.info("img_path DB에서 삭제된 파일 개수: " + deletedCount);
 			    } else if ("notice_modify".equals(currentPage)) {
-			        int deletedCount = noticeService.deleteAttachByUuid(uuid);
+			        int deletedCount = adminnoticeService.deleteAttachByUuid(uuid);
 			        log.info("notice_file DB에서 삭제된 파일 개수: " + deletedCount);
 			    } else {
 			        log.warn("currentPage 값이 올바르지 않음: " + currentPage);

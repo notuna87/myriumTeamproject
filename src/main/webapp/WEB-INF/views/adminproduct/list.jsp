@@ -61,14 +61,8 @@
 
 				<!-- /.panel-heading -->
 				<div class="panel-body">
-					    <!-- 필터링 섹션 -->
+					<!-- 필터링 섹션 -->
 				    <form action="/adminproduct/list" method="get" class="form-inline" style="margin-bottom:10px;">
-				        <!-- <select name="category" class="form-control">
-				            <option value="">카테고리</option>
-				            <c:forEach var="cat" items="${categories}">
-				                <option value="${cat}" <c:if test="${param.category == cat}">selected</c:if>>${cat}</option>
-				            </c:forEach>
-				        </select> -->
 				        <select name="category" class="form-control">
 						    <option value= "">카테고리</option>
 						    <option value="원예용품" <c:if test="${param.category == '원예용품'}">selected</c:if>>원예용품</option>
@@ -95,7 +89,6 @@
 				        </select>
 				        <button type="submit" class="btn btn-primary">필터</button>
 				        <button type="button" class="btn btn-info" onclick="location.href='/adminproduct/list'">필터 초기화</button>
-
 				    </form>
 				
 				    <!-- 상품 테이블 -->
@@ -170,14 +163,16 @@
 						<div class="col-lg-12">
 							<form id='searchFormProduct' action="/adminproduct/list" method='get'>
 								<select name='type' >
-									<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : ''}" /> >선택하세요</option>
+									<!-- <option value="" <c:out value="${pageMaker.cri.type == null?'selected':''}"/>>선택하세요</option> -->
 									<option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':''}"/>>상품명</option>
 								</select> 
 								<input type='text' name='keyword' value='<c:out value="${pageMaker.cri.keyword}"/>' /> 
 								<input type='hidden' name='pageNum' value='<c:out value="${pageMaker.cri.pageNum}"/>' /> 
-								<input type='hidden' name='amount' value='<c:out value="${pageMaker.cri.amount}"/>' />
-
-								
+								<input type='hidden' name='amount' value='<c:out value="${pageMaker.cri.amount}"/>' />									
+							    <input type="hidden" name="category" value="${pageMaker.cri.category}">
+								<input type="hidden" name="is_discount" value="${pageMaker.cri.is_discount}" />
+								<input type="hidden" name="is_timesales" value="${pageMaker.cri.is_timesales}" />
+								<input type="hidden" name="is_deleted" value="${pageMaker.cri.is_deleted}" />						
 								<button type="submit" class="btn btn-sm btn-primary">
 									<i class="fa fa-search"></i> 상품검색
 								</button>
@@ -296,7 +291,7 @@ $(document).ready(function(){
 	var searchFormProduct = $("#searchFormProduct");
 
 	$("#searchFormProduct button").on("click", function(e){
-		if(!searchFormOrder.find("option:selected").val()){
+		if(!searchFormProduct.find("option:selected").val()){
 			alert("검색종류를 선택하세요");
 			return false;
 		}

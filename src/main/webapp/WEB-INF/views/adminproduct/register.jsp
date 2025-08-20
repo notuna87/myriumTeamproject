@@ -199,7 +199,7 @@
         
 						<!-- 업로드 영역 -->
 						<div class="form-group">
-							<h4><label class="form-label"><strong>상품 이미지 (최대 10장)</strong></label></h4>
+							<h4><label class="form-label"><strong>상품 이미지 (최대 10개)</strong></label></h4>
 							<!-- 설명 문구 -->
 							<p class="text-muted small mb-2">
 								※ 상품 이미지는 <strong>10개</strong> 까지 업로드할 수 있습니다.<br>
@@ -216,7 +216,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<h4><label class="form-label"><strong>상품상세정보 이미지 (최대 5장)</strong></label></h4>
+							<h4><label class="form-label"><strong>상품상세정보 이미지 (최대 2개)</strong></label></h4>
 							<!-- 설명 문구 -->
 							<p class="text-muted small mb-2">
 								※ 상품상세정보 이미지는 <strong>2개</strong> 까지 업로드할 수 있습니다.<br>
@@ -363,6 +363,8 @@ $(document).ready(function () {
 	  $("#uploadInputDetail").val(''); // 파일 input 초기화 (필수)
 	  $("#uploadBtnThumbnail").hide(); // 업로드 숨김
 	  $("#uploadBtnDetail").hide(); // 업로드 숨김
+	  $("#uploadInputThumbnail").show();
+	  $("#uploadInputDetail").show();
 	});
   
 
