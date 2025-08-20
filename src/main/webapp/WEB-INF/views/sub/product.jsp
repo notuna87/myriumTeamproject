@@ -115,7 +115,7 @@
 					<form action="/cart" method="post">
 						<input type="hidden" name="quantityCartHidden" id="quantityCartHidden" value="1" min="1" readonly />
 						<input type="hidden" id="productIdHidden" name="productId" value="${product.id}">
-						<input type="text" name="productStock" value="${product.product_stock}">
+						<input type="hidden" name="productStock" value="${product.product_stock}">
 						<button type="submit" class="inCart">장바구니</button>
 					</form>
 					<form action="/purchasedirect" method="post">
