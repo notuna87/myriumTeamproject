@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>마이리움 : 주문서 작성</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/purchasePage.css" />
 
@@ -219,10 +219,10 @@
 					<div class="purchaseAgree">
 						<p>구매조건 확인 및 결제진행 동의</p>
 						<p>
-							배송정보 제공방침 동의<span>&nbsp;&nbsp;&nbsp;<a href="#">자세히 ></a></span>
+							배송정보 제공방침 동의<span>&nbsp;&nbsp;&nbsp;<a class="policyButton" onclick="window.open('${pageContext.request.contextPath}/terms/deliverypolicy', 'deliveryPopup', 'width=640,height=350,scrollbars=no'); return false;">자세히 ></a></span>
 						</p>
 						<p>
-							청약철회방침 동의<span>&nbsp;&nbsp;&nbsp;<a href="#">자세히 ></a></span>
+							청약철회방침 동의<span>&nbsp;&nbsp;&nbsp;<a class="policyButton" onclick="window.open('${pageContext.request.contextPath}/terms/subscriptionpolicy', 'deliveryPopup', 'width=640,height=535,scrollbars=no'); return false;">자세히 ></a></span>
 						</p>
 					</div>
 					<h4>주문 내용을 확인하였으며 약관에 동의합니다.</h4>

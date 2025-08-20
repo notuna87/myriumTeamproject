@@ -47,4 +47,15 @@ public class TermsController {
         model.addAttribute("termsContent", sb.toString().trim());
         return "join/terms_detail";
 	}
+	
+	@GetMapping("/terms/deliverypolicy")
+	public String goDeliverypolicy() {
+		return "purchase/deliveryPolicy";
+	}
+	
+	@GetMapping("/terms/subscriptionpolicy")
+	public String goSubscriptionpolicy() {
+		return "purchase/subscriptionPolicy";
+	}
+	
 }

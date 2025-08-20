@@ -301,6 +301,10 @@ section {
     font-weight: 500;
     text-align: center;
 }
+
+.policyButton {
+	cursor: pointer;
+}
 /* 구매 조건 동의서 끝 */
 
 /* 구매하기 버튼 시작*/

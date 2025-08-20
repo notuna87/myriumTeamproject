@@ -905,6 +905,7 @@ a .fontWhite {
 	gap: 16px;
 	flex: 1 1 auto;
 	min-width: 0;
+	margin-top : 35px;
 }
 
 .review-left {
@@ -950,6 +951,7 @@ a .fontWhite {
 	text-align: right;
 	min-width: 180px;
 	flex: 0 0 180px;
+	margin-top : 35px;
 }
 
 .star {
