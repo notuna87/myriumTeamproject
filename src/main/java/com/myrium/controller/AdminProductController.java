@@ -45,7 +45,7 @@ public class AdminProductController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
-		
+		log.info("cri:" + cri);
 		List<ProductDTO> list = service.getProductListWithCategory(cri);
 		model.addAttribute("list", list);
 
@@ -58,7 +58,7 @@ public class AdminProductController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/register")
 	public String register(ProductVO vo, 
-						   CategoryVO cat,
+						   CategoryVO category,
 	                       @RequestParam("attachList") String attachListJson,
 	                       RedirectAttributes rttr) {
 
@@ -75,8 +75,8 @@ public class AdminProductController {
 	    service.register(vo);
 	    
 	    // 3. 카테고리 등록
-	    cat.setProduct_id(vo.getId());
-	    service.insertCategory(cat);
+	    category.setProduct_id(vo.getId());
+	    service.insertCategory(category);
 	    
 	    // 3. 이미지 경로(첨부파일) 등록
 	    if (attachList != null && !attachList.isEmpty()) {
@@ -117,9 +117,11 @@ public class AdminProductController {
 
 		ProductVO productInfo = service.get(id);
 		model.addAttribute("product", productInfo);
+		log.info("product_id_0:" + productInfo);
 
 		CategoryVO categoryList = adminproductmapper.getCategoryList(id);
 		model.addAttribute("category", categoryList);
+		log.info("categoryList:" + categoryList);
 
 		List<ImgpathVO> attachImgs = service.findByProductId(id);
 		model.addAttribute("attachImgsJson", new ObjectMapper().writeValueAsString(attachImgs));
@@ -130,13 +132,16 @@ public class AdminProductController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/modify")
 	public String modify(ProductVO vo,
-				CategoryVO cat,
+				CategoryVO category,
 				@RequestParam(value = "attachList", required = false) String attachListJson,
 				@RequestParam(value = "deleteuuids", required = false) String deleteUuids,
-				@ModelAttribute("category") Criteria cri,
+				//@RequestParam(value = "product_id", required = false) int product_id,
+				@ModelAttribute("cri") Criteria cri,
 				RedirectAttributes rttr) {
 		
-		log.info("category:" + cri);
+		//log.info("product_id:" + product_id);
+		log.info("category:" + category);
+		log.info("cri:" + cri);
 		
 	    // 1. JSON 파싱
 		ObjectMapper mapper = new ObjectMapper();
@@ -181,15 +186,16 @@ public class AdminProductController {
 	    service.modify(vo);
 	    
 	    // 3. 카테고리 등록
-	    cat.setProduct_id(vo.getId());
-	    service.updateCategory(cat);
+	    log.info("product_id:" + vo.getId());
+	    category.setProduct_id(vo.getId());
+	    service.updateCategory(category);
 	    
 	    // 4. 이미지 경로(첨부파일) 등록
 	    if (attachList != null && !attachList.isEmpty()) {
 	        for (AttachFileDTO dto : attachList) {
 	            ImgpathVO imgVO = new ImgpathVO();
 
-	            imgVO.setId(dto.getId());
+	            imgVO.setId(dto.getId());	            
 	            imgVO.setProduct_id(dto.getProductId());
 	            imgVO.setImg_path(dto.getUploadPath() + "/" + dto.getUuid() + "_" + dto.getFileName());	            
 	            imgVO.setUuid(dto.getUuid());

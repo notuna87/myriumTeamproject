@@ -43,13 +43,13 @@
 						</div>
 
 						<div class="form-group">
-							<label>제목</label> 	
-							<input class="form-control" name="question" value="${faq.question}">
+							<label>자주 묻는 질문</label> 	
+							<input class="form-control" name="question" value="${faq.question}" required>
 						</div>
 
 						<div class="form-group">
-			                  <label>내용</label>
-						      <textarea class="form-control" rows="3" name='answer' style="resize:none; height:300px;">${faq.answer}</textarea>
+			                  <label>답변내용</label>
+						      <textarea class="form-control" rows="3" name='answer' style="resize:none; height:300px;" required>${faq.answer}</textarea>
 						</div>
 
 						<div class="form-group">
@@ -95,6 +95,20 @@ $(function() {
 			formObj.attr("action", "/adminfaq/list").attr("method", "get").empty();
 		} else if (operation === 'modify') {
 			console.log("[수정 진행] 제목:", $("input[name='question']").val(), "내용 길이:", $("textarea[name='answer']").val().length);
+			const section = document.querySelector("input[name='section']:checked").value;
+			const question = document.querySelector("input[name='question']").value.trim();
+			const answer = document.querySelector("textarea[name='answer']").value.trim();
+
+			console.log("[FAQ 등록 시도] 분류:", section, "질문:", question, "답변 길이:", answer.length);
+
+			if(!question || !answer){
+				console.warn("[FAQ 수정등록 실패] 필수값 누락");
+				alert("질문과 답변을 모두 입력해주세요.");
+				e.preventDefault();
+				return;
+			} else {
+				console.log("[FAQ 수정등록 진행]");
+			}
 		}
 		
 		formObj.submit();

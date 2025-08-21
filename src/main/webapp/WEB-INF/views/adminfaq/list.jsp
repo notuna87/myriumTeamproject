@@ -32,8 +32,8 @@
 				<div class="panel panel-default">
 					<sec:authorize access="hasAuthority('ADMIN')">
 						<div class="panel-heading">
-							새로운 FAQ 등록은 작성 버튼을 클릭하세요.
-							<button id='regBtn' type="button" class="btn btn-info">작성</button>
+							새로운 FAQ 작성은 등록 버튼을 클릭하세요.
+							<button id='regBtn' type="button" class="btn btn-info">등록</button>
 						</div>
 					</sec:authorize>
 
@@ -75,18 +75,18 @@
 													<sec:authorize access="hasAuthority('ADMIN')">
 														<div style="margin-top: 5px; display: flex; justify-content: space-between; align-items: center;">
 															<span class="label label-${faq.isDeleted == 0  ? 'success' : 'default'}">
-																${faq.isDeleted == 0 ? '노출' : '미노출'}
+																${faq.isDeleted == 0 ? '노출' : '비노출'}
 															</span>
 															<div>
 																<button class="btn btn-sm btn-primary edit-btn" data-id="${faq.id}">수정</button>
 																<c:choose>
 																	<c:when test="${faq.isDeleted == 0}">
-																		<button type="button" class="btn btn-sm btn-warning softdel-btn" data-id="${faq.id}">감추기</button>
-																		<button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${faq.id}">영구삭제</button>
+																		<button type="button" class="btn btn-sm btn-warning softdel-btn" data-id="${faq.id}">비노출</button>
+																		<button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${faq.id}">삭제</button>
 																	</c:when>
 																	<c:otherwise>
 																		<button type="button" class="btn btn-sm btn-success restore-btn" data-id="${faq.id}">복구</button>
-																		<button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${faq.id}">영구삭제</button>
+																		<button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${faq.id}">삭제</button>
 																	</c:otherwise>
 																</c:choose>
 															</div>

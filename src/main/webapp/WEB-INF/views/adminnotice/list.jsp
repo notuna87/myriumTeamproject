@@ -46,8 +46,8 @@
             <div class="panel panel-default">
                 <sec:authorize access="hasAuthority('ADMIN')">
                     <div class="panel-heading">
-                        공지사항을 작성하려면 작성 버튼을 클릭하세요.
-                        <button id='regBtn' type="button" class="btn btn-info">작성</button>
+                        공지사항을 작성하려면 등록 버튼을 클릭하세요.
+                        <button id='regBtn' type="button" class="btn btn-info">등록</button>
                     </div>
                     <div class="panel-heading">
                         <span class="badge badge-danger ml-1">NEW</span> 최근 3일 이내의 새로운 공지사항
@@ -102,7 +102,7 @@
                                                 <td class="text-center">
                                                     <c:choose>
                                                         <c:when test="${notice.isDeleted == 1}">
-                                                            <span class="label label-default">미노출</span>
+                                                            <span class="label label-default">비노출</span>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span class="label label-success">게시중</span>
@@ -113,12 +113,12 @@
                                                     <button type="button" class="btn btn-sm btn-primary edit-btn" data-id="${notice.id}">수정</button>
                                                     <c:choose>
                                                         <c:when test="${notice.isDeleted == 0}">
-                                                            <button type="button" class="btn btn-sm btn-warning softdel-btn" data-id="${notice.id}">글내림</button>
-                                                            <button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${notice.id}">영구삭제</button>
+                                                            <button type="button" class="btn btn-sm btn-warning softdel-btn" data-id="${notice.id}">비노출</button>
+                                                            <button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${notice.id}">삭제</button>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <button type="button" class="btn btn-sm btn-success restore-btn" data-id="${notice.id}">복구</button>
-                                                            <button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${notice.id}">영구삭제</button>
+                                                            <button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${notice.id}">삭제</button>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </td>

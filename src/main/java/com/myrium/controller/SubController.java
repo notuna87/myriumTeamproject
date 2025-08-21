@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.myrium.domain.BoardVO;
 import com.myrium.domain.ProductDTO;
 import com.myrium.domain.ReviewDTO;
-import com.myrium.security.domain.CustomUser;
 import com.myrium.service.AdminBoardService;
 import com.myrium.service.ProductService;
 import com.myrium.service.ReviewService;
@@ -30,7 +27,7 @@ import lombok.extern.log4j.Log4j;
 @RequiredArgsConstructor
 public class SubController {
 
-	private final ProductService productservice;
+	//private final ProductService productservice;
 	private final AdminBoardService adminboardservice;
 	@Autowired
 	private ProductService productService;

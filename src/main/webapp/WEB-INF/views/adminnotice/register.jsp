@@ -73,6 +73,7 @@
 						
 						<div class="text-right mt-3">
 							<button type="submit" class="btn btn-success">등록</button>
+							<button type="button" class="btn btn-info" id="listBtn">목록</button>
 							<button type="reset" class="btn btn-warning" id="resetBtn">다시작성</button>
 						</div>
 					</form>
@@ -250,6 +251,11 @@ $(document).ready(function () {
     }
     console.log("폼 제출, 제목:", title, "내용 길이:", content.length);
   });
+  
+  document.getElementById("listBtn").addEventListener("click", function() {
+	    window.history.back();
+	  });  
+
 
 });
 </script>

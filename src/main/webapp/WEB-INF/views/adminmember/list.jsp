@@ -164,6 +164,9 @@
                                 <input type="text" name="keyword" value="<c:out value='${pageMaker.cri.keyword}'/>" />
                                 <input type="hidden" name="pageNum" value="<c:out value='${pageMaker.cri.pageNum}'/>" />
                                 <input type="hidden" name="amount" value="<c:out value='${pageMaker.cri.amount}'/>" />
+   								<input type="hidden" name="auth" value="${pageMaker.cri.auth}" />
+								<input type="hidden" name="gender" value="${pageMaker.cri.gender}" />
+								<input type="hidden" name="is_deleted" value="${pageMaker.cri.is_deleted}" />	
                                 <button type="submit" class="btn btn-sm btn-primary">
                                     <i class="fa fa-search"></i> 검색
                                 </button>

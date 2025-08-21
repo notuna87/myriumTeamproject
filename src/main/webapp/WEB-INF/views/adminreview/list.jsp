@@ -52,7 +52,6 @@
 			        </sec:authorize>
 					<div class="panel-heading">
 						<span class="badge">NEW</span> 3일 이내 작성된 리뷰입니다.
-						<c:out value="${groupedReviews}"></c:out>
 					</div> 
 			
 			        <div class="panel-body">			          
@@ -229,6 +228,7 @@ $(document).ready(function(){
 	  $('.product-link, .review-detail-btn').on('click', function() {
 	    const productName = $(this).data('productname');
 	    const productId = $(this).data('productid');
+	    $('#reviewModal').data('productid', productId); // 모달에 productId 저장
 	    console.log("productName:" + productName);
 	    console.log("productId:" + productId);
 	    // 모달 내부 상품명 표시
@@ -268,7 +268,7 @@ $(document).ready(function(){
 				html += '<th class="text-center"> 리뷰 내용</th>';
 				html += '<th class="text-center" style="width:80px;"> 조회수</th>';
 				html += '<th class="text-center" style="width:80px;">평점</th>';
-				html += '<th class="text-center" style="width:80px;">노출</th>';
+				html += '<th class="text-center" style="width:80px;">상태</th>';
 				html += '<th class="text-center" style="width:150px;">관리</th>';
 				html += '</tr>';
 				html += '</thead>';
@@ -287,7 +287,7 @@ $(document).ready(function(){
 			
 				// 노출여부 표시
 				if (review.isDeleted == 1) {
-				  html += '<td class="text-center" style="vertical-align:middle;"><span class="label label-default">숨김</span></td>';
+				  html += '<td class="text-center" style="vertical-align:middle;"><span class="label label-default">비노출</span></td>';
 				} else {
 				  html += '<td class="text-center" style="vertical-align:middle;"><span class="label label-success">노출</span></td>';
 				}
@@ -298,7 +298,7 @@ $(document).ready(function(){
 				    html += '<button class="btn btn-success restore-btn" data-reviewid="' + review.id + '">복구</button> ';
 				  } else {
 				    // 숨김 버튼
-				    html += '<button class="btn btn-warning softdel-btn" data-reviewid="' + review.id + '">숨김</button> ';
+				    html += '<button class="btn btn-warning softdel-btn" data-reviewid="' + review.id + '">비노출</button> ';
 				  }
 				  // 삭제 버튼은 항상 노출
 				  html += '<button class="btn btn-danger harddel-btn" data-reviewid="' + review.id + '">삭제</button>';
@@ -360,7 +360,7 @@ $(document).ready(function(){
 
 		$(document).on('click', '.harddel-btn', function() {
 			  var reviewId = $(this).data('reviewid');
-			  var productId = $('#modalProductLink').attr('href').split('/').pop();
+			  var productId = $('#reviewModal').data('productid');
 			  var currentPage = parseInt($('#reviewModal').attr('data-currentpage')) || 1;
 			  
 			  if (!confirm('삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?')) return;
@@ -384,7 +384,7 @@ $(document).ready(function(){
 		
 		$(document).on('click', '.softdel-btn', function() {
 			  var reviewId = $(this).data('reviewid');
-			  var productId = $('#modalProductLink').attr('href').split('/').pop();
+			  var productId = $('#reviewModal').data('productid');
 			  var currentPage = parseInt($('#reviewModal').attr('data-currentpage')) || 1;
 			  
 			  if (!confirm('리뷰가 노출되지 않습니다.')) return;
@@ -408,7 +408,7 @@ $(document).ready(function(){
 		
 		$(document).on('click', '.restore-btn', function() {
 			  var reviewId = $(this).data('reviewid');
-			  var productId = $('#modalProductLink').attr('href').split('/').pop();
+			  var productId = $('#reviewModal').data('productid');
 			  var currentPage = parseInt($('#reviewModal').attr('data-currentpage')) || 1;
 			  
 			  if (!confirm('리뷰가 노출됩니다.')) return;

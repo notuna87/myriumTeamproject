@@ -242,12 +242,15 @@ $(document).ready(function(){
             '<p>고객명: ' + orderInfo.receiver + '</p>' +
             '<p>주소: ' + orderInfo.address + '</p>' +
             '<p>전화번호: ' + orderInfo.phoneNumber + '</p>' +
-
+            
             '<table class="table table-bordered">' +
             '<thead><tr>' +
             '<th class="text-center">주문상품번호</th>' +
             '<th class="text-center">상품명</th>' +
             '<th class="text-center">수량</th>' +
+            '<th class="text-center">상품단가</th>' +
+            '<th class="text-center">할인단가</th>' +
+            '<th class="text-center">구매금액</th>' +
             '<th class="text-center">상태</th>' +
             '<th class="text-center">처리</th>' +
             '</tr></thead><tbody>';
@@ -277,10 +280,16 @@ $(document).ready(function(){
                     case 99: statusText = "<span class='label label-info'>부분 취소/교환/반품</span>"; break;
                 }
 
+            // total_price 계산
+            item.total_price = item.quantity * item.discount_price;
+            
             html += '<tr>' +
                 '<td class="text-center">' + item.orders_product_id + '</td>' +
                 '<td class="text-left">' + item.productName + '</td>' +
                 '<td class="text-right">' + item.quantity + '</td>' +
+                '<td class="text-right">' + item.product_price.toLocaleString() + '</td>' +
+                '<td class="text-right">' + item.discount_price.toLocaleString() + '</td>' +
+                '<td class="text-right">' + item.total_price.toLocaleString() + '</td>' +
                 '<td class="text-center">' + statusText + '</td>' +                            
                 '<td class="text-center">';
                 

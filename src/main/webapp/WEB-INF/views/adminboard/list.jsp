@@ -47,8 +47,8 @@
 				<!-- 일반사용자에게만 문의 작성 버튼 노출 -->
 				<sec:authorize access="!hasAuthority('ADMIN')">
 					<div class="panel-heading">
-						문의사항을 작성하려면 작성 버튼을 클릭하세요.
-						<button id='regBtn' type="button" class="btn btn-info">작성</button>
+						문의사항을 작성하려면 등록 버튼을 클릭하세요.
+						<button id='regBtn' type="button" class="btn btn-info">등록</button>
 					</div>
 				</sec:authorize>
 
@@ -104,7 +104,7 @@
 											<sec:authorize access="hasAuthority('ADMIN')">
 												<td class="text-center">
 													<c:choose>
-														<c:when test="${board.isDeleted == 1}"><span class="label label-default">미노출</span></c:when>
+														<c:when test="${board.isDeleted == 1}"><span class="label label-default">비노출</span></c:when>
 														<c:otherwise><span class="label label-success">게시중</span></c:otherwise>
 													</c:choose>
 												</td>
@@ -112,12 +112,12 @@
 													<button type="button" class="btn btn-sm btn-primary edit-btn" data-id="${board.id}">수정</button>
 													<c:choose>
 														<c:when test="${board.isDeleted == 0}">
-															<button type="button" class="btn btn-sm btn-warning softdel-btn" data-id="${board.id}">글내림</button>
-															<button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${board.id}">영구삭제</button>
+															<button type="button" class="btn btn-sm btn-warning softdel-btn" data-id="${board.id}">비노출</button>
+															<button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${board.id}">삭제</button>
 														</c:when>
 														<c:otherwise>
 															<button type="button" class="btn btn-sm btn-success restore-btn" data-id="${board.id}">복구</button>
-															<button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${board.id}">영구삭제</button>
+															<button type="button" class="btn btn-sm btn-danger harddel-btn" data-id="${board.id}">삭제</button>
 														</c:otherwise>
 													</c:choose>
 												</td>

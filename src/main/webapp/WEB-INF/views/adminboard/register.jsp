@@ -86,7 +86,8 @@
 						</div>
 
 						<button type="submit" class="btn btn-default btn-success">등록</button>
-						<button type="reset" class="btn btn-default btn-info">다시작성</button>
+						<button type="button" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/adminboard/list'">목록</button>
+						<button type="reset" class="btn btn-warning btn-info">다시작성</button>
 					</form>
 				</div>
 			</div>
