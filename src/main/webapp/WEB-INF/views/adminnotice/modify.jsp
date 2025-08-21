@@ -190,21 +190,77 @@ $(function () {
         console.log("첨부파일 삭제:", uuid);
     });
 
-    $("form button[type=submit]").on("click", function(e){
-        const op = $(this).data("oper");
-        console.log("버튼 클릭 operation:", op);
+//    $("form button[type=submit]").on("click", function(e){
+//        const op = $(this).data("oper");
+//        console.log("버튼 클릭 operation:", op);
 
-        if(op==='remove' && !confirm("삭제 후 복구 불가.")){ e.preventDefault(); return; }
-        if(op==='list'){ 
-            e.preventDefault(); 
-            $("#noticeForm").attr("action","/adminnotice/list").attr("method","get").submit();
-        }
+//        if(op==='remove' && !confirm("삭제 후 복구 불가.")){ e.preventDefault(); return; }
+//        if(op==='list'){ 
+//            e.preventDefault(); 
+//            $("#noticeForm").attr("action","/adminnotice/list").attr("method","get").submit();
+//        }
         // 제목/내용 체크
-        const title = $("input[name='title']").val().trim();
-        const content = $("textarea[name='content']").val().trim();
-        if(!title){ alert("제목 필요"); e.preventDefault(); return; }
-        if(!content){ alert("내용 필요"); e.preventDefault(); return; }
-        if(selectedFiles.length>0 && !uploadCompleted){ alert("파일 업로드 먼저"); e.preventDefault(); return; }
+//        const title = $("input[name='title']").val().trim();
+//        const content = $("textarea[name='content']").val().trim();
+//        if(!title){ alert("제목 필요"); e.preventDefault(); return; }
+//        if(!content){ alert("내용 필요"); e.preventDefault(); return; }
+//        if(selectedFiles.length>0 && !uploadCompleted){ alert("파일 업로드 먼저"); e.preventDefault(); return; }
+//    });
+    
+    // 등록 버튼 클릭 시 유효성 검사
+    var formObj = $("form");
+    $("form button[type=submit]").on("click", function (e) {
+  	  
+  	const title = $("input[name='title']").val().trim();
+      const content = $("textarea[name='content']").val().trim();
+
+      if (!title) {
+        alert("제목을 입력해주세요.");
+        $("input[name='title']").focus();
+        e.preventDefault();
+        return;
+      }
+
+      if (!content) {
+        alert("내용을 입력해주세요.");
+        $("textarea[name='content']").focus();
+        e.preventDefault();
+        return;
+      }
+
+      // 파일이 선택된 경우 업로드 완료 여부 체크
+      if (selectedFiles.length > 0 && !uploadCompleted) {
+        alert("파일 업로드를 먼저 완료해주세요.");
+        e.preventDefault();
+        return;
+      }
+      
+  	e.preventDefault();
+  	
+  	  const operation = $(this).data("oper");
+  	
+  	console.log(operation);
+  	
+  	if(operation === 'remove'){
+  		if (confirm("삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
+  			formObj.attr("action", "/adminnotice/harddel"); // 소프트 삭제 => softdel, 하드(영구) 삭제 => harddel 
+  		}
+  	}else if(operation === 'list'){
+  		formObj.attr("action", "/adminnotice/list").attr("method", "get");
+  		var pageNumTag = $("input[name='pageNum']").clone();
+  		var amountTag = $("input[name='amount']").clone();
+  		var keywordTag = $("input[name='keyword']").clone();
+  		var typeTag = $("input[name='type']").clone();
+  		
+  		formObj.empty();
+  		formObj.append(pageNumTag);
+  		formObj.append(amountTag);
+  		formObj.append(keywordTag);
+  		formObj.append(typeTag);
+  	}
+  	
+  	formObj.submit();
+      
     });
 
 });

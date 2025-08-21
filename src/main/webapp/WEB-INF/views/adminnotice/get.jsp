@@ -75,7 +75,7 @@
 							<sec:authorize access="isAuthenticated()">
 								<c:if test="${pinfo.username eq notice.customerId}">
 									<button type="button" class="btn btn-warning softdel-btn" data-id="${notice.id}"
-										data-customer-id="${notice.customerId}">글내림</button>
+										data-customer-id="${notice.customerId}">비노출</button>
 								</c:if>
 							</sec:authorize>
 

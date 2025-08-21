@@ -43,12 +43,12 @@
 
 						<div class="form-group">
 							<label>제목</label> 	
-							<input class="form-control" name='title' value="${board.title}" >
+							<input class="form-control" name='title' value="${board.title}" required>
 						</div>
 
 						<div class="form-group">
 			                  <label>내용</label>
-						      <textarea class="form-control" rows="3" name='content' style="resize:none; height:300px;">${board.content}</textarea>
+						      <textarea class="form-control" rows="3" name='content' style="resize:none; height:300px;" required>${board.content}</textarea>
 						</div>
 
 						<div class="form-group">
@@ -57,7 +57,7 @@
 						</div>
 
 						<sec:authorize access="hasAuthority('ADMIN')">
-							<button type="submit" data-oper='modify' class="btn btn-default">등록</button>
+							<button type="submit" data-oper='modify' class="btn btn-success">등록</button>
 							<button type="submit" data-oper='remove' class="btn btn-danger">삭제</button>
 						</sec:authorize>
 						<button type="submit" data-oper='list' class="btn btn-info">목록</button>
@@ -103,6 +103,22 @@ $(document).ready(function() {
 			formObj.append(pageNumTag, amountTag, keywordTag, typeTag);
 		} else if (operation === 'modify') {
 			console.log("수정 처리");
+		  	const title = $("input[name='title']").val().trim();
+		    const content = $("textarea[name='content']").val().trim();
+
+		    if (!title) {
+		      alert("제목을 입력해주세요.");
+		      $("input[name='title']").focus();
+		      e.preventDefault();
+		      return;
+		    }
+
+		    if (!content) {
+		      alert("내용을 입력해주세요.");
+		      $("textarea[name='content']").focus();
+		      e.preventDefault();
+		      return;
+		    }			
 			formObj.attr("action", "/adminboard/modify");
 		} else {
 			console.log("알 수 없는 operation:", operation);

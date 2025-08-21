@@ -52,7 +52,6 @@
 			        </sec:authorize>
 					<div class="panel-heading">
 						<span class="badge">NEW</span> 3일 이내 작성된 리뷰입니다.
-						<c:out value="${groupedReviews}"></c:out>
 					</div> 
 			
 			        <div class="panel-body">			          
