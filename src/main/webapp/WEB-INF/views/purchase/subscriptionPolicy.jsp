@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>마이리움 : 배송정보 제공방침 동의</title>
+<title>마이리움 : 청약철회방침 동의</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reset.css" />
 <style>
 .deliveryWrap {
