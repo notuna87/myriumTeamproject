@@ -4,6 +4,12 @@
 <p align="center">JSP와 Servlet 기반으로 구현된 동적 웹 프로젝트</p>
 <br/>
 
+<details><summary>아코디언 예시입니다.</summary>
+  예시 입니까?
+
+  진짜 예시입니다.
+</details>
+
 ## 📌 목차
 
 - [개요](https://github.com/notuna87/noh_aladinJSP#-개요)
