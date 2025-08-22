@@ -1,7 +1,6 @@
-![main](https://github.com/user-attachments/assets/c860f814-6f64-4de5-8cc2-d3d9f6ae8d3d)
+홈 페이지 이미지 넣을곳
 
-
-<h1 align="center">📚 JSP/Servlet 프로젝트</h1>
+<h1 align="center">📚 마이리움 팀 프로젝트</h1>
 <p align="center">JSP와 Servlet 기반으로 구현된 동적 웹 프로젝트</p>
 <br/>
 
