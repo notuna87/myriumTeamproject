@@ -135,8 +135,8 @@
 	  <if test="cri.is_discount != -1">
 	    AND is_discount = #{cri.is_discount}
 	  </if>
-	  <if test="cri.is_timeSales != -1">
-	    AND is_timesales = #{cri.is_timeSales}
+	  <if test="cri.is_timesales != -1">
+	    AND is_timesales = #{cri.is_timesales}
 	  </if>
 	  <if test="cri.is_deleted != -1">
 	    AND is_deleted = #{cri.is_deleted}
