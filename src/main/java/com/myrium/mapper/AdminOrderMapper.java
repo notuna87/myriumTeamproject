@@ -13,12 +13,12 @@ public interface AdminOrderMapper {
 	
     int updateOrderProductStatus(@Param("ordersProductId") int ordersProductId, @Param("orderStatus") int orderStatus);
 
-	int updateOrderStatus(@Param("ordersId") String ordersId, @Param("orderStatus") int orderStatus);
+	int updateOrderStatus(@Param("ordersId") int ordersId, @Param("orderStatus") int orderStatus);
 	
 	public List<Integer> getPagedOrderIds(@Param("cri") Criteria cri);
 	
 	public List<OrderDTO> getOrdersWithProducts(List<Integer> orderIds);
 
-	public List<Integer> getStatusByOrdersId(String ordersId);
+	public List<Integer> getStatusByOrdersId(int ordersId);
 	
 }

@@ -39,7 +39,7 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 	}
 	
 	@Override
-	public void updateOrderStatus(String ordersId, int ordersProductId, int orderStatus) {
+	public void updateOrderStatus(int ordersId, int ordersProductId, int orderStatus) {
 		
 	    // 1. 개별 상품 상태 업데이트
 	    mapper.updateOrderProductStatus(ordersProductId, orderStatus);
