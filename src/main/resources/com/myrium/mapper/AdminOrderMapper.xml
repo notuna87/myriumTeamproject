@@ -108,11 +108,11 @@
 <update id="updateOrderStatus">
     UPDATE orders
     SET order_status = #{orderStatus}
-    WHERE orders_id = #{ordersId}
+    WHERE id = #{ordersId}
 </update>
 
 <select id="getStatusByOrdersId" resultType="int">
-  SELECT order_status FROM orders_product WHERE orders_id = #{ordersId}
+  SELECT order_status FROM orders_product WHERE id = #{ordersId}
 </select>
 
 <select id="getTotalCount" resultType="int">

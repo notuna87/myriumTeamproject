@@ -39,8 +39,8 @@ log.info("cri:" + cri);
 	    List<OrderDTO> list = service.getOrderList(cri);
 
 	    // 주문번호별 그룹핑
-	    Map<String, List<OrderDTO>> groupedOrders = list.stream()
-	        .collect(Collectors.groupingBy(OrderDTO::getOrdersId));
+	    Map<Long, List<OrderDTO>> groupedOrders = list.stream()
+	        .collect(Collectors.groupingBy(OrderDTO::getId));
 	    
 	    model.addAttribute("groupedOrders", groupedOrders);
 
@@ -63,9 +63,11 @@ log.info("cri:" + cri);
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/updateStatus")
 	public Map<String, Object> updateOrderStatus(
-	        @RequestParam("ordersId") String ordersId,
+	        @RequestParam("ordersId") int ordersId,
 	        @RequestParam("orders_product_id") int ordersProductId,
 	        @RequestParam("orderStatus") int orderStatus) {
+		
+		log.info("ordersId: " + ordersId);
 
 	    Map<String, Object> result = new HashMap<>();
 	    try {

@@ -11,6 +11,6 @@ public interface AdminOrderService {
 	   
 	   public int getTotal(Criteria cri);
 
-	   public void updateOrderStatus(String ordersId, int ordersProductId, int orderStatus);
+	   public void updateOrderStatus(int ordersId, int ordersProductId, int orderStatus);
 	   
 }
