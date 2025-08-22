@@ -29,12 +29,15 @@
 ## 🧩 프로젝트 설계
 <h3 align="center">Usecase Diagram</h3>
 
+유스케이스 다이어그램 사진
+
 <h3 align="center">ERD</h3>
 
-<p align="center"><img src="https://github.com/user-attachments/assets/e81a5f9c-18e0-4d73-9f9a-3e5224f32f2a"></p>
+erd 다이어그램 사진
 
 <h3 align="center">Class Diagram</h3>
 
+클래스 다이어그램 사진
 
 
 ## 🖥️ 실행 화면 --- 동영상 파일 넣을곳
