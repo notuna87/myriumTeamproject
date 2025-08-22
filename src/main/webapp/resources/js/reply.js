@@ -14,7 +14,8 @@ var replyService = (function () {
       contentType: "application/json; charset=utf-8",
       success: function (result, status, xhr) {
         if (callback) {
-          callback(result);
+          //callback(result);
+          callback("등록이 완료되었습니다.");
         }
       },
       error: function (xhr, status, er) {
@@ -99,7 +100,8 @@ var replyService = (function () {
 
       success: function (result, status, xhr) {
         if (callback) {
-          callback(result);
+          //callback(result);
+          callback("수정이 완료되었습니다.");
         }
       },
       error: function (xhr, status, er) {

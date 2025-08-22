@@ -193,8 +193,8 @@ public class UploadController {
 
 	@GetMapping("/download")
 	public ResponseEntity<Resource> downloadFile(String uuid, String path, String filename) throws Exception {
-		// String fullPath = "c:\\upload\\" + path + "\\" + uuid + "_" + filename;
-		String fullPath = "c:\\upload\\" + uuid + "_" + filename;
+
+		String fullPath = "c:\\upload\\" + path + "\\" + uuid + "_" + filename;
 		Resource resource = new FileSystemResource(fullPath);
 
 		if (!resource.exists()) {

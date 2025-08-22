@@ -86,11 +86,11 @@
 
 					<!-- 현재 로그인 사용자 정보 -->
 					<sec:authentication property="principal" var="pinfo" />
-					<sec:authorize access="isAuthenticated()">
+					<!-- <sec:authorize access="isAuthenticated()">
 						<c:if test="${pinfo.username eq board.customerId}">
 							<button type="button" class="btn btn-warning softdel-btn" data-id="${board.id}" data-customer-id="${board.customerId}">글내림</button>
 						</c:if>
-					</sec:authorize>
+					</sec:authorize> -->
 
 					<!-- 관리자용 수정 버튼 -->
 					<sec:authorize access="hasAuthority('ADMIN')">
