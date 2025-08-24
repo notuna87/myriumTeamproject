@@ -114,8 +114,11 @@
 <h3>카테고리</h3>
 <p align="center"><img src="https://github.com/user-attachments/assets/6d30afd5-77c7-4123-a599-f86b09ec75de"></p>
 
-## 🗂️ PPT ---- ppt 사진 넣을곳
+## 🗂️ PPT
 
+<details><summary><h3 align="center">PPT</h3></summary>
+
+</details>
 </br>
 
 ## 🚀 개선사항
