@@ -6,12 +6,6 @@
 <p align="center">Spring MVC 기반 3인 협작 클론 사이트 프로젝트입니다.</p>
 <br/>
 
-<details><summary>아코디언 예시입니다.</summary>
-  예시 입니까?
-
-  진짜 예시입니다.
-</details>
-
 ## 📌 목차
 
 - [개요](https://github.com/notuna87/noh_aladinJSP#-개요)
@@ -27,12 +21,12 @@
 
 ## 🛠️ 기술 스택
 - Language : `JAVA(11)`, `JavaScript(1.5)`
-- Framework / Library: `JSP(JavaServer Pages)(2.3)`, `Servlet(4.0)`, `JSTL`, `JDBC`,`DBManager`,`EL`,`jQuery`
-- Database : `Mysql(8.0)`
+- Framework / Library: `JSP(JavaServer Pages)(2.3)`, `JSTL`, `JDBC`,`DBManager`,`EL`,`jQuery`,`Lombok`
+- Database : `Oracle 11g XE (11.2.0.2.0)`
 - Server : `Apache Tomcat(9.0.70)`
-- Tool : `Eclipse IDE (4.29.0)`
-- API : `Kakao Book Search API`
-- ETC : `Git`
+- Tool : `Spring Tool Suite 3`
+- API : `Daum postCode API`
+- ETC : `Git`, `google Sheets`, `draw.io`, `erdCloud`, `sourcetree`
 
 ## 🧩 프로젝트 설계
 
@@ -103,9 +97,22 @@
 
 ## 🖥️ 실행 화면
 <h3>메인</h3>
-![Image](https://github.com/user-attachments/assets/42ec117d-52d0-411f-b85f-b1c10804e9fe)
+<p align="center"><img src="https://github.com/user-attachments/assets/ef5dc2a7-da83-43db-af32-845f733411e0"></p>
 
 <h3>상품 상세</h3>
+<p align="center"><img src="https://github.com/user-attachments/assets/ac1a4d1e-e2a7-431b-a43b-da66421e2359"></p>
+
+<h3>장바구니<h3>
+<p align="center"><img src="https://github.com/user-attachments/assets/94105129-9a49-4673-b761-221f3155469a"></p>
+
+<h3>결제</h3>
+<p align="center"><img src="https://github.com/user-attachments/assets/84571e25-3010-4564-bf73-496e1f1d667c"></p>
+
+<h3>검색</h3>
+<p align="center"><img src="https://github.com/user-attachments/assets/3155a1c4-f48b-4515-b347-88c7d252b367"></p>
+
+<h3>카테고리</h3>
+<p align="center"><img src="https://github.com/user-attachments/assets/6d30afd5-77c7-4123-a599-f86b09ec75de"></p>
 
 ## 🗂️ PPT ---- ppt 사진 넣을곳
 
