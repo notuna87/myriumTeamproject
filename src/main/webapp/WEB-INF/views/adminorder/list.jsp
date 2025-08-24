@@ -82,6 +82,7 @@
 			            <table style="width:100%;" class="table table-striped table-bordered table-hover" id="dataTables-example">			            
 			              <thead>
 			                <tr>
+			                  <th class="text-center">ID</th>
 			                  <th class="text-center">주문일</th>
 			                  <th class="text-center">주문번호</th>			                  
 			                  <th class="text-center">주문상품</th>
@@ -96,10 +97,12 @@
 			              </thead>
 			              <tbody>
 			                <c:forEach var="entry" items="${groupedOrders}">
+			                  <!--<c:out value="${groupedOrders}"/>-->
 			                  <c:set var="ordersKey" value="${entry.key}" />
 			                  <c:set var="items" value="${entry.value}" />
 			                  
 			                  <tr>
+			                    <td class="text-center">${items[0].id}</td>
 			                    <td class="text-center">${items[0].orderDate}</td>
 			                    <td class="text-center">${items[0].ordersId}
 			                    	<!-- NEW 라벨: 발송처리되지 않은 주문 -->
@@ -121,7 +124,7 @@
 			                    <td class="text-center">${items[0].phoneNumber}</td>
 			                    <td class="text-center">
 			                      <button class="btn btn-sm btn-primary"
-			                              onclick="showOrderModal('${items[0].ordersId}')">
+			                              onclick="showOrderModal('${items[0].id}')">
 			                        자세히
 			                      </button>
 			                    </td>
@@ -223,7 +226,7 @@ $(document).ready(function(){
 
         // 주문번호(ordersId) 기준 필터링
         var filteredItems = ordersList.filter(function (item) {
-            return item.ordersId === ordersId;
+            return Number(item.id) === Number(ordersId);
         });
 
         console.log("Filtered items:", filteredItems);
@@ -237,7 +240,8 @@ $(document).ready(function(){
         // 주문 정보 (첫 번째 아이템 기준)
         var orderInfo = filteredItems[0];
 
-        var html = '<h5>주문번호: ' + ordersId + '</h5>' +
+        var html = '<h5>주문번호: ' + orderInfo.ordersId + '</h5>' +
+            '<P>ID: ' + orderInfo.id + '</p>' +
             '<p>주문일: ' + orderInfo.orderDate + '</p>' +
             '<p>고객명: ' + orderInfo.receiver + '</p>' +
             '<p>주소: ' + orderInfo.address + '</p>' +
@@ -294,26 +298,26 @@ $(document).ready(function(){
                 '<td class="text-center">';
                 
             switch (item.order_status_product) {
-                case 0: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="1">배송준비중</button>'; break;
-                case 1: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="2">배송중</button>'; break;
-                case 2: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="3">배송완료</button>'; break;
-                case 3: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="18">구매확정</button>'; break;
-                case 4: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="12">교환승인</button>' +
-                				'<button class="btn btn-sm btn-danger update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="13">교환거절</button>'; break;
-                case 5: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="2">배송중</button>'; break;
-                case 6: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="14">반품승인</button>' +
-                				'<button class="btn btn-sm btn-danger update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="15">반품거절</button>'; break;
-                case 7: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="11">환불완료</button>'; break;
-                case 8: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="16">취소승인</button>' +
-                				'<button class="btn btn-sm btn-danger update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="17">취소거절</button>'; break;
-                case 9: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="11">환불완료</button>'; break;
-                case 10: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id + '" data-status="11">환불완료</button>'; break;
-                case 12: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id +'" data-status="2">배송중</button>'; break;
-                case 13: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id +'" data-status="12">교환승인</button>'; break;
-                case 14: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id +'" data-status="11">환불완료</button>'; break;
-                case 15: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id +'" data-status="14">반품승인</button>'; break;
-                case 16: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id +'" data-status="9">환불완료</button>'; break;
-                case 17: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.ordersId + '" data-pid="' + item.orders_product_id +'" data-status="16">취소승인</button>'; break;
+                case 0: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="1">배송준비중</button>'; break;
+                case 1: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="2">배송중</button>'; break;
+                case 2: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="3">배송완료</button>'; break;
+                case 3: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="18">구매확정</button>'; break;
+                case 4: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="12">교환승인</button>' +
+                				'<button class="btn btn-sm btn-danger update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="13">교환거절</button>'; break;
+                case 5: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="2">배송중</button>'; break;
+                case 6: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="14">반품승인</button>' +
+                				'<button class="btn btn-sm btn-danger update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="15">반품거절</button>'; break;
+                case 7: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="11">환불완료</button>'; break;
+                case 8: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="16">취소승인</button>' +
+                				'<button class="btn btn-sm btn-danger update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="17">취소거절</button>'; break;
+                case 9: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="11">환불완료</button>'; break;
+                case 10: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id + '" data-status="11">환불완료</button>'; break;
+                case 12: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id +'" data-status="2">배송중</button>'; break;
+                case 13: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id +'" data-status="12">교환승인</button>'; break;
+                case 14: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id +'" data-status="11">환불완료</button>'; break;
+                case 15: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id +'" data-status="14">반품승인</button>'; break;
+                case 16: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id +'" data-status="9">환불완료</button>'; break;
+                case 17: html += '<button class="btn btn-sm btn-success update-status-btn" data-oid="' + item.id + '" data-pid="' + item.orders_product_id +'" data-status="16">취소승인</button>'; break;
             }
 
         	html += '</td></tr>';
@@ -337,9 +341,9 @@ $(document).ready(function(){
             url: '/adminorder/updateStatus',
             type: 'POST',
             data: {
-                ordersId: ordersId,
-                orders_product_id: ordersProductId,
-                orderStatus: orderStatus
+                ordersId: parseInt(ordersId, 10),
+                orders_product_id: parseInt(ordersProductId, 10),
+                orderStatus: parseInt(orderStatus, 10)
             },
             success: function (response) {
                 alert("상태가 변경되었습니다.");
@@ -347,14 +351,14 @@ $(document).ready(function(){
                 // 버튼이 있는 행을 찾는다
                 var $tr = $btn.closest('tr');
 
-                // 상태 텍스트가 들어있는 4번째 <td> (0-based index: 3)
-                var $statusTd = $tr.find('td').eq(3);
+                // 상태 텍스트가 들어있는 7번째 <td> (0-based index: 6)
+                var $statusTd = $tr.find('td').eq(6);
 
                 // 상태 코드를 텍스트로 변환하는 함수 호출
-                $statusTd.text(getStatusText(orderStatus));
+                $statusTd.html(getStatusText(orderStatus));
 
-                // 버튼 영역은 5번째 <td> (index:4)
-                var $actionTd = $tr.find('td').eq(4);
+                // 버튼 영역은 8번째 <td> (index:7)
+                var $actionTd = $tr.find('td').eq(7);
 
                 // 상태에 따라 버튼 다시 갱신 (아래 함수 참고)
                 $actionTd.html(getActionButtons(orderStatus, ordersId, ordersProductId));
@@ -367,31 +371,37 @@ $(document).ready(function(){
     });
 
     // 상태 코드 -> 상태 텍스트 변환 함수 (모달 생성시와 동일하게 유지)
-    function getStatusText(status) {
-        switch (status) {
-            case 0: return "입금전";
-            case 1: return "배송준비중";
-            case 2: return "배송중";
-            case 3: return "배송완료";
-            case 4: return "교환신청";
-            case 5: return "교환완료";
-            case 6: return "반품신청";
-            case 7: return "반품완료";
-            case 8: return "취소신청";
-            case 9: return "취소완료";
-            case 10: return "환불거절";
-            case 11: return "환불완료";
-            case 12: return "교환승인";
-            case 13: return "교환거절";
-            case 14: return "반품승인";
-            case 15: return "반품거절";
-            case 16: return "취소승인";
-            case 17: return "취소거절";
-            case 18: return "구매확정";
-            case 99: return "부분 취소/교환/반품";
-            default: return "알 수 없음";
-        }
-    }
+	function getStatusText(status) {
+	    switch (status) {
+	        case 0:  return '<span class="label label-default">입금전</span>';
+	        case 1:  return '<span class="label label-primary">배송준비중</span>';
+	        case 2:  return '<span class="label label-info">배송중</span>';
+	        case 3:  return '<span class="label label-success">배송완료</span>';
+	
+	        case 4:  return '<span class="label label-warning">교환신청</span>';
+	        case 5:  return '<span class="label label-success">교환완료</span>';
+	        case 6:  return '<span class="label label-warning">반품신청</span>';
+	        case 7:  return '<span class="label label-success">반품완료</span>';
+	
+	        case 8:  return '<span class="label label-warning">취소신청</span>';
+	        case 9:  return '<span class="label label-success">취소완료</span>';
+	
+	        case 10: return '<span class="label label-danger">환불거절</span>';
+	        case 11: return '<span class="label label-success">환불완료</span>';
+	
+	        case 12: return '<span class="label label-success">교환승인</span>';
+	        case 13: return '<span class="label label-danger">교환거절</span>';
+	        case 14: return '<span class="label label-success">반품승인</span>';
+	        case 15: return '<span class="label label-danger">반품거절</span>';
+	        case 16: return '<span class="label label-success">취소승인</span>';
+	        case 17: return '<span class="label label-danger">취소거절</span>';
+	
+	        case 18: return '<span class="label label-info">구매확정</span>';
+	        case 99: return '<span class="label label-warning">부분 취소/교환/반품</span>';
+	
+	        default: return '<span class="label label-default">알 수 없음</span>';
+	    }
+	}
 
     // 버튼 html 생성 함수 (모달 생성시 로직과 동일하게 맞춤 필요)
     function getActionButtons(status, ordersId, ordersProductId) {
