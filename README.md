@@ -164,12 +164,51 @@
 <img src="https://github.com/user-attachments/assets/df4727ba-a4f9-4387-80c7-bd6a146428bb">
 <img src="https://github.com/user-attachments/assets/97cd308e-3210-4687-849c-9d4b7b0e7a6f">
 </details>
-</br>
 
-<details><summary><h3 align="center">PPT 목차 및 개발일정</h3></summary>
 
+<details><summary><h3 align="center">시연 PPT</h3></summary>
+<img src="https://github.com/user-attachments/assets/a8791688-42c5-4d8c-9188-751dddfc5b99">
+<img src="https://github.com/user-attachments/assets/2942bd7e-acfb-461e-b35d-87e741c42b2f">
+<img src="https://github.com/user-attachments/assets/4271ad11-53c4-43ed-b53e-71ef8bade458">
+<img src="https://github.com/user-attachments/assets/0d0a0782-e281-4e16-8c11-21898f83051c">
+<img src="https://github.com/user-attachments/assets/6bbbcb54-6717-443a-a1f6-26455b70e183">
+<img src="https://github.com/user-attachments/assets/ac79e2ce-46c1-44e2-b738-38b6985a3ff9">
+<img src="https://github.com/user-attachments/assets/3ec7ed7d-75ad-4c87-a7a1-c708728e3097">
+<img src="https://github.com/user-attachments/assets/2dd58000-0091-4b42-ad8a-1720d6ebb798">
+<img src="https://github.com/user-attachments/assets/28842885-8775-443d-a9b2-765a36def45a">
+<img src="https://github.com/user-attachments/assets/24dbbe3d-a9aa-47c7-aa54-1f1fa581be94">
+<img src="https://github.com/user-attachments/assets/22905df1-a5cf-4eb9-a279-8d83b76f53f6">
+<img src="https://github.com/user-attachments/assets/9b60f928-04a0-4b94-b2d3-e7ad75e79222">
+<img src="https://github.com/user-attachments/assets/d3660a00-eb41-4565-9655-a6394c422ae6">
+<img src="https://github.com/user-attachments/assets/e98537eb-de24-4abe-ab68-99abbe16fc52">
 </details>
 
-## 🚀 개선사항
+## 🚀 개선사항 및 개선점
 </br>
+1. 타임세일 기능 미구현
+- 아쉬운점 : 특정 시간에 상품이 자동 종료되는 기능을 구현하지 못함
+- 개선점 : 스케쥴러를 활용하여 자동화 기능을 추가할 예정
 
+2. VO와 DTO를 깔끔하게 정리하지 못하였음
+- 아쉬운점 : VO와 DTO의 역할이 명확하지 않아 코드 구조가 혼란 스러움
+- 개선점 : DTO는 데이터 전달, VO는 값 표현 객체로 일관성 있도록 조정
+
+3. 예외처리 미흡
+- 아쉬운점 : 오류 발생 시 사용자 친화적인 안내 부족
+- 개선점 : 공통 에러 페이지 및 예외 처리 로직 강화
+
+4. 테스트 코드 부족
+- 아쉬운점 : 기능별 단위 테스트 및 통합 테스트가 충분하지 않음
+- 개선점 : JUnit, Mockito 등을 활용하여 테스트 코드 보강
+
+5. 공통 모듈화 부족
+- 아쉬운점 : 일부 코드가 중복되어 유지 보수성이 떨어짐
+- 개선점 : 공통 모듈 및 유틸 클래스로 중복 제거
+
+6. 쿠폰 시스템 미구현
+- 아쉬운점 : 할인 및 프로모션 기능이 제공되지 않음 
+- 개선점 : 쿠폰 발급 및 적용 로직 추가 예정
+
+7. 결제 API 미적용
+- 아쉬운점 : 시간 부족으로 인하여 외부 결제 서비스와의 연동이 이루어지지 않음 
+- 개선점 : 결제 API 연동 예정
