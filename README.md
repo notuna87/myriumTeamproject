@@ -8,15 +8,15 @@
 
 ## 📌 목차
 
-- [개요](https://github.com/notuna87/noh_aladinJSP#-개요)
-- [기술 스택](https://github.com/notuna87/noh_aladinJSP#-기술-스택)
-- [프로젝트 설계](https://github.com/notuna87/noh_aladinJSP#-프로젝트-설계)
-- [실행 화면](https://github.com/notuna87/noh_aladinJSP#-실행-화면)
-- [PPT](https://github.com/notuna87/noh_aladinJSP#-PPT)
-- [개선사항](https://github.com/notuna87/noh_aladinJSP#-개선사항)
+- [개요](https://github.com/notuna87/myriumTeamproject#-개요)
+- [기술 스택](https://github.com/notuna87/myriumTeamproject#-기술-스택)
+- [프로젝트 설계](https://github.com/notuna87/myriumTeamproject#-프로젝트-설계)
+- [실행 화면](https://github.com/notuna87/myriumTeamproject#-실행-화면)
+- [PPT](https://github.com/notuna87/myriumTeamproject#-PPT)
+- [개선사항](https://github.com/notuna87/myriumTeamproject#-개선사항)
 
 ## 📖 개요
-- 프로젝트 목표 : 
+- 프로젝트 목표 : Spring MVC 기반으로 마이리움 클론 사이트를 제작하여, 실제 전자상거래 환경에서 상품 조회, 장바구니, 주문 등의 기능을 구현
 - 개발 기간 :
 
 ## 🛠️ 기술 스택
