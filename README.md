@@ -103,10 +103,9 @@
 
 ## 🖥️ 실행 화면
 <h3>메인</h3>
-![Adobe Express - Adobe Express - main_display (1)](https://github.com/user-attachments/assets/fed60335-48fb-4ce0-b04f-a676db6afeec)
+![main_display](https://github.com/user-attachments/assets/abeba3dc-0608-4ba2-a2dc-534a82f045d7)
 
 <h3>상품 상세</h3>
-![Adobe Express - Adobe Express - main_sub](https://github.com/user-attachments/assets/cf4e3c02-8117-4f06-808b-221e25a58f56)
 
 ## 🗂️ PPT ---- ppt 사진 넣을곳
 
