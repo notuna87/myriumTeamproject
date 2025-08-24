@@ -2,6 +2,7 @@
 ![babysbreath_detail](https://github.com/user-attachments/assets/9f1b8e1e-73c1-4067-b591-d0db3fb503de)
 ![Screenshot 2025-08-24 at 17 30 21](https://github.com/user-attachments/assets/9806a0a3-8eec-46a1-be65-47bafa622215)
 
+
 <h1 align="center">📚 마이리움 팀 프로젝트</h1>
 <p align="center">Spring MVC 기반 3인 협작 클론 사이트 프로젝트입니다.</p>
 <br/>
@@ -116,10 +117,58 @@
 
 ## 🗂️ PPT
 
-<details><summary><h3 align="center">PPT</h3></summary>
+<details><summary><h3 align="center">PPT 목차 및 개발일정</h3></summary>
+<img src="https://github.com/user-attachments/assets/0c7566e0-98d8-444c-b752-87bdd9ff39fe">
+<img src="https://github.com/user-attachments/assets/7859a4c9-68b3-499f-8891-12a691d6e666">
+<img src="https://github.com/user-attachments/assets/7e75b973-a23a-4271-b7b7-27b3d5e11b3d">
+</details>
 
+<details><summary><h3 align="center">PPT 요구사항 분석</h3></summary>
+<img src="https://github.com/user-attachments/assets/662b80c2-47f9-4246-82e3-4785ae248eca">
+<img src="https://github.com/user-attachments/assets/d63f9016-80c4-4353-953c-869372439fab">
+<img src="https://github.com/user-attachments/assets/10fe6205-4dea-43a6-8267-0773a6b78687">
+<img src="https://github.com/user-attachments/assets/4b550a94-e6c8-42bd-89b8-a2aa0aec6865">
+<img src="https://github.com/user-attachments/assets/26d592eb-c459-44ec-989e-9e3e853ee818">
+<img src="https://github.com/user-attachments/assets/7b2a5041-284e-4413-af0c-e8160769cb9b">
+<img src="https://github.com/user-attachments/assets/ee02d855-414f-4a90-95d4-3ebab1f0670d">
+<img src="https://github.com/user-attachments/assets/e69b80f6-e56d-4c33-aa74-0971f372ba90">
+<img src="https://github.com/user-attachments/assets/86f04487-3f84-4fe0-a643-b11081c78be0">
+<img src="https://github.com/user-attachments/assets/386848c0-bd38-4cf3-b585-e3f972262e6d">
+<img src="https://github.com/user-attachments/assets/b0f48cac-3515-49f6-8573-af06321d99c2">
+<img src="https://github.com/user-attachments/assets/5665bc16-1651-4533-8e5d-786aa75bd3fb">
+<img src="https://github.com/user-attachments/assets/b7d9f29b-f1d8-47c8-988b-b603eac2be13">
+<img src="https://github.com/user-attachments/assets/075d654c-c7d7-4576-bfdf-168da1681f14">
+<img src="https://github.com/user-attachments/assets/223e9762-6d91-4dd4-b3f4-b2a0aa1643dc">
+<img src="https://github.com/user-attachments/assets/b36a7520-4b27-42e5-9127-ff3567eb5a45">
+<img src="https://github.com/user-attachments/assets/0c4c3ea0-da8c-4762-ac04-3a686d0253fe">
+<img src="https://github.com/user-attachments/assets/27a24dab-6803-47d7-b810-51e90f14bdee">
+<img src="https://github.com/user-attachments/assets/5054a679-b042-418c-a2ab-063a4383dadb">
+<img src="https://github.com/user-attachments/assets/e0f7e333-0629-463c-b097-87db244a576d">
+<img src="https://github.com/user-attachments/assets/ec173492-d802-4488-8b60-39114c158317">
+<img src="https://github.com/user-attachments/assets/c9a5368b-8a14-4bd9-bcc9-0543237dcb07">
+<img src="https://github.com/user-attachments/assets/6fb18fcd-0989-418e-be42-5b94b02897d5">
+<img src="https://github.com/user-attachments/assets/33aa5291-3db7-4cf8-9ee6-92352f864bb5">
+<img src="https://github.com/user-attachments/assets/0c759390-41c3-47fc-8488-b8656e6b3270">
+<img src="https://github.com/user-attachments/assets/d435e2b3-0c1d-4b60-8ef9-53d15b74c54a">
+<img src="https://github.com/user-attachments/assets/0f235dde-6de9-4a0b-8efc-98138151e85c">
+<img src="https://github.com/user-attachments/assets/8019b3cf-53f7-4628-aeef-16aa1bfb4b7f">
+<img src="https://github.com/user-attachments/assets/33e58a6a-736c-424d-b8cd-8032f4cd2429">
+<img src="https://github.com/user-attachments/assets/9a0d4348-0cf1-41da-a03a-29fdc56ac898">
+<img src="https://github.com/user-attachments/assets/1851f43d-8f91-49d0-87ae-316105dcb464">
+<img src="https://github.com/user-attachments/assets/242f2bcf-a4c8-4a1e-860c-36be2e02e01c">
+<img src="https://github.com/user-attachments/assets/e6314844-866f-444a-ad56-ddf4a2f8232e">
+<img src="https://github.com/user-attachments/assets/48d3b608-e56f-4b74-825d-d8f6f776106a">
+<img src="https://github.com/user-attachments/assets/c93cb956-73bc-45cf-8668-ca352dd6474a">
+<img src="https://github.com/user-attachments/assets/40e72a5f-b334-48fc-b273-624ced3f9f23">
+<img src="https://github.com/user-attachments/assets/3d3db4f2-e89a-427d-9d31-3a6fd711dfe1">
+<img src="https://github.com/user-attachments/assets/df4727ba-a4f9-4387-80c7-bd6a146428bb">
+<img src="https://github.com/user-attachments/assets/97cd308e-3210-4687-849c-9d4b7b0e7a6f">
 </details>
 </br>
+
+<details><summary><h3 align="center">PPT 목차 및 개발일정</h3></summary>
+
+</details>
 
 ## 🚀 개선사항
 </br>
