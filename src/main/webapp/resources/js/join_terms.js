@@ -189,11 +189,7 @@ emailInput.addEventListener('input', () => {
     emailErrorEl.textContent = '올바른 이메일 주소 형식이 아닙니다.';
     emailErrorEl.className = 'error_msg';
   } else {
-    emailErrorEl.textContent = '사용 가능한 이메일입니다.';
-    emailErrorEl.className = 'success_msg';
-  }
-  
-  	  	fetch(`/member/check-email?email=${email}`)
+      	  	fetch(`/member/check-email?email=${email}`)
 	  .then(response => response.text())
 	  .then(text => {
 	    if (text === "unavailable") {
@@ -211,6 +207,9 @@ emailInput.addEventListener('input', () => {
 	    emailErrorEl.className = 'error_msg';
 	    isIdAvailable = false;
 });
+
+  }
+  
 });
 
 
