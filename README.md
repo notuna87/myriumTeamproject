@@ -103,7 +103,7 @@
 
 ## 🖥️ 실행 화면
 <h3>메인</h3>
-![main_display](https://github.com/user-attachments/assets/abeba3dc-0608-4ba2-a2dc-534a82f045d7)
+![main_display](https://github.com/user-attachments/assets/42ec117d-52d0-411f-b85f-b1c10804e9fe)
 
 <h3>상품 상세</h3>
 
