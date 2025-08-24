@@ -36,13 +36,13 @@
 
 ## 🧩 프로젝트 설계
 
-<details><summary><h3 align="center">Usecase Diagram</h3>
-  <img width="1128" height="790" alt="481296084-728d4a85-0932-4a82-9524-97cdfa095230" src="https://github.com/user-attachments/assets/716f55e6-3f78-49a4-a3d9-e2c08a8ed390" />
-</summary>
+<details><summary><h3 align="center">Usecase Diagram</h3></summary>
+<img width="1128" height="790" alt="481296084-728d4a85-0932-4a82-9524-97cdfa095230" src="https://github.com/user-attachments/assets/716f55e6-3f78-49a4-a3d9-e2c08a8ed390" />
+</details>
 
-<details><summary><h3 align="center">ERD</h3>
+<details><summary><h3 align="center">ERD</h3></summary>
 <img width="2733" height="1886" alt="Myrium erd" src="https://github.com/user-attachments/assets/888cae06-4c6a-4435-bd6c-eeda52ab09a2" />
-</summary>
+</details>
   
 <details><summary><h3 align="center">Class Diagram</h3></summary>
 <h4>UploadController</h4>
@@ -101,7 +101,12 @@
 
 
 
-## 🖥️ 실행 화면 --- 동영상 파일 넣을곳
+## 🖥️ 실행 화면
+<h3>메인</h3>
+![Adobe Express - Adobe Express - main_display (1)](https://github.com/user-attachments/assets/fed60335-48fb-4ce0-b04f-a676db6afeec)
+
+<h3>상품 상세</h3>
+![Adobe Express - Adobe Express - main_sub](https://github.com/user-attachments/assets/cf4e3c02-8117-4f06-808b-221e25a58f56)
 
 ## 🗂️ PPT ---- ppt 사진 넣을곳
 
