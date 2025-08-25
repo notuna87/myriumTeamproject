@@ -42,7 +42,7 @@
 <details><summary><h3 align="center">Class Diagram</h3></summary>
 <h4>UploadController</h4>
 <img width="2200" height="1347" alt="Diagram_UploadController" src="https://github.com/user-attachments/assets/95f413e3-6508-44ee-bc83-0cdf7372487c" />
-<h4>TotalReviewControllerh4>
+<h4>TotalReviewController<h4>
 <img width="1271" height="724" alt="Diagram_TotalReviewController" src="https://github.com/user-attachments/assets/dbb13257-40bb-40d2-9867-9bc67c14041d" />
 <h4>SubController</h4>
 <img width="2234" height="1259" alt="Diagram_SubController" src="https://github.com/user-attachments/assets/63e078eb-4fbd-488d-b62b-bbbadb3b3a0e" />
