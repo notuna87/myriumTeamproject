@@ -98,22 +98,22 @@
 
 ## 🖥️ 실행 화면
 <h3>메인</h3>
-<p align="center"><img src="https://github.com/user-attachments/assets/ef5dc2a7-da83-43db-af32-845f733411e0"></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/4c16c37a-8589-4adb-9d23-31de15f801d2"></p>
 
 <h3>상품 상세</h3>
-<p align="center"><img src="https://github.com/user-attachments/assets/ac1a4d1e-e2a7-431b-a43b-da66421e2359"></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/c23c0a1f-a61c-43dd-bcc0-38a1addfd21a"></p>
 
 <h3>장바구니<h3>
-<p align="center"><img src="https://github.com/user-attachments/assets/94105129-9a49-4673-b761-221f3155469a"></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/5c0537e3-869a-490b-8a46-e8379664a69a"></p>
 
 <h3>결제</h3>
-<p align="center"><img src="https://github.com/user-attachments/assets/84571e25-3010-4564-bf73-496e1f1d667c"></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/522a5fdc-78f3-41f6-90b0-25026b8376ae"></p>
 
 <h3>검색</h3>
-<p align="center"><img src="https://github.com/user-attachments/assets/3155a1c4-f48b-4515-b347-88c7d252b367"></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/c16ee1a6-12e6-456a-955c-051956049368"></p>
 
 <h3>카테고리</h3>
-<p align="center"><img src="https://github.com/user-attachments/assets/6d30afd5-77c7-4123-a599-f86b09ec75de"></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/918e0d74-c41b-43c8-9fe6-03b426cf0c0c"></p>
 
 ## 🗂️ PPT
 
