@@ -17,8 +17,14 @@
 - [개선사항](https://github.com/notuna87/myriumTeamproject#-개선사항)
 
 ## 📖 개요
-- 프로젝트 목표 : Spring MVC 기반으로 마이리움 클론 사이트를 제작하여, 실제 전자상거래 환경에서 상품 조회, 장바구니, 주문 등의 기능을 구현
-- 개발 기간 : 2025.07.16 ~ 2025.08.14
+
+  * **프로젝트 목표 : Spring MVC 기반으로 마이리움 클론 사이트를 제작하여, 실제 전자상거래 환경에서 상품 조회, 장바구니, 주문 등의 기능을 구현**
+
+  * **개발 기간**
+    * 1단계 (07.16 ~ 07.17, 2일) : 요구사항 분석, 화면 흐름 및 데이터 정의<br/>
+    * 2단계 (07.18 ~ 07.19, 2일) : DB 설계, ERD 및 아키텍처 기획<br/>
+    * 3단계 (07.21 ~ 08.15, 20일) : 기능 구현, 화면 개발, 보안 및 테스트<br/>
+    * 4단계 (08.12 ~ 08.14, 3일) : 최종 점검, 스모크 테스트, 배포<br/>
 
 ## 🛠️ 기술 스택
 - Language : `JAVA(11)`, `JavaScript(1.5)`
@@ -31,15 +37,13 @@
 
 ## 🧩 프로젝트 설계
 
-<details><summary><h3 align="center">Usecase Diagram</h3></summary>
-<img width="1128" height="790" alt="481296084-728d4a85-0932-4a82-9524-97cdfa095230" src="https://github.com/user-attachments/assets/716f55e6-3f78-49a4-a3d9-e2c08a8ed390" />
-</details>
+<h3>🖥️Usecase Diagram</h3>
+<img alt="481296084-728d4a85-0932-4a82-9524-97cdfa095230" src="https://github.com/user-attachments/assets/716f55e6-3f78-49a4-a3d9-e2c08a8ed390" />
 
-<details><summary><h3 align="center">ERD</h3></summary>
-<img width="2733" height="1886" alt="Myrium erd" src="https://github.com/user-attachments/assets/888cae06-4c6a-4435-bd6c-eeda52ab09a2" />
-</details>
+<h3>🖥️ERD</h3>
+<img alt="Myrium erd" src="https://github.com/user-attachments/assets/888cae06-4c6a-4435-bd6c-eeda52ab09a2" />
   
-<details><summary><h3 align="center">Class Diagram</h3></summary>
+<details><summary><h3 align="center">🖱️클릭 : Class Diagram (26장)</h3></summary>
 <h4>UploadController</h4>
 <img width="2200" height="1347" alt="Diagram_UploadController" src="https://github.com/user-attachments/assets/95f413e3-6508-44ee-bc83-0cdf7372487c" />
 <h4>TotalReviewController<h4>
@@ -98,8 +102,7 @@
 
 ## 🖥️ 실행 화면
 
-<details>
-  <summary><h3 align="center">메인</h3></summary>
+<h3>⭐ 메인</h3>
   
   * **메인**    
     * **1. 메인**
@@ -107,10 +110,8 @@
       * 타임세일의 경우 슬라이더로 표시되며, 다른 전시화면에서 타임세일 여부를 표시해줍니다.
       * `상품더보기` 버튼을 클릭할시 상단 전시는 3개씩, 하단 전시는 4개씩 상품이 더 표시되며, 모두 표시되었을 경우 버튼이 사라집니다.
 <p align="center"><img src="https://github.com/user-attachments/assets/4c16c37a-8589-4adb-9d23-31de15f801d2"></p>
-</details>
 
-<details>
-  <summary><h3 align="center">상품 상세</h3></summary>
+<h3>⭐ 상품 상세</h3>
   
   * **상품 상세**
     * **2-1. 상품 이미지**
@@ -149,8 +150,7 @@
       <p align="center"><img src="https://github.com/user-attachments/assets/c160f196-48c3-46f0-9af1-5d750ea2b53a"></p>
 </details>
 
-<details>
-  <summary><h3 align="center">장바구니</h3></summary>
+<h3>⭐ 장바구니</h3>
 
   * **장바구니**
     * **3. 장바구니**
@@ -160,10 +160,8 @@
       * 상품의 총 금액이 `49,900원`을 초과하지 않는 경우 배송비 `3,000원`이 자동으로 추가됩니다.
       * `삭제하기`버튼을 클릭하여 장바구니에서 상품을 삭제할 수 있습니다.
       <p align="center"><img src="https://github.com/user-attachments/assets/5c0537e3-869a-490b-8a46-e8379664a69a"></p>
-</details>
 
-<details>
-  <summary><h3 align="center">결제하기</h3></summary>
+<h3>⭐ 결제하기</h3>
 
   * **결제하기**
     * **4.1 주문서 작성**
@@ -189,10 +187,8 @@
       * `주문확인하기`버튼 클릭 시 마이페이지로 이동합니다.
       * `쇼핑계속하기`버튼 클릭 시 메인으로 이동합니다.
       <p align="center"><img src="https://github.com/user-attachments/assets/3946a130-679a-4a50-8ed1-bb4d9bb1178c"></p>
-</details>
 
-<details>
-  <summary><h3 align="center">검색</h3></summary>
+<h3>⭐ 검색</h3>
 
   * **검색**
     * **5. 검색**
@@ -201,10 +197,8 @@
       * 검색된 결과를 원하는 정렬 기준을 선택하여 정렬할 수 있습니다.
       * 오라클 페이징 기능을 이용하여, 한페이지에 8개의 상품을 볼 수 있습니다.
       <p align="center"><img src="https://github.com/user-attachments/assets/c16ee1a6-12e6-456a-955c-051956049368"></p>
-</details>
 
-<details>
-  <summary><h3 align="center">카테고리</h3></summary>
+<h3>⭐ 카테고리</h3>
 
   * **카테고리**
     * **6. 카테고리**
@@ -213,74 +207,28 @@
       * `상품더보기` 버트을 클릭하여 4개의 상품씩 더 볼 수 있습니다.
       * 카테고리를 선택 후 원하는 정렬기준을 적용하여 상품을 볼 수 있습니다.
       <p align="center"><img src="https://github.com/user-attachments/assets/918e0d74-c41b-43c8-9fe6-03b426cf0c0c"></p>
-</details>
 
 ## 🗂️ PPT
 
-<details><summary><h3 align="center">PPT 목차 및 개발일정</h3></summary>
-<img src="https://github.com/user-attachments/assets/0c7566e0-98d8-444c-b752-87bdd9ff39fe">
-<img src="https://github.com/user-attachments/assets/7859a4c9-68b3-499f-8891-12a691d6e666">
-<img src="https://github.com/user-attachments/assets/7e75b973-a23a-4271-b7b7-27b3d5e11b3d">
-</details>
+<h3>⭐ PPT 요구사항 분석 : 4장 요약</h3>
 
-<details><summary><h3 align="center">PPT 요구사항 분석</h3></summary>
-<img src="https://github.com/user-attachments/assets/662b80c2-47f9-4246-82e3-4785ae248eca">
-<img src="https://github.com/user-attachments/assets/d63f9016-80c4-4353-953c-869372439fab">
-<img src="https://github.com/user-attachments/assets/10fe6205-4dea-43a6-8267-0773a6b78687">
-<img src="https://github.com/user-attachments/assets/4b550a94-e6c8-42bd-89b8-a2aa0aec6865">
-<img src="https://github.com/user-attachments/assets/26d592eb-c459-44ec-989e-9e3e853ee818">
-<img src="https://github.com/user-attachments/assets/7b2a5041-284e-4413-af0c-e8160769cb9b">
-<img src="https://github.com/user-attachments/assets/ee02d855-414f-4a90-95d4-3ebab1f0670d">
-<img src="https://github.com/user-attachments/assets/e69b80f6-e56d-4c33-aa74-0971f372ba90">
-<img src="https://github.com/user-attachments/assets/86f04487-3f84-4fe0-a643-b11081c78be0">
-<img src="https://github.com/user-attachments/assets/386848c0-bd38-4cf3-b585-e3f972262e6d">
-<img src="https://github.com/user-attachments/assets/b0f48cac-3515-49f6-8573-af06321d99c2">
-<img src="https://github.com/user-attachments/assets/5665bc16-1651-4533-8e5d-786aa75bd3fb">
-<img src="https://github.com/user-attachments/assets/b7d9f29b-f1d8-47c8-988b-b603eac2be13">
-<img src="https://github.com/user-attachments/assets/075d654c-c7d7-4576-bfdf-168da1681f14">
-<img src="https://github.com/user-attachments/assets/223e9762-6d91-4dd4-b3f4-b2a0aa1643dc">
-<img src="https://github.com/user-attachments/assets/b36a7520-4b27-42e5-9127-ff3567eb5a45">
-<img src="https://github.com/user-attachments/assets/0c4c3ea0-da8c-4762-ac04-3a686d0253fe">
-<img src="https://github.com/user-attachments/assets/27a24dab-6803-47d7-b810-51e90f14bdee">
-<img src="https://github.com/user-attachments/assets/5054a679-b042-418c-a2ab-063a4383dadb">
-<img src="https://github.com/user-attachments/assets/e0f7e333-0629-463c-b097-87db244a576d">
-<img src="https://github.com/user-attachments/assets/ec173492-d802-4488-8b60-39114c158317">
-<img src="https://github.com/user-attachments/assets/c9a5368b-8a14-4bd9-bcc9-0543237dcb07">
-<img src="https://github.com/user-attachments/assets/6fb18fcd-0989-418e-be42-5b94b02897d5">
-<img src="https://github.com/user-attachments/assets/33aa5291-3db7-4cf8-9ee6-92352f864bb5">
-<img src="https://github.com/user-attachments/assets/0c759390-41c3-47fc-8488-b8656e6b3270">
-<img src="https://github.com/user-attachments/assets/d435e2b3-0c1d-4b60-8ef9-53d15b74c54a">
-<img src="https://github.com/user-attachments/assets/0f235dde-6de9-4a0b-8efc-98138151e85c">
-<img src="https://github.com/user-attachments/assets/8019b3cf-53f7-4628-aeef-16aa1bfb4b7f">
-<img src="https://github.com/user-attachments/assets/33e58a6a-736c-424d-b8cd-8032f4cd2429">
-<img src="https://github.com/user-attachments/assets/9a0d4348-0cf1-41da-a03a-29fdc56ac898">
-<img src="https://github.com/user-attachments/assets/1851f43d-8f91-49d0-87ae-316105dcb464">
-<img src="https://github.com/user-attachments/assets/242f2bcf-a4c8-4a1e-860c-36be2e02e01c">
-<img src="https://github.com/user-attachments/assets/e6314844-866f-444a-ad56-ddf4a2f8232e">
-<img src="https://github.com/user-attachments/assets/48d3b608-e56f-4b74-825d-d8f6f776106a">
-<img src="https://github.com/user-attachments/assets/c93cb956-73bc-45cf-8668-ca352dd6474a">
-<img src="https://github.com/user-attachments/assets/40e72a5f-b334-48fc-b273-624ced3f9f23">
-<img src="https://github.com/user-attachments/assets/3d3db4f2-e89a-427d-9d31-3a6fd711dfe1">
-<img src="https://github.com/user-attachments/assets/df4727ba-a4f9-4387-80c7-bd6a146428bb">
-<img src="https://github.com/user-attachments/assets/97cd308e-3210-4687-849c-9d4b7b0e7a6f">
-</details>
+| <img src="https://github.com/user-attachments/assets/c5bd3557-ea35-4271-b3d8-cfb62a1ec386" width="500"/> | <img src="https://github.com/user-attachments/assets/28a31e76-1cee-4cfe-8022-ae1e8998839c" width="500"/> |
+| :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/25206a90-380a-48e2-9da9-e677be757995" width="500"/> | <img src="https://github.com/user-attachments/assets/370119cb-db1a-448d-b4b2-8589c9d9b82a" width="500"/> |
 
 
-<details><summary><h3 align="center">시연 PPT</h3></summary>
-<img src="https://github.com/user-attachments/assets/a8791688-42c5-4d8c-9188-751dddfc5b99">
-<img src="https://github.com/user-attachments/assets/2942bd7e-acfb-461e-b35d-87e741c42b2f">
-<img src="https://github.com/user-attachments/assets/4271ad11-53c4-43ed-b53e-71ef8bade458">
-<img src="https://github.com/user-attachments/assets/0d0a0782-e281-4e16-8c11-21898f83051c">
-<img src="https://github.com/user-attachments/assets/6bbbcb54-6717-443a-a1f6-26455b70e183">
-<img src="https://github.com/user-attachments/assets/ac79e2ce-46c1-44e2-b738-38b6985a3ff9">
-<img src="https://github.com/user-attachments/assets/3ec7ed7d-75ad-4c87-a7a1-c708728e3097">
-<img src="https://github.com/user-attachments/assets/2dd58000-0091-4b42-ad8a-1720d6ebb798">
-<img src="https://github.com/user-attachments/assets/28842885-8775-443d-a9b2-765a36def45a">
-<img src="https://github.com/user-attachments/assets/24dbbe3d-a9aa-47c7-aa54-1f1fa581be94">
-<img src="https://github.com/user-attachments/assets/22905df1-a5cf-4eb9-a279-8d83b76f53f6">
-<img src="https://github.com/user-attachments/assets/9b60f928-04a0-4b94-b2d3-e7ad75e79222">
-<img src="https://github.com/user-attachments/assets/d3660a00-eb41-4565-9655-a6394c422ae6">
-<img src="https://github.com/user-attachments/assets/e98537eb-de24-4abe-ab68-99abbe16fc52">
+
+<details><summary><h3 align="center">🖱️클릭 : 시연 PPT</h3></summary>
+  
+| <img src="https://github.com/user-attachments/assets/a8791688-42c5-4d8c-9188-751dddfc5b99" width="500"> | <img src="https://github.com/user-attachments/assets/2942bd7e-acfb-461e-b35d-87e741c42b2f" width="500"> |
+| :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/4271ad11-53c4-43ed-b53e-71ef8bade458" width="500"> | <img src="https://github.com/user-attachments/assets/0d0a0782-e281-4e16-8c11-21898f83051c" width="500"> |
+| <img src="https://github.com/user-attachments/assets/6bbbcb54-6717-443a-a1f6-26455b70e183" width="500"> | <img src="https://github.com/user-attachments/assets/ac79e2ce-46c1-44e2-b738-38b6985a3ff9" width="500"> |
+| <img src="https://github.com/user-attachments/assets/3ec7ed7d-75ad-4c87-a7a1-c708728e3097" width="500"> | <img src="https://github.com/user-attachments/assets/2dd58000-0091-4b42-ad8a-1720d6ebb798" width="500"> |
+| <img src="https://github.com/user-attachments/assets/28842885-8775-443d-a9b2-765a36def45a" width="500"> | <img src="https://github.com/user-attachments/assets/24dbbe3d-a9aa-47c7-aa54-1f1fa581be94" width="500"> |
+| <img src="https://github.com/user-attachments/assets/22905df1-a5cf-4eb9-a279-8d83b76f53f6" width="500"> | <img src="https://github.com/user-attachments/assets/9b60f928-04a0-4b94-b2d3-e7ad75e79222" width="500"> |
+| <img src="https://github.com/user-attachments/assets/d3660a00-eb41-4565-9655-a6394c422ae6" width="500"> | <img src="https://github.com/user-attachments/assets/e98537eb-de24-4abe-ab68-99abbe16fc52" width="500"> |
+
 </details>
 
 ## 🚀 개선사항 및 개선점
